@@ -32,5 +32,11 @@ gradlePlugin{
             id = "financialassistant.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+
+        register("featureModule"){
+            id = "financialassistant.feature.module"
+            implementationClass = "FeatureModuleConventionPlugin"
+        }
     }
+
 }
