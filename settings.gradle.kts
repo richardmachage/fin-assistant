@@ -20,6 +20,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Financial Assistant"
+rootProject.name = "FinancialAssistant"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+
 include(":app")
- 
+include(":feature:onboarding")

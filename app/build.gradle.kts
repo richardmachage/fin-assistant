@@ -7,6 +7,9 @@ plugins {
 }
 
 dependencies {
+    //feature dependencies
+    implementation(projects.feature.onboarding)
+
     implementation(libs.bundles.default.dependencies)
 
     // Jetpack Compose BOM (Manages all Compose versions automatically)

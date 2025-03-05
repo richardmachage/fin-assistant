@@ -1,5 +1,6 @@
 import com.android.build.gradle.LibraryExtension
 import com.android.builder.model.v2.ide.Library
+import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
@@ -17,21 +18,38 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
 
                 defaultConfig {
                     minSdk = 26
-                    targetSdk = 35
+
+                    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+                    consumerProguardFiles("consumer-rules.pro")
                 }
 
-                buildFeatures {
-                    compose = true
-                }
-
-                dependencies {
-                    add(
-                        "implementation", platform(
-                            versionCatalogLibs.findLibrary("androidx-compose-bom").get()
+                buildTypes {
+                    release {
+                        isMinifyEnabled = false
+                        proguardFiles(
+                            getDefaultProguardFile("proguard-android-optimize.txt"),
+                            "proguard-rules.pro"
                         )
-                    )
-                    add("implementation", versionCatalogLibs.findBundle("default-dependencies").get())
+                    }
                 }
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+
+            }
+
+            extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension> {
+                jvmToolchain(17)
+            }
+
+            dependencies {
+                add(
+                    "implementation", platform(
+                        versionCatalogLibs.findLibrary("androidx-compose-bom").get()
+                    )
+                )
+                add("implementation", versionCatalogLibs.findBundle("default-dependencies").get())
             }
         }
     }

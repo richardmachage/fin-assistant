@@ -11,6 +11,8 @@ composeBom = "2025.02.00"
 androidTools = "31.9.0"
 ksp = "2.0.10-1.0.24"
 room = "2.6.1"
+appcompat = "1.7.0"
+material = "1.12.0"
 
 
 [libraries]
@@ -36,6 +38,8 @@ compose-gradlePlugin = { module = "org.jetbrains.kotlin:compose-compiler-gradle-
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -44,6 +48,9 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 
 #plugins defined by this project
 financialassistant-android-application = { id = "financialassistant.android.application" }
+financialassistant-feature-module = { id = "financialassistant.feature.module" }
+
+android-library = { id = "com.android.library", version.ref = "agp" }
 
 [bundles]
 default-dependencies = [
