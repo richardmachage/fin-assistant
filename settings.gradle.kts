@@ -26,3 +26,4 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":feature:onboarding")
+include(":core:data")

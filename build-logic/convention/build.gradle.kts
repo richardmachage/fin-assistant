@@ -37,6 +37,11 @@ gradlePlugin{
             id = "financialassistant.feature.module"
             implementationClass = "FeatureModuleConventionPlugin"
         }
+
+        register("coreModule"){
+            id = "financialassistant.core.module"
+            implementationClass = "CoreModuleConventionPlugin"
+        }
     }
 
 }
