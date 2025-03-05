@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             FinancialAssistantTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Financial Assistant",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
