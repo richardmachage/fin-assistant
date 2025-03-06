@@ -10,5 +10,6 @@ android {
 }
 
 dependencies {
-
+    ksp(libs.room.compiler)
+    implementation(libs.bundles.room)
 }
