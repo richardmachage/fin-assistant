@@ -6,7 +6,7 @@ android {
     namespace = "com.transsion.financialassistant.background"
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 

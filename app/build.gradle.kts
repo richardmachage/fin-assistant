@@ -1,9 +1,7 @@
 plugins {
-    //alias(libs.plugins.android.application)
-    //alias(libs.plugins.kotlin.android)
     alias(libs.plugins.financialassistant.android.application)
-
-    alias(libs.plugins.kotlin.compose)
+    //alias(libs.plugins.ksp) //for hilt
+    //alias(libs.plugins.hilt.android)
 }
 
 dependencies {
@@ -16,4 +14,8 @@ dependencies {
     // Jetpack Compose BOM (Manages all Compose versions automatically)
     implementation(platform(libs.androidx.compose.bom))
 
+
+    //hilt
+    //ksp(libs.hilt.compiler)
+    //implementation(libs.bundles.hilt)
 }

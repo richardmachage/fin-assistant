@@ -10,6 +10,8 @@ class CoreModuleConventionPlugin : Plugin<Project> {
         with(target) {
             pluginManager.apply("com.android.library")
             pluginManager.apply("org.jetbrains.kotlin.android")
+            pluginManager.apply("com.google.devtools.ksp")
+            pluginManager.apply("dagger.hilt.android.plugin")
 
 
             extensions.configure<LibraryExtension> {
@@ -44,9 +46,9 @@ class CoreModuleConventionPlugin : Plugin<Project> {
             }
 
             dependencies {
-                //TODO add hilt
                 add("implementation", versionCatalogLibs.findBundle("testing").get())
-
+                add("ksp", versionCatalogLibs.findLibrary("hilt-compiler").get())
+                add("implementation", versionCatalogLibs.findBundle("hilt").get())
             }
         }
     }

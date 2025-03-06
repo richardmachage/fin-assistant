@@ -9,10 +9,12 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.02.00"
 androidTools = "31.9.0"
-ksp = "2.0.10-1.0.24"
+ksp = "2.1.0-1.0.29"
 room = "2.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
+hilt = "2.52"
+hiltNavigation = "1.2.0"
 
 
 [libraries]
@@ -30,8 +32,12 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+#Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 #Room
-##Room
 room-compiler = {group = "androidx.room", name= "room-compiler", version.ref = "room"}
 room-runtime = {group = "androidx.room", name ="room-runtime", version.ref = "room"}
 room-ktx = {group = "androidx.room", name = "room-ktx", version.ref="room"}
@@ -51,6 +57,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 #plugins defined by this project
 financialassistant-android-application = { id = "financialassistant.android.application" }
@@ -92,6 +100,11 @@ compose-testing = [
 testing = [
     "junit",
     "androidx-junit",
+]
+
+hilt = [
+    "hilt-android",
+    "hilt-navigation-compose"
 ]
 
 room = [

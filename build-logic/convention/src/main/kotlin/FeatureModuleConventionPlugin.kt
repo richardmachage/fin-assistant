@@ -12,6 +12,9 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
             pluginManager.apply("com.android.library")
             pluginManager.apply("org.jetbrains.kotlin.android")
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
+            pluginManager.apply("com.google.devtools.ksp")
+            pluginManager.apply("dagger.hilt.android.plugin")
+
 
             extensions.configure<LibraryExtension> {
                 compileSdk = 35
@@ -50,6 +53,8 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
                     )
                 )
                 add("implementation", versionCatalogLibs.findBundle("default-dependencies").get())
+                add("ksp", versionCatalogLibs.findLibrary("hilt-compiler").get())
+                add("implementation", versionCatalogLibs.findBundle("hilt").get())
             }
         }
     }
