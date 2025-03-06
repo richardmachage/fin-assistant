@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.datastore
+package com.transsion.financialassistant.data.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore

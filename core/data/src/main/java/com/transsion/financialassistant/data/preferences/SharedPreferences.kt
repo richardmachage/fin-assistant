@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.shared_preference
+package com.transsion.financialassistant.data.preferences
 
 import android.annotation.SuppressLint
 import android.content.Context
