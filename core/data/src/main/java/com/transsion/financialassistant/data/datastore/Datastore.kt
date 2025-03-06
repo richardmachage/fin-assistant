@@ -10,9 +10,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "FinancialAssistantDatastore")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "financialassistant.DATASTORE")
 
-class Datastore(private val context: Context) {
+class DatastorePreferences(private val context: Context) {
+
     companion object {
         val LANGUAGE_KEY = stringPreferencesKey("language_key")
     }
