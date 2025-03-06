@@ -1,5 +1,4 @@
 import com.android.build.gradle.LibraryExtension
-import com.android.builder.model.v2.ide.Library
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -14,7 +13,7 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
             pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
             pluginManager.apply("com.google.devtools.ksp")
             pluginManager.apply("dagger.hilt.android.plugin")
-
+            pluginManager.apply("org.jetbrains.kotlin.plugin.serialization")
 
             extensions.configure<LibraryExtension> {
                 compileSdk = 35
@@ -55,6 +54,11 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
                 add("implementation", versionCatalogLibs.findBundle("default-dependencies").get())
                 add("ksp", versionCatalogLibs.findLibrary("hilt-compiler").get())
                 add("implementation", versionCatalogLibs.findBundle("hilt").get())
+                add(
+                    "implementation",
+                    versionCatalogLibs.findLibrary("kotlinx-serialization-core").get()
+                )
+
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.onboarding
+package com.transsion.financialassistant.onboarding.screens.welcome
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,10 +10,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun OnBoarding(){
-    Scaffold {innerPadding->
-        Box(modifier = Modifier.padding(innerPadding).fillMaxSize(), contentAlignment = Alignment.Center){
-            Text("Welcome to Onboarding")
+fun WelcomeScreen() {
+    Scaffold { innerPadding ->
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text("Welcome to Financial Assistant")
         }
     }
 }
