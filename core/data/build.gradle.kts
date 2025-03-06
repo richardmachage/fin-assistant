@@ -10,6 +10,11 @@ android {
 }
 
 dependencies {
+    //room
     ksp(libs.room.compiler)
     implementation(libs.bundles.room)
+
+    //data store
+    implementation(libs.datastore.preferences)
+
 }

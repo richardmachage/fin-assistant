@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.room.entities
+package com.transsion.financialassistant.data.room.db
 
 import androidx.room.RoomDatabase
 
