@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.ui.theme
+package com.transsion.financialassistant.presentation.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

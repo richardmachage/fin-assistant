@@ -9,6 +9,7 @@ plugins {
 dependencies {
     //feature dependencies
     implementation(projects.feature.onboarding)
+    implementation(projects.core.presentation)
 
     implementation(libs.bundles.default.dependencies)
 

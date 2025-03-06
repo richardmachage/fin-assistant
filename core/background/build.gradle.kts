@@ -3,9 +3,10 @@ plugins {
 }
 
 android {
-    namespace = "com.transsion.financialassistant.data"
+    namespace = "com.transsion.financialassistant.background"
+
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "11"
     }
 }
 
