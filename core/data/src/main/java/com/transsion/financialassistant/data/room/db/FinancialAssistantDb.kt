@@ -1,6 +1,71 @@
 package com.transsion.financialassistant.data.room.db
 
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsDao
+import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
+import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
+import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
+import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
+import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
+import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
+import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
+import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
+import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
+import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
+import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
+import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 
+@Database(
+    entities = [
+        DepositMoneyEntity::class,
+        ReceiveMoneyEntity::class,
+        SendPochiEntity::class,
+        WithdrawMoneyEntity::class,
+        BuyGoodsEntity::class,
+        PayBillEntity::class,
+        SendPochiEntity::class,
+        SendMoneyEntity::class
+    ],
+    version = 1,
+    exportSchema = true
+
+)
 abstract class FinancialAssistantDb : RoomDatabase() {
+
+    abstract fun depositMoneyDao(): DepositMoneyDao
+    abstract fun receiveMoneyDao(): ReceiveMoneyDao
+    abstract fun sendPochiDao(): SendPochiDao
+    abstract fun withdrawMoneyDao(): WithdrawMoneyDao
+    abstract fun buyGoodsDao(): BuyGoodsDao
+    abstract fun payBillDao(): PayBillDao
+    abstract fun sendMoneyDao(): SendMoneyDao
+    abstract fun sendGlobalDao(): SendGlobalDao
+
+    companion object {
+        private var INSTANCE: FinancialAssistantDb? = null
+
+        fun getInstance(context: Context): FinancialAssistantDb {
+            synchronized(this) {
+                var instance = INSTANCE
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
+                        context.applicationContext,
+                        FinancialAssistantDb::class.java,
+                        "financial_assistant_db"
+                    )
+                        .fallbackToDestructiveMigration()
+                        .build()
+                    INSTANCE = instance
+                }
+                return instance
+            }
+
+        }
+    }
+
 }
