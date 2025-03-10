@@ -1,8 +1,10 @@
 package com.transsion.financialassistant.data.room.entities.paybill_till
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
+@Entity
 data class PayBillEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

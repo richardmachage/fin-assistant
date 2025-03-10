@@ -1,8 +1,10 @@
 package com.transsion.financialassistant.data.room.entities.withdraw
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
+@Entity
 data class WithdrawMoneyEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,

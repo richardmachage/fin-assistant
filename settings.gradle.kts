@@ -20,6 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
+gradle.startParameter.excludedTaskNames.addAll(listOf("build-logic:convention:testClasses"))
 rootProject.name = "FinancialAssistant"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

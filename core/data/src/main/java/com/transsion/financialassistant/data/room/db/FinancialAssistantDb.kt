@@ -28,7 +28,6 @@ import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMone
         WithdrawMoneyEntity::class,
         BuyGoodsEntity::class,
         PayBillEntity::class,
-        SendPochiEntity::class,
         SendMoneyEntity::class
     ],
     version = 1,
