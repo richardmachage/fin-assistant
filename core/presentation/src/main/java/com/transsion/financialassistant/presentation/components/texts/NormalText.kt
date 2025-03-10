@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.presentation.components.texts
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,10 +11,10 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun NormalText(
+    modifier: Modifier = Modifier,
     text: String,
-    textColor: Color = Color.Black,
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Center,
-    modifier: Modifier = Modifier
 ) {
     Text(
         modifier = modifier,

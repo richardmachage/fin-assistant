@@ -7,4 +7,7 @@ import kotlinx.serialization.Serializable
 sealed interface OnboardingRoutes {
     @Serializable
     object Welcome : OnboardingRoutes
+
+    @Serializable
+    object ConfirmNumber : OnboardingRoutes
 }

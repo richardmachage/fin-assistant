@@ -12,11 +12,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -24,30 +22,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingSmall
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 //@Preview(showSystemUi = true)
 @Composable
-fun GetStarted() {
+fun GetStarted(
+    navController: NavController
+) {
     Scaffold { innerPadding ->
         Box(
             modifier = Modifier
@@ -57,7 +61,8 @@ fun GetStarted() {
             Image(
                 modifier = Modifier.fillMaxSize(),
                 painter = painterResource(R.drawable.get_started),
-                contentDescription = "image"
+                contentDescription = "image",
+                contentScale = ContentScale.FillBounds
             )
 
             //content text
@@ -88,17 +93,14 @@ fun GetStarted() {
 
                 )
                 VerticalSpacer(10)
-                //swipe button
-                /* FilledButtonFa(
-                     text = stringResource(R.string.swipe_to_get_started)
-                 )
-                 */
 
                 SwipeToStartButton(
                     modifier = Modifier.fillMaxWidth(),
                     width = LocalConfiguration.current.screenWidthDp.dp,
                     onSwipeComplete = {
                         //navigate to assigning accounts
+                        navController.navigate(OnboardingRoutes.ConfirmNumber)
+
                     }
                 )
                 VerticalSpacer(10)
@@ -112,15 +114,12 @@ fun GetStarted() {
 @Composable
 fun SwipeToStartButton(
     modifier: Modifier = Modifier,
-    width: Dp,//= 300.dp,
-    height: Dp = 56.dp,
+    width: Dp,
+    height: Dp = 55.dp,
     onSwipeComplete: () -> Unit
 ) {
     val density = LocalDensity.current
     // Track the swipe state
-    /*val swipeableState = remember {
-        androidx.compose.foundation.gestures.rememberSwipeableState(initialValue = 0)
-    }*/
     val swipeableState = rememberSwipeableState(0)
 
     // Anchors define where the handle can rest (start -> value=0, end -> value=1)
@@ -136,6 +135,8 @@ fun SwipeToStartButton(
     LaunchedEffect(swipeableState.currentValue) {
         if (swipeableState.currentValue == 1) {
             onSwipeComplete()
+            delay(400)
+            swipeableState.snapTo(0)
         }
     }
 
@@ -145,25 +146,23 @@ fun SwipeToStartButton(
             .width(width)
             .height(height)
             .clip(RoundedCornerShape(28.dp))
-            .background(Color(0xFFC8E6C9)) // Light green-ish background
+            .background(FAColors.GrayBackground) // Light green-ish background
             .swipeable(
                 state = swipeableState,
                 anchors = anchors,
                 thresholds = { _, _ ->
                     //androidx.compose.foundation.gestures.FractionalThreshold(0.5f)
-                    FractionalThreshold(0.5f)
+                    FractionalThreshold(0.7f)
                 },
                 orientation = Orientation.Horizontal
             ),
         contentAlignment = Alignment.CenterStart
     ) {
-        // "Swipe to get started" text in the center
-        Text(
-            text = "Swipe to get started",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.DarkGray,
-            modifier = Modifier.align(Alignment.Center)
+
+        NormalText(
+            Modifier.align(Alignment.Center),
+            text = stringResource(R.string.swipe_to_get_started),
+            textAlign = TextAlign.Center
         )
 
         // The handle (circle with an icon) that moves with the swipe
@@ -171,16 +170,17 @@ fun SwipeToStartButton(
 
         Box(
             modifier = Modifier
+                .padding(paddingSmall)
+                .size(height)
                 .offset { IntOffset(offsetPx.roundToInt(), 0) }
-                .size(height) // same size as the track height, so it's a circle
-                .clip(CircleShape)
-                .background(Color(0xFF4CAF50)) // Green handle
-                .padding(8.dp),
+                .clip(RoundedCornerShape(40))
+                .background(FAColors.green),
             contentAlignment = Alignment.Center
         ) {
+
             // Replace with your own icon; using built-in arrow icons or a custom resource
             Icon(
-                painter = painterResource(id = android.R.drawable.ic_media_ff),
+                painter = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.swipe_arrows),
                 contentDescription = "Swipe Icon",
                 tint = Color.White
             )

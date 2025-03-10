@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.presentation.components.texts
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +16,7 @@ fun BigTittleText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     text: String = "Begin your smartmoney journey",
-    textColor: Color = Color.Black
+    textColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Text(
         text = text,
