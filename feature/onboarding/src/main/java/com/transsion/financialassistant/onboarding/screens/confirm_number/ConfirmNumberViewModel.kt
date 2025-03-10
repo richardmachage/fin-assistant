@@ -17,4 +17,8 @@ class ConfirmNumberViewModel @Inject constructor() : ViewModel() {
             it.copy(isLoading = value)
         }
     }
+
+    fun getPhoneNumbers() {
+        //get the phone numbers in the phone
+    }
 }
