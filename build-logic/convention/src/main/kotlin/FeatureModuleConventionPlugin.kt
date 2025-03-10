@@ -54,6 +54,7 @@ class FeatureModuleConventionPlugin : Plugin<Project> {
                 add("implementation", versionCatalogLibs.findBundle("default-dependencies").get())
                 add("ksp", versionCatalogLibs.findLibrary("hilt-compiler").get())
                 add("implementation", versionCatalogLibs.findBundle("hilt").get())
+                add("debugImplementation", versionCatalogLibs.findLibrary("ui-tooling").get())
                 add(
                     "implementation",
                     versionCatalogLibs.findLibrary("kotlinx-serialization-core").get()

@@ -11,6 +11,5 @@ android {
 }
 
 dependencies {
-
     debugImplementation(libs.ui.tooling)
 }

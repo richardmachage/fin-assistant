@@ -10,6 +10,10 @@ android {
 }
 
 dependencies {
+    //project dependencies
+    implementation(projects.core.presentation)
+    implementation(libs.androidx.compose.material)
 
+    debugImplementation(libs.ui.tooling)
 
 }
