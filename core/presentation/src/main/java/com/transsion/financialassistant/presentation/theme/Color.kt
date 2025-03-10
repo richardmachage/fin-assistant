@@ -11,5 +11,8 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 object FAColors {
-    val green = Color.Green
+    val green = Color(0xFF01802D)
+    val GrayBackground = Color(0xFFECEEED)
+    val greenOverlay = green.copy(alpha = 0.5f)
+
 }
