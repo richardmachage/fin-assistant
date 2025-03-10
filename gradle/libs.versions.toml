@@ -20,6 +20,7 @@ splashScreen = "1.0.1"
 navVersion = "2.8.8"
 kotlinSerialization = "1.7.3"
 kotlinSerializationPlugin = "2.0.21"
+uiTooling = "1.7.8"
 
 
 [libraries]
@@ -63,6 +64,7 @@ ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devto
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "room" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
