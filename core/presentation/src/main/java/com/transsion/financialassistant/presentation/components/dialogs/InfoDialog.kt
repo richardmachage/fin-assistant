@@ -1,7 +1,6 @@
 package com.transsion.financialassistant.presentation.components.dialogs
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,21 +16,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.transsion.financialassistant.presentation.R
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfirmDialog(
+fun InfoDialog(
     showDialog: Boolean = false,
-    title: String,
-    message: String,
-    confirmButtonText: String = stringResource(R.string.okay),
-    dismissButtonText: String = stringResource(R.string.cancel),
-    onConfirm: () -> Unit,
+    title: String = "Confirm Dialog",
+    message: String = "Are you sure you want to leave?",
+    buttonText: String = stringResource(R.string.okay),
     onDismiss: () -> Unit,
 ) {
     if (showDialog) {
@@ -55,8 +52,6 @@ fun ConfirmDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // VerticalSpacer(5)
-
                 //Tittle
                 TitleText(
                     modifier = Modifier
@@ -71,24 +66,12 @@ fun ConfirmDialog(
 
                 VerticalSpacer(10)
 
-                //Buttons
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    FilledButtonFa(
-                        text = confirmButtonText,
-                        onClick = { onConfirm() }
-                    )
+                //Button
+                FilledButtonFa(
+                    text = buttonText,
+                    onClick = { onDismiss() }
+                )
 
-                    OutlineButtonFa(
-                        text = dismissButtonText,
-                        onClick = { onDismiss() },
-                    )
-                }
             }
         }
     }
