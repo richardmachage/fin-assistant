@@ -41,10 +41,7 @@ fun ConfirmNumberScreen(
     var showReadSimDialog by remember { mutableStateOf(false) }
 
 
-    //FIX ME
-
     Scaffold { innerPadding ->
-
 
         when (state.isLoading) {
             true -> CircularLoading(
@@ -73,6 +70,7 @@ fun ConfirmNumberScreen(
                         BigTittleText(
                             text = stringResource(R.string.begin_your_smartmoney_journey)
                         )
+
                         //number selection -> different components when sims are two versus one
 
                         DynamicText(
