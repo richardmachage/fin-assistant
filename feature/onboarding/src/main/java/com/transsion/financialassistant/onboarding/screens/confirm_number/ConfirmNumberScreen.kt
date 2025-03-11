@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
+import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.DynamicText
@@ -35,8 +40,27 @@ fun ConfirmNumberScreen(
     viewModel: ConfirmNumberViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    var showReadSimDialog by remember { mutableStateOf(false) }
 
+    LaunchedEffect(Unit) {
+        //check if READ_PHONE_STATE permission is granted, if not, show dialog
+        showReadSimDialog = true
+    }
     Scaffold { innerPadding ->
+
+        ConfirmDialog(
+            showDialog = showReadSimDialog,
+            title = stringResource(R.string.allow_financial_assistant_to_access_sim),
+            message = stringResource(R.string.we_need_to_access_your_sim_info),
+            dismissButtonText = stringResource(R.string.deny),
+            onConfirm = {
+                showReadSimDialog = false
+            },
+            onDismiss = {
+                showReadSimDialog = false
+            }
+        )
+
         when (state.isLoading) {
             true -> CircularLoading(
                 isLoading = true,
