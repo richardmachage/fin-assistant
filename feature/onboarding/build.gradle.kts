@@ -12,6 +12,8 @@ android {
 dependencies {
     //project dependencies
     implementation(projects.core.presentation)
+    implementation(projects.core.data)
+
     implementation(libs.androidx.compose.material)
 
     debugImplementation(libs.ui.tooling)
