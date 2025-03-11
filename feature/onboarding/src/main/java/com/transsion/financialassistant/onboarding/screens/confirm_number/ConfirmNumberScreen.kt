@@ -20,7 +20,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -32,10 +35,11 @@ import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 
-@Preview(showSystemUi = true)
+//@Preview(showSystemUi = true)
 @Composable
 fun ConfirmNumberScreen(
-    viewModel: ConfirmNumberViewModel = hiltViewModel()
+    viewModel: ConfirmNumberViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showReadSimDialog by remember { mutableStateOf(false) }
@@ -105,6 +109,7 @@ fun ConfirmNumberScreen(
                         //modifier = Modifier.align(Alignment.Center).fillMaxWidth(),
                         text = stringResource(R.string.get_started),
                         onClick = {
+                            navController.navigate(OnboardingRoutes.CreatePin)
                             //TODO
                         }
                     )
