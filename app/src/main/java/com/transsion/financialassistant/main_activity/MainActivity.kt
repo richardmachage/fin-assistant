@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
-                    startDestination = OnboardingRoutes.Welcome
+                    startDestination = OnboardingRoutes.Login
                 )
             }
         }
