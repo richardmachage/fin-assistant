@@ -36,6 +36,7 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreenViewModel
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
+import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 
@@ -83,10 +84,9 @@ fun LoginScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         if (index < pin.length) {
-                            Text(
-                                text =  if (index < pin.length) "*" else "",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
+                          NormalText(
+                              text =if (index < pin.length) "*" else "",
+                          )
                         }
                     }
                 }
