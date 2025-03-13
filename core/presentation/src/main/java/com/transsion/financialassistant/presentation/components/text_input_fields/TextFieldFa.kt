@@ -22,6 +22,42 @@ fun TextFieldFa(
     modifier: Modifier = Modifier,
     label: String? = null,
     placeholder: String,
+    singleLine: Boolean = true,
+    maxLines: Int = Int.MAX_VALUE,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = modifier,
+        label = label?.let { { FaintText(text = it) } },
+        placeholder = placeholder.let { { FaintText(text = it) } },
+        singleLine = singleLine,
+        shape = RoundedCornerShape(50),
+        maxLines = maxLines,
+        colors = TextFieldDefaults.colors().copy(
+            unfocusedContainerColor = FAColors.GrayBackground,
+            focusedContainerColor = FAColors.GrayBackground,
+            focusedTextColor = FAColors.black,
+            unfocusedTextColor = FAColors.black,
+            unfocusedIndicatorColor = Color.White,
+            focusedIndicatorColor = FAColors.green,
+            unfocusedPlaceholderColor = Color.Black
+        ),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Next
+        ),
+    )
+}
+
+@Composable
+fun PasswordTextFieldFa(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    isShowError: Boolean = false,
+    placeholder: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     singleLine: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
@@ -33,6 +69,7 @@ fun TextFieldFa(
         label = label?.let { { FaintText(text = it) } },
         placeholder = placeholder.let { { FaintText(text = it) } },
         singleLine = singleLine,
+        isError = isShowError,
         visualTransformation = visualTransformation,
         shape = RoundedCornerShape(50),
         maxLines = maxLines,

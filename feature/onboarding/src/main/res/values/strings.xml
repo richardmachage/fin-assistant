@@ -20,4 +20,6 @@
     <string name="pin">PIN</string>
     <string name="enter_pin">Enter Pin</string>
     <string name="confirm_pin">Confirm Pin</string>
+    <string name="create">Create</string>
+    <string name="pin_error_message">Your PIN entries do not match. Please try again.</string>
 </resources>
