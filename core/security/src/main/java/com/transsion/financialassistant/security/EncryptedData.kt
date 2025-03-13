@@ -6,6 +6,6 @@ data class EncryptedData(
     val iv: String,
     val data: String
 ) {
-    fun getIvAsByteArray() = Base64.decode(iv, Base64.DEFAULT)
-    fun getDataAsByteArray() = Base64.decode(data, Base64.DEFAULT)
+    fun getIvAsByteArray(): ByteArray = Base64.decode(iv, Base64.DEFAULT)
+    fun getDataAsByteArray(): ByteArray = Base64.decode(data, Base64.DEFAULT)
 }

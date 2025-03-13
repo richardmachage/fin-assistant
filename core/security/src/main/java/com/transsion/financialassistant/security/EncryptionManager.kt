@@ -13,7 +13,7 @@ object EncryptionManager {
     private const val KEYSTORE_ALIAS = "PIN_ENCRYPTION_KEY"
 
 
-    private fun getEncryptionKey(): SecretKey {
+    fun getEncryptionKey(): SecretKey {
         val keystore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
 
         if (keystore.containsAlias(KEYSTORE_ALIAS).not()) {

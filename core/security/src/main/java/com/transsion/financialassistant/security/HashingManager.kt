@@ -5,8 +5,8 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 
 object HashingManager {
-    
-    fun generateSalt() = ByteArray(16).apply { SecureRandom().nextBytes(this) }
+
+    fun generateSalt() = ByteArray(32).apply { SecureRandom().nextBytes(this) }
 
     fun hashData(data: String, salt: ByteArray): ByteArray {
         val spec = PBEKeySpec(data.toCharArray(), salt, 10000, 256)
