@@ -12,6 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 object FAColors {
     val green = Color(0xFF01802D)
+    val black = Color(0xFF000000)
     val GrayBackground = Color(0xFFECEEED)
     val greenOverlay = green.copy(alpha = 0.3f)
     val faintText = Color(0xFF757575)

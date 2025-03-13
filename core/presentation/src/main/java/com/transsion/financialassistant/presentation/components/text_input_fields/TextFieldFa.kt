@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.theme.FAColors
 
@@ -21,6 +22,7 @@ fun TextFieldFa(
     modifier: Modifier = Modifier,
     label: String? = null,
     placeholder: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     singleLine: Boolean = true,
     maxLines: Int = Int.MAX_VALUE,
 ) {
@@ -31,11 +33,14 @@ fun TextFieldFa(
         label = label?.let { { FaintText(text = it) } },
         placeholder = placeholder.let { { FaintText(text = it) } },
         singleLine = singleLine,
+        visualTransformation = visualTransformation,
         shape = RoundedCornerShape(50),
         maxLines = maxLines,
         colors = TextFieldDefaults.colors().copy(
             unfocusedContainerColor = FAColors.GrayBackground,
             focusedContainerColor = FAColors.GrayBackground,
+            focusedTextColor = FAColors.black,
+            unfocusedTextColor = FAColors.black,
             unfocusedIndicatorColor = Color.White,
             focusedIndicatorColor = FAColors.green,
             unfocusedPlaceholderColor = Color.Black
