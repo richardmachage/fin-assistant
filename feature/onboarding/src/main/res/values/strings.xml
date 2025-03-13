@@ -23,7 +23,7 @@
     <string name="create">Create</string>
     <string name="pin_error_message">Your PIN entries do not match. Please try again.</string>
     <string name="greeting">Hi, Good Morning</string>
-    <string name="login_description">Welcome back to your financial assistant. Enter your PIN to log in.</string>
+    <string name="login_description">Welcome back to your financial assistant.\nEnter your PIN to log in.</string>
     <string name="good_morning">Hi, Good Morning</string>
     <string name="good_afternoon">Hi, Good Afternoon</string>
     <string name="good_evening">Hi, Good Evening</string>

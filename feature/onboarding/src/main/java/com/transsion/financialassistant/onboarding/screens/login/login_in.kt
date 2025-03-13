@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -26,9 +28,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
@@ -38,6 +45,7 @@ import com.transsion.financialassistant.presentation.components.texts.BigTittleT
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 
 @Composable
@@ -52,48 +60,79 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        Column(
+        Box(
             modifier = Modifier
-                .padding(top = 144.dp)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+                .align(Alignment.TopCenter)
+                .fillMaxHeight(0.4f),
+            contentAlignment = Alignment.Center
         ) {
-            BigTittleText(
-                text = stringResource(viewModel.getGreetingBasedOnTime())
-            )
-            VerticalSpacer(8)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
 
-            FaintText(text = stringResource(R.string.login_description))
-
-            VerticalSpacer(16)
-
-            // PIN Display
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
-                repeat(4) { index ->
-                    Box(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .border(
-                                BorderStroke(2.dp, FAColors.green),
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (index < pin.length) {
-                          NormalText(
-                              text =if (index < pin.length) "*" else "",
-                          )
-                        }
-                    }
-                }
+
+                BigTittleText(
+                    text = stringResource(viewModel.getGreetingBasedOnTime())
+                )
+                VerticalSpacer(8)
+
+                FaintText(
+                    modifier = Modifier.fillMaxWidth(0.7F),
+                    text = stringResource(R.string.login_description))
+
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            // PIN Display
+            Column(
+                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.6f),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    repeat(4) { index ->
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .border(
+                                    BorderStroke(2.dp, FAColors.green),
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (index < pin.length) {
+                                NormalText(
+                                    text = if (index < pin.length) "*" else "",
+                                )
+                            }
+                        }
+                    }
 
+                }
+
+                VerticalSpacer(8)
+
+                //FIXME Error Message
+                Text(text = "Error", color = Color.Red, fontSize = 11.sp)
+            }
+            // VerticalSpacer(16)
+
+
+    }
+
+
+
+//second half
+        Box(
+            modifier = Modifier
+                .fillMaxHeight(0.5F)
+                .align(Alignment.BottomCenter)
+        ) {
+            //custom key pad
             // KeyPad Number Layout
             val keyPadNumbers = listOf(
                 listOf("1", "2", "3"),
@@ -101,36 +140,42 @@ fun LoginScreen(
                 listOf("7", "8", "9")
             )
 
-            keyPadNumbers.forEach { row ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    row.forEach { digit ->
-                        NumberButton(digit) {
-                            if (pin.length < 4) pin += digit
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                keyPadNumbers.forEach { row ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(0.8F),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        row.forEach { digit ->
+                            NumberButton(digit) {
+                                if (pin.length < 4) pin += digit
+                            }
                         }
                     }
-                }
-                VerticalSpacer(8)
-            }
-
-            // Last row: Fingerprint, 0, Delete
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Fingerprint Button
-                CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
-                    // Implement Fingerprint Authentication
+                    VerticalSpacer(8)
                 }
 
-                // Zero Button
-                NumberButton("0") {
-                    if (pin.length < 4) pin += "0"
-                }
+                // Last row: Fingerprint, 0, Delete
+                Row(
+                    modifier = Modifier.fillMaxWidth(0.8F),
+                    horizontalArrangement = Arrangement.SpaceEvenly,                ) {
+                    // Fingerprint Button
+                    CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
+                        // Implement Fingerprint Authentication
+                    }
 
-                // Delete Button
-                CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
-                    if (pin.isNotEmpty()) pin = pin.dropLast(1)
+                    // Zero Button
+                    NumberButton("0") {
+                        if (pin.length < 4) pin += "0"
+                    }
+
+                    // Delete Button
+                    CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
+                        if (pin.isNotEmpty()) pin = pin.dropLast(1)
+                    }
                 }
             }
         }
@@ -171,5 +216,15 @@ fun CircularIconButton(icon: Int, onClick: () -> Unit) {
             tint = FAColors.green,
             modifier = Modifier.size(32.dp)
         )
+    }
+}
+
+
+
+@PreviewScreenSizes
+@Composable
+fun PrevLogIn(){
+    FinancialAssistantTheme {
+        LoginScreen()
     }
 }

@@ -12,6 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreatePinScreenViewModel @Inject constructor(): ViewModel() {
+    
     fun getGreetingBasedOnTime(): Int {
         val currentHour = LocalTime.now().hour
         return when (currentHour) {
