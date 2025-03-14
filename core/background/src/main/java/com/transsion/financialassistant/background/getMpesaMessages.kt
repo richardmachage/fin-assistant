@@ -1,0 +1,74 @@
+package com.transsion.financialassistant.background
+
+import android.content.ContentResolver
+import android.database.Cursor
+import android.provider.Telephony
+import com.transsion.financialassistant.background.models.MpesaMessage
+import kotlin.time.Duration
+import kotlin.time.measureTime
+
+
+fun getMpesaMessages(
+    filterValue: String? = null,
+    contentResolver: ContentResolver,
+    getExecutionTime: (Duration) -> Unit
+): List<MpesaMessage> {
+    val mpesaMessages = mutableListOf<MpesaMessage>()
+    val projection = arrayOf(
+        Telephony.Sms.BODY,
+        Telephony.Sms.SUBSCRIPTION_ID
+    )
+
+    val selection = "${Telephony.Sms.ADDRESS} = ?"
+
+    val selectionArgs = arrayOf("MPESA")
+
+    val sortOrder = "${Telephony.Sms.DATE} DESC"
+
+    return try {
+        val cursor: Cursor? = contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )
+
+        cursor?.use {
+            val bodyColumn = it.getColumnIndexOrThrow(Telephony.Sms.BODY)
+            val subscriptionIdColumn = it.getColumnIndexOrThrow(Telephony.Sms.SUBSCRIPTION_ID)
+
+            val timeTaken = measureTime {
+                while (it.moveToNext()) {
+                    filterValue?.let { value ->
+                        val body = it.getString(bodyColumn)
+                        if (body.contains(value)) {
+                            mpesaMessages.add(
+                                MpesaMessage(
+                                    body = it.getString(bodyColumn),
+                                    subscriptionId = it.getString(subscriptionIdColumn)
+                                )
+                            )
+                        }
+                    } ?: run {
+                        mpesaMessages.add(
+                            MpesaMessage(
+                                body = it.getString(bodyColumn),
+                                subscriptionId = it.getString(subscriptionIdColumn)
+                            )
+                        )
+                    }
+
+                }
+            }
+            getExecutionTime(timeTaken)
+        }
+        mpesaMessages
+    } catch (e: Exception) {
+        e.printStackTrace()
+        //TODO handle errors if any
+        getExecutionTime(Duration.ZERO)
+        emptyList()
+    }
+    //return emptyList()
+}

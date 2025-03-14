@@ -1,6 +1,6 @@
 package com.transsion.financialassistant.data.models
 
-enum class TransactionType(description: String) {
+enum class TransactionType(val description: String) {
     DEPOSIT("Money Deposit"),
     WITHDRAWAL("Money Withdrawal"),
     SEND_MONEY("Send Money"),
@@ -10,6 +10,9 @@ enum class TransactionType(description: String) {
     BUY_GOODS("Buy Goods Till"),
     SEND_MSHWARI("Send money to Mshwari"),
     RECEIVE_MSHWARI("Receive money from Mshwari"),
-    AIRTIME_PURCHASE("Purchase at Airtime"),
-    BUNDLES_PURCHASE("Purchase data Bundles"),
+    AIRTIME_PURCHASE("Purchase Airtime"),
+    BUNDLES_PURCHASE("Purchase Data Bundles");
+
 }
+
+

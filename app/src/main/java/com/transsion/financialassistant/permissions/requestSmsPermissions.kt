@@ -3,7 +3,7 @@ package com.transsion.financialassistant.permissions
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 
@@ -27,8 +27,9 @@ fun requestSmsPermissions(
         requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
     } else {
         // Permissions already granted.
-        Toast.makeText(context, "Read and Send SMS permissions granted", Toast.LENGTH_SHORT)
-            .show()
+        Log.d("READ SMS", "Permissions already granted")
+        /*Toast.makeText(context, "Read and Send SMS permissions granted", Toast.LENGTH_SHORT)
+            .show()*/
 
     }
 }

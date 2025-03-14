@@ -8,6 +8,7 @@ dependencies {
     //feature dependencies
     implementation(projects.feature.onboarding)
     implementation(projects.core.presentation)
+    implementation(projects.core.background)
 
     implementation(libs.bundles.default.dependencies)
 
