@@ -1,17 +1,18 @@
 package com.transsion.financialassistant.main_activity
 
-import android.content.ContentResolver
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.background.getMpesaMessages
+import com.transsion.financialassistant.background.getMpesaMessagesByTransactionType
 import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.TransactionType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -27,18 +28,21 @@ class MainViewModel @Inject constructor() : ViewModel() {
     private var _messages = MutableStateFlow(emptyList<MpesaMessage>())
     val messages = _messages.asStateFlow()
 
-    fun getTheMessages(contentResolver: ContentResolver) {
+    fun getTheMessages(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) { _loadingState.update { true } }
+            _loadingState.update { true }
             _messages.update {
-                getMpesaMessages(
-                    contentResolver = contentResolver,
-                    getExecutionTime = {
-                        this.launch(Dispatchers.Main) {
-                            _timeTaken.update { it }
+                getMpesaMessagesByTransactionType(
+                    context = context,
+                    getExecutionTime = { dur ->
+//                        this.launch(Dispatchers.Main) {
+                        Log.d("DurationInVM", "Time taken: $it")
+
+                        _timeTaken.update { dur }
                             _loadingState.update { false }
-                        }
-                    }
+
+                    },
+                    transactionType = TransactionType.RECEIVE_MONEY
                 )
             }
         }

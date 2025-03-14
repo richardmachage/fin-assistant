@@ -1,18 +1,22 @@
 package com.transsion.financialassistant.background
 
-import android.content.ContentResolver
+import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
 import android.provider.Telephony
+import android.util.Log
 import com.transsion.financialassistant.background.models.MpesaMessage
 import kotlin.time.Duration
 import kotlin.time.measureTime
 
 
+@SuppressLint("MissingPermission")
 fun getMpesaMessages(
     filterValue: String? = null,
-    contentResolver: ContentResolver,
+    context: Context,
     getExecutionTime: (Duration) -> Unit
 ): List<MpesaMessage> {
+
     val mpesaMessages = mutableListOf<MpesaMessage>()
     val projection = arrayOf(
         Telephony.Sms.BODY,
@@ -26,7 +30,7 @@ fun getMpesaMessages(
     val sortOrder = "${Telephony.Sms.DATE} DESC"
 
     return try {
-        val cursor: Cursor? = contentResolver.query(
+        val cursor: Cursor? = context.contentResolver.query(
             Telephony.Sms.CONTENT_URI,
             projection,
             selection,
@@ -46,7 +50,10 @@ fun getMpesaMessages(
                             mpesaMessages.add(
                                 MpesaMessage(
                                     body = it.getString(bodyColumn),
-                                    subscriptionId = it.getString(subscriptionIdColumn)
+                                    subscriptionId = getReceivingAddress(
+                                        context = context,
+                                        subscriptionId = it.getInt(subscriptionIdColumn)
+                                    ).toString()
                                 )
                             )
                         }
@@ -61,6 +68,7 @@ fun getMpesaMessages(
 
                 }
             }
+            Log.d("DurationInGetMessages", "Time taken: $timeTaken")
             getExecutionTime(timeTaken)
         }
         mpesaMessages

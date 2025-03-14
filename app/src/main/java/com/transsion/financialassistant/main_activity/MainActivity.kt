@@ -24,9 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
-import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
-import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -57,14 +54,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinancialAssistantTheme {
-                val financialAssistantController = rememberNavController()
-                FinancialAssistantNavHost(
-                    navController = financialAssistantController,
-                    startDestination = OnboardingRoutes.Welcome
-                )
+                /* val financialAssistantController = rememberNavController()
+                 FinancialAssistantNavHost(
+                     navController = financialAssistantController,
+                     startDestination = OnboardingRoutes.Welcome
+                 )*/
 
 
-                // TestMessageScreen()
+                TestMessageScreen()
             }
         }
     }
@@ -75,7 +72,7 @@ class MainActivity : ComponentActivity() {
 fun TestMessageScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val contentResolver = LocalContext.current.contentResolver
+    val context = LocalContext.current
     val timeTaken by viewModel.timeTaken.collectAsState()
     val loadingState by viewModel.loadingState.collectAsState()
     val mpesaMessages by viewModel.messages.collectAsState()
@@ -93,7 +90,7 @@ fun TestMessageScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text(text = "Time Taken : $timeTaken")
+                Text(text = "Time Taken : ${timeTaken.inWholeMilliseconds}")
                 VerticalSpacer(10)
 
                 if (loadingState) {
@@ -104,7 +101,7 @@ fun TestMessageScreen(
 
                 Button(
                     enabled = mpesaMessages.isEmpty(),
-                    onClick = { viewModel.getTheMessages(contentResolver) }) {
+                    onClick = { viewModel.getTheMessages(context = context) }) {
                     Text(text = "Get Messages")
                 }
 

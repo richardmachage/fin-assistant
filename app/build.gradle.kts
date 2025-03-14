@@ -9,6 +9,7 @@ dependencies {
     implementation(projects.feature.onboarding)
     implementation(projects.core.presentation)
     implementation(projects.core.background)
+    implementation(projects.core.data)
 
     implementation(libs.bundles.default.dependencies)
 

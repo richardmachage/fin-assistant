@@ -23,6 +23,17 @@ fun requestSmsPermissions(
     ) {
         permissionsToRequest.add(Manifest.permission.SEND_SMS)
     }
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_NUMBERS)
+        != PackageManager.PERMISSION_GRANTED
+    ) {
+        permissionsToRequest.add(Manifest.permission.READ_PHONE_NUMBERS) //FIXME abstract this permission to its own file, it is a separate permission
+    }
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+        != PackageManager.PERMISSION_GRANTED
+    ) {
+        permissionsToRequest.add(Manifest.permission.READ_PHONE_STATE) //FIXME abstract this permission to its own file, it is a separate permission
+    }
+
     if (permissionsToRequest.isNotEmpty()) {
         requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
     } else {
