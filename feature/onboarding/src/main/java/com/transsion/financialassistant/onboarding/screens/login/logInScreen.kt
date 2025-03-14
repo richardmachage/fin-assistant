@@ -145,7 +145,12 @@ fun LoginScreen(
                             VerticalSpacer(8)
 
                             //FIXME Error Message
-                            Text(text = "Error", color = Color.Red, fontSize = 11.sp)
+                                //Text(text = "Error", color = Color.Red, fontSize = 11.sp)
+                            Text(
+                                text = viewModel.errorMessage.value ?: "",
+                                color = Color.Red,
+                                fontSize = 11.sp
+                            )
                         }
                         // VerticalSpacer(16)
 

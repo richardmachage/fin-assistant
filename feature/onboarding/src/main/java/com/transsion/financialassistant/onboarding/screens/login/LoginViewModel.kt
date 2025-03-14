@@ -18,6 +18,22 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     private var _state = MutableStateFlow(LoginScreenState())
     val state = _state.asStateFlow()
 
+    var pin = mutableStateOf("")
+    var confirmnPin = mutableStateOf("")
+    var errorMessage = mutableStateOf<String?>(null)
+
+    fun validatePin(){
+        if (pin.value.length < 4){
+            errorMessage.value = "Pin Must be atleast 4 Digits"
+            return
+        }
+
+        if (pin.value != confirmnPin.value){
+            errorMessage.value = "Pins do not match"
+            return
+        }
+    }
+
     fun onPinChange(digit:String){
         if (state.value.pin.length < 4) _state.update { it.copy(pin = _state.value.pin + digit) }
     }
