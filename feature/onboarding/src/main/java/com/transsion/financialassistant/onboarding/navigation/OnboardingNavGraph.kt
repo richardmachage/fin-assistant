@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
+import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 
 fun NavGraphBuilder.onboardingNavGraph(
     navController: NavController
@@ -21,7 +22,11 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.CreatePin> {
-        CreatePinScreen()
+        CreatePinScreen(navController = navController)
+    }
+
+    composable<OnboardingRoutes.Login> {
+        LoginScreen()
     }
 
 }
