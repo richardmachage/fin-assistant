@@ -13,6 +13,21 @@ enum class TransactionType(val description: String) {
     AIRTIME_PURCHASE("Purchase Airtime"),
     BUNDLES_PURCHASE("Purchase Data Bundles");
 
+    fun getRegex(): Regex {
+        return when (this) {
+            DEPOSIT -> "".toRegex()
+            WITHDRAWAL -> "".toRegex()
+            SEND_MONEY -> "".toRegex()
+            RECEIVE_MONEY -> "".toRegex()
+            RECEIVE_POCHI -> "".toRegex()
+            PAY_BILL -> "".toRegex()
+            BUY_GOODS -> "".toRegex()
+            SEND_MSHWARI -> "".toRegex()
+            RECEIVE_MSHWARI -> "".toRegex()
+            AIRTIME_PURCHASE -> "".toRegex()
+            BUNDLES_PURCHASE -> "".toRegex()
+        }
+    }
 }
 
 
