@@ -114,7 +114,7 @@ fun TestMessageScreen(
 
                 if (mpesaMessages.isNotEmpty()) {
                     LazyColumn {
-                        itemsIndexed(mpesaMessages/*.subList(0,10)*/) { index, it ->
+                        itemsIndexed(mpesaMessages) { index, it ->
                             Log.d("MPESA MESSAGE", it.body)
                             Column(
                                 modifier = Modifier.padding(paddingMedium)

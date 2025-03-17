@@ -6,15 +6,18 @@ import android.database.Cursor
 import android.provider.Telephony
 import android.util.Log
 import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import kotlin.time.Duration
 import kotlin.time.measureTime
 
 
 @SuppressLint("MissingPermission")
 fun getMpesaMessages(
-    filterValue: String? = null,
+    filterValue: TransactionType,//String? = null,
     context: Context,
-    getExecutionTime: (Duration) -> Unit
+    getExecutionTime: (Duration) -> Unit,
+    transactionRepo: TransactionRepo
 ): List<MpesaMessage> {
 
     val mpesaMessages = mutableListOf<MpesaMessage>()
@@ -44,9 +47,14 @@ fun getMpesaMessages(
 
             val timeTaken = measureTime {
                 while (it.moveToNext()) {
-                    filterValue?.let { value ->
+                    // filterValue.let { value ->
                         val body = it.getString(bodyColumn)
-                        if (body.contains(value)) {
+                    val transactionType = transactionRepo.getTransactionType(body)
+
+                    if (
+                    //body.contains(value)
+                        transactionType == filterValue
+                    ) {
                             mpesaMessages.add(
                                 MpesaMessage(
                                     body = it.getString(bodyColumn),
@@ -57,14 +65,15 @@ fun getMpesaMessages(
                                 )
                             )
                         }
-                    } ?: run {
+                    //}
+                    /*?: run {
                         mpesaMessages.add(
                             MpesaMessage(
                                 body = it.getString(bodyColumn),
                                 subscriptionId = it.getString(subscriptionIdColumn)
                             )
                         )
-                    }
+                    }*/
 
                 }
             }

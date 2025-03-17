@@ -1,8 +1,9 @@
 package com.transsion.financialassistant.data.repository.transaction
 
 import com.transsion.financialassistant.data.models.TransactionType
+import javax.inject.Inject
 
-class TransactionRepoImpl : TransactionRepo {
+class TransactionRepoImpl @Inject constructor() : TransactionRepo {
     override fun getTransactionType(message: String): TransactionType =
         when {
             TransactionType.RECEIVE_MONEY.getRegex()

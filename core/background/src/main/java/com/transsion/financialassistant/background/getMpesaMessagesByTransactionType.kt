@@ -1,15 +1,10 @@
 package com.transsion.financialassistant.background
 
-import android.content.Context
-import android.util.Log
-import com.transsion.financialassistant.background.models.MpesaMessage
-import com.transsion.financialassistant.data.models.TransactionType
-import kotlin.time.Duration
-
 /**
  * This function is built on top of the [getMpesaMessages] function.
  *
  */
+/*
 fun getMpesaMessagesByTransactionType(
     transactionType: TransactionType,
     context: Context,
@@ -18,9 +13,11 @@ fun getMpesaMessagesByTransactionType(
 
     return when (transactionType) {
         TransactionType.BUNDLES_PURCHASE -> {
-            /** Ensure always, this is the first condition
+            */
+/** Ensure always, this is the first condition
              * because the buy bundles and PayBill messages overlap
-             * such that each contains "for account part*/
+ * such that each contains "for account part*//*
+
             getMpesaMessages(
                 filterValue = "BUNDLES",
                 context = context,
@@ -154,7 +151,18 @@ fun getMpesaMessagesByTransactionType(
             //FIXME
             emptyList()
         }
+
+        TransactionType.SEND_POCHI -> {
+            getMpesaMessages(
+                filterValue = "sent to richard",
+                context = context,
+                getExecutionTime = {
+                    Log.d("DurationInFilter", "Time taken: $it")
+                }
+            )
+
+        }
     }
 
 
-}
+}*/

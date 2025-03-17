@@ -18,7 +18,7 @@ class TransactionTypeTests {
     @Test
     fun `should detect SEND_MONEY transaction`() {
         val message =
-            "XGT78DYE3 Confirmed. Ksh250.50 sent to John Doe 0712345678 on 7/03/25 at 10:45 AM. New M-PESA balance is Ksh8,765.00. Transaction cost, Ksh20.00. Amount you can transact within the day is 49.00."
+            "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY)

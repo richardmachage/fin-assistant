@@ -1,12 +1,12 @@
 package com.transsion.financialassistant.main_activity
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.background.getMpesaMessagesByTransactionType
+import com.transsion.financialassistant.background.getMpesaMessages
 import com.transsion.financialassistant.background.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +17,9 @@ import javax.inject.Inject
 import kotlin.time.Duration
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val transactionRepo: TransactionRepo
+) : ViewModel() {
 
     private var _timeTaken = MutableStateFlow(Duration.ZERO)
     val timeTaken = _timeTaken.asStateFlow()
@@ -32,17 +34,14 @@ class MainViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             _loadingState.update { true }
             _messages.update {
-                getMpesaMessagesByTransactionType(
+                getMpesaMessages(
                     context = context,
+                    filterValue = TransactionType.SEND_MONEY,
                     getExecutionTime = { dur ->
-//                        this.launch(Dispatchers.Main) {
-                        Log.d("DurationInVM", "Time taken: $it")
-
                         _timeTaken.update { dur }
-                            _loadingState.update { false }
-
+                        _loadingState.update { false }
                     },
-                    transactionType = TransactionType.SEND_MSHWARI
+                    transactionRepo = transactionRepo
                 )
             }
         }
