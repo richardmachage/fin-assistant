@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -59,7 +60,6 @@ class MainActivity : ComponentActivity() {
                      navController = financialAssistantController,
                      startDestination = OnboardingRoutes.Welcome
                  )*/
-
 
                 TestMessageScreen()
             }
@@ -101,7 +101,9 @@ fun TestMessageScreen(
 
                 Button(
                     enabled = mpesaMessages.isEmpty(),
-                    onClick = { viewModel.getTheMessages(context = context) }) {
+                    onClick = { viewModel.getTheMessages(
+                        context = context
+                    ) }) {
                     Text(text = "Get Messages")
                 }
 

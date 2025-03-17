@@ -150,7 +150,16 @@ fun getMpesaMessagesByTransactionType(
             )
         }
 
-
+        TransactionType.RECEIVE_MONEY_BANK -> {
+            getMpesaMessages(
+                filterValue = "from your bank",
+                context = context,
+                getExecutionTime = {
+                    Log.d("DurationInFilter", "Time taken: $it")
+                    getExecutionTime(it)
+                }
+                    )
+        }
     }
 
 
