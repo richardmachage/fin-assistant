@@ -23,7 +23,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
+import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -52,16 +56,18 @@ class MainActivity : ComponentActivity() {
             }
         requestSmsPermissions(this, requestPermissionLauncher)
 
+        installSplashScreen()
         enableEdgeToEdge()
         setContent {
             FinancialAssistantTheme {
-                /* val financialAssistantController = rememberNavController()
+                val financialAssistantController = rememberNavController()
                  FinancialAssistantNavHost(
                      navController = financialAssistantController,
                      startDestination = OnboardingRoutes.Welcome
-                 )*/
+                 )
 
-                TestMessageScreen()
+
+                // TestMessageScreen()
             }
         }
     }
@@ -101,9 +107,7 @@ fun TestMessageScreen(
 
                 Button(
                     enabled = mpesaMessages.isEmpty(),
-                    onClick = { viewModel.getTheMessages(
-                        context = context
-                    ) }) {
+                    onClick = { viewModel.getTheMessages(context = context) }) {
                     Text(text = "Get Messages")
                 }
 

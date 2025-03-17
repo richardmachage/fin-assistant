@@ -16,7 +16,8 @@ dependencies {
     // Jetpack Compose BOM (Manages all Compose versions automatically)
     implementation(platform(libs.androidx.compose.bom))
 
-
+    //splash screen
+    implementation(libs.splash.screen)
     //hilt
     //ksp(libs.hilt.compiler)
     //implementation(libs.bundles.hilt)
