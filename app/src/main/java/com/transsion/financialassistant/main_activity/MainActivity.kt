@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.main_activity
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,10 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
-import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
-import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -60,14 +57,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinancialAssistantTheme {
-                val financialAssistantController = rememberNavController()
+                /*val financialAssistantController = rememberNavController()
                  FinancialAssistantNavHost(
                      navController = financialAssistantController,
                      startDestination = OnboardingRoutes.Welcome
-                 )
+                 )*/
 
 
-                // TestMessageScreen()
+                TestMessageScreen()
             }
         }
     }
@@ -115,15 +112,18 @@ fun TestMessageScreen(
                     Text(text = "Number of messages : ${mpesaMessages.size}")
                 }
 
-                LazyColumn {
-                    itemsIndexed(mpesaMessages) { index, it ->
-                        Column(
-                            modifier = Modifier.padding(paddingMedium)
-                        ) {
-                            Text("index: $index")
-                            Text(text = "sub Id: " + it.subscriptionId)
-                            VerticalSpacer(5)
-                            Text(text = "message: " + it.body)
+                if (mpesaMessages.isNotEmpty()) {
+                    LazyColumn {
+                        itemsIndexed(mpesaMessages/*.subList(0,10)*/) { index, it ->
+                            Log.d("MPESA MESSAGE", it.body)
+                            Column(
+                                modifier = Modifier.padding(paddingMedium)
+                            ) {
+                                Text("index: $index")
+                                Text(text = "sub Id: " + it.subscriptionId)
+                                VerticalSpacer(5)
+                                Text(text = "message: " + it.body)
+                            }
                         }
                     }
                 }

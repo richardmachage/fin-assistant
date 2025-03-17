@@ -1,0 +1,115 @@
+package com.transsion.financialassistant.data
+
+import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
+import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+
+class TransactionTypeTests {
+    private lateinit var transactionRepo: TransactionRepo
+
+    @Before
+    fun setUp() {
+        transactionRepo = TransactionRepoImpl()
+    }
+
+    @Test
+    fun `should detect SEND_MONEY transaction`() {
+        val message =
+            "XGT78DYE3 Confirmed. Ksh250.50 sent to John Doe 0712345678 on 7/03/25 at 10:45 AM. New M-PESA balance is Ksh8,765.00. Transaction cost, Ksh20.00. Amount you can transact within the day is 49.00."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.SEND_MONEY)
+    }
+
+    @Test
+    fun `should detect RECEIVE_MONEY transaction`() {
+        val message =
+            "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.RECEIVE_MONEY)
+    }
+
+    @Test
+    fun `should detect PAY_BILL transaction`() {
+        val message =
+            "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val result = transactionRepo.getTransactionType(message)
+
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.PAY_BILL)
+    }
+
+    @Test
+    fun `should detect BUY_GOODS transaction`() {
+        val message =
+            "TCG3YADR1X Confirmed. Ksh2,045.00 paid to POWERMART SUPERMARKET. on 16/3/25 at 7:51 PM.New M-PESA balance is Ksh1,324.13. Transaction cost, Ksh0.00. Amount you can transact within the day is 497,455.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.BUY_GOODS)
+    }
+
+    @Test
+    fun `should detect AIRTIME_PURCHASE transaction`() {
+        val message =
+            "TBC5RBYBPR confirmed.You bought Ksh20.00 of airtime on 12/2/25 at 4:57 PM.New M-PESA balance is Ksh1,685.97. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,660.00. Buy airtime from 1 bob via M-PESA today & keep that conversation going!"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.AIRTIME_PURCHASE)
+    }
+
+    @Test
+    fun `should detect WITHDRAWAL transaction`() {
+        val message =
+            "TA96JTQFV6 Confirmed.on 9/1/25 at 2:05 PMWithdraw Ksh39,000.00 from 096026 - Quick Call Solutions Angels Confectionery Shop Uniafric Hse Nairobi CBD Agg New M-PESA balance is Ksh2,879.89. Transaction cost, Ksh278.00. Amount you can transact within the day is 460,840.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.WITHDRAWAL)
+    }
+
+    @Test
+    fun `should detect DEPOSIT transaction`() {
+        val message =
+            "TA6678JM3W Confirmed. On 6/1/25 at 4:22 PM Give Ksh1,000.00 cash to HASHI COMM Evalast EnterprisesGITHURAI 44 New M-PESA balance is Ksh1,335.89. You can now access M-PESA via *334#"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.DEPOSIT)
+    }
+
+    @Test
+    fun `should detect SEND_MSHWARI transaction`() {
+        val message =
+            "TC57GMRGAL Confirmed.Ksh15,000.00 transferred to M-Shwari account on 5/3/25 at 11:53 AM. M-PESA balance is Ksh12,066.05 .New M-Shwari saving account balance is Ksh17,033.79. Transaction cost Ksh.0.00"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.SEND_MSHWARI)
+    }
+
+    @Test
+    fun `should detect RECEIVE_MSHWARI transaction`() {
+        val message =
+            "TC347QKO6Q Confirmed.Ksh2,000.00 transferred to M-Shwari account on 3/3/25 at 2:33 PM. M-PESA balance is Ksh4,070.05 .New M-Shwari saving account balance is Ksh2,033.79. Transaction cost Ksh.0.00"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.SEND_MSHWARI)
+    }
+
+
+    @Test
+    fun `should handle null input safely`() {
+        val message: String? = null
+        val result = transactionRepo.getTransactionType(message ?: "")
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.UNKNOWN)
+    }
+}

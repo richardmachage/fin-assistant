@@ -42,7 +42,7 @@ class MainViewModel @Inject constructor() : ViewModel() {
                             _loadingState.update { false }
 
                     },
-                    transactionType = TransactionType.RECEIVE_MONEY
+                    transactionType = TransactionType.SEND_MSHWARI
                 )
             }
         }
