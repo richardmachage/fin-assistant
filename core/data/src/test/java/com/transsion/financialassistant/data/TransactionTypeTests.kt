@@ -86,7 +86,7 @@ class TransactionTypeTests {
     @Test
     fun `should detect SEND_MSHWARI transaction`() {
         val message =
-            "TC57GMRGAL Confirmed.Ksh15,000.00 transferred to M-Shwari account on 5/3/25 at 11:53 AM. M-PESA balance is Ksh12,066.05 .New M-Shwari saving account balance is Ksh17,033.79. Transaction cost Ksh.0.00"
+            "TC57GMRGAT Confirmed.Ksh15,000.00 transferred to M-Shwari account on 5/3/25 at 11:53 AM. M-PESA balance is Ksh12,066.05 .New M-Shwari saving account balance is Ksh17,033.79. Transaction cost Ksh.0.00"
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
 
@@ -101,6 +101,26 @@ class TransactionTypeTests {
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.SEND_MSHWARI)
+    }
+
+    @Test
+    fun `should detect send pochi transaction`() {
+        val message =
+            "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard  machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.SEND_POCHI)
+    }
+
+    @Test
+    fun `should detect receive pochi transaction`() {
+        val message =
+            "TCH01GAG8Y Confirmed.You have received Ksh10.00 from RICHARD  MACHAGE on 17/3/25 at 12:03 PM  New business balance is Ksh10.00. To access your funds, Dial *334#,select Pochi la Biashara & Withdraw funds."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.RECEIVE_POCHI)
     }
 
 

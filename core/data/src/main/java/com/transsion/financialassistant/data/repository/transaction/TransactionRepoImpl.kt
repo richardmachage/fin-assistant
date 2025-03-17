@@ -33,9 +33,15 @@ class TransactionRepoImpl : TransactionRepo {
                 .matches(message) -> TransactionType.BUY_GOODS
 
             TransactionType.SEND_MSHWARI.getRegex().matches(message) -> TransactionType.SEND_MSHWARI
+
+            TransactionType.RECEIVE_POCHI.getRegex()
+                .matches(message) -> TransactionType.RECEIVE_POCHI
+
             TransactionType.RECEIVE_MSHWARI.getRegex()
                 .matches(message) -> TransactionType.RECEIVE_MSHWARI
 
+            TransactionType.SEND_POCHI.getRegex()
+                .matches(message) -> TransactionType.SEND_POCHI
             else -> TransactionType.UNKNOWN
         }
 }
