@@ -5,8 +5,7 @@ import android.content.Context
 interface OnboardingRepo {
 
     /**Checks if the user has completed onboarding.*/
-    fun hasCompletedOnboarding(): Boolean?
-
+    fun hasCompletedOnboarding(): Boolean
 
     /** Saves the user's onboarding status.*/
     fun setCompletedOnboarding()
@@ -18,7 +17,25 @@ interface OnboardingRepo {
         onFailure: (errorMessage: String) -> Unit
     )
 
+    /** set mpesa phone number */
+    suspend fun setMpesaNumber(
+        mpesaNumber: String,
+        onSuccess: () -> Unit,
+        onFailure: (errorMessage: String) -> Unit
+    )
 
+    /** sets/updates the PIN*/
+    suspend fun setPin(
+        pin: String,
+        onSuccess: () -> Unit,
+        onFailure: (errorMessage: String) -> Unit
+    )
 
+    /** verifies in the input Pin is the correct one*/
+    fun verifyPin(
+        pin: String,
+        onSuccess: (Boolean) -> Unit,
+        onFailure: (errorMessage: String) -> Unit
+    )
 
 }

@@ -10,6 +10,9 @@ android {
 }
 
 dependencies {
+    //project dependencies
+    implementation(projects.core.security)
+
     //room
     ksp(libs.room.compiler)
     implementation(libs.bundles.room)
