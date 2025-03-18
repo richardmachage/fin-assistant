@@ -42,4 +42,9 @@
     <string name="data_doesnot_leave_phone">Your data does not leave your phone</string>
     <string name="continue_btn">Continue</string>
     <string name="skip">Skip</string>
+    <string name="get_instant_notifications">Get instant notifications</string>
+    <string name="get_reminders">Get reminders for scheduled payments</string>
+    <string name="customized_notifications">Customize reminders for important\ntransactions you can’t afford to forget</string>
+    <string name="enable_notifications">Enable notifications</string>
+    <string name="do_later">I’ll do this later</string>
 </resources>

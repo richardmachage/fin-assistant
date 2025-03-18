@@ -11,6 +11,7 @@ import com.transsion.financialassistant.onboarding.screens.confirm_number.Confir
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
+import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.set_password.SetPasswordScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -47,7 +48,7 @@ fun NavGraphBuilder.onboardingNavGraph(
         SetPasswordScreen(navController)
     }
 
-
-
-
+    composable<OnboardingRoutes.EnableNotifications> {
+        EnableNotificationScreen(navController)
+    }
 }

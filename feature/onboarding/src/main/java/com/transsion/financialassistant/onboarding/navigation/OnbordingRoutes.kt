@@ -26,4 +26,7 @@ sealed interface OnboardingRoutes {
     @Serializable
     object SetPassword : OnboardingRoutes
 
+    @Serializable
+    object EnableNotifications : OnboardingRoutes
+
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.R.drawable.stash_question
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -96,7 +97,6 @@ fun SetPasswordScreen(
                     //horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val iconSize = 24.dp
-                    val iconPadding = paddingLarge
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
@@ -154,7 +154,7 @@ fun SetPasswordScreen(
                     .padding(paddingLarge)
                     //.align(Alignment.BottomCenter)
                     .imePadding(),
-                onClick = {},
+                onClick = {navController.navigate(OnboardingRoutes.EnableNotifications)},
                 text = stringResource(R.string.continue_btn)
             )
 
