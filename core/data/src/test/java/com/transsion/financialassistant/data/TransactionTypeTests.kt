@@ -66,10 +66,9 @@ class TransactionTypeTests {
     @Test
     fun `should detect WITHDRAWAL transaction`() {
         val message =
-            "TA96JTQFV6 Confirmed.on 9/1/25 at 2:05 PMWithdraw Ksh39,000.00 from 096026 - Quick Call Solutions Angels Confectionery Shop Uniafric Hse Nairobi CBD Agg New M-PESA balance is Ksh2,879.89. Transaction cost, Ksh278.00. Amount you can transact within the day is 460,840.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
+            "TA6678JM3W Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
-
         assertTrue(result == TransactionType.WITHDRAWAL)
     }
 

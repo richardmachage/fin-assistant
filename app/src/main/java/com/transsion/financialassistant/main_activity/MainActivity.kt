@@ -26,6 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
+import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -57,14 +61,16 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FinancialAssistantTheme {
-                /*val financialAssistantController = rememberNavController()
-                 FinancialAssistantNavHost(
-                     navController = financialAssistantController,
-                     startDestination = OnboardingRoutes.Welcome
-                 )*/
+                val financialAssistantController = rememberNavController()
+//                 FinancialAssistantNavHost(
+//                     navController = financialAssistantController,
+//                     startDestination = OnboardingRoutes.Welcome
+//                 )
+
+                ChangePhoneNumberInstructions(navController = financialAssistantController)
 
 
-                TestMessageScreen()
+                //TestMessageScreen()
             }
         }
     }

@@ -17,4 +17,7 @@ sealed interface OnboardingRoutes {
     @Serializable
     object Login : OnboardingRoutes
 
+    @Serializable
+    object ChangeNumber : OnboardingRoutes
+
 }

@@ -28,4 +28,9 @@
     <string name="good_afternoon">Hi, Good Afternoon</string>
     <string name="good_evening">Hi, Good Evening</string>
     <string name="good_night">Hi, Good Night</string>
+    <string name="change_number">Change Number</string>
+    <string name="change_number_instructions">Follow the steps below to use another M-PESA number with Financial Assistant</string>
+    <string name="change_number_instructions_1">1. Ensure that the number you want to use is registered with M-PESA.</string>
+    <string name="change_number_instructions_2">2. Insert the SIM card into the empty SIM slot or replace your existing SIM.</string>
+    <string name="change_number_instructions_3">3. Reopen Financial Assistant to use your number as desired.</string>
 </resources>
