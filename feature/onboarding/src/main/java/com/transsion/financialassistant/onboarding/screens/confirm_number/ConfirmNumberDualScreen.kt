@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -106,7 +107,7 @@ fun ConfirmNumberDualScreen(
                         .padding(paddingLarge)
                         .align(Alignment.BottomCenter)
                         .imePadding(),
-                    onClick = {onStart(selectedNumber)},
+                    onClick = { navController.navigate(OnboardingRoutes.SetPassword) }, //{onStart(selectedNumber)},
                     text = stringResource(R.string.get_started),
                 )
         }

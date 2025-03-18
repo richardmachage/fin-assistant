@@ -33,6 +33,7 @@ import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
+import com.transsion.financialassistant.onboarding.screens.promt_screens.set_password.SetPasswordScreen
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -72,7 +73,7 @@ class MainActivity : ComponentActivity() {
 //                 )
 
                 //ChangePhoneNumberInstructions(navController = financialAssistantController)
-                ConfirmNumberDualScreen(navController = financialAssistantController)
+                SetPasswordScreen(navController = financialAssistantController)
 
 
                 //TestMessageScreen()

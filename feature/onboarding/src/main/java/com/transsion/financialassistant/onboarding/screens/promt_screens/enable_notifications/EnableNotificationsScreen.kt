@@ -1,0 +1,2 @@
+package com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications
+

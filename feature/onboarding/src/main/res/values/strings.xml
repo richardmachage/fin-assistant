@@ -36,4 +36,10 @@
     <string name="detected_dual_number">Financial Assistant has detected two phone numbers registered with M-PESA. You can use one or both.</string>
     <string name="no_m_pesa_numbers_detected">No M-PESA numbers detected.</string>
     <string name="select_mpesa_number">Select Your M-PESA Number</string>
+    <string name="log_in_securely">Log in securely and maintain\nyour privacy</string>
+    <string name="secure_your_app_pin">Secure your app and financial data from prying eyes</string>
+    <string name="login_fingerprint">Log into the Financial Assistant with your fingerprint</string>
+    <string name="data_doesnot_leave_phone">Your data does not leave your phone</string>
+    <string name="continue_btn">Continue</string>
+    <string name="skip">Skip</string>
 </resources>
