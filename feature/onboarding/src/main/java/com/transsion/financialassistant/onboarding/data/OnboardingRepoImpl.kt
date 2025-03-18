@@ -100,6 +100,9 @@ class OnboardingRepoImpl @Inject constructor(
     ) {
 
         try {
+
+            if (mpesaNumber.isBlank()) throw Exception("Invalid M-PESA number")
+
             datastorePreferences.saveValue(
                 key = DatastorePreferences.MPESA_NUMBER_KEY,
                 value = mpesaNumber
@@ -116,6 +119,9 @@ class OnboardingRepoImpl @Inject constructor(
         onFailure: (errorMessage: String) -> Unit
     ) {
         try {
+
+            if (pin.isBlank()) throw Exception("Invalid PIN")
+
             //hash pin
             val hashedPin = securityRepo.doHash(pin)
             //encrypt the hashed pin

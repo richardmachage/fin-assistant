@@ -19,7 +19,6 @@ class DatastorePreferences(private val context: Context) {
         val LANGUAGE_KEY = stringPreferencesKey("language_key")
     }
 
-
     suspend fun <T> saveValue(key: Preferences.Key<T>, value: T) {
         context.dataStore.edit { preferences ->
             preferences[key] = value

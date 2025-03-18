@@ -13,9 +13,17 @@ dependencies {
     //project dependencies
     implementation(projects.core.presentation)
     implementation(projects.core.data)
+    implementation(projects.core.security)
 
     implementation(libs.androidx.compose.material)
 
     debugImplementation(libs.ui.tooling)
+
+    //data store
+    implementation(libs.datastore.preferences)
+
+    /* testImplementation(projects.core.data)
+     testImplementation(projects.core.security)*/
+    // testImplementation(libs.datastore.preferences)
 
 }
