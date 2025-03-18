@@ -175,7 +175,7 @@ fun CreatePinScreen(
                         showError = true
                     }
                 },
-                enabled = isMatching
+                enabled = isMatching,
             )
         }
     }
