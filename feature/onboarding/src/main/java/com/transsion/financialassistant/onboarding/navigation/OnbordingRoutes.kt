@@ -14,4 +14,7 @@ sealed interface OnboardingRoutes {
     @Serializable
     object CreatePin : OnboardingRoutes
 
+    @Serializable
+    object Login : OnboardingRoutes
+
 }
