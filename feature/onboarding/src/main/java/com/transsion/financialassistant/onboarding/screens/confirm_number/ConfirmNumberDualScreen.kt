@@ -1,7 +1,10 @@
 package com.transsion.financialassistant.onboarding.screens.confirm_number
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,20 +13,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
@@ -31,25 +40,29 @@ import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
+import com.transsion.financialassistant.presentation.components.texts.NormalText
+import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingMedium
+import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun ConfirmNumberDualScreen(
     navController: NavController,
     viewModel: ConfirmNumberViewModel = hiltViewModel(),
-    onStart: (String) -> Unit = {}
+    onStart: (String) -> Unit = {},
+    context: Context = LocalContext.current
 ){
     val phoneNumbers by viewModel.mpesaNumbers.collectAsState()
-    var selectedNumber by remember {
-        mutableStateOf(
-            phoneNumbers.firstOrNull() ?: ""
-        )
-    }
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val selectedNumber by viewModel.selectedNumber.collectAsState()
+
 
     LaunchedEffect(Unit) {
-        viewModel.getPhoneDualNumbers()
+        viewModel.loadMpesaNumbers(context)
     }
     Scaffold { paddingValues ->
         Box(
@@ -73,33 +86,30 @@ fun ConfirmNumberDualScreen(
 
                 VerticalSpacer(32)
 
-                if (phoneNumbers.isEmpty()) {
-                    Text(stringResource(R.string.no_m_pesa_numbers_detected))
-                } else {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = stringResource(R.string.select_mpesa_number),
-                            style = MaterialTheme.typography.headlineSmall
-                        )
+               when {
+                   errorMessage != null -> {
+                       Text(text = errorMessage!!, color = Color.Red)
+                   }
+                   phoneNumbers.isEmpty() -> {
+                       Text(text = stringResource(R.string.no_m_pesa_numbers_detected))
+                   }
+                   else -> {
+                       LazyColumn (
+                           horizontalAlignment = Alignment.Start,
+                           verticalArrangement = Arrangement.SpaceEvenly
+                       ) {
+                          itemsIndexed(phoneNumbers) {index, number ->
+                              PhoneNumberItem(
+                                  phoneNumber = number,
+                                  simSlot = index + 1,
+                                  isSelected = number == selectedNumber,
+                                  onToggle = {viewModel.selectNumber(number)}
+                              )
+                          }
+                       }
 
-                        phoneNumbers.forEach { number ->
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Text(number, style = MaterialTheme.typography.bodyMedium)
-                                Switch(
-                                    checked = number == selectedNumber,
-                                    onCheckedChange = { selectedNumber = number }
-                                )
-                            }
-                        }
-                    }
-                }
+                   }
+               }
             }
                 FilledButtonFa(
                     modifier = Modifier
@@ -110,6 +120,75 @@ fun ConfirmNumberDualScreen(
                     onClick = { navController.navigate(OnboardingRoutes.SetPassword) }, //{onStart(selectedNumber)},
                     text = stringResource(R.string.get_started),
                 )
+        }
+    }
+}
+
+@Composable
+fun PhoneNumberItem(
+    phoneNumber: String,
+    simSlot: Int,
+    isSelected: Boolean,
+    onToggle: () -> Unit
+) {
+    val cardBackgroundColor = if (isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.GrayBackground
+    val textColor = if (isSystemInDarkTheme()) Color.White else FAColors.black
+    Card(
+        modifier = Modifier
+            .fillMaxWidth(0.9f)
+            .padding(vertical = paddingSmall),
+        colors = CardDefaults.cardColors(
+            containerColor = cardBackgroundColor,
+            contentColor = FAColors.black
+        ),
+        shape = RoundedCornerShape(paddingSmall)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = paddingSmall, vertical = paddingLarge),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(paddingSmall)
+            ) {
+                NormalText(
+                    text = phoneNumber,
+                    textColor = textColor,
+                    modifier = Modifier
+                )
+                HorizontalSpacer(8)
+
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = if (simSlot == 1) FAColors.lightGreen else FAColors.lightGreen,
+                            shape = RoundedCornerShape(22.dp)
+                        )
+                        .padding(horizontal = paddingSmall, vertical = paddingSmall)
+                ) {
+                    NormalText(
+                        text = "SIM $simSlot",
+                        textColor = FAColors.green,
+
+                        )
+                }
+            }
+            HorizontalSpacer(8)
+
+            Switch(
+                modifier = Modifier.padding( end = paddingMedium),
+                checked = isSelected,
+                onCheckedChange = { onToggle() },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = FAColors.green,
+                    uncheckedThumbColor = Color.Gray,
+                    uncheckedTrackColor = Color.LightGray
+                )
+            )
         }
     }
 }

@@ -73,8 +73,9 @@ class MainActivity : ComponentActivity() {
 //                     startDestination = OnboardingRoutes.Welcome
 //                 )
 
-                //ChangePhoneNumberInstructions(navController = financialAssistantController)
-                EnableNotificationScreen(navController = financialAssistantController)
+               // ChangePhoneNumberInstructions(navController = financialAssistantController)
+                ConfirmNumberDualScreen(navController = financialAssistantController)
+                //EnableNotificationScreen(navController = financialAssistantController)
                 //SetPasswordScreen(navController = financialAssistantController)
 
 
