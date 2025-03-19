@@ -99,7 +99,7 @@ fun GetStarted(
                     width = LocalConfiguration.current.screenWidthDp.dp,
                     onSwipeComplete = {
                         //navigate to assigning accounts
-                        navController.navigate(OnboardingRoutes.ConfirmNumber)
+                        navController.navigate(OnboardingRoutes.ConfirmNumberDual)
 
                     }
                 )

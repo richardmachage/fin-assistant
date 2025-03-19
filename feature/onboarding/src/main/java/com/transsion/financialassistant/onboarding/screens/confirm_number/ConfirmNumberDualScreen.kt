@@ -79,7 +79,6 @@ fun ConfirmNumberDualScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
             ) {
                 val faintTitleText = when (phoneNumbers.size) {
                     2 -> stringResource(R.string.detected_dual_number)
