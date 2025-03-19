@@ -41,14 +41,14 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.ConfirmNumberDual> {
-        ConfirmNumberDualScreen(navController)
+        ConfirmNumberDualScreen(navController = navController)
     }
 
     composable<OnboardingRoutes.SetPassword> {
-        SetPasswordScreen(navController)
+        SetPasswordScreen(navController = navController)
     }
 
     composable<OnboardingRoutes.EnableNotifications> {
-        EnableNotificationScreen(navController)
+        EnableNotificationScreen(navController = navController)
     }
 }

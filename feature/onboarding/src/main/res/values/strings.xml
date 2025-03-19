@@ -3,8 +3,8 @@
     <string name="get_smarter_with_finances">Get smarter with your finances, powered by AI.</string>
     <string name="the_financial_assistant_app_lets">The financial assistance app lets you track what comes in and goes out</string>
     <string name="swipe_to_get_started">Swipe to get started</string>
-    <string name="begin_your_smartmoney_journey">Begin your SmartMoney\nJourney</string>
-    <string name="detected_one_number">Financial Assistant has detected your primary M-PESA phone number as %1$s</string>
+    <string name="begin_your_smartmoney_journey">Begin your SmartMoney Journey</string>
+    <string name="detected_one_number">Financial Assistant has detected your primary M-PESA phone number as</string>
     <string name="not_your_number">Not your phone number?</string>
     <string name="use_another_number">Use another number</string>
     <string name="get_started">Get Started</string>

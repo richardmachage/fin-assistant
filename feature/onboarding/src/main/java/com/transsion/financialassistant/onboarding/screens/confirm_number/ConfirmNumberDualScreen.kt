@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -39,6 +41,7 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
+import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -55,7 +58,7 @@ fun ConfirmNumberDualScreen(
     viewModel: ConfirmNumberViewModel = hiltViewModel(),
     onStart: (String) -> Unit = {},
     context: Context = LocalContext.current
-){
+) {
     val phoneNumbers by viewModel.mpesaNumbers.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
     val selectedNumber by viewModel.selectedNumber.collectAsState()
@@ -76,54 +79,128 @@ fun ConfirmNumberDualScreen(
                     .fillMaxSize()
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
+                val faintTitleText = when (phoneNumbers.size) {
+                    2 -> stringResource(R.string.detected_dual_number)
+                    1 -> stringResource(R.string.detected_one_number) + " " + phoneNumbers.first()
+                    else -> null
+                }
+
                 BigTittleText(
                     text = stringResource(R.string.begin_your_smartmoney_journey),
                 )
                 VerticalSpacer(32)
 
-                FaintText(text = stringResource(R.string.detected_dual_number))
-
+                faintTitleText?.let {
+                    FaintText(text = it)
+                }
                 VerticalSpacer(32)
 
-               when {
-                   errorMessage != null -> {
-                       Text(text = errorMessage!!, color = Color.Red)
-                   }
-                   phoneNumbers.isEmpty() -> {
-                       Text(text = stringResource(R.string.no_m_pesa_numbers_detected))
-                   }
-                   else -> {
-                       LazyColumn (
-                           horizontalAlignment = Alignment.Start,
-                           verticalArrangement = Arrangement.SpaceEvenly
-                       ) {
-                          itemsIndexed(phoneNumbers) {index, number ->
-                              PhoneNumberItem(
-                                  phoneNumber = number,
-                                  simSlot = index + 1,
-                                  isSelected = number == selectedNumber,
-                                  onToggle = {viewModel.selectNumber(number)}
-                              )
-                          }
-                       }
+                when {
+                    errorMessage != null -> {
+                        NormalText(
+                            text = errorMessage!!,
+                            textColor = Color.Red
+                        )
+                        NormalText(
+                            text = stringResource(R.string.no_m_pesa_numbers_detected),
+                            textAlign = TextAlign.Start,
+                            textColor = Color.Red,
+                            modifier = Modifier.padding(paddingMedium)
+                        )
 
-                   }
-               }
+                        Card(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(paddingLarge),
+                            shape = RoundedCornerShape(paddingLarge),
+                        ){
+                            NormalText(
+                                text = stringResource(R.string.change_number_instructions_1),
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(paddingMedium)
+                            )
+                            NormalText(
+                                text = stringResource(R.string.change_number_instructions_2),
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(paddingMedium)
+                            )
+                            NormalText(
+                                text = stringResource(R.string.change_number_instructions_3),
+                                textAlign = TextAlign.Start,
+                                modifier = Modifier.padding(paddingMedium)
+                            )
+                        }
+                    }
+
+                    phoneNumbers.isEmpty() -> {
+                        NormalText(
+                            text = stringResource(R.string.no_m_pesa_numbers_detected),
+                            textAlign = TextAlign.Start,
+                            textColor = Color.Red
+                        )
+                    }
+
+                    else -> {
+                        when (phoneNumbers.size) {
+                            1 -> {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.Center,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    NormalText(
+                                        text = stringResource(R.string.not_your_number)
+                                    )
+                                    HorizontalSpacer(5)
+
+                                    ClickableText(
+                                        text = stringResource(R.string.use_another_number),
+                                        onClick = {
+                                            navController.navigate(OnboardingRoutes.ChangeNumber)
+                                        },
+                                        underline = true
+                                    )
+                                }
+                            }
+
+                            2 -> {
+                                Column {
+                                    Text(
+                                        text = stringResource(R.string.select_mpesa_number),
+                                        style = MaterialTheme.typography.headlineSmall
+                                    )
+                                    phoneNumbers.forEach { number ->
+                                        PhoneNumberItem(
+                                            phoneNumber = number,
+                                            simSlot = phoneNumbers.indexOf(number) + 1,
+                                            isSelected = number == selectedNumber,
+                                            onToggle = { viewModel.selectNumber(number) }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        //}
+                    }
+                }
             }
-                FilledButtonFa(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingLarge)
-                        .align(Alignment.BottomCenter)
-                        .imePadding(),
-                    onClick = { navController.navigate(OnboardingRoutes.SetPassword) }, //{onStart(selectedNumber)},
-                    text = stringResource(R.string.get_started),
-                )
+            FilledButtonFa(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingLarge)
+                    .align(Alignment.BottomCenter)
+                    .imePadding(),
+                onClick = { navController.navigate(OnboardingRoutes.CreatePin) }, //{onStart(selectedNumber)},
+                text = stringResource(R.string.get_started),
+            )
         }
     }
 }
 
+
+// Composable for two numbers detected
 @Composable
 fun PhoneNumberItem(
     phoneNumber: String,
@@ -131,7 +208,8 @@ fun PhoneNumberItem(
     isSelected: Boolean,
     onToggle: () -> Unit
 ) {
-    val cardBackgroundColor = if (isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.GrayBackground
+    val cardBackgroundColor =
+        if (isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.GrayBackground
     val textColor = if (isSystemInDarkTheme()) Color.White else FAColors.black
     Card(
         modifier = Modifier
@@ -179,7 +257,7 @@ fun PhoneNumberItem(
             HorizontalSpacer(8)
 
             Switch(
-                modifier = Modifier.padding( end = paddingMedium),
+                modifier = Modifier.padding(end = paddingMedium),
                 checked = isSelected,
                 onCheckedChange = { onToggle() },
                 colors = SwitchDefaults.colors(

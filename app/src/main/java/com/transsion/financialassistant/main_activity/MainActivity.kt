@@ -68,15 +68,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             FinancialAssistantTheme {
                 val financialAssistantController = rememberNavController()
-//                 FinancialAssistantNavHost(
-//                     navController = financialAssistantController,
-//                     startDestination = OnboardingRoutes.Welcome
-//                 )
-
-               // ChangePhoneNumberInstructions(navController = financialAssistantController)
-                ConfirmNumberDualScreen(navController = financialAssistantController)
-                //EnableNotificationScreen(navController = financialAssistantController)
-                //SetPasswordScreen(navController = financialAssistantController)
+                 FinancialAssistantNavHost(
+                     navController = financialAssistantController,
+                     startDestination = OnboardingRoutes.Welcome
+                 )
 
 
                 //TestMessageScreen()
