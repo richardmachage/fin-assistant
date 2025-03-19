@@ -24,12 +24,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.presentation.components.buttons.CancelButton
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
+import com.transsion.financialassistant.presentation.components.buttons.InfoIconButton
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable
 fun EnableNotificationScreen(navController: NavController){
@@ -49,13 +52,30 @@ fun EnableNotificationScreen(navController: NavController){
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
+            /*Image(
                 modifier = Modifier
                     .align(Alignment.End),
                 painter = painterResource(id = R.drawable.frame_25),
                 contentDescription = "close",
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
-            )
+            )*/
+
+            Row (
+                modifier = Modifier.fillMaxWidth().padding(paddingSmall),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                InfoIconButton(
+                    onClick = {}
+                )
+
+                CancelButton(
+                    onClick = {
+
+                    }
+                )
+            }
 
             VerticalSpacer(8)
             Column(
