@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.telephony.SubscriptionManager
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.checkSelfPermission
 import com.transsion.financialassistant.data.SAFARICOM_MCC_MNC
+import com.transsion.financialassistant.data.SAFARICOM_MCC_MNC_0
 import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.preferences.SharedPreferences
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
@@ -168,7 +170,11 @@ class OnboardingRepoImpl @Inject constructor(
     }
 
     private fun isSafaricomNumber(mccMnc: String): Boolean {
-        return mccMnc == SAFARICOM_MCC_MNC
+        Log.d(
+            "isSafaricomNumber",
+            "is mccmnc : $mccMnc == safMncemcc: $SAFARICOM_MCC_MNC or $SAFARICOM_MCC_MNC_0"
+        )
+        return mccMnc == SAFARICOM_MCC_MNC || mccMnc == SAFARICOM_MCC_MNC_0
     }
 
 }

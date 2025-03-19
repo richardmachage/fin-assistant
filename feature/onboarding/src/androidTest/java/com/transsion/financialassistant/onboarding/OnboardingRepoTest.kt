@@ -2,6 +2,7 @@ package com.transsion.financialassistant.onboarding
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.rule.GrantPermissionRule
 import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.preferences.SharedPreferences
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
@@ -15,6 +16,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -69,6 +71,15 @@ class OnboardingRepoTest {
         )
     }
 
+
+    @get:Rule
+    val permissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(android.Manifest.permission.READ_PHONE_STATE)
+
+    @get:Rule
+    val permissionRule2: GrantPermissionRule =
+        GrantPermissionRule.grant(android.Manifest.permission.READ_PHONE_NUMBERS)
+
     @Test
     fun shouldFailWhenNoSafaricomNumbersAreFound() {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
@@ -98,7 +109,10 @@ class OnboardingRepoTest {
                 assertTrue(phoneNumbers.isNotEmpty())
                 println("Found Safaricom numbers: $phoneNumbers") // Debug output
             },
-            onFailure = { fail("Should not fail when a Safaricom number is found") }
+            onFailure = {
+                println(it)
+                fail("Should not fail when a Safaricom number is found")
+            }
         )
     }
 

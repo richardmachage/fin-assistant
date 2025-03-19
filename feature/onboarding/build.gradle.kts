@@ -16,6 +16,7 @@ dependencies {
     implementation(projects.core.security)
 
     implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.rules)
 
     debugImplementation(libs.ui.tooling)
 
