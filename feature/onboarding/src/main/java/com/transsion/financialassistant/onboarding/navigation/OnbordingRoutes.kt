@@ -17,4 +17,16 @@ sealed interface OnboardingRoutes {
     @Serializable
     object Login : OnboardingRoutes
 
+    @Serializable
+    object ChangeNumber : OnboardingRoutes
+
+    @Serializable
+    object ConfirmNumberDual : OnboardingRoutes
+
+    @Serializable
+    object SetPassword : OnboardingRoutes
+
+    @Serializable
+    object EnableNotifications : OnboardingRoutes
+
 }

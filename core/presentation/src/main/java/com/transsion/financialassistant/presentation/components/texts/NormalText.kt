@@ -7,12 +7,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 @Composable
 fun NormalText(
     modifier: Modifier = Modifier,
     text: String,
+    fontSize: TextUnit = 14.sp,
+    lineHeight: TextUnit = 17.sp,
     textColor: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Center,
 ) {
@@ -21,8 +24,8 @@ fun NormalText(
         textAlign = textAlign,
         text = text,
         fontWeight = FontWeight(400),
-        fontSize = 14.sp,
-        lineHeight = 17.sp,
+        fontSize = fontSize,
+        lineHeight = lineHeight,
         color = textColor
     )
 }

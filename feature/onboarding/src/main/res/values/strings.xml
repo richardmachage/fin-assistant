@@ -3,7 +3,7 @@
     <string name="get_smarter_with_finances">Get smarter with your finances, powered by AI.</string>
     <string name="the_financial_assistant_app_lets">The financial assistance app lets you track what comes in and goes out</string>
     <string name="swipe_to_get_started">Swipe to get started</string>
-    <string name="begin_your_smartmoney_journey">Begin your smartmoney journey</string>
+    <string name="begin_your_smartmoney_journey">Begin your SmartMoney\nJourney</string>
     <string name="detected_one_number">Financial Assistant has detected your primary M-PESA phone number as %1$s</string>
     <string name="not_your_number">Not your phone number?</string>
     <string name="use_another_number">Use another number</string>
@@ -28,4 +28,23 @@
     <string name="good_afternoon">Hi, Good Afternoon</string>
     <string name="good_evening">Hi, Good Evening</string>
     <string name="good_night">Hi, Good Night</string>
+    <string name="change_number">Change Number</string>
+    <string name="change_number_instructions">Follow the steps below to use another M-PESA number with Financial Assistant</string>
+    <string name="change_number_instructions_1">1. Ensure that the number you want to use is registered with M-PESA.</string>
+    <string name="change_number_instructions_2">2. Insert the SIM card into the empty SIM slot or replace your existing SIM.</string>
+    <string name="change_number_instructions_3">3. Reopen Financial Assistant to use your number as desired.</string>
+    <string name="detected_dual_number">Financial Assistant has detected two phone numbers registered with M-PESA. You can use one or both.</string>
+    <string name="no_m_pesa_numbers_detected">No M-PESA numbers detected.</string>
+    <string name="select_mpesa_number">Select Your M-PESA Number</string>
+    <string name="log_in_securely">Log in securely and maintain\nyour privacy</string>
+    <string name="secure_your_app_pin">Secure your app and financial data from prying eyes</string>
+    <string name="login_fingerprint">Log into the Financial Assistant with your fingerprint</string>
+    <string name="data_doesnot_leave_phone">Your data does not leave your phone</string>
+    <string name="continue_btn">Continue</string>
+    <string name="skip">Skip</string>
+    <string name="get_instant_notifications">Get instant notifications</string>
+    <string name="get_reminders">Get reminders for scheduled payments</string>
+    <string name="customized_notifications">Customize reminders for important\ntransactions you can’t afford to forget</string>
+    <string name="enable_notifications">Enable notifications</string>
+    <string name="do_later">I’ll do this later</string>
 </resources>
