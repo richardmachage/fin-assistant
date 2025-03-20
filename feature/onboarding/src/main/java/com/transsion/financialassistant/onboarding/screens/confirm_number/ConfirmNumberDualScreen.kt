@@ -100,7 +100,7 @@ fun ConfirmNumberDualScreen(
                     errorMessage != null -> {
                         NormalText(
                             text = errorMessage!!,
-                            textColor = Color.Red
+                            //textColor = Color.Red
                         )
                         NormalText(
                             text = stringResource(R.string.no_m_pesa_numbers_detected),
