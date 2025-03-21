@@ -3,8 +3,11 @@ package com.transsion.financialassistant.onboarding.screens.login
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -18,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val loginRepo: OnboardingRepo
+    private val loginRepo: OnboardingRepo,
 ) : ViewModel() {
     private var _state = MutableStateFlow(LoginScreenState())
     private val _loginState = MutableStateFlow<PinState>(PinState.Idle)
@@ -30,6 +33,7 @@ class LoginViewModel @Inject constructor(
     var confirmnPin = mutableStateOf("")
     private val _errorMessage = MutableStateFlow<String?>(null)
     var errorMessage: StateFlow<String?> = _errorMessage
+
 
     fun onPinEntered(digit: String) {
         if(_pin.value.length < 4){
@@ -44,12 +48,6 @@ class LoginViewModel @Inject constructor(
 
     fun onPinChange(digit:String){
         if (state.value.pin.length < 4) _state.update { it.copy(pin = _state.value.pin + digit) }
-    }
-
-    fun removeLastDigit() {
-        if (_pin.value.isNotEmpty()) {
-            _pin.value = _pin.value.dropLast(1)
-        }
     }
 
     fun validatePin(pin: String){

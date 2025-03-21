@@ -33,7 +33,6 @@ import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.set_password.SetPasswordScreen
-import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
 import com.transsion.financialassistant.permissions.readPhoneStatePermission
 import com.transsion.financialassistant.permissions.requestPhoneNumberPermissions
 import com.transsion.financialassistant.permissions.requestSmsPermissions
@@ -76,15 +75,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             FinancialAssistantTheme {
                 val financialAssistantController = rememberNavController()
-//                 FinancialAssistantNavHost(
-//                     navController = financialAssistantController,
-//                     startDestination = OnboardingRoutes.Welcome
-//                 )
+                 FinancialAssistantNavHost(
+                     navController = financialAssistantController,
+                     startDestination = OnboardingRoutes.Welcome
+                 )
 
                // EnableNotificationScreen(navController = financialAssistantController)
                 //SetPasswordScreen()
                 //TestMessageScreen()
-                SurveyScreen(navController = financialAssistantController)
             }
         }
     }

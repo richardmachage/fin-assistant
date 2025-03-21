@@ -24,8 +24,6 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
-import com.transsion.financialassistant.presentation.utils.paddingLarge
-import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable

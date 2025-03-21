@@ -39,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
@@ -54,7 +56,8 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val context = LocalContext.current
     val state by  viewModel.state.collectAsStateWithLifecycle()
@@ -80,6 +83,7 @@ fun LoginScreen(
     LaunchedEffect(state.pin) {
         if (state.pin.length == 4){
             viewModel.onLogin()
+            navController.navigate(OnboardingRoutes.SurveyScreen)
         }
     }
 
@@ -144,7 +148,6 @@ fun LoginScreen(
                                             NormalText(
                                                 text = if (index < state.pin.length) "*" else "",
                                             )
-
                                         }
                                     }
                                 }
@@ -274,6 +277,6 @@ fun CircularIconButton(icon: Int, onClick: () -> Unit) {
 @Composable
 fun PrevLogIn(){
     FinancialAssistantTheme {
-        LoginScreen()
+       // LoginScreen()
     }
 }

@@ -34,7 +34,7 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.Login> {
-        LoginScreen()
+        LoginScreen(navController = navController)
     }
 
     composable<OnboardingRoutes.ChangeNumber> {
