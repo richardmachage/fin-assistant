@@ -21,7 +21,7 @@
     <string name="enter_pin">Enter Pin</string>
     <string name="confirm_pin">Confirm Pin</string>
     <string name="create">Create</string>
-    <string name="pin_error_message">Your PIN entries do not match. Please try again.</string>
+    <string name="pin_error_message">PIN must be at least 4 digits.</string>
     <string name="greeting">Hi, Good Morning</string>
     <string name="login_description">Welcome back to your financial assistant.\nEnter your PIN to log in.</string>
     <string name="good_morning">Hi, Good Morning</string>
@@ -47,4 +47,6 @@
     <string name="customized_notifications">Customize reminders for important\ntransactions you can’t afford to forget</string>
     <string name="enable_notifications">Enable notifications</string>
     <string name="do_later">I’ll do this later</string>
+    <string name="confirm_pin_error_message">Your Pin Does not Match!!</string>
+    <string name="show_error">Pin Doesn\'t meet the requirements!!</string>
 </resources>

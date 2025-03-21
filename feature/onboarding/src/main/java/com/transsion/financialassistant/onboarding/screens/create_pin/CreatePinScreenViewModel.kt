@@ -22,6 +22,8 @@ class CreatePinScreenViewModel @Inject constructor(
     private val _pinState = MutableStateFlow<PinState>(PinState.Idle)
     val pinState : StateFlow<PinState> = _pinState
 
+
+
     fun setUserPin(pin: String) {
         viewModelScope.launch {
             _pinState.value = PinState.Loading
@@ -37,6 +39,5 @@ class CreatePinScreenViewModel @Inject constructor(
             )
         }
     }
-
 }
 

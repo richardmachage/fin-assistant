@@ -4,9 +4,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
+import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -14,29 +17,65 @@ import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val loginRepo: OnboardingRepo
+) : ViewModel() {
     private var _state = MutableStateFlow(LoginScreenState())
+    private val _loginState = MutableStateFlow<PinState>(PinState.Idle)
+    val loginState: StateFlow<PinState> = _loginState
     val state = _state.asStateFlow()
 
-    var pin = mutableStateOf("")
+    private val _pin = MutableStateFlow("")
+    val pin: StateFlow<String> = _pin
     var confirmnPin = mutableStateOf("")
-    var errorMessage = mutableStateOf<String?>(null)
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    var errorMessage: StateFlow<String?> = _errorMessage
 
-    fun validatePin(){
-        if (pin.value.length < 4){
-            errorMessage.value = "Pin Must be atleast 4 Digits"
-            return
-        }
+    fun onPinEntered(digit: String) {
+        if(_pin.value.length < 4){
+            _pin.value += digit
 
-        if (pin.value != confirmnPin.value){
-            errorMessage.value = "Pins do not match"
-            return
+            // if user has entered 4 digit pin, verify the PIN
+            if (_pin.value.length == 4) {
+                validatePin(_pin.value)
+            }
         }
     }
 
     fun onPinChange(digit:String){
         if (state.value.pin.length < 4) _state.update { it.copy(pin = _state.value.pin + digit) }
     }
+
+    fun removeLastDigit() {
+        if (_pin.value.isNotEmpty()) {
+            _pin.value = _pin.value.dropLast(1)
+        }
+    }
+
+    fun validatePin(pin: String){
+       viewModelScope.launch {
+           _loginState.value = PinState.Loading
+
+           loginRepo.verifyPin(
+               pin = pin,
+               onSuccess = { isCorrect ->
+                   if (isCorrect) {
+                       _loginState.value = PinState.Success
+                       _errorMessage.value = null // Clear PIN input on failure
+                   } else {
+                       _loginState.value = PinState.Error("Incorrect PIN")
+                       _errorMessage.value = "Incorrect PIN. Try again."
+                       _pin.value = "" // Clear PIN input on failure
+                   }
+               },
+               onFailure = {errorMessage ->
+                   _loginState.value = PinState.Error(errorMessage)
+               }
+           )
+       }
+    }
+
+
 
     fun onLogin(){
        //TODO log n functionality

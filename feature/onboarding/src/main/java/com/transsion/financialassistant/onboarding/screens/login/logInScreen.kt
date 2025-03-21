@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,7 +42,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.Text
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import com.transsion.financialassistant.presentation.components.CircularLoading
+import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -53,8 +57,11 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
-   // var pin by remember { mutableStateOf("") } // Holds the PIN Value
     val state by  viewModel.state.collectAsStateWithLifecycle()
+    var pin by remember { mutableStateOf("") }
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+
 
 
     CircularLoading(
@@ -62,7 +69,7 @@ fun LoginScreen(
         loadingMessage = "Logging in"
     )
 
-    //Toost hanlder
+    //Toast handler
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let {
             Toast.makeText(context,state.toastMessage,Toast.LENGTH_SHORT).show()
@@ -78,9 +85,10 @@ fun LoginScreen(
 
 
     Surface {
-        when (state.isLoading) {
-            true -> CircularLoading(true)
-            false -> {
+        when (loginState) {
+            is PinState.Loading -> CircularLoading()
+            //true -> CircularLoading(true)
+            else -> {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -136,6 +144,7 @@ fun LoginScreen(
                                             NormalText(
                                                 text = if (index < state.pin.length) "*" else "",
                                             )
+
                                         }
                                     }
                                 }
@@ -144,17 +153,14 @@ fun LoginScreen(
 
                             VerticalSpacer(8)
 
-                            //FIXME Error Message
-                                //Text(text = "Error", color = Color.Red, fontSize = 11.sp)
-                            Text(
-                                text = viewModel.errorMessage.value ?: "",
-                                color = Color.Red,
-                                fontSize = 11.sp
-                            )
+                            if (!errorMessage.isNullOrEmpty()){
+                                Text(
+                                    text = errorMessage!!,
+                                    color = Color.Red,
+                                    fontSize = 11.sp
+                                )
+                            }
                         }
-                        // VerticalSpacer(16)
-
-
                     }
 
 
@@ -184,6 +190,8 @@ fun LoginScreen(
                                     row.forEach { digit ->
                                         NumberButton(digit) {
                                             viewModel.onPinChange(digit)
+                                          viewModel.onPinEntered(digit)
+
                                         }
                                     }
                                 }
@@ -203,6 +211,7 @@ fun LoginScreen(
                                 // Zero Button
                                 NumberButton("0") {
                                     viewModel.onPinChange("0")
+                                    viewModel.onPinEntered(digit = "0")
                                 }
 
                                 // Delete Button
@@ -221,7 +230,10 @@ fun LoginScreen(
 
 // Reusable Number Button
 @Composable
-fun NumberButton(number: String, onClick: () -> Unit) {
+fun NumberButton(
+    number: String,
+    onClick: () -> Unit,
+) {
     Button(
         onClick = onClick,
         modifier = Modifier

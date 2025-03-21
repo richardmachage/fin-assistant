@@ -2,6 +2,7 @@ package com.transsion.financialassistant.onboarding.screens.create_pin
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,10 +39,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
@@ -56,9 +61,15 @@ import com.transsion.financialassistant.presentation.utils.paddingLarge
 
 @Composable
 fun CreatePinScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: CreatePinScreenViewModel = hiltViewModel()
 ) {
+    val pinState by viewModel.pinState.collectAsState()
     var pin by remember { mutableStateOf("") }
+
+    var pinError by remember { mutableStateOf(false) }
+    var confirmPinError by remember { mutableStateOf(false) }
+
     var confirmPin by remember { mutableStateOf("") }
     var showError by remember { mutableStateOf(false) }
     val context: Context = LocalContext.current
@@ -72,6 +83,8 @@ fun CreatePinScreen(
     }
 
 
+
+
     Scaffold(
     ) { paddingValues ->
         Box(
@@ -82,7 +95,9 @@ fun CreatePinScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingLarge)
+                    .padding(paddingLarge),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -117,41 +132,58 @@ fun CreatePinScreen(
                 NormalText(
                     text = stringResource(R.string.pin),
                     textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(start = 60.dp)
+                    modifier = Modifier
+                        .padding(start = 60.dp)
+                        .align(Alignment.Start)
                 )
                 VerticalSpacer(8)
                 PasswordTextFieldFa(
                     value = pin,
-                    onValueChange = { newPin -> if (newPin.length < 5) pin = newPin },
+                    onValueChange = { newPin ->
+                        if (newPin.length < 5) pin = newPin
+                        pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     placeholder = stringResource(R.string.pin),
-                    isShowError = showError,
+                   isShowError = pinError,
                     visualTransformation = asteriskVisualTransformation
                 )
+                if (pinError) {
+                    Text(
+                        text = stringResource(R.string.pin_error_message),
+                        color = Color.Red,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                }
 
                 VerticalSpacer(16)
                 NormalText(
                     text = stringResource(R.string.confirm_pin),
                     textAlign = TextAlign.Start,
-                    modifier = Modifier.padding(start = 60.dp)
+                    modifier = Modifier
+                        .padding(start = 60.dp)
+                        .align(Alignment.Start)
                 )
                 VerticalSpacer(8)
                 PasswordTextFieldFa(
                     value = confirmPin,
                     onValueChange = { newConfirmPin ->
-                        if (newConfirmPin.length < 5) confirmPin = newConfirmPin
+                        if (newConfirmPin.length < 5){
+                            confirmPin = newConfirmPin
+                            confirmPinError = pin != confirmPin // Show Error if Pin does not match
+                        }
                     },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
                     placeholder = stringResource(R.string.confirm_pin),
-                    isShowError = showError,
+                    isShowError = confirmPinError,
                     visualTransformation = asteriskVisualTransformation
                 )
 
-                if (showError) {
+                if (confirmPinError) {
                     Text(
-                        text = stringResource(R.string.pin_error_message),
+                        text = stringResource(R.string.confirm_pin_error_message),
                         color = Color.Red,
                         modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                     )
@@ -165,11 +197,12 @@ fun CreatePinScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingLarge)
-                    .align(Alignment.BottomCenter)
-                    .imePadding(),
+                    .imePadding()
+                    .align(Alignment.BottomCenter),
                 text = stringResource(R.string.create),
                 onClick = {
                     if (isValidLength && isMatching) {
+                        viewModel.setUserPin(pin)
                         navController.navigate(OnboardingRoutes.Login)
                     } else {
                         showError = true
@@ -177,6 +210,26 @@ fun CreatePinScreen(
                 },
                 enabled = isMatching,
             )
+
+            if (showError) {
+                Text(
+                    text = stringResource(R.string.show_error),
+                    color = Color.Red,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
+
+            when(pinState) {
+                is PinState.Loading -> CircularLoading()
+                is PinState.Success -> {
+                    Toast.makeText(context, "Pin Created Successfully!", Toast.LENGTH_SHORT).show()
+                }
+                is PinState.Error -> {
+                    val errorMessage = (pinState as PinState.Error).message
+                    Text(text = errorMessage, color = Color.Red)
+                }
+                else -> {}
+            }
         }
     }
 }
