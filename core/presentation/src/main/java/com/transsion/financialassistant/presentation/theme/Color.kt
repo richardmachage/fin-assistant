@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.presentation.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -21,6 +22,9 @@ object FAColors {
     val cardBackgroundDark = Color(0xFF1E1E1E)
     val cardBackgroundLight = Color(0xFFECEEED)
     val splashScreenBackground = Color(0xFF413503)
-
 }
 
+@Composable
+fun ThemeColors(){
+    val cardBackground = if (isSystemInDarkTheme())Color(0xFF1E1E1E) else Color(0xFFECEEED)
+}
