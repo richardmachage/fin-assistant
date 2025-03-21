@@ -192,7 +192,7 @@ fun ConfirmNumberDualScreen(
                     .padding(paddingLarge)
                     .align(Alignment.BottomCenter),
                 onClick = { navController.navigate(OnboardingRoutes.CreatePin) },
-                enabled = phoneNumbers.isNotEmpty(),
+                enabled = if (state.mpesaNumbers.isNotEmpty() && state.mpesaNumbers.size == 1) true else state.selectedNumber != null,
                 text = stringResource(R.string.get_started),
             )
         }
