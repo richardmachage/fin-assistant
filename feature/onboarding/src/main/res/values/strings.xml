@@ -49,4 +49,6 @@
     <string name="do_later">I’ll do this later</string>
     <string name="confirm_pin_error_message">Your Pin Does not Match!!</string>
     <string name="show_error">Pin Doesn\'t meet the requirements!!</string>
+    <string name="what_do_you_want_to_do">What do you want to use Financial Assistant for?</string>
+    <string name="we_use_this_information">We use this information to tailor the app to your specific needs</string>
 </resources>

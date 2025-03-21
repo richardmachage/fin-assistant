@@ -29,4 +29,7 @@ sealed interface OnboardingRoutes {
     @Serializable
     object EnableNotifications : OnboardingRoutes
 
+    @Serializable
+    object SurveyScreen: OnboardingRoutes
+
 }
