@@ -7,7 +7,6 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
-import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
@@ -25,9 +24,6 @@ fun NavGraphBuilder.onboardingNavGraph(
         )
     }
 
-    composable<OnboardingRoutes.ConfirmNumber> {
-        ConfirmNumberScreen(navController = navController)
-    }
 
     composable<OnboardingRoutes.CreatePin> {
         CreatePinScreen(navController = navController)
