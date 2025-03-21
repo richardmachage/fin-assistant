@@ -185,13 +185,14 @@ fun ConfirmNumberDualScreen(
                     }
                 }
             }
+
             FilledButtonFa(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingLarge)
-                    .align(Alignment.BottomCenter)
-                    .imePadding(),
-                onClick = { navController.navigate(OnboardingRoutes.CreatePin) }, //{onStart(selectedNumber)},
+                    .align(Alignment.BottomCenter),
+                onClick = { navController.navigate(OnboardingRoutes.CreatePin) },
+                enabled = phoneNumbers.isNotEmpty(),
                 text = stringResource(R.string.get_started),
             )
         }

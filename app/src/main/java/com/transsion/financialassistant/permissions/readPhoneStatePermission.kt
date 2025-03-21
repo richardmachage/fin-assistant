@@ -7,35 +7,12 @@ import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.ContextCompat
 
-
-fun requestSmsPermissions(
+fun readPhoneStatePermission(
     context: Context,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>
-) {
+){
     val permissionsToRequest = mutableListOf<String>()
 
-    // SMS Permissions (Send and READ)
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
-        != PackageManager.PERMISSION_GRANTED
-    ) {
-        permissionsToRequest.add(Manifest.permission.READ_SMS)
-    }
-
-    // SEND SMS Permissions
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS)
-        != PackageManager.PERMISSION_GRANTED
-    ) {
-        permissionsToRequest.add(Manifest.permission.SEND_SMS)
-    }
-
-    // READ PHONE NUMBERS Permissions
-    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_NUMBERS)
-        != PackageManager.PERMISSION_GRANTED
-    ) {
-        permissionsToRequest.add(Manifest.permission.READ_PHONE_NUMBERS)
-    }
-
-    // READ PHONE STATE Permissions
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
         != PackageManager.PERMISSION_GRANTED
     ) {
@@ -51,4 +28,5 @@ fun requestSmsPermissions(
             .show()*/
 
     }
+
 }

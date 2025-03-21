@@ -162,7 +162,8 @@ fun SwipeToStartButton(
         NormalText(
             Modifier.align(Alignment.Center),
             text = stringResource(R.string.swipe_to_get_started),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            textColor = FAColors.black
         )
 
         // The handle (circle with an icon) that moves with the swipe

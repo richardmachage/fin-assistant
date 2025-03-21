@@ -33,6 +33,8 @@ import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.set_password.SetPasswordScreen
+import com.transsion.financialassistant.permissions.readPhoneStatePermission
+import com.transsion.financialassistant.permissions.requestPhoneNumberPermissions
 import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -44,22 +46,28 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {permissions ->
+            val readSmsGranted = permissions[android.Manifest.permission.READ_SMS] ?: false
+            val sendSmsGranted = permissions[android.Manifest.permission.SEND_SMS] ?: false
+            val readPhoneStateGranted = permissions[android.Manifest.permission.READ_PHONE_STATE] ?: false
+            val readPhoneNumberGranted = permissions[android.Manifest.permission.READ_PHONE_NUMBERS] ?: false
+
+            if (readSmsGranted || sendSmsGranted || readPhoneStateGranted || readPhoneNumberGranted) {
+                Toast.makeText(this, "All Permissions Granted", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Some Permissions Denied", Toast.LENGTH_SHORT).show()
+            }
+        }
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val requestPermissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                val readSmsGranted = permissions[android.Manifest.permission.READ_SMS] ?: false
-                val sendSmsGranted = permissions[android.Manifest.permission.SEND_SMS] ?: false
-
-                if (readSmsGranted && sendSmsGranted) {
-                    Toast.makeText(this, "SMS Permissions Granted", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "SMS Permissions Denied", Toast.LENGTH_SHORT).show()
-                }
-            }
+        readPhoneStatePermission(this, requestPermissionLauncher)
         requestSmsPermissions(this, requestPermissionLauncher)
+        requestPhoneNumberPermissions(this, requestPermissionLauncher)
+
+
 
        //installSplashScreen()
         installSplashScreen()
