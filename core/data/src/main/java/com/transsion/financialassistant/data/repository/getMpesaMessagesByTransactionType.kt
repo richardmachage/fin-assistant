@@ -1,11 +1,11 @@
-package com.transsion.financialassistant.background
+package com.transsion.financialassistant.data.repository
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.provider.Telephony
 import android.util.Log
-import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import kotlin.time.Duration

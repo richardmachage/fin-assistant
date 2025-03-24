@@ -1,10 +1,19 @@
 package com.transsion.financialassistant.data.repository.transaction
 
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
+import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
+import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
+import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
 
 interface TransactionRepo {
     fun getTransactionType(message: String): TransactionType
-
     fun parseSendMoneyMessage(message: String, phone: String): SendMoneyEntity?
+    fun parseReceiveMoneyMessage(message: String, phone: String): ReceiveMoneyEntity?
+    fun parsePayBillMessage(message: String, phone: String): PayBillEntity?
+    fun parseBuyGoodsMessage(message: String, phone: String): BuyGoodsEntity?
+    fun parseSendPochiMessage(message: String, phone: String): SendPochiEntity?
+    fun parseDepositMoneyMessage(message: String, phone: String): DepositMoneyEntity?
 }

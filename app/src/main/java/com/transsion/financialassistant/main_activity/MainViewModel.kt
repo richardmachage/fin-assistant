@@ -3,9 +3,9 @@ package com.transsion.financialassistant.main_activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.background.getMpesaMessagesByTransactionType
-import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.getMpesaMessagesByTransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

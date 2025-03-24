@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.background.models
+package com.transsion.financialassistant.data.models
 
 
 data class MpesaMessage(

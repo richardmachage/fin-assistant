@@ -2,6 +2,8 @@ package com.transsion.financialassistant.data.di
 
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.data.repository.security.SecurityRepoImpl
+import com.transsion.financialassistant.data.repository.send_money.SendMoneyRepo
+import com.transsion.financialassistant.data.repository.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
 import dagger.Binds
@@ -22,4 +24,10 @@ abstract class RepositoryModule {
     internal abstract fun bindSecurityRepo(
         securityRepoImpl: SecurityRepoImpl
     ): SecurityRepo
+
+    @Binds
+    internal abstract fun bindSendMoneyRepo(
+        sendMoneyRepoImpl: SendMoneyRepoImpl
+    ): SendMoneyRepo
+
 }
