@@ -55,4 +55,16 @@
     <string name="user_need_2">I want to manage by business finance</string>
     <string name="user_need_3">I want to track both personal and business finances</string>
     <string name="next_btn">Next</string>
+    <string name="money_expenditure_personal">What do you frequently\nspend your money on?</string>
+    <string name="money_out_categories">Select your money out categories</string>
+    <string name="baby_clothes">Baby Clothes</string>
+    <string name="gifts_donations"><![CDATA[Gifts & Donations]]></string>
+    <string name="bills_utilities"><![CDATA[Bills & Utilities]]></string>
+    <string name="clothing">Clothing</string>
+    <string name="groceries">Groceries</string>
+    <string name="rent">Rent</string>
+    <string name="savings">Savings</string>
+    <string name="transaction_costs">Transaction costs</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="healthcare">Healthcare</string>
 </resources>

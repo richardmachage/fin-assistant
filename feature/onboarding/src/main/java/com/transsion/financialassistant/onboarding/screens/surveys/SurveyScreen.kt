@@ -45,6 +45,7 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 
 @Composable
@@ -149,7 +150,7 @@ fun SurveyScreen(
                 }
                 FilledButtonFa(
                     text = stringResource(R.string.next_btn),
-                    onClick = {},
+                    onClick = {if (selectedOption == stringOptions[0]) navController.navigate(OnboardingRoutes.PersonalTrackerSurvey)},
                     enabled = if (selectedOption.isNotEmpty()) true else false,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)

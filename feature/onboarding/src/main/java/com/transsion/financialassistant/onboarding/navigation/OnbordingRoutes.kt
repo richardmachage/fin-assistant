@@ -32,4 +32,7 @@ sealed interface OnboardingRoutes {
     @Serializable
     object SurveyScreen: OnboardingRoutes
 
+    @Serializable
+    object PersonalTrackerSurvey: OnboardingRoutes
+
 }
