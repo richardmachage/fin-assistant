@@ -9,13 +9,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,7 +22,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
@@ -59,10 +55,11 @@ fun ConfirmNumberDualScreen(
     onStart: (String) -> Unit = {},
     context: Context = LocalContext.current
 ) {
-    val phoneNumbers by viewModel.mpesaNumbers.collectAsState()
+    /*val phoneNumbers by viewModel.mpesaNumbers.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
-    val selectedNumber by viewModel.selectedNumber.collectAsState()
+    val selectedNumber by viewModel.selectedNumber.collectAsState()*/
 
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.loadMpesaNumbers(context)
@@ -80,9 +77,9 @@ fun ConfirmNumberDualScreen(
                     .padding(paddingValues),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val faintTitleText = when (phoneNumbers.size) {
+                val faintTitleText = when (state.mpesaNumbers.size) {
                     2 -> stringResource(R.string.detected_dual_number)
-                    1 -> stringResource(R.string.detected_one_number) + " " + phoneNumbers.first()
+                    1 -> stringResource(R.string.detected_one_number) + " " + state.mpesaNumbers.first()
                     else -> null
                 }
 
@@ -97,10 +94,9 @@ fun ConfirmNumberDualScreen(
                 VerticalSpacer(32)
 
                 when {
-                    errorMessage != null -> {
+                    state.errorMessage != null -> {
                         NormalText(
-                            text = errorMessage!!,
-                            //textColor = Color.Red
+                            text = state.errorMessage!!,
                         )
                         NormalText(
                             text = stringResource(R.string.no_m_pesa_numbers_detected),
@@ -132,7 +128,7 @@ fun ConfirmNumberDualScreen(
                         }
                     }
 
-                    phoneNumbers.isEmpty() -> {
+                    state.mpesaNumbers.isEmpty() -> {
                         NormalText(
                             text = stringResource(R.string.no_m_pesa_numbers_detected),
                             textAlign = TextAlign.Start,
@@ -141,7 +137,7 @@ fun ConfirmNumberDualScreen(
                     }
 
                     else -> {
-                        when (phoneNumbers.size) {
+                        when (state.mpesaNumbers.size) {
                             1 -> {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
@@ -170,12 +166,12 @@ fun ConfirmNumberDualScreen(
                                         text = stringResource(R.string.select_mpesa_number),
                                         style = MaterialTheme.typography.headlineSmall
                                     )
-                                    phoneNumbers.forEach { number ->
+                                    state.mpesaNumbers.forEach { number ->
                                         PhoneNumberItem(
                                             phoneNumber = number,
-                                            simSlot = phoneNumbers.indexOf(number) + 1,
-                                            isSelected = number == selectedNumber,
-                                            onToggle = { viewModel.selectNumber(number) }
+                                            simSlot = state.mpesaNumbers.indexOf(number) + 1,
+                                            isSelected = number == state.selectedNumber,
+                                            onToggle = { viewModel.onSelectNumber(number) }
                                         )
                                     }
                                 }
