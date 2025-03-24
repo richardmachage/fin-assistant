@@ -3,7 +3,7 @@ package com.transsion.financialassistant.main_activity
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.background.getMpesaMessages
+import com.transsion.financialassistant.background.getMpesaMessagesByTransactionType
 import com.transsion.financialassistant.background.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _loadingState.update { true }
             _messages.update {
-                getMpesaMessages(
+                getMpesaMessagesByTransactionType(
                     context = context,
                     filterValue = TransactionType.SEND_MONEY,
                     getExecutionTime = { dur ->

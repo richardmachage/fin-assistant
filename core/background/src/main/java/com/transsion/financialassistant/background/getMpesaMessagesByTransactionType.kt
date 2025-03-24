@@ -1,168 +1,85 @@
 package com.transsion.financialassistant.background
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.database.Cursor
+import android.provider.Telephony
+import android.util.Log
+import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
+import kotlin.time.Duration
+import kotlin.time.measureTime
+
 /**
- * This function is built on top of the [getMpesaMessages] function.
- *
+ *  * This function queries the SMS content provider for messages sent from "MPESA",
+ *  * filters them by the specified [filterValue] (i.e., transaction type),
+ *  * and maps them into a list of [MpesaMessage] objects.
+ *  *
  */
-/*
+@SuppressLint("MissingPermission")
 fun getMpesaMessagesByTransactionType(
-    transactionType: TransactionType,
+    filterValue: TransactionType,
     context: Context,
-    getExecutionTime: (Duration) -> Unit = {}
+    getExecutionTime: (Duration) -> Unit,
+    transactionRepo: TransactionRepo
 ): List<MpesaMessage> {
 
-    return when (transactionType) {
-        TransactionType.BUNDLES_PURCHASE -> {
-            */
-/** Ensure always, this is the first condition
-             * because the buy bundles and PayBill messages overlap
- * such that each contains "for account part*//*
+    val mpesaMessages = mutableListOf<MpesaMessage>()
+    val projection = arrayOf(
+        Telephony.Sms.BODY,
+        Telephony.Sms.SUBSCRIPTION_ID
+    )
 
-            getMpesaMessages(
-                filterValue = "BUNDLES",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
+    val selection = "${Telephony.Sms.ADDRESS} = ?"
+
+    val selectionArgs = arrayOf("MPESA")
+
+    val sortOrder = "${Telephony.Sms.DATE} DESC"
+
+    return try {
+        val cursor: Cursor? = context.contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+        )
+
+        cursor?.use {
+            val bodyColumn = it.getColumnIndexOrThrow(Telephony.Sms.BODY)
+            val subscriptionIdColumn = it.getColumnIndexOrThrow(Telephony.Sms.SUBSCRIPTION_ID)
+
+            val timeTaken = measureTime {
+                while (it.moveToNext()) {
+                    // filterValue.let { value ->
+                    val body = it.getString(bodyColumn)
+                    val transactionType = transactionRepo.getTransactionType(body)
+
+                    if (
+                        transactionType == filterValue
+                    ) {
+                        mpesaMessages.add(
+                            MpesaMessage(
+                                body = it.getString(bodyColumn),
+                                subscriptionId = getReceivingAddress(
+                                    context = context,
+                                    subscriptionId = it.getInt(subscriptionIdColumn)
+                                ).toString()
+                            )
+                        )
+                    }
+
                 }
-            )
+            }
+            Log.d("DurationInGetMessages", "Time taken: $timeTaken")
+            getExecutionTime(timeTaken)
         }
-
-        TransactionType.AIRTIME_PURCHASE -> {
-            getMpesaMessages(
-                filterValue = "You bought",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                },
-
-                )
-        }
-
-        TransactionType.DEPOSIT -> {
-            getMpesaMessages(
-                filterValue = "Give",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.WITHDRAWAL -> {
-            getMpesaMessages(
-                filterValue = "Withdraw",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.SEND_MONEY -> {
-            getMpesaMessages(
-                filterValue = "sent",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-            )
-        }
-
-        TransactionType.RECEIVE_MONEY -> {
-            getMpesaMessages(
-                filterValue = "received",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.RECEIVE_POCHI -> {
-            getMpesaMessages(
-                filterValue = "POCHI",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.PAY_BILL -> {
-            getMpesaMessages(
-                filterValue = "for account",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.BUY_GOODS -> {
-            getMpesaMessages(
-                filterValue = "paid to",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.SEND_MSHWARI -> {
-            getMpesaMessages(
-                filterValue = "transferred to M-Shwari",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.RECEIVE_MSHWARI -> {
-            getMpesaMessages(
-                filterValue = "from your M-Shwari",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                    getExecutionTime(it)
-                }
-
-            )
-        }
-
-        TransactionType.UNKNOWN -> {
-            //FIXME
-            emptyList()
-        }
-
-        TransactionType.SEND_POCHI -> {
-            getMpesaMessages(
-                filterValue = "sent to richard",
-                context = context,
-                getExecutionTime = {
-                    Log.d("DurationInFilter", "Time taken: $it")
-                }
-            )
-
-        }
+        mpesaMessages
+    } catch (e: Exception) {
+        e.printStackTrace()
+        //TODO handle errors if any
+        getExecutionTime(Duration.ZERO)
+        emptyList()
     }
-
-
-}*/
+}
