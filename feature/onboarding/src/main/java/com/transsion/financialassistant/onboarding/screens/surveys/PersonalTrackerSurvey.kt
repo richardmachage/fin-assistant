@@ -85,7 +85,7 @@ fun PersonalTrackerSurvey(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxHeight(0.8f)
+                        .fillMaxHeight()
                         .padding(start = paddingMedium),
                     horizontalAlignment = Alignment.Start
                 ) {
