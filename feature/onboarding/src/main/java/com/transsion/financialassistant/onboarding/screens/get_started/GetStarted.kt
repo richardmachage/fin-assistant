@@ -100,6 +100,9 @@ fun GetStarted(
                     onSwipeComplete = {
                         //navigate to assigning accounts
                         navController.navigate(OnboardingRoutes.ConfirmNumberDual)
+                        {
+                            popUpTo(OnboardingRoutes.ConfirmNumberDual){inclusive = true}
+                        }
 
                     }
                 )

@@ -3,12 +3,8 @@ package com.transsion.financialassistant.onboarding.screens.login
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
-import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,8 +20,8 @@ class LoginViewModel @Inject constructor(
     private val loginRepo: OnboardingRepo,
 ) : ViewModel() {
     private var _state = MutableStateFlow(LoginScreenState())
-    private val _loginState = MutableStateFlow<PinState>(PinState.Idle)
-    val loginState: StateFlow<PinState> = _loginState
+//    private val _loginState = MutableStateFlow<PinState>(PinState.Idle)
+//    val loginState: StateFlow<PinState> = _loginState
     val state = _state.asStateFlow()
 
     private val _pin = MutableStateFlow("")
@@ -46,28 +42,38 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun clearPin() {
+        _pin.value = ""
+    }
+
     fun onPinChange(digit:String){
         if (state.value.pin.length < 4) _state.update { it.copy(pin = _state.value.pin + digit) }
     }
 
     fun validatePin(pin: String){
        viewModelScope.launch {
-           _loginState.value = PinState.Loading
+           //_loginState.value = PinState.Loading
+           _state.value = state.value.copy(isLoading = true)
 
            loginRepo.verifyPin(
                pin = pin,
                onSuccess = { isCorrect ->
                    if (isCorrect) {
-                       _loginState.value = PinState.Success
+                      // _loginState.value = PinState.Success
+                       _state.value = state.value.copy(isSuccess = true)
                        _errorMessage.value = null // Clear PIN input on failure
                    } else {
-                       _loginState.value = PinState.Error("Incorrect PIN")
+                       //_loginState.value = PinState.Error("Incorrect PIN")
+                       _state.value = state.value.copy(toastMessage = "Incorrect PIN")
                        _errorMessage.value = "Incorrect PIN. Try again."
                        _pin.value = "" // Clear PIN input on failure
                    }
                },
                onFailure = {errorMessage ->
-                   _loginState.value = PinState.Error(errorMessage)
+                   //_loginState.value = PinState.Error(errorMessage)
+                   _state.value = state.value.copy(toastMessage = errorMessage)
+                   _errorMessage.value = errorMessage
+                   _pin.value = "" // Clear PIN input on failure
                }
            )
        }
@@ -81,7 +87,7 @@ class LoginViewModel @Inject constructor(
             toggleLoading(true)
             delay(3000)
             toggleLoading(false)
-            showToast("Logged In successfully")
+            //showToast("Logged In successfully")
         }
     }
 

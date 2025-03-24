@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
@@ -90,7 +91,7 @@ fun PersonalTrackerSurvey(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                        verticalAlignment = Alignment.Top,
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         IconButton(
@@ -157,8 +158,9 @@ fun PersonalTrackerSurvey(
                         onClick = {},
                         enabled = if (selectedItems.isNotEmpty()) true else false,
                         modifier = Modifier
-                            .fillMaxWidth(0.8f                                      )
+                            .fillMaxWidth(0.8f)
                             .align(Alignment.BottomCenter)
+                            .padding(WindowInsets.navigationBars.asPaddingValues())
                     )
                 }
             }

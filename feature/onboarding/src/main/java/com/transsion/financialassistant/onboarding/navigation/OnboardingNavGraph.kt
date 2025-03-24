@@ -21,7 +21,7 @@ fun NavGraphBuilder.onboardingNavGraph(
 ) {
     composable<OnboardingRoutes.Welcome> {
         GetStarted(
-            navController = navController
+            navController = navController,
         )
     }
 

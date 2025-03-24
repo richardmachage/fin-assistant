@@ -150,7 +150,11 @@ fun SurveyScreen(
                 }
                 FilledButtonFa(
                     text = stringResource(R.string.next_btn),
-                    onClick = {if (selectedOption == stringOptions[0]) navController.navigate(OnboardingRoutes.PersonalTrackerSurvey)},
+                    onClick = {
+                        if (selectedOption == stringOptions[0]) navController.navigate(OnboardingRoutes.PersonalTrackerSurvey){
+                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
+                        }
+                              },
                     enabled = if (selectedOption.isNotEmpty()) true else false,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)

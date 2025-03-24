@@ -105,11 +105,12 @@ fun ConfirmNumberDualScreen(
                             modifier = Modifier.padding(paddingMedium)
                         )
 
-                        Card(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(paddingLarge),
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingLarge),
                             shape = RoundedCornerShape(paddingLarge),
-                        ){
+                        ) {
                             NormalText(
                                 text = stringResource(R.string.change_number_instructions_1),
                                 textAlign = TextAlign.Start,
@@ -187,7 +188,13 @@ fun ConfirmNumberDualScreen(
                     .fillMaxWidth()
                     .padding(paddingLarge)
                     .align(Alignment.BottomCenter),
-                onClick = { navController.navigate(OnboardingRoutes.CreatePin) },
+                onClick = {
+                    navController.navigate(OnboardingRoutes.CreatePin) {
+                        popUpTo<OnboardingRoutes.ConfirmNumberDual> {
+                            inclusive = true
+                        }
+                    }
+                },
                 enabled = if (state.mpesaNumbers.isNotEmpty() && state.mpesaNumbers.size == 1) true else state.selectedNumber != null,
                 text = stringResource(R.string.get_started),
             )

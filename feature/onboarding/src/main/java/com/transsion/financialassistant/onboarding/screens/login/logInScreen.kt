@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.wear.compose.material.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,12 +39,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
+import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.onboarding.screens.create_pin.PinState
 import com.transsion.financialassistant.presentation.components.CircularLoading
-import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -62,7 +59,7 @@ fun LoginScreen(
     val context = LocalContext.current
     val state by  viewModel.state.collectAsStateWithLifecycle()
     var pin by remember { mutableStateOf("") }
-    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    //val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
 
@@ -82,16 +79,24 @@ fun LoginScreen(
 
     LaunchedEffect(state.pin) {
         if (state.pin.length == 4){
-            viewModel.onLogin()
-            navController.navigate(OnboardingRoutes.SurveyScreen)
+            viewModel.validatePin(state.pin)
+            }
+        }
+
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess){
+            viewModel.clearPin()
+            navController.navigate(OnboardingRoutes.SurveyScreen){
+                popUpTo(OnboardingRoutes.Login){inclusive = true}
+            }
         }
     }
 
 
     Surface {
-        when (loginState) {
-            is PinState.Loading -> CircularLoading()
-            //true -> CircularLoading(true)
+        when (state.isSuccess) {
+            //is PinState.Loading -> CircularLoading()
+            true -> CircularLoading(true)
             else -> {
                 Box(
                     modifier = Modifier
@@ -125,7 +130,9 @@ fun LoginScreen(
 
                         // PIN Display
                         Column(
-                            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomCenter),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {

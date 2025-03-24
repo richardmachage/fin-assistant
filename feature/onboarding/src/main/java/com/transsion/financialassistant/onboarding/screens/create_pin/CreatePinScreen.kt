@@ -81,8 +81,17 @@ fun CreatePinScreen(
             .joinToString(""))
         TransformedText(transformedText, OffsetMapping.Identity)
     }
-
-
+    // After succefully creating the pin, it should clear the CreatePinScreen Route from the backstack
+    LaunchedEffect(pinState.success) {
+        if (pinState.success) {
+            viewModel.clearPin()
+            navController.navigate(OnboardingRoutes.Login) {
+                popUpTo<OnboardingRoutes.CreatePin> {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
 
     Scaffold(
@@ -203,7 +212,11 @@ fun CreatePinScreen(
                 onClick = {
                     if (isValidLength && isMatching) {
                         viewModel.setUserPin(pin)
-                        navController.navigate(OnboardingRoutes.Login)
+                        navController.navigate(OnboardingRoutes.Login){
+                            popUpTo<OnboardingRoutes.CreatePin> {
+                                inclusive = true
+                            }
+                        }
                     } else {
                         showError = true
                     }
@@ -219,14 +232,14 @@ fun CreatePinScreen(
                 )
             }
 
-            when(pinState) {
-                is PinState.Loading -> CircularLoading()
-                is PinState.Success -> {
+            when {
+                //is PinState.Loading -> CircularLoading()
+
+                pinState.isLoading -> {
                     Toast.makeText(context, "Pin Created Successfully!", Toast.LENGTH_SHORT).show()
                 }
-                is PinState.Error -> {
-                    val errorMessage = (pinState as PinState.Error).message
-                    Text(text = errorMessage, color = Color.Red)
+               pinState.error != null -> {
+                    Text(text = pinState.error!!, color = Color.Red)
                 }
                 else -> {}
             }
