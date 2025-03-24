@@ -64,7 +64,6 @@ class OnboardingRepoImpl @Inject constructor(
                     val mnc = subscriptionInfo.mncString.toString()
 
                     //check if number is for safaricom
-                    //check if number is for safaricom
                     when (isSafaricomNumber(mccMnc = "$mcc$mnc")) {
                         false -> {
                             //Not an mpesa number, so do nothing
@@ -177,4 +176,19 @@ class OnboardingRepoImpl @Inject constructor(
         return mccMnc == SAFARICOM_MCC_MNC || mccMnc == SAFARICOM_MCC_MNC_0
     }
 
+}
+
+
+fun addTwoNumbers(firstNum: Int, secondNumber: Int): Int? {
+    //ask user to enter number one
+    println("Enter first number")
+    val a = readlnOrNull()?.toIntOrNull()
+    //ask user to enter number two
+    println("Enter second number")
+    val b = readlnOrNull()?.toIntOrNull()
+
+    //get the sum
+    val sum = a ?: (0 + b!!) ?: 0
+    //return the sum
+    return sum
 }

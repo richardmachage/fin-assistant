@@ -9,9 +9,6 @@ sealed interface OnboardingRoutes {
     object Welcome : OnboardingRoutes
 
     @Serializable
-    object ConfirmNumber : OnboardingRoutes
-
-    @Serializable
     object CreatePin : OnboardingRoutes
 
     @Serializable
