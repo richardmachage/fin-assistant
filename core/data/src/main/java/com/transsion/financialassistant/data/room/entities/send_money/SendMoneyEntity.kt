@@ -7,7 +7,6 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 @Entity
 data class SendMoneyEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
     val transactionCode: String,
     val phone: String,
     val sentToName: String,
