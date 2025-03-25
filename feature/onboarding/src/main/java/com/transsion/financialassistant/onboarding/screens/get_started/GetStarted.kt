@@ -48,7 +48,7 @@ import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.dialogs.InfoDialog
 import com.transsion.financialassistant.presentation.components.isPermissionGranted
-import com.transsion.financialassistant.presentation.components.requestPermission
+import com.transsion.financialassistant.presentation.components.requestMultiplePermissions
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -66,12 +66,31 @@ fun GetStarted(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var isGranted = remember { context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) }
+    var isGranted = remember {
+        context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) && context.isPermissionGranted(
+            Manifest.permission.READ_PHONE_NUMBERS
+        )
+    }
     var showPermissionDialog by remember { mutableStateOf(false) }
     var showPermissionRationaleDialog by remember { mutableStateOf(false) }
 
 
-    val launcher = requestPermission(
+    /*val launcher = requestPermission(
+        onPermissionGranted = {
+            isGranted = true
+            showPermissionDialog = false
+            showPermissionRationaleDialog = false
+        },
+        onPermissionDenied = {
+            showPermissionRationaleDialog = true
+        }
+    )*/
+
+    val permissions = arrayOf(
+        Manifest.permission.READ_PHONE_STATE,
+        Manifest.permission.READ_PHONE_NUMBERS
+    )
+    val launcher = requestMultiplePermissions(
         onPermissionGranted = {
             isGranted = true
             showPermissionDialog = false
@@ -95,7 +114,7 @@ fun GetStarted(
             },
             onConfirm = {
                 showPermissionDialog = false
-                launcher.launch(Manifest.permission.READ_PHONE_STATE)
+                launcher.launch(permissions)
             },
             confirmButtonText = stringResource(com.transsion.financialassistant.presentation.R.string.allow),
             dismissButtonText = stringResource(R.string.deny)
@@ -108,7 +127,7 @@ fun GetStarted(
             message = stringResource(R.string.read_phone_state_rationale),
             onDismiss = {
                 showPermissionRationaleDialog = false
-                launcher.launch(Manifest.permission.READ_PHONE_STATE)
+                launcher.launch(permissions)
             },
             buttonText = stringResource(com.transsion.financialassistant.presentation.R.string.allow)
         )

@@ -22,6 +22,25 @@ fun requestPermission(
     )
 }
 
+@Composable
+fun requestMultiplePermissions(
+    onPermissionGranted: () -> Unit,
+    onPermissionDenied: () -> Unit
+): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
+
+    return rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+            val allGranted = permissions.values.all { it }
+            if (allGranted) {
+                onPermissionGranted()
+            } else {
+                onPermissionDenied()
+            }
+        }
+    )
+}
+
 
 fun Context.isPermissionGranted(permission: String) =
     ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
