@@ -188,8 +188,11 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
         return ReceivePochiEntity (
             transactionCode = groups[1],
             phone = phone,
+            amount = groups[2].replace(",","").toDouble(),
             receiveFromName = groups[3],
-            receiveFromPhone = groups[4],
+            date = groups[4],
+            time = groups[5],
+            businessBalance = groups[2].replace(",","").toDouble()
         )
     }
 
