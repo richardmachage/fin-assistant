@@ -80,17 +80,20 @@ class LoginViewModel @Inject constructor(
     }
 
 
-
-    fun onLogin(){
-       //TODO log n functionality
+    fun onLogin(
+        onSuccess: () -> Unit,
+    ) {
+        //TODO log n functionality
         viewModelScope.launch {
             toggleLoading(true)
+            state.value.pin = ""
             delay(3000)
+            onSuccess()
             toggleLoading(false)
-            //showToast("Logged In successfully")
+            // showToast("Logged In successfully")
+
         }
     }
-
     fun getGreetingBasedOnTime(): Int {
         val currentHour = LocalTime.now().hour
         return when (currentHour) {

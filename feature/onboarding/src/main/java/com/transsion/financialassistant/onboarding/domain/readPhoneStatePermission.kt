@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.permissions
+package com.transsion.financialassistant.onboarding.domain
 
 import android.Manifest
 import android.content.Context
@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 fun readPhoneStatePermission(
     context: Context,
     requestPermissionLauncher: ActivityResultLauncher<Array<String>>
-){
+) {
     val permissionsToRequest = mutableListOf<String>()
 
     if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
@@ -18,6 +18,13 @@ fun readPhoneStatePermission(
     ) {
         permissionsToRequest.add(Manifest.permission.READ_PHONE_STATE)
     }
+
+    if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_NUMBERS)
+        != PackageManager.PERMISSION_GRANTED
+    ) {
+        permissionsToRequest.add(Manifest.permission.READ_PHONE_NUMBERS)
+    }
+
 
     if (permissionsToRequest.isNotEmpty()) {
         requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())

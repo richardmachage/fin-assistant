@@ -3,11 +3,9 @@ package com.transsion.financialassistant.main_activity
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,9 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.permissions.readPhoneStatePermission
-import com.transsion.financialassistant.permissions.requestPhoneNumberPermissions
-import com.transsion.financialassistant.permissions.requestSmsPermissions
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -44,27 +39,27 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {permissions ->
-            val readSmsGranted = permissions[android.Manifest.permission.READ_SMS] ?: false
-            val sendSmsGranted = permissions[android.Manifest.permission.SEND_SMS] ?: false
-            val readPhoneStateGranted = permissions[android.Manifest.permission.READ_PHONE_STATE] ?: false
-            val readPhoneNumberGranted = permissions[android.Manifest.permission.READ_PHONE_NUMBERS] ?: false
+    /* private val requestPermissionLauncher =
+         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {permissions ->
+             val readSmsGranted = permissions[android.Manifest.permission.READ_SMS] ?: false
+             val sendSmsGranted = permissions[android.Manifest.permission.SEND_SMS] ?: false
+             val readPhoneStateGranted = permissions[android.Manifest.permission.READ_PHONE_STATE] ?: false
+             val readPhoneNumberGranted = permissions[android.Manifest.permission.READ_PHONE_NUMBERS] ?: false
 
-            if (readSmsGranted || sendSmsGranted || readPhoneStateGranted || readPhoneNumberGranted) {
-                Toast.makeText(this, "All Permissions Granted", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Some Permissions Denied", Toast.LENGTH_SHORT).show()
-            }
-        }
+             if (readSmsGranted || sendSmsGranted || readPhoneStateGranted || readPhoneNumberGranted) {
+                 Toast.makeText(this, "All Permissions Granted", Toast.LENGTH_SHORT).show()
+             } else {
+                 Toast.makeText(this, "Some Permissions Denied", Toast.LENGTH_SHORT).show()
+             }
+         }*/
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        readPhoneStatePermission(this, requestPermissionLauncher)
+        /*readPhoneStatePermission(this, requestPermissionLauncher)
         requestSmsPermissions(this, requestPermissionLauncher)
         requestPhoneNumberPermissions(this, requestPermissionLauncher)
-
+*/
 
 
        //installSplashScreen()
