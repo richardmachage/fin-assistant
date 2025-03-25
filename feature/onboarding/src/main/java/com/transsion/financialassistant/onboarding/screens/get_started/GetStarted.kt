@@ -202,7 +202,7 @@ fun SwipeToStartButton(
         )
     }
 
-    // When fully swiped (i.e., state = 1), trigger onSwipeComplete
+    // When fully swiped (i.e., state = 1), triggers onSwipeComplete
     LaunchedEffect(swipeableState.currentValue) {
         if (swipeableState.currentValue == 1) {
             onSwipeComplete()
@@ -217,12 +217,11 @@ fun SwipeToStartButton(
             .width(width)
             .height(height)
             .clip(RoundedCornerShape(28.dp))
-            .background(FAColors.GrayBackground) // Light green-ish background
+            .background(FAColors.GrayBackground)
             .swipeable(
                 state = swipeableState,
                 anchors = anchors,
                 thresholds = { _, _ ->
-                    //androidx.compose.foundation.gestures.FractionalThreshold(0.5f)
                     FractionalThreshold(0.7f)
                 },
                 orientation = Orientation.Horizontal
@@ -250,7 +249,6 @@ fun SwipeToStartButton(
             contentAlignment = Alignment.Center
         ) {
 
-            // Replace with your own icon; using built-in arrow icons or a custom resource
             Icon(
                 painter = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.swipe_arrows),
                 contentDescription = "Swipe Icon",
