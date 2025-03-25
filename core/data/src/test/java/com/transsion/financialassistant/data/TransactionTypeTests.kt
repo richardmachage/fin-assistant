@@ -36,8 +36,15 @@ class TransactionTypeTests {
     @Test
     fun `should detect PAY_BILL transaction`() {
         val message =
-            "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+            "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+
+        //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val result = transactionRepo.getTransactionType(message)
+        val groups = TransactionType.PAY_BILL.getRegex().find(message)?.groupValues
+
+        groups?.forEachIndexed { index, value ->
+            println("$index : $value")
+        }
 
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.PAY_BILL)
