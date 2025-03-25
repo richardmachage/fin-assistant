@@ -1,12 +1,10 @@
 package com.transsion.financialassistant.main_activity
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
@@ -38,42 +37,20 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-
-    /* private val requestPermissionLauncher =
-         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {permissions ->
-             val readSmsGranted = permissions[android.Manifest.permission.READ_SMS] ?: false
-             val sendSmsGranted = permissions[android.Manifest.permission.SEND_SMS] ?: false
-             val readPhoneStateGranted = permissions[android.Manifest.permission.READ_PHONE_STATE] ?: false
-             val readPhoneNumberGranted = permissions[android.Manifest.permission.READ_PHONE_NUMBERS] ?: false
-
-             if (readSmsGranted || sendSmsGranted || readPhoneStateGranted || readPhoneNumberGranted) {
-                 Toast.makeText(this, "All Permissions Granted", Toast.LENGTH_SHORT).show()
-             } else {
-                 Toast.makeText(this, "Some Permissions Denied", Toast.LENGTH_SHORT).show()
-             }
-         }*/
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        /*readPhoneStatePermission(this, requestPermissionLauncher)
-        requestSmsPermissions(this, requestPermissionLauncher)
-        requestPhoneNumberPermissions(this, requestPermissionLauncher)
-*/
 
-
-       //installSplashScreen()
         installSplashScreen()
         enableEdgeToEdge()
         setContent {
+            val viewmodel = hiltViewModel<MainViewModel>()
             FinancialAssistantTheme {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
                     startDestination = OnboardingRoutes.Welcome
                 )
-
-                //SurveyScreen(navController = financialAssistantController)
             }
         }
     }
@@ -84,9 +61,10 @@ class MainActivity : ComponentActivity() {
 fun TestMessageScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    val timeTaken by viewModel.timeTaken.collectAsState()
-    val loadingState by viewModel.loadingState.collectAsState()
+    // val timeTaken by viewModel.timeTaken.collectAsState()
+    // val loadingState by viewModel.loadingState.collectAsState()
     val mpesaMessages by viewModel.messages.collectAsState()
 
     Scaffold { innerPadding ->
@@ -102,10 +80,10 @@ fun TestMessageScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Text(text = "Time Taken : ${timeTaken.inWholeMilliseconds}")
+                Text(text = "Time Taken : ${state.timeTaken.inWholeMilliseconds}")
                 VerticalSpacer(10)
 
-                if (loadingState) {
+                if (state.isLoading) {
                     CircularProgressIndicator(color = FAColors.green)
                 }
 

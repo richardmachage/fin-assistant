@@ -7,6 +7,7 @@ import com.transsion.financialassistant.background.getMpesaMessages
 import com.transsion.financialassistant.background.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,36 +15,49 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.time.Duration
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val transactionRepo: TransactionRepo
 ) : ViewModel() {
 
-    private var _timeTaken = MutableStateFlow(Duration.ZERO)
-    val timeTaken = _timeTaken.asStateFlow()
+    private var _state = MutableStateFlow(ScreenState())
+    val state = _state.asStateFlow()
 
-    private var _loadingState = MutableStateFlow(false)
-    val loadingState = _loadingState.asStateFlow()
 
     private var _messages = MutableStateFlow(emptyList<MpesaMessage>())
     val messages = _messages.asStateFlow()
 
     fun getTheMessages(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            _loadingState.update { true }
+            _state.update { it.copy(isLoading = true) }
             _messages.update {
                 getMpesaMessages(
                     context = context,
                     filterValue = TransactionType.SEND_MONEY,
                     getExecutionTime = { dur ->
-                        _timeTaken.update { dur }
-                        _loadingState.update { false }
+                        _state.update { it.copy(timeTaken = dur) }
+                        _state.update { it.copy(isLoading = false) }
                     },
                     transactionRepo = transactionRepo
                 )
             }
         }
+    }
+
+    fun getStartDestination(): Any {
+
+        //when onboarding has completed
+        // when PIN login is enabled
+        // --> Go to login screen
+
+        //when PIN login is disabled
+        // --> Go to home screen
+
+
+        //when onboarding has NOT completed
+        // --> Go to Welcome screen to complete onboarding
+        return OnboardingRoutes.Welcome
+
     }
 }
