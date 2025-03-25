@@ -48,11 +48,11 @@ class MainViewModel @Inject constructor(
     fun getStartDestination(): Any {
 
         //when onboarding has completed
-        // when PIN login is enabled
-        // --> Go to login screen
+            // when PIN login is enabled
+            // --> Go to login screen
 
-        //when PIN login is disabled
-        // --> Go to home screen
+            //when PIN login is disabled
+            // --> Go to home screen
 
 
         //when onboarding has NOT completed

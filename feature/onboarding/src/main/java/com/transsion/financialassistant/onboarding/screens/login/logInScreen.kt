@@ -87,7 +87,7 @@ fun LoginScreen(
 
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess){
-            viewModel.onLogin()
+            viewModel.onLogin(onSuccess = {})
             viewModel.clearPin()
             navController.navigate(OnboardingRoutes.SurveyScreen){
                 popUpTo(OnboardingRoutes.Login){inclusive = true}
