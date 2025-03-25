@@ -3,6 +3,7 @@ package com.transsion.financialassistant.data
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -46,25 +47,26 @@ class TransactionRepoTests {
         assertTrue("KELVIN  OMUTERE" == entity?.receiveFromName)
         assertTrue("0759733329" == entity?.receiveFromPhone)
         assertTrue(1600.00 == entity?.amount)
-
     }
-
+    @Test
     fun testSuccessfulParseOfPayBillMessage() {
         val message =
-            "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+            //"TCB48EE7UG Confirmed. Ksh20.00 sent to Joshua Me Paid for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+
+        "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
         val entity = transactionRepo.parsePayBillMessage(
             message = message,
             phone = "0718353505"
         )
-
         assertNotNull(entity)
-        assertTrue("TCM0P6D1HI" == entity?.transactionCode)
-        assertTrue("Lipa na KCB" == entity?.paidToName)
-        assertTrue("9000839" == entity?.paidToAccountNo)
-        assertTrue(300.00 == entity?.amount)
+        //entity?.let {
+            assertTrue(entity?.transactionCode == "TCM0P6D1HI")
+            assertTrue(entity?.paidToName == "Lipa na KCB")
+            assertTrue(entity?.paidToAccountNo == "9000839")
+            assertTrue(entity?.amount == 300.00)
+        }
 
-    }
 
     @Test
     fun testSuccessfulParseOfBuyGoodsMessage() {
@@ -118,7 +120,6 @@ class TransactionRepoTests {
             message = message,
             phone = "0718353505"
         )
-
         assertTrue(entity != null)
         assertTrue(entity?.transactionCode == "TA6678JM3W")
         assertTrue(entity?.date == "6/1/25")
@@ -127,6 +128,5 @@ class TransactionRepoTests {
         assertTrue(entity?.mpesaBalance == 1335.89)
         assertTrue(entity?.transactionCategory == TransactionCategory.IN)
     }
-
 
 }
