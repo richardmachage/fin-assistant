@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.onboarding.screens.get_started
 
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -17,13 +18,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,25 +40,81 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
+import androidx.wear.compose.material.SwipeableState
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
+import com.transsion.financialassistant.presentation.components.dialogs.InfoDialog
+import com.transsion.financialassistant.presentation.components.isPermissionGranted
+import com.transsion.financialassistant.presentation.components.requestPermission
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 //@Preview(showSystemUi = true)
+@OptIn(ExperimentalWearMaterialApi::class)
 @Composable
 fun GetStarted(
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    var isGranted = remember { context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) }
+    var showPermissionDialog by remember { mutableStateOf(false) }
+    var showPermissionRationaleDialog by remember { mutableStateOf(false) }
+
+
+    val launcher = requestPermission(
+        onPermissionGranted = {
+            isGranted = true
+            showPermissionDialog = false
+            showPermissionRationaleDialog = false
+        },
+        onPermissionDenied = {
+            showPermissionRationaleDialog = true
+        }
+    )
+
     Scaffold { innerPadding ->
+
+        //Read phone state Permission dialog
+        ConfirmDialog(
+            showDialog = showPermissionDialog,
+            title = stringResource(R.string.allow_financial_assistant_to_access_sim),
+            message = stringResource(R.string.we_need_to_access_your_sim_info),
+            onDismiss = {
+                showPermissionDialog = false
+                showPermissionRationaleDialog = true
+            },
+            onConfirm = {
+                showPermissionDialog = false
+                launcher.launch(Manifest.permission.READ_PHONE_STATE)
+            },
+            confirmButtonText = stringResource(com.transsion.financialassistant.presentation.R.string.allow),
+            dismissButtonText = stringResource(R.string.deny)
+        )
+
+        //Read phone state permission rationale dialog
+        InfoDialog(
+            showDialog = showPermissionRationaleDialog,
+            title = stringResource(R.string.allow_financial_assistant_to_access_sim),
+            message = stringResource(R.string.read_phone_state_rationale),
+            onDismiss = {
+                showPermissionRationaleDialog = false
+                launcher.launch(Manifest.permission.READ_PHONE_STATE)
+            },
+            buttonText = stringResource(com.transsion.financialassistant.presentation.R.string.allow)
+        )
+
+
+
         Box(
             modifier = Modifier
                 //.padding(innerPadding)
@@ -94,17 +156,23 @@ fun GetStarted(
                 )
                 VerticalSpacer(10)
 
+                val swipeableState = rememberSwipeableState(0)
+
                 SwipeToStartButton(
                     modifier = Modifier.fillMaxWidth(),
                     width = LocalConfiguration.current.screenWidthDp.dp,
                     onSwipeComplete = {
-                        //navigate to assigning accounts
-                        navController.navigate(OnboardingRoutes.ConfirmNumberDual)
-                        {
-                            popUpTo(OnboardingRoutes.ConfirmNumberDual){inclusive = true}
+                        if (isGranted) {
+                            navController.navigate(OnboardingRoutes.ConfirmNumberDual)
+                            {
+                                popUpTo(OnboardingRoutes.Welcome) { inclusive = true }
+                            }
+                        } else {
+                            scope.launch { swipeableState.snapTo(0) }
+                            showPermissionDialog = true
                         }
-
-                    }
+                    },
+                    swipeableState = swipeableState
                 )
                 VerticalSpacer(10)
 
@@ -119,11 +187,11 @@ fun SwipeToStartButton(
     modifier: Modifier = Modifier,
     width: Dp,
     height: Dp = 55.dp,
-    onSwipeComplete: () -> Unit
+    onSwipeComplete: () -> Unit,
+    swipeableState: SwipeableState<Int>
 ) {
     val density = LocalDensity.current
     // Track the swipe state
-    val swipeableState = rememberSwipeableState(0)
 
     // Anchors define where the handle can rest (start -> value=0, end -> value=1)
     val anchors = remember(width) {
@@ -138,8 +206,8 @@ fun SwipeToStartButton(
     LaunchedEffect(swipeableState.currentValue) {
         if (swipeableState.currentValue == 1) {
             onSwipeComplete()
-            delay(400)
-            swipeableState.snapTo(0)
+            //delay(400)
+            //swipeableState.snapTo(0)
         }
     }
 

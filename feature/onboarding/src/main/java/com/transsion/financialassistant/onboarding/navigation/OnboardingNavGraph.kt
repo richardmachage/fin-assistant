@@ -8,10 +8,10 @@ import androidx.navigation.compose.composable
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
+import com.transsion.financialassistant.onboarding.screens.create_pin.SetPasswordPromptScreen
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
-import com.transsion.financialassistant.onboarding.screens.promt_screens.set_password.SetPasswordScreen
 import com.transsion.financialassistant.onboarding.screens.surveys.PersonalTrackerSurvey
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
 
@@ -43,7 +43,7 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.SetPassword> {
-        SetPasswordScreen(navController = navController)
+        SetPasswordPromptScreen(onSkip = {}, onContinue = {})
     }
 
     composable<OnboardingRoutes.EnableNotifications> {

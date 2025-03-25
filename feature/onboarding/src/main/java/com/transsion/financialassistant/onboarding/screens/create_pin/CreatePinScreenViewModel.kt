@@ -1,20 +1,14 @@
 package com.transsion.financialassistant.onboarding.screens.create_pin
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
-import com.transsion.financialassistant.presentation.components.texts.BigTittleText
-import com.transsion.financialassistant.presentation.components.texts.FaintText
-import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +21,15 @@ class CreatePinScreenViewModel @Inject constructor(
     //val pinState : StateFlow<PinState> = _pinState
     val pinState: StateFlow<CreatePinScreenState> =
         _pinState.asStateFlow() // Expose the state as a read-only StateFlow
+
+
+    private var _showPrompt = MutableStateFlow(true)
+    val showPrompt = _showPrompt.asStateFlow()
+
+
+    fun setShowPrompt(show: Boolean) {
+        _showPrompt.update { show }
+    }
 
     fun setUserPin(pin: String) {
         viewModelScope.launch {
@@ -77,3 +80,4 @@ class CreatePinScreenViewModel @Inject constructor(
         _pinState.update { it.copy(error = null, toastMessage = null) }
     }
 }
+

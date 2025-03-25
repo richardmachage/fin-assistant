@@ -16,7 +16,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,23 +32,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
-import com.transsion.financialassistant.presentation.components.text_input_fields.TextFieldFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -64,6 +58,7 @@ fun CreatePinScreen(
     navController: NavController,
     viewModel: CreatePinScreenViewModel = hiltViewModel()
 ) {
+    val showPrompt by viewModel.showPrompt.collectAsState()
     val pinState by viewModel.pinState.collectAsState()
     var pin by remember { mutableStateOf("") }
 
@@ -93,114 +88,123 @@ fun CreatePinScreen(
         }
     }
 
+    when (showPrompt) {
+        true -> SetPasswordPromptScreen(
+            onSkip = {
+                //Navigate to surveys
+            }, onContinue = {
+                viewModel.setShowPrompt(false)
+            }
+        )
 
-    Scaffold(
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Column(
+        false -> Scaffold(
+        ) { paddingValues ->
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingLarge),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                    .fillMaxSize()
+                    .padding(paddingValues)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(paddingLarge)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingLarge),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconButton(
-                        onClick = { navController.navigateUp() },
-                        colors = IconButtonDefaults.iconButtonColors().copy(
-                            containerColor = MaterialTheme.colorScheme.background,
-                            contentColor = MaterialTheme.colorScheme.onBackground
-                        )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(paddingLarge)
                     ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                        IconButton(
+                            onClick = { navController.navigateUp() },
+                            colors = IconButtonDefaults.iconButtonColors().copy(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                contentColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Back",
+                            )
+                        }
+                        //  }
+                        HorizontalSpacer(16)
+                        BigTittleText(text = stringResource(R.string.create_pin))
+                    }
+
+                    VerticalSpacer(4)
+
+                    FaintText(
+                        modifier = Modifier.padding(start = 60.dp),
+                        text = stringResource(R.string.create_pin_description),
+                        textAlign = TextAlign.Start,
+                    )
+
+                    VerticalSpacer(16)
+                    NormalText(
+                        text = stringResource(R.string.pin),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(start = 60.dp)
+                            .align(Alignment.Start)
+                    )
+                    VerticalSpacer(8)
+                    PasswordTextFieldFa(
+                        value = pin,
+                        onValueChange = { newPin ->
+                            if (newPin.length < 5) pin = newPin
+                            pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        placeholder = stringResource(R.string.pin),
+                        isShowError = pinError,
+                        visualTransformation = asteriskVisualTransformation
+                    )
+                    if (pinError) {
+                        Text(
+                            text = stringResource(R.string.pin_error_message),
+                            color = Color.Red,
+                            modifier = Modifier.padding(start = 8.dp, top = 4.dp)
                         )
                     }
-                    //  }
-                    HorizontalSpacer(16)
-                    BigTittleText(text = stringResource(R.string.create_pin))
-                }
 
-                VerticalSpacer(4)
-
-                FaintText(
-                    modifier = Modifier.padding(start = 60.dp),
-                    text = stringResource(R.string.create_pin_description),
-                    textAlign = TextAlign.Start,
-                )
-
-                VerticalSpacer(16)
-                NormalText(
-                    text = stringResource(R.string.pin),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(start = 60.dp)
-                        .align(Alignment.Start)
-                )
-                VerticalSpacer(8)
-                PasswordTextFieldFa(
-                    value = pin,
-                    onValueChange = { newPin ->
-                        if (newPin.length < 5) pin = newPin
-                        pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
-                    },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    placeholder = stringResource(R.string.pin),
-                   isShowError = pinError,
-                    visualTransformation = asteriskVisualTransformation
-                )
-                if (pinError) {
-                    Text(
-                        text = stringResource(R.string.pin_error_message),
-                        color = Color.Red,
-                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    VerticalSpacer(16)
+                    NormalText(
+                        text = stringResource(R.string.confirm_pin),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier
+                            .padding(start = 60.dp)
+                            .align(Alignment.Start)
                     )
-                }
-
-                VerticalSpacer(16)
-                NormalText(
-                    text = stringResource(R.string.confirm_pin),
-                    textAlign = TextAlign.Start,
-                    modifier = Modifier
-                        .padding(start = 60.dp)
-                        .align(Alignment.Start)
-                )
-                VerticalSpacer(8)
-                PasswordTextFieldFa(
-                    value = confirmPin,
-                    onValueChange = { newConfirmPin ->
-                        if (newConfirmPin.length < 5){
-                            confirmPin = newConfirmPin
-                            confirmPinError = pin != confirmPin // Show Error if Pin does not match
-                        }
-                    },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    placeholder = stringResource(R.string.confirm_pin),
-                    isShowError = confirmPinError,
-                    visualTransformation = asteriskVisualTransformation
-                )
-
-                if (confirmPinError) {
-                    Text(
-                        text = stringResource(R.string.confirm_pin_error_message),
-                        color = Color.Red,
-                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    VerticalSpacer(8)
+                    PasswordTextFieldFa(
+                        value = confirmPin,
+                        onValueChange = { newConfirmPin ->
+                            if (newConfirmPin.length < 5) {
+                                confirmPin = newConfirmPin
+                                confirmPinError =
+                                    pin != confirmPin // Show Error if Pin does not match
+                            }
+                        },
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally),
+                        placeholder = stringResource(R.string.confirm_pin),
+                        isShowError = confirmPinError,
+                        visualTransformation = asteriskVisualTransformation
                     )
+
+                    if (confirmPinError) {
+                        Text(
+                            text = stringResource(R.string.confirm_pin_error_message),
+                            color = Color.Red,
+                            modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                        )
+                    }
+
+                    VerticalSpacer(80)
+
                 }
-
-                VerticalSpacer(80)
-
-            }
 
             FilledButtonFa(
                 modifier = Modifier
@@ -245,6 +249,8 @@ fun CreatePinScreen(
             }
         }
     }
+}
+
 }
 
 

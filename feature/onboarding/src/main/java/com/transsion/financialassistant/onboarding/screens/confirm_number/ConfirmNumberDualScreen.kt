@@ -64,6 +64,7 @@ fun ConfirmNumberDualScreen(
     LaunchedEffect(Unit) {
         viewModel.loadMpesaNumbers(context)
     }
+
     Scaffold { paddingValues ->
         Box(
             modifier = Modifier

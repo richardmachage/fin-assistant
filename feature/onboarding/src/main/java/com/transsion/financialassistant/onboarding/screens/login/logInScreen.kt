@@ -77,6 +77,8 @@ fun LoginScreen(
         }
     }
 
+
+
     LaunchedEffect(state.pin) {
         if (state.pin.length == 4){
             viewModel.validatePin(state.pin)
