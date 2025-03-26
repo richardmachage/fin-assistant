@@ -1,12 +1,8 @@
-package com.transsion.financialassistant.data.room.entities.withdraw
+package com.transsion.financialassistant.data.room.entities.buy_airtime
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
-@Entity
-data class WithdrawMoneyEntity(
-    @PrimaryKey
+data class BuyAirtimeEntity(
     val transactionCode: String,
     val phone: String,
     val amount: Double,
@@ -14,7 +10,5 @@ data class WithdrawMoneyEntity(
     val date: String,
     val time: String,
     val transactionCost: Double,
-    val agent: String,
-    //val agentNumber: String,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT
 )

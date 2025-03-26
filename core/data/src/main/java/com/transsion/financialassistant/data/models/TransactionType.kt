@@ -26,7 +26,7 @@ enum class TransactionType(val description: String) {
             SEND_MONEY -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z ]+) (\\d{10}) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.  Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
 
             RECEIVE_MONEY -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z ]+) (\\d+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\s+New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
-            RECEIVE_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})  New business balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
+            RECEIVE_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) {2}New business balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex()
 
             SEND_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?"
@@ -37,7 +37,9 @@ enum class TransactionType(val description: String) {
             SEND_MSHWARI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.Ksh([\\d,]+\\.?\\d{0,2}) transferred to M-Shwari account on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2}) \\..*?New M-Shwari saving account balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost Ksh\\.([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
 
 
-            RECEIVE_MSHWARI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.Ksh([\\d,]+\\.?\\d{0,2}) received from M-Shwari on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2}) \\..*?New M-Shwari saving account balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost Ksh\\.([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
+            RECEIVE_MSHWARI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.Ksh([\\d,]+\\.?\\d{0,2}) transferred from M-Shwari on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2}) \\..*?New M-Shwari saving account balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost Ksh\\.([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
+
+            //RECEIVE_MSHWARI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.Ksh([\\d,]+\\.?\\d{0,2}) transferred from M-Shwari account on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. M-Shwari balance is Ksh([\\d,]+\\.?\\d{0,2}) \\.M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2}) \\.Transaction cost Ksh\\.([\\d,]+\\.?\\d{0,2})\n".toRegex()
 
             AIRTIME_PURCHASE -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You bought Ksh([\\d,]+\\.?\\d{0,2}) of airtime on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
             BUNDLES_PURCHASE -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Z ]+) for account ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
