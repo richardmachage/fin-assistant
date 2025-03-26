@@ -1,9 +1,12 @@
 package com.transsion.financialassistant.data.room.entities.receive_mshwari
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
-import java.sql.Date
 
-data class ReceiveMshwari(
+@Entity
+data class ReceiveMshwariEntity(
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val account: String,

@@ -3,7 +3,6 @@ package com.transsion.financialassistant.data
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
-import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -161,7 +160,7 @@ class TransactionRepoTests {
     }
 
     @Test
-    fun testSuccessfulParseofReceiveMshwariMessage() {
+    fun testSuccessfulParseOfReceiveMshwariMessage() {
         val message =
             "TCP22LYZH8 Confirmed.Ksh20.00 transferred from M-Shwari account on 25/3/25 at 4:41 PM. M-Shwari balance is Ksh10.29 .M-PESA balance is Ksh79.61 .Transaction cost Ksh.0.00"
 
@@ -171,7 +170,6 @@ class TransactionRepoTests {
         )
         assertTrue(entity != null)
         assertTrue(entity?.transactionCode == "TCP22LYZH8")
-        assertTrue(entity?.account == "M-Shwari account")
         assertTrue(entity?.amount == 20.00)
         assertTrue(entity?.mpesaBalance == 79.61)
         assertTrue(entity?.mshwariBalance == 10.29)

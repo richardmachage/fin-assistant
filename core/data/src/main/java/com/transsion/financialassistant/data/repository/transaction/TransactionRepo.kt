@@ -7,7 +7,7 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
-import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwari
+import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
@@ -24,7 +24,7 @@ interface TransactionRepo {
     fun parseDepositMoneyMessage(message: String, phone: String): DepositMoneyEntity?
     fun parseReceivePochiMessage(message: String, phone: String): ReceivePochiEntity?
     fun parseBundlesPurchaseMessage(message: String, phone: String): BundlesPurchaseEntity?
-    fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwari?
+    fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwariEntity?
     fun parseSendMshwariMessage(message: String, phone: String): SendMshwariEntity?
     fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity?
     fun parseWithdrawMoneyMessage(message: String, phone: String): WithdrawMoneyEntity?

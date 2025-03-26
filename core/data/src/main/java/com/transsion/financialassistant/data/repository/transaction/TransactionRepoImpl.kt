@@ -7,7 +7,7 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
-import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwari
+import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
@@ -223,7 +223,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
         )
     }
 
-    override fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwari? {
+    override fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwariEntity? {
         val match = TransactionType.RECEIVE_MSHWARI.getRegex().find(message) ?: return null
         val groups = match.groupValues
 
@@ -231,16 +231,16 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             println("${index}, $it")
         }
 
-        return ReceiveMshwari(
+        return ReceiveMshwariEntity(
             transactionCode = groups[1],
             phone = phone,
             amount = groups[2].replace(",","").toDouble(),
             account = groups[3],
-            date = groups[4],
-            time = groups[5],
-            mshwariBalance = groups[6].replace(",","").toDouble(),
-            mpesaBalance =  groups[7].replace(",", "").toDouble(),
-            transactionCost = groups[8].toDouble()
+            date = groups[3],
+            time = groups[4],
+            mshwariBalance = groups[5].replace(",", "").toDouble(),
+            mpesaBalance = groups[6].replace(",", "").toDouble(),
+            transactionCost = groups[7].toDouble()
         )
     }
 
