@@ -42,11 +42,11 @@ class TransactionRepoTests {
             phone = "0718353505"
         )
 
-//        assertNotNull(entity)
-//        assertTrue("TCN1UNF1RZ" == entity?.transactionCode)
-//        assertTrue("KELVIN  OMUTERE" == entity?.receiveFromName)
-//        assertTrue("0759733329" == entity?.receiveFromPhone)
-//        assertTrue(1600.00 == entity?.amount)
+        assertNotNull(entity)
+        assertTrue("TCN1UNF1RZ" == entity?.transactionCode)
+        assertTrue("KELVIN  OMUTERE" == entity?.receiveFromName)
+        assertTrue("0759733329" == entity?.receiveFromPhone)
+        assertTrue(1600.00 == entity?.amount)
     }
     @Test
     fun testSuccessfulParseOfPayBillMessage() {
@@ -60,7 +60,6 @@ class TransactionRepoTests {
             phone = "0718353505"
         )
         assertNotNull(entity)
-        //entity?.let {
             assertTrue(entity?.transactionCode == "TCM0P6D1HI")
             assertTrue(entity?.paidToName == "Lipa na KCB")
             assertTrue(entity?.paidToAccountNo == "9000839")
@@ -170,13 +169,12 @@ class TransactionRepoTests {
             message = message,
             phone = "0718353505"
         )
-
-//        assertNotNull(entity)
-//        assertTrue(entity?.transactionCode == "TCP22LYZH8")
-//        assertTrue(entity?.account == "M-Shwari account")
-//        assertTrue(entity?.amount == 20.00)
-//        assertTrue(entity?.mpesaBalance == 79.61)
-//        assertTrue(entity?.mshwariBalance == 10.29)
+        assertTrue(entity != null)
+        assertTrue(entity?.transactionCode == "TCP22LYZH8")
+        assertTrue(entity?.account == "M-Shwari account")
+        assertTrue(entity?.amount == 20.00)
+        assertTrue(entity?.mpesaBalance == 79.61)
+        assertTrue(entity?.mshwariBalance == 10.29)
     }
 
     @Test
@@ -205,12 +203,12 @@ class TransactionRepoTests {
             phone = "0718353505"
         )
 
-//        assertTrue(entity != null)
-//        assertTrue(entity?.transactionCode == "TCA95DZ8Q7")
-//        assertTrue(entity?.amount == 30.00)
-//        assertTrue(entity?.mpesaBalance == 43.61)
-//        assertTrue(entity?.date == "10/3/25")
-//        assertTrue(entity?.time == "2:27 PM")
+        assertTrue(entity != null)
+        assertTrue(entity?.transactionCode == "TCA95DZ8Q7")
+        assertTrue(entity?.amount == 30.00)
+        assertTrue(entity?.mpesaBalance == 43.61)
+        assertTrue(entity?.date == "10/3/25")
+        assertTrue(entity?.time == "2:27 PM")
     }
 
     @Test
