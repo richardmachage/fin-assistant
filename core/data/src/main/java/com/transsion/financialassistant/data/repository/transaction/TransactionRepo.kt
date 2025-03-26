@@ -12,6 +12,7 @@ import com.transsion.financialassistant.data.room.entities.receive_pochi.Receive
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 
 interface TransactionRepo {
     fun getTransactionType(message: String): TransactionType
@@ -26,4 +27,5 @@ interface TransactionRepo {
     fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwari?
     fun parseSendMshwariMessage(message: String, phone: String): SendMshwariEntity?
     fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity?
+    fun parseWithdrawMoneyMessage(message: String, phone: String): WithdrawMoneyEntity?
 }

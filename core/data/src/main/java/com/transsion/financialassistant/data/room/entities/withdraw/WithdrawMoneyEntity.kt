@@ -13,5 +13,8 @@ data class WithdrawMoneyEntity(
     val mpesaBalance: Double,
     val date: String,
     val time: String,
+    val transactionCost: Double,
+    val agent: String,
+    //val agentNumber: String,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT
 )

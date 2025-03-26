@@ -12,6 +12,7 @@ import com.transsion.financialassistant.data.room.entities.receive_pochi.Receive
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import javax.inject.Inject
 
 open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
@@ -44,7 +45,8 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             TransactionType.BUY_GOODS.getRegex()
                 .matches(message) -> TransactionType.BUY_GOODS
 
-            TransactionType.SEND_MSHWARI.getRegex().matches(message) -> TransactionType.SEND_MSHWARI
+            TransactionType.SEND_MSHWARI.getRegex()
+                .matches(message) -> TransactionType.SEND_MSHWARI
 
             TransactionType.RECEIVE_POCHI.getRegex()
                 .matches(message) -> TransactionType.RECEIVE_POCHI
@@ -234,8 +236,8 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             phone = phone,
             amount = groups[2].replace(",","").toDouble(),
             account = groups[3],
-            time = groups[5],
             date = groups[4],
+            time = groups[5],
             mshwariBalance = groups[6].replace(",","").toDouble(),
             mpesaBalance =  groups[7].replace(",", "").toDouble(),
             transactionCost = groups[8].toDouble()
@@ -279,6 +281,27 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             date = groups[3],
             time = groups[4],
             transactionCost = groups[6].toDouble()
+        )
+    }
+
+    override fun parseWithdrawMoneyMessage(message: String, phone: String): WithdrawMoneyEntity? {
+        val match = TransactionType.WITHDRAWAL.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        return WithdrawMoneyEntity(
+            transactionCode = groups[1],
+            phone = phone,
+            amount = groups[4].replace(",","").toDouble(),
+            mpesaBalance = groups[6].replace(",","").toDouble(),
+            date = groups[2],
+            time = groups[3],
+            //agentName = groups[5],
+            agent = groups[5],
+            transactionCost = groups[7].toDouble()
         )
     }
 
