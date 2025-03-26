@@ -4,6 +4,12 @@ import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.data.repository.security.SecurityRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
+import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
+import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import dagger.Binds
@@ -30,4 +36,18 @@ abstract class RepositoryModule {
         sendMoneyRepoImpl: SendMoneyRepoImpl
     ): SendMoneyRepo
 
+    @Binds
+    internal abstract fun bindReceiveMoneyRepo(
+        receiveMoneyRepoImpl: ReceiveMoneyRepoImpl
+    ): ReceiveMoneyRepo
+
+    @Binds
+    internal abstract fun bindPayBillRepo(
+        payBillRepoImpl: PayBillRepoImpl
+    ): PayBillRepo
+
+    @Binds
+    internal abstract fun bindBuyGoodsRepo(
+        buyGoodsRepoImpl: BuyGoodsRepoImpl
+    ): BuyGoodsRepo
 }
