@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepo
+import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
@@ -12,6 +14,10 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mone
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
+import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
+import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepoImpl
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDb
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -29,6 +35,9 @@ class RoomDbTests {
     private lateinit var receiveMoneyRepo: ReceiveMoneyRepo
     private lateinit var buyGoodsRepo: BuyGoodsRepo
     private lateinit var payBillRepo: PayBillRepo
+    private lateinit var withdrawMoneyRepo: WithdrawMoneyRepo
+    private lateinit var buyAirtimeRepo: BuyAirtimeRepo
+    private lateinit var sendMshwariRepo: SendMshwariRepo
     private lateinit var appContext: Context
 
     @Before
@@ -48,7 +57,9 @@ class RoomDbTests {
         receiveMoneyRepo = ReceiveMoneyRepoImpl(receiveMoneyDao = db.receiveMoneyDao())
         payBillRepo = PayBillRepoImpl(payBillDao = db.payBillDao())
         buyGoodsRepo = BuyGoodsRepoImpl(buyGoodsDao = db.buyGoodsDao())
-
+        withdrawMoneyRepo = WithdrawMoneyRepoImpl(withdrawMoneyDao = db.withdrawMoneyDao())
+        buyAirtimeRepo = BuyAirtimeRepoImpl(buyAirtimeDao = db.buyAirtimeDao())
+        sendMshwariRepo = SendMshwariRepoImpl(sendMshwariDao = db.sendMshwariDao())
     }
 
     @After
@@ -135,6 +146,61 @@ class RoomDbTests {
         assertTrue(successCalled)
     }
 
+    @Test
+    fun testInsertWithdrawMoneyTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "SL14U1AA94 Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. Amount you can transact within the day is 496,850.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
+        var successCalled = false
 
+        withdrawMoneyRepo.insertWithdrawMoneyTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098765",
+            onSuccess = { successCalled = true },
+            onFailure = { fail(it) }
+        )
+
+        assertTrue(successCalled)
+    }
+
+    @Test
+    fun testInsertBuyAirtimeTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TCA95DZ8Q7 confirmed.You bought Ksh30.00 of airtime on 10/3/25 at 2:27 PM.New M-PESA balance is Ksh43.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,890.00. Start Investing today with Ziidi MMF & earn daily. Dial *334#"
+
+        var successCalled = false
+
+        buyAirtimeRepo.insertBuyAirtimeTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098765",
+            onSuccess = { successCalled = true },
+            onFailure = { fail(it) }
+        )
+
+        assertTrue(successCalled)
+
+    }
+
+    @Test
+    fun testInsertSendMshwariTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TCP82LUXUW Confirmed.Ksh30.00 transferred to M-Shwari account on 25/3/25 at 4:41 PM. M-PESA balance is Ksh59.61 .New M-Shwari saving account balance is Ksh30.29. Transaction cost Ksh.0.00"
+
+        var successCalled = false
+
+        sendMshwariRepo.insertSendMshwariTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098765",
+            onSuccess = { successCalled = true },
+            onFailure = { fail(it) }
+        )
+
+        assertTrue(successCalled)
+    }
 
 }
