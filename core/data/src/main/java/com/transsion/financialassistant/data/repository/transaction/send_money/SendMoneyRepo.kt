@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.repository.send_money
+package com.transsion.financialassistant.data.repository.transaction.send_money
 
 import android.content.Context
 
@@ -9,6 +9,8 @@ interface SendMoneyRepo {
         context: Context,
         subId: Int,
         onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
-    )
+        onFailure: (String) -> Unit,
+        phone: String? = null,
+
+        )
 }

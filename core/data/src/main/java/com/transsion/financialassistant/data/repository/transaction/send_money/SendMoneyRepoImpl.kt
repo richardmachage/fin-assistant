@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.repository.send_money
+package com.transsion.financialassistant.data.repository.transaction.send_money
 
 import android.Manifest
 import android.content.Context
@@ -18,16 +18,19 @@ class SendMoneyRepoImpl @Inject constructor(
         context: Context,
         subId: Int,
         onSuccess: () -> Unit,
-        onFailure: (String) -> Unit
+        onFailure: (String) -> Unit,
+        phone: String?
     ) {
+        var thisPhone = phone
         try {
 
-
             //get the receiving address
-            val phone = getReceivingAddress(context, subId)
+            if (thisPhone == null) {
+                thisPhone = getReceivingAddress(context, subId)
+            }
 
             //parse the message
-            val sendMoneyEntity = parseSendMoneyMessage(message, phone ?: "")
+            val sendMoneyEntity = parseSendMoneyMessage(message, thisPhone ?: "")
 
             //insert the transaction into the database
             sendMoneyEntity?.let {

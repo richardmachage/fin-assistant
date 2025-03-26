@@ -2,10 +2,10 @@ package com.transsion.financialassistant.data.di
 
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.data.repository.security.SecurityRepoImpl
-import com.transsion.financialassistant.data.repository.send_money.SendMoneyRepo
-import com.transsion.financialassistant.data.repository.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
+import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
