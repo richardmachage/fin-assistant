@@ -194,4 +194,29 @@ class TransactionRepoTests {
         assertTrue(entity?.amount == 30.00)
     }
 
+    @Test
+    fun testSuccessfulParseOfPurchaseAirtimeMessage() {
+        val message =
+            "TCA95DZ8Q7 confirmed.You bought Ksh30.00 of airtime on 10/3/25 at 2:27 PM.New M-PESA balance is Ksh43.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,890.00. Start Investing today with Ziidi MMF & earn daily. Dial *334#"
+
+        val entity = transactionRepo.parsePurchaseAirtimeMessage(
+            message = message,
+            phone = "0718353505"
+        )
+
+//        assertTrue(entity != null)
+//        assertTrue(entity?.transactionCode == "TCA95DZ8Q7")
+//        assertTrue(entity?.amount == 30.00)
+//        assertTrue(entity?.mpesaBalance == 43.61)
+//        assertTrue(entity?.date == "10/3/25")
+//        assertTrue(entity?.time == "2:27 PM")
+    }
+
+    @Test
+    fun testSuccessfulParseofWithdrawalMessage() {
+        val message =
+            ""
+
+    }
+
 }

@@ -2,6 +2,7 @@ package com.transsion.financialassistant.data.repository.transaction
 
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseEntity
+import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
@@ -24,4 +25,5 @@ interface TransactionRepo {
     fun parseBundlesPurchaseMessage(message: String, phone: String): BundlesPurchaseEntity?
     fun parseReceiveMshwariMessage(message: String, phone: String): ReceiveMshwari?
     fun parseSendMshwariMessage(message: String, phone: String): SendMshwariEntity?
+    fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity?
 }

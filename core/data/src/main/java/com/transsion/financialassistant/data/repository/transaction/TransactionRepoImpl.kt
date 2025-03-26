@@ -2,6 +2,7 @@ package com.transsion.financialassistant.data.repository.transaction
 
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseEntity
+import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
@@ -259,6 +260,25 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             time = groups[4],
             mshwariBalance = groups[6].replace(",","").toDouble(),
             transactionCost = groups[7].toDouble()
+        )
+    }
+
+    override fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity? {
+        val match = TransactionType.AIRTIME_PURCHASE.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        return BuyAirtimeEntity(
+            transactionCode = groups[1],
+            phone = phone,
+            amount = groups[2].replace(",","").toDouble(),
+            mpesaBalance = groups[5].replace(",","").toDouble(),
+            date = groups[3],
+            time = groups[4],
+            transactionCost = groups[6].toDouble()
         )
     }
 
