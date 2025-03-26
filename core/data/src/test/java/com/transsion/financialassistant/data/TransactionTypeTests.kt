@@ -66,12 +66,8 @@ class TransactionTypeTests {
     @Test
     fun `should detect WITHDRAWAL transaction`() {
         val message =
-            "ET04TG335 Confirmed.\n" +
-                    "on 20/2/14 at 2:44 PM\n" +
-                    "Withdraw Ksh16,000.00 from\n" +
-                    "129324 - Brothers Link Agency Vetngong Road\n" +
-                    "New M-PESA balance is Ksh570.00.Save & get a loan on MShwari"
-            //"SL14U1AA94 Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
+            "SL14U1AA94 Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. Amount you can transact within the day is 496,850.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
+        //"SL14U1AA94 Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.WITHDRAWAL)
@@ -100,13 +96,12 @@ class TransactionTypeTests {
     @Test
     fun `should detect RECEIVE_MSHWARI transaction`() {
         val message =
-           //"TC347QKO6Q Confirmed.Ksh2,000.00 transferred to M-Shwari account on 3/3/25 at 2:33 PM. M-PESA balance is Ksh4,070.05 .New M-Shwari saving account balance is Ksh2,033.79. Transaction cost Ksh.0.00"
             "TCP22LYZH8 Confirmed.Ksh20.00 transferred from M-Shwari account on 25/3/25 at 4:41 PM. M-Shwari balance is Ksh10.29 .M-PESA balance is Ksh79.61 .Transaction cost Ksh.0.00"
 
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
 
-        //assertTrue(result == TransactionType.RECEIVE_MSHWARI)
+        assertTrue(result == TransactionType.RECEIVE_MSHWARI)
     }
 
     @Test

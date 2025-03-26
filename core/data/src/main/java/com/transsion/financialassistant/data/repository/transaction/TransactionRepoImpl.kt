@@ -83,7 +83,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
 
     override fun parseReceiveMoneyMessage(message: String, phone: String): ReceiveMoneyEntity? {
 
-        val match = TransactionType.PAY_BILL.getRegex().find(message) ?: return null
+        val match = TransactionType.RECEIVE_MONEY.getRegex().find(message) ?: return null
         val groups = match.groupValues
 
         groups.forEachIndexed { index, it ->
