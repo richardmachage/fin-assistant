@@ -6,7 +6,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 
 @Entity
 data class BuyGoodsEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     val id: Int = 0,
     val transactionCode: String,
     val phone: String,

@@ -1,8 +1,12 @@
 package com.transsion.financialassistant.data.room.entities.send_mshwari
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
+@Entity
 data class SendMshwariEntity(
+    @PrimaryKey
     val transactionCode: String,
     val amount: Double,
     val phone: String,
