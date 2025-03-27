@@ -1,8 +1,10 @@
 package com.transsion.financialassistant.data.room.entities.receive_pochi
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
+@Entity
 data class ReceivePochiEntity(
     @PrimaryKey
     val transactionCode: String,

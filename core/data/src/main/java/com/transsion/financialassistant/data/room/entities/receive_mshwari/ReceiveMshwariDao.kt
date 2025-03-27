@@ -16,22 +16,22 @@ interface ReceiveMshwariDao {
 
     // update
     @Update
-    suspend fun update(sendMshwariEntity: SendMshwariEntity)
+    suspend fun update(receiveMshwari: ReceiveMshwariEntity)
 
     // delete an item
     @Delete
-    suspend fun delete(sendMshwariEntity: SendMshwariEntity)
+    suspend fun delete(receiveMshwari: ReceiveMshwariEntity)
 
     // read
-    @Query("SELECT * FROM receive_mshwari_table")
+    @Query("SELECT * FROM ReceiveMshwariEntity")
     fun getAll(): Flow<List<ReceiveMshwariEntity>>
 
     // delete all
-    @Query("DELETE FROM receive_mshwari_table")
+    @Query("DELETE FROM ReceiveMshwariEntity")
     suspend fun deleteAll()
 
     // select an item by transactionCode
-    @Query("SELECT * FROM receive_mshwari_table WHERE transactionCode = :transactionCode")
+    @Query("SELECT * FROM ReceiveMshwariEntity WHERE transactionCode = :transactionCode")
     suspend fun getByTransactionCode(transactionCode: String): ReceiveMshwariEntity?
 
 }

@@ -22,7 +22,7 @@ interface SendMshwariDao {
     suspend fun delete(sendMshwariEntity: SendMshwariEntity)
 
     // read
-    @Query("SELECT * FROM send_mshwari")
+    @Query("SELECT * FROM SendMshwariEntity")
     fun getAll(): Flow<List<SendMshwariEntity>>
 
 }

@@ -22,6 +22,6 @@ interface BuyAirtimeDao {
     suspend fun delete(buyAirtimeEntity: BuyAirtimeEntity)
 
     //read
-    @Query("SELECT * FROM buy_airtime")
+    @Query("SELECT * FROM BuyAirtimeEntity")
     fun getAll(): Flow<List<BuyAirtimeEntity>>
 }

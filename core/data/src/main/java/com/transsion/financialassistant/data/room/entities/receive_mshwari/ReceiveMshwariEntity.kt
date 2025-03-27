@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
-@Entity(tableName = "receive_mshwari_table")
+@Entity
 data class ReceiveMshwariEntity(
     @PrimaryKey
     val transactionCode: String,

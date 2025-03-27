@@ -8,6 +8,12 @@
       <SelectionState runConfigName="testInsertReceiveMshwariTransaction_withPhone_shouldSucceed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="testBundlesPurchaseTransaction_withPhone_shouldSucceed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="RoomDbTests">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

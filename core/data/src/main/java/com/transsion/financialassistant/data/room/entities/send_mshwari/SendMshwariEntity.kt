@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
-@Entity(tableName = "send_mshwari")
+@Entity
 data class SendMshwariEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val amount: Double,
     val phone: String,

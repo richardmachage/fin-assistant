@@ -23,7 +23,7 @@ interface BundlesPurchaseDao {
 
     // read
 
-    @Query("SELECT * FROM bundles_purchase")
+    @Query("SELECT * FROM BundlesPurchaseEntity")
     fun getAll(): Flow<List<BundlesPurchaseEntity>>
 
 }

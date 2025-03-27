@@ -4,9 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
 
-@Entity(tableName = "buy_airtime")
+@Entity
 data class BuyAirtimeEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val amount: Double,
