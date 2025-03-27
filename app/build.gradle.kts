@@ -4,6 +4,7 @@ plugins {
     //alias(libs.plugins.hilt.android)
 }
 
+
 dependencies {
     //feature dependencies
     implementation(projects.feature.onboarding)
@@ -18,7 +19,14 @@ dependencies {
 
     //splash screen
     implementation(libs.splash.screen)
-    //hilt
-    //ksp(libs.hilt.compiler)
-    //implementation(libs.bundles.hilt)
+
+
+    //worker
+    implementation(libs.androidx.work.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.ext.compiler)
+    testImplementation(libs.work.testing)
+    androidTestImplementation(libs.work.testing)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.junit)
 }
