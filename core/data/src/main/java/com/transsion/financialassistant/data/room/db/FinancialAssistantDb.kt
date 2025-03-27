@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseDao
+import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseEntity
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeDao
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsDao
@@ -14,7 +16,10 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillD
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
+import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
+import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
+import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
@@ -35,7 +40,10 @@ import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMone
         SendMoneyEntity::class,
         BuyAirtimeEntity::class,
         SendMshwariEntity::class,
-        ],
+        ReceiveMshwariEntity::class,
+        SendGlobalEntity::class,
+        BundlesPurchaseEntity::class,
+    ],
     version = 1,
     exportSchema = true
 
@@ -52,6 +60,8 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun sendGlobalDao(): SendGlobalDao
     abstract fun buyAirtimeDao(): BuyAirtimeDao
     abstract fun sendMshwariDao(): SendMshwariDao
+    abstract fun receiveMshwariDao(): ReceiveMshwariDao
+    abstract fun bundlesPurchaseDao(): BundlesPurchaseDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
