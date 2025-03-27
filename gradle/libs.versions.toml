@@ -1,15 +1,18 @@
 [versions]
 agp = "8.8.2"
-kotlin = "2.1.0"
+#kotlin = "2.1.0"
+kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+kotlinxCoroutinesTest = "1.7.3"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2025.02.00"
 androidTools = "31.9.0"
-ksp = "2.1.0-1.0.29"
+#ksp = "2.1.0-1.0.29"
+ksp = "2.0.21-1.0.25"
 room = "2.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
@@ -23,6 +26,10 @@ kotlinSerializationPlugin = "2.0.21"
 uiTooling = "1.7.8"
 composeMaterial = "1.4.1"
 rules = "1.6.1"
+work_version = "2.10.0"
+hiltExt = "1.2.0"
+androidxWork = "2.10.0"
+
 
 
 [libraries]
@@ -40,6 +47,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navVersion" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinSerialization" }
 #datastore
@@ -49,6 +57,10 @@ datastore-preferences = { group = "androidx.datastore", name = "datastore-prefer
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
+hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
+
 #Room
 room-compiler = {group = "androidx.room", name= "room-compiler", version.ref = "room"}
 room-runtime = {group = "androidx.room", name ="room-runtime", version.ref = "room"}
@@ -56,6 +68,15 @@ room-ktx = {group = "androidx.room", name = "room-ktx", version.ref="room"}
 room-paging = {group = "androidx.room", name = "room-paging", version.ref = "room" }
 ##splash screen
 splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashScreen" }
+
+
+#worker
+androidx-work-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWork" }
+work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work_version" }
+work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work_version" }
+work-multiprocess = { group = "androidx.work", name = "work-multiprocess", version.ref = "work_version" }
+
+
 
 # Dependencies of the included build-logic
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
@@ -124,7 +145,7 @@ testing = [
 
 hilt = [
     "hilt-android",
-    "hilt-navigation-compose"
+    "hilt-navigation-compose",
 ]
 
 room = [

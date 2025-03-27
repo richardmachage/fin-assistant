@@ -54,6 +54,8 @@ class CoreModuleConventionPlugin : Plugin<Project> {
                     "implementation",
                     versionCatalogLibs.findLibrary("kotlinx-serialization-core").get()
                 )
+                add("testImplementation", versionCatalogLibs.findBundle("testing").get())
+
 
             }
         }

@@ -1,20 +1,25 @@
-package com.transsion.financialassistant.background
+package com.transsion.financialassistant.data.repository
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
 import android.provider.Telephony
 import android.util.Log
-import com.transsion.financialassistant.background.models.MpesaMessage
+import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import kotlin.time.Duration
 import kotlin.time.measureTime
 
-
+/**
+ *  * This function queries the SMS content provider for messages sent from "MPESA",
+ *  * filters them by the specified [filterValue] (i.e., transaction type),
+ *  * and maps them into a list of [MpesaMessage] objects.
+ *  *
+ */
 @SuppressLint("MissingPermission")
-fun getMpesaMessages(
-    filterValue: TransactionType,//String? = null,
+fun getMpesaMessagesByTransactionType(
+    filterValue: TransactionType,
     context: Context,
     getExecutionTime: (Duration) -> Unit,
     transactionRepo: TransactionRepo
@@ -48,32 +53,22 @@ fun getMpesaMessages(
             val timeTaken = measureTime {
                 while (it.moveToNext()) {
                     // filterValue.let { value ->
-                        val body = it.getString(bodyColumn)
+                    val body = it.getString(bodyColumn)
                     val transactionType = transactionRepo.getTransactionType(body)
 
                     if (
-                    //body.contains(value)
                         transactionType == filterValue
                     ) {
-                            mpesaMessages.add(
-                                MpesaMessage(
-                                    body = it.getString(bodyColumn),
-                                    subscriptionId = getReceivingAddress(
-                                        context = context,
-                                        subscriptionId = it.getInt(subscriptionIdColumn)
-                                    ).toString()
-                                )
-                            )
-                        }
-                    //}
-                    /*?: run {
                         mpesaMessages.add(
                             MpesaMessage(
                                 body = it.getString(bodyColumn),
-                                subscriptionId = it.getString(subscriptionIdColumn)
+                                subscriptionId = getReceivingAddress(
+                                    context = context,
+                                    subscriptionId = it.getInt(subscriptionIdColumn)
+                                ).toString()
                             )
                         )
-                    }*/
+                    }
 
                 }
             }
@@ -87,5 +82,4 @@ fun getMpesaMessages(
         getExecutionTime(Duration.ZERO)
         emptyList()
     }
-    //return emptyList()
 }

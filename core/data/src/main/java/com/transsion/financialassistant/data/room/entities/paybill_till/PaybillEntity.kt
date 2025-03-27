@@ -6,8 +6,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 
 @Entity
 data class PayBillEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val paidToName: String,

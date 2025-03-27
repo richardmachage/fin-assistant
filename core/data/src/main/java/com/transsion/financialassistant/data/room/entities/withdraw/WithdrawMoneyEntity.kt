@@ -6,13 +6,15 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 
 @Entity
 data class WithdrawMoneyEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val amount: Double,
     val mpesaBalance: Double,
     val date: String,
     val time: String,
+    val transactionCost: Double,
+    val agent: String,
+    //val agentNumber: String,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT
 )
