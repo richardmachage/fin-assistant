@@ -1,0 +1,29 @@
+plugins {
+    alias(libs.plugins.financialassistant.feature.module)
+}
+
+android {
+    namespace = "com.transsion.financialassistant.insights"
+}
+
+dependencies {
+
+    /*implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)*/
+
+    //project dependencies
+    implementation(projects.core.presentation)
+    implementation(projects.core.data)
+
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.rules)
+
+    debugImplementation(libs.ui.tooling)
+
+    //data store
+    implementation(libs.datastore.preferences)
+}
