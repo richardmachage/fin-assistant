@@ -3,4 +3,8 @@
     <string name="okay">OK</string>
     <string name="cancel">Cancel</string>
     <string name="allow">Allow</string>
+    <string name="money_in">Money in</string>
+    <string name="kes">KES</string>
+    <string name="transactions">transactions</string>
+    <string name="money_out">Money out</string>
 </resources>
