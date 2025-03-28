@@ -8,6 +8,7 @@ plugins {
 dependencies {
     //feature dependencies
     implementation(projects.feature.onboarding)
+    implementation(projects.feature.insights)
     implementation(projects.core.presentation)
     implementation(projects.core.background)
     implementation(projects.core.data)
