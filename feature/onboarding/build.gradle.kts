@@ -17,6 +17,8 @@ dependencies {
 
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.rules)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.biometric)
 
     debugImplementation(libs.ui.tooling)
 

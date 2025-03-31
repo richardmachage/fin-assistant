@@ -12,6 +12,8 @@ android {
 dependencies {
     //project dependencies
     implementation(projects.core.security)
+    implementation(libs.androidx.appcompat)
+    //implementation(libs.androidx.biometric.ktx)
 
     //room
     ksp(libs.room.compiler)
@@ -19,6 +21,9 @@ dependencies {
 
     //data store
     implementation(libs.datastore.preferences)
+
+    // Biometric
+    implementation (libs.androidx.biometric)
 
     //testing
     testImplementation(libs.junit)

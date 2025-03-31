@@ -2,9 +2,11 @@ package com.transsion.financialassistant.onboarding.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.transsion.financialassistant.onboarding.biometric_auth.BiometricAuth
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
@@ -56,6 +58,13 @@ fun NavGraphBuilder.onboardingNavGraph(
 
     composable<OnboardingRoutes.PersonalTrackerSurvey> {
         PersonalTrackerSurvey(navController = navController)
+    }
+
+    composable<OnboardingRoutes.BiometricAuth> {
+        BiometricAuth(
+            navController = navController,
+            activity = AppCompatActivity()
+        )
     }
 
 

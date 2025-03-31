@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.2"
 #kotlin = "2.1.0"
+biometric = "1.4.0-alpha03"
 kotlin = "2.0.21"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -29,10 +30,12 @@ rules = "1.6.1"
 work_version = "2.10.0"
 hiltExt = "1.2.0"
 androidxWork = "2.10.0"
+biometricKtx = "1.1.0"
 
 
 
 [libraries]
+androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -90,6 +93,7 @@ material = { group = "com.google.android.material", name = "material", version.r
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 androidx-compose-material = { group = "androidx.wear.compose", name = "compose-material", version.ref = "composeMaterial" }
 androidx-rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
+androidx-biometric-ktx = { group = "androidx.biometric", name = "biometric-ktx", version.ref = "biometricKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
