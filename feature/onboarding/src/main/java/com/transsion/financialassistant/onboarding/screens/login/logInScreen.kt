@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
+import android.content.Intent
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -55,6 +56,7 @@ import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -75,6 +77,11 @@ fun LoginScreen(
     val biometricResult by promptManager.promptResult.collectAsState(initial = null)
 
     val storedPin = remember { mutableStateOf("") }
+
+    var isLoading by remember { mutableStateOf(true) }
+
+    val isAuthenticated by viewModel.biometricAuthenticated.collectAsState()
+
 
     CircularLoading(
         isLoading = state.isLoading,
@@ -107,14 +114,21 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(biometricResult) {
-        biometricResult?.let { result ->
-            if (result is BiometricResult.AuthenticationSuccess) {
-                storedPin.value = viewModel.getPin() ?: "" // Retrieve the stored PIN
-                // Update the state with the stored PIN to auto-fill the input boxes
-                viewModel.setPin(storedPin.value)
-            }
-        }
+    LaunchedEffect(isAuthenticated) {
+       if (isAuthenticated) {
+           viewModel.onLogin {
+               navController.navigate(OnboardingRoutes.SurveyScreen){
+                   popUpTo(OnboardingRoutes.Login){inclusive = true}
+               }
+           }
+       }
+    }
+
+    // Simulate a loading state (e.g., fingerprint authentication or loading data)
+    LaunchedEffect(Unit) {
+        // Simulate an async operation
+        delay(2000)  // Simulate loading time
+        isLoading = false
     }
 
 
@@ -261,6 +275,8 @@ fun LoginScreen(
                                 CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
                                     if (state.pin.isNotEmpty()) viewModel.onBackSpace()
                                 }
+
+                                val intent = Intent(context, LoginActivity::class.java)
 
                                 // Display biometric authentication result
                                 biometricResult?.let { result ->

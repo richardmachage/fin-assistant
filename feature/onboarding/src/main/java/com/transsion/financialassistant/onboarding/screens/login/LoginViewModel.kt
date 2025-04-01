@@ -37,13 +37,16 @@ class LoginViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     var errorMessage: StateFlow<String?> = _errorMessage
 
-    private val sharedPreferences = EncryptedSharedPreferences.create(
-        "secure_prefs", // File name for encrypted preferences
-        getOrCreateKey().toString(), // Key for encryption
-        context, // Application context
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, // Encryption scheme for the key
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM // Encryption scheme for the value
-    )
+    private val _biometricAuthenticated = MutableStateFlow(false)
+    val biometricAuthenticated: StateFlow<Boolean> = _biometricAuthenticated
+
+//    private val sharedPreferences = EncryptedSharedPreferences.create(
+//        "secure_prefs", // File name for encrypted preferences
+//        getOrCreateKey().toString(), // Key for encryption
+//        context, // Application context
+//        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, // Encryption scheme for the key
+//        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM // Encryption scheme for the value
+//    )
 
     // Handle pin entry action
     fun onPinEntered(digit: String) {
@@ -53,6 +56,10 @@ class LoginViewModel @Inject constructor(
                 validatePin(_pin.value)
             }
         }
+    }
+
+    fun onBiometricSuccess(){
+        _biometricAuthenticated.value = true
     }
 
     fun setPin(pin: String) {
@@ -70,8 +77,8 @@ class LoginViewModel @Inject constructor(
     }
 
     // Retrieve the saved PIN
-    fun getPin(): String? {
-        return sharedPreferences.getString(PIN_KEY, null)
+    fun getPin(): String {
+        return _pin.value
     }
 
     // Handle pin validation

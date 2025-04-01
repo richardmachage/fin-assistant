@@ -41,6 +41,7 @@ dependencies {
 
     // Biometric Security
     implementation (libs.androidx.security.crypto)
+    implementation(libs.splash.screen)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
