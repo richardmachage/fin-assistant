@@ -2,10 +2,22 @@ plugins {
     /*alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)*/
     alias(libs.plugins.financialassistant.feature.module)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.transsion.financialassistant.onboarding"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+    buildFeatures {
+        compose = true
+    }
 
 }
 
@@ -19,11 +31,24 @@ dependencies {
     implementation(libs.androidx.rules)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.biometric)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+
+    // Biometric Security
+    implementation (libs.androidx.security.crypto)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 
     debugImplementation(libs.ui.tooling)
 
     //data store
     implementation(libs.datastore.preferences)
+    debugImplementation(libs.androidx.ui.test.manifest)
 
     /* testImplementation(projects.core.data)
      testImplementation(projects.core.security)*/

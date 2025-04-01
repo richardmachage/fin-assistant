@@ -68,11 +68,12 @@
     <string name="entertainment">Entertainment</string>
     <string name="healthcare">Healthcare</string>
     <string name="read_phone_state_rationale">Financial Assistant needs to access the Simcard information to be able to identify the mpesa numbers on the phone, without which you will not be possible to use the application.\\nThank you</string>
-    <string name="biometric_authentication">Biometric Authentication</string>
-    <string name="please_authenticate_to_continue">Please authenticate to continue</string>
+    <string name="biometric_authentication">Authentication required</string>
+    <string name="please_authenticate_to_continue">Unlock Financial Assistant using your Biometrics</string>
     <string name="authentication_failed">Authentication Failed</string>
     <string name="authentication_not_set">Authentication Not Set</string>
     <string name="authentication_success">Authentication Successful</string>
     <string name="feature_unavailable">Biometric Feature Unavailale</string>
     <string name="hardware_unavailable">Hardware Unavailable</string>
+    <string name="title_activity_login">LoginActivity</string>
 </resources>

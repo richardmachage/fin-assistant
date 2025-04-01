@@ -13,26 +13,40 @@
 
     <application
         android:name=".application.Application"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:label="@string/app_name"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/logo"
-        android:label="@string/app_name"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FinancialAssistant"
         tools:targetApi="31">
+        <!--        android:theme="@style/Theme.FinancialAssistant"-->
         <activity
             android:name=".main_activity.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.FinancialAssistant.Splash">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+    <!--            android:theme="@style/Theme.AppCompat.DayNight">-->
+
+        <!-- LoginActivity uses AppCompat theme -->
+<!--        <activity-->
+<!--            android:name=".onboarding.screens.login.LoginActivity"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@style/Theme.AppCompat.DayNight"-->
+<!--        android:label="Login">-->
+<!--        <intent-filter>-->
+<!--            <action android:name="android.intent.action.MAIN" />-->
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--        </intent-filter>-->
+<!--    </activity>-->
 
         <!--<provider
             android:name="androidx.startup.InitializationProvider"

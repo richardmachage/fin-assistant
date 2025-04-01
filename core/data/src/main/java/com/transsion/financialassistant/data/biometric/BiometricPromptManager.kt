@@ -1,20 +1,26 @@
 package com.transsion.financialassistant.data.biometric
 
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.PromptInfo
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class BiometricPromptManager (
+    // For Biometric functionality the class has to extend Activity
     private val activity: AppCompatActivity
-){
+) {
     private val resultChannel = Channel<BiometricResult>()
     val promptResult = resultChannel.receiveAsFlow()
 
     // Biometric Prompt
+    @RequiresApi(Build.VERSION_CODES.P)
     fun showBiometricPrompt(
         title: String,
         description: String
@@ -33,6 +39,7 @@ class BiometricPromptManager (
             .setAllowedAuthenticators(authenticators)
             .setConfirmationRequired(false)
 
+        // check if the device meets biometric hardware requirements - From Android 11 and above
         if (Build.VERSION.SDK_INT < 30){
             promptInfo.setNegativeButtonText("Cancel")
         }
@@ -56,7 +63,8 @@ class BiometricPromptManager (
         }
 
         val prompt = BiometricPrompt(
-            activity,
+            activity, // ComponentActivity instance
+            ContextCompat.getMainExecutor(activity),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
@@ -75,7 +83,7 @@ class BiometricPromptManager (
             }
         )
 
-        // call the biometric prompt
+        // Call the biometric prompt
         prompt.authenticate(promptInfo.build())
     }
 }

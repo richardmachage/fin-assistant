@@ -1,11 +1,16 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
-import androidx.compose.runtime.mutableStateOf
+import android.content.Context
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.security.crypto.EncryptedSharedPreferences
+import com.transsion.financialassistant.data.preferences.SharedPreferences.Companion.PIN_KEY
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,87 +18,98 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalTime
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginRepo: OnboardingRepo,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
+    // Login screen state containing all UI-related data
     private var _state = MutableStateFlow(LoginScreenState())
-//    private val _loginState = MutableStateFlow<PinState>(PinState.Idle)
-//    val loginState: StateFlow<PinState> = _loginState
-    val state = _state.asStateFlow()
+    val state: StateFlow<LoginScreenState> = _state.asStateFlow()
 
     private val _pin = MutableStateFlow("")
     val pin: StateFlow<String> = _pin
-    var confirmnPin = mutableStateOf("")
+
     private val _errorMessage = MutableStateFlow<String?>(null)
     var errorMessage: StateFlow<String?> = _errorMessage
 
+    private val sharedPreferences = EncryptedSharedPreferences.create(
+        "secure_prefs", // File name for encrypted preferences
+        getOrCreateKey().toString(), // Key for encryption
+        context, // Application context
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, // Encryption scheme for the key
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM // Encryption scheme for the value
+    )
 
+    // Handle pin entry action
     fun onPinEntered(digit: String) {
-        if(_pin.value.length < 4){
+        if (_pin.value.length < 4) {
             _pin.value += digit
-
-            // if user has entered 4 digit pin, verify the PIN
             if (_pin.value.length == 4) {
                 validatePin(_pin.value)
             }
         }
     }
 
+    fun setPin(pin: String) {
+        _pin.value = pin // to set the pin value from outside the ViewModel
+    }
+
+    // Clear PIN input
     fun clearPin() {
         _pin.value = ""
+    }
+
+    // reset error message
+    fun resetErrorMessage() {
+        _errorMessage.value = null
+    }
+
+    // Retrieve the saved PIN
+    fun getPin(): String? {
+        return sharedPreferences.getString(PIN_KEY, null)
+    }
+
+    // Handle pin validation
+    fun validatePin(pin: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            loginRepo.verifyPin(pin = pin,
+                onSuccess = { isCorrect ->
+                    if (isCorrect) {
+                        _state.update { it.copy(isSuccess = true, isLoading = false, toastMessage = null) }
+                    } else {
+                        _state.update { it.copy(isSuccess = false, isLoading = false, toastMessage = "Incorrect PIN") }
+                        _pin.value = "" // Reset PIN on failure
+                    }
+                },
+                onFailure = { errorMessage ->
+                    _state.update { it.copy(isLoading = false, toastMessage = errorMessage) }
+                    _pin.value = "" // Reset PIN on failure
+                }
+            )
+        }
     }
 
     fun onPinChange(digit:String){
         if (state.value.pin.length < 4) _state.update { it.copy(pin = _state.value.pin + digit) }
     }
 
-    fun validatePin(pin: String){
-       viewModelScope.launch {
-           //_loginState.value = PinState.Loading
-           _state.value = state.value.copy(isLoading = true)
-
-           loginRepo.verifyPin(
-               pin = pin,
-               onSuccess = { isCorrect ->
-                   if (isCorrect) {
-                      // _loginState.value = PinState.Success
-                       _state.value = state.value.copy(isSuccess = true)
-                       _errorMessage.value = null // Clear PIN input on failure
-                   } else {
-                       //_loginState.value = PinState.Error("Incorrect PIN")
-                       _state.value = state.value.copy(toastMessage = "Incorrect PIN")
-                       _errorMessage.value = "Incorrect PIN. Try again."
-                       _pin.value = "" // Clear PIN input on failure
-                   }
-               },
-               onFailure = {errorMessage ->
-                   //_loginState.value = PinState.Error(errorMessage)
-                   _state.value = state.value.copy(toastMessage = errorMessage)
-                   _errorMessage.value = errorMessage
-                   _pin.value = "" // Clear PIN input on failure
-               }
-           )
-       }
-    }
-
-
-    fun onLogin(
-        onSuccess: () -> Unit,
-    ) {
-        //TODO log n functionality
+    // Handle the login process
+    fun onLogin(onSuccess: () -> Unit) {
         viewModelScope.launch {
             toggleLoading(true)
-            state.value.pin = ""
-            delay(3000)
+            delay(3000) // Simulate login delay
             onSuccess()
             toggleLoading(false)
-            // showToast("Logged In successfully")
-
         }
     }
+
+    // Get appropriate greeting based on the time of day
     fun getGreetingBasedOnTime(): Int {
         val currentHour = LocalTime.now().hour
         return when (currentHour) {
@@ -104,20 +120,41 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun showToast(message:String){
+    // Show a toast message (UI update)
+    fun showToast(message: String) {
         _state.update { it.copy(toastMessage = message) }
     }
 
-    fun resetToast(){
+    // Reset the toast message state
+    fun resetToast() {
         _state.update { it.copy(toastMessage = null) }
     }
 
-    fun toggleLoading(isLoading:Boolean){
-        _state.update { it.copy(isLoading=isLoading) }
+    // Toggle loading state
+    fun toggleLoading(isLoading: Boolean) {
+        _state.update { it.copy(isLoading = isLoading) }
     }
 
+    // Handle backspace key for PIN entry
     fun onBackSpace() {
         _state.update { it.copy(pin = it.pin.dropLast(1)) }
     }
 
+    // Generate or get the master encryption key from Android Keystore
+    private fun getOrCreateKey(): SecretKey {
+        val keyStore = java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        val key = keyStore.getKey("pin_encryption_key", null)
+        if (key != null) return key as SecretKey
+
+        // If key doesn't exist, generate a new key
+        val keyGenerator = KeyGenerator.getInstance("AES", "AndroidKeyStore").apply {
+            init(
+                KeyGenParameterSpec.Builder("pin_encryption_key", KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                    .build()
+            )
+        }
+        return keyGenerator.generateKey()
+    }
 }

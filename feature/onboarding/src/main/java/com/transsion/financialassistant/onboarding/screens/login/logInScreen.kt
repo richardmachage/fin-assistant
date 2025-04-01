@@ -1,6 +1,9 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,6 +44,8 @@ import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
+import com.transsion.financialassistant.data.biometric.BiometricPromptManager
+import com.transsion.financialassistant.data.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.CircularLoading
@@ -50,19 +55,26 @@ import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
+import kotlinx.coroutines.flow.update
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val context = LocalContext.current
+    val activity = context as? AppCompatActivity
     val state by  viewModel.state.collectAsStateWithLifecycle()
     var pin by remember { mutableStateOf("") }
     //val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
+    // BiometricPromptManager for biometric authentication
+    val promptManager by remember { mutableStateOf(BiometricPromptManager(activity!!) )}
+    val biometricResult by promptManager.promptResult.collectAsState(initial = null)
 
+    val storedPin = remember { mutableStateOf("") }
 
     CircularLoading(
         isLoading = state.isLoading,
@@ -91,6 +103,16 @@ fun LoginScreen(
             viewModel.clearPin()
             navController.navigate(OnboardingRoutes.SurveyScreen){
                 popUpTo(OnboardingRoutes.Login){inclusive = true}
+            }
+        }
+    }
+
+    LaunchedEffect(biometricResult) {
+        biometricResult?.let { result ->
+            if (result is BiometricResult.AuthenticationSuccess) {
+                storedPin.value = viewModel.getPin() ?: "" // Retrieve the stored PIN
+                // Update the state with the stored PIN to auto-fill the input boxes
+                viewModel.setPin(storedPin.value)
             }
         }
     }
@@ -161,7 +183,6 @@ fun LoginScreen(
                                         }
                                     }
                                 }
-
                             }
 
                             VerticalSpacer(8)
@@ -172,7 +193,11 @@ fun LoginScreen(
                                     color = Color.Red,
                                     fontSize = 11.sp
                                 )
+
+                                // reset the error message after displaying
+                                viewModel.resetErrorMessage()
                             }
+
                         }
                     }
 
@@ -218,7 +243,12 @@ fun LoginScreen(
                             ) {
                                 // Fingerprint Button
                                 CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
-                                    // Implement Fingerprint Authentication
+                                    // Trigger biometric authentication when fingerprint button is clicked
+                                    promptManager.showBiometricPrompt(
+                                        title = context.getString(R.string.biometric_authentication),
+                                        description = context.getString(R.string.please_authenticate_to_continue)
+                                    )
+
                                 }
 
                                 // Zero Button
@@ -230,6 +260,18 @@ fun LoginScreen(
                                 // Delete Button
                                 CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
                                     if (state.pin.isNotEmpty()) viewModel.onBackSpace()
+                                }
+
+                                // Display biometric authentication result
+                                biometricResult?.let { result ->
+                                    if (result is BiometricResult.AuthenticationSuccess) {
+                                        storedPin.value = viewModel.getPin() ?: ""
+                                        viewModel.onLogin(onSuccess = {
+                                            navController.navigate(OnboardingRoutes.SurveyScreen){
+                                                popUpTo(OnboardingRoutes.Login){inclusive = true}
+                                            }
+                                        })
+                                    }
                                 }
                             }
                         }
