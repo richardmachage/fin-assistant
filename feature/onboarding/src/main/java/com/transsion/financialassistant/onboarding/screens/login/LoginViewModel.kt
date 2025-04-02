@@ -1,25 +1,18 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
 import android.content.Context
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.security.crypto.EncryptedSharedPreferences
-import com.transsion.financialassistant.data.preferences.SharedPreferences.Companion.PIN_KEY
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalTime
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,13 +33,7 @@ class LoginViewModel @Inject constructor(
     private val _biometricAuthenticated = MutableStateFlow(false)
     val biometricAuthenticated: StateFlow<Boolean> = _biometricAuthenticated
 
-//    private val sharedPreferences = EncryptedSharedPreferences.create(
-//        "secure_prefs", // File name for encrypted preferences
-//        getOrCreateKey().toString(), // Key for encryption
-//        context, // Application context
-//        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV, // Encryption scheme for the key
-//        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM // Encryption scheme for the value
-//    )
+
 
     // Handle pin entry action
     fun onPinEntered(digit: String) {
@@ -58,13 +45,6 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    fun onBiometricSuccess(){
-        _biometricAuthenticated.value = true
-    }
-
-    fun setPin(pin: String) {
-        _pin.value = pin // to set the pin value from outside the ViewModel
-    }
 
     // Clear PIN input
     fun clearPin() {
@@ -76,10 +56,6 @@ class LoginViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
-    // Retrieve the saved PIN
-    fun getPin(): String {
-        return _pin.value
-    }
 
     // Handle pin validation
     fun validatePin(pin: String) {
@@ -88,9 +64,21 @@ class LoginViewModel @Inject constructor(
             loginRepo.verifyPin(pin = pin,
                 onSuccess = { isCorrect ->
                     if (isCorrect) {
-                        _state.update { it.copy(isSuccess = true, isLoading = false, toastMessage = null) }
+                        _state.update {
+                            it.copy(
+                                isValidationSuccess = true,
+                                isLoading = false,
+                                toastMessage = null
+                            )
+                        }
                     } else {
-                        _state.update { it.copy(isSuccess = false, isLoading = false, toastMessage = "Incorrect PIN") }
+                        _state.update {
+                            it.copy(
+                                isValidationSuccess = false,
+                                isLoading = false,
+                                toastMessage = "Incorrect PIN"
+                            )
+                        }
                         _pin.value = "" // Reset PIN on failure
                     }
                 },
@@ -107,14 +95,14 @@ class LoginViewModel @Inject constructor(
     }
 
     // Handle the login process
-    fun onLogin(onSuccess: () -> Unit) {
-        viewModelScope.launch {
-            toggleLoading(true)
-            delay(3000) // Simulate login delay
-            onSuccess()
-            toggleLoading(false)
-        }
-    }
+    /* fun onLogin(onSuccess: () -> Unit) {
+         viewModelScope.launch {
+             toggleLoading(true)
+             //delay(3000) // Simulate login delay
+             onSuccess()
+             toggleLoading(false)
+         }
+     }*/
 
     // Get appropriate greeting based on the time of day
     fun getGreetingBasedOnTime(): Int {
@@ -147,21 +135,5 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(pin = it.pin.dropLast(1)) }
     }
 
-    // Generate or get the master encryption key from Android Keystore
-    private fun getOrCreateKey(): SecretKey {
-        val keyStore = java.security.KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
-        val key = keyStore.getKey("pin_encryption_key", null)
-        if (key != null) return key as SecretKey
 
-        // If key doesn't exist, generate a new key
-        val keyGenerator = KeyGenerator.getInstance("AES", "AndroidKeyStore").apply {
-            init(
-                KeyGenParameterSpec.Builder("pin_encryption_key", KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .build()
-            )
-        }
-        return keyGenerator.generateKey()
-    }
 }

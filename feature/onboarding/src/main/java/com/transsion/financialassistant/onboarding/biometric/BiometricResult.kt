@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.data.biometric
+package com.transsion.financialassistant.onboarding.biometric
 
 sealed interface BiometricResult {
     data object HardwareUnavailable : BiometricResult
