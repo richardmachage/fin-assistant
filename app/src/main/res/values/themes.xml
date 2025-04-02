@@ -5,7 +5,7 @@
 
     <style name="Theme.FinancialAssistant.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/splashScreenBackground</item>
-        <item name="postSplashScreenTheme">@style/Theme.FinancialAssistant</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat.NoActionBar</item>
     </style>
 
 </resources>
