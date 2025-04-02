@@ -15,7 +15,7 @@ private val DarkColorScheme = darkColorScheme(
     secondary = PurpleGrey80,
     tertiary = Pink80,
     background = FAColors.GrayBackground,
-    surface = FAColors.cardBackgroundDark
+    surface = FAColors.cardBackgroundDark.copy(alpha = 0.5F)
 
 )
 

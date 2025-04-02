@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.presentation.components.graphs
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -35,12 +36,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
 @Composable
 fun LineChart(
     modifier: Modifier = Modifier,
     dataPoints: List<DataPoint>,
+
 ) {
 
     val selectedPoint = remember { mutableStateOf<DataPoint?>(null) }
@@ -50,12 +53,12 @@ fun LineChart(
 
 
     BoxWithConstraints(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
 
 
-        val spacingPerPoint = 16.dp
+        val spacingPerPoint = 1.dp
         val chartWidth = (dataPoints.size * spacingPerPoint.value).coerceAtLeast(800F).dp
 
         val canvasHeight = constraints.maxHeight.toFloat()
@@ -67,14 +70,16 @@ fun LineChart(
         val labelSpace = 24f
         Row(
             modifier = Modifier
-                .height(canvasHeight.dp)
+                // .height(canvasHeight.dp)
                 .horizontalScroll(scrollState)
+                .width(chartWidth)
+                .background(FAColors.green)
         ) {
             Canvas(
                 modifier = Modifier
-                    //.fillMaxSize()
+                    .padding(start = 15.dp, end = 15.dp)
                     .width(chartWidth)
-                    .height(canvasHeight.dp + labelSpace.dp)
+                    .height(canvasHeight.dp)
                     .pointerInput(dataPoints) {
                         /**This lets allows for: Detecting a tap, Find which Offset is closest in x,Store the associated DataPoint*/
                         detectTapGestures { tapOffset ->
@@ -238,22 +243,18 @@ fun LineChartPrev(showBackground: Boolean = true) {
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    //.fillMaxHeight(0.5f)
+                    .fillMaxSize()
                     .padding(it),
                 contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-                ) {
-                    LineChart(
+
+                LineChart(
                         dataPoints = sampleData,
                         modifier = Modifier
-                            .fillMaxWidth(0.9f)
+                            .fillMaxWidth(0.5f)
                             .height(200.dp)
                     )
                 }
-            }
 
         }
     }
