@@ -18,19 +18,11 @@ import com.patrykandpatrick.vico.core.cartesian.axis.VerticalAxis
 import com.patrykandpatrick.vico.core.cartesian.data.CartesianChartModelProducer
 import com.patrykandpatrick.vico.core.cartesian.data.lineSeries
 import com.patrykandpatrick.vico.core.cartesian.layer.LineCartesianLayer
+import com.transsion.financialassistant.presentation.components.graphs.custom.sampleData
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import kotlinx.coroutines.runBlocking
 
-val sampleData = listOf(
-    DataPoint("Sun", 120f),
-    DataPoint("Mon", 300f),
-    DataPoint("Tue", 180f),
-    DataPoint("Wed", 400f),
-    DataPoint("Thu", 250f),
-    DataPoint("Fri", 310f),
-    DataPoint("Sat", 200f),
-)
 
 @Composable
 fun LineChartVico(
