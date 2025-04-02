@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.VerticalDivider
@@ -45,10 +44,8 @@ fun InOutCard(
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(15),
-        colors = CardDefaults.cardColors().copy(
-            containerColor = Color.White
-        )
-    ) {
+
+        ) {
         VerticalSpacer(10)
         Row(
             modifier = Modifier

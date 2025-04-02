@@ -17,6 +17,7 @@ import com.transsion.financialassistant.presentation.components.graphs.custom.sa
 import com.transsion.financialassistant.presentation.components.graphs.vico.LineChartVico
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
@@ -28,11 +29,11 @@ fun Graph(
     subtitle: String
 ) {
     ElevatedCard(
-
+        modifier = modifier,
         shape = RoundedCornerShape(10)
     ) {
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(paddingLarge)
         ) {
@@ -50,7 +51,7 @@ fun Graph(
 
             LineChartVico(
                 dataPoints = sampleData,
-
+                lineColor = FAColors.green
                 )
 
 

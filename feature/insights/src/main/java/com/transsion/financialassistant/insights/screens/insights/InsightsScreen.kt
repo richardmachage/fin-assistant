@@ -1,12 +1,14 @@
 package com.transsion.financialassistant.insights.screens.insights
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -26,13 +28,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.R
+import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
+import com.transsion.financialassistant.insights.screens.components.InsightCategoryCard
 import com.transsion.financialassistant.insights.screens.components.MoneyToggle
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -40,14 +45,23 @@ import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
+import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable
 fun InsightsScreen() {
+    val screeHeight = LocalConfiguration.current.screenHeightDp
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .fillMaxWidth()
+                // .height(screeHeight.dp)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding(),
+                    start = paddingMedium,
+                    end = paddingMedium
+                )
                 .verticalScroll(rememberScrollState())
         ) {
             //tittle
@@ -160,7 +174,33 @@ fun InsightsScreen() {
 
 
             //Graph
+            VerticalSpacer(5)
+            Graph(
+                title = stringResource(com.transsion.financialassistant.presentation.R.string.money_in),
+                subtitle = "From 27 Mar - 2 Apr, 2025, 9:50AM",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingMedium)
+                    .align(Alignment.CenterHorizontally)
+            )
 
+
+            //categories
+            LazyVerticalGrid(
+                columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
+                modifier = Modifier
+                    .height((screeHeight / 2).dp)
+                    .padding(paddingMedium),
+                horizontalArrangement = Arrangement.SpaceBetween.apply {
+                    spacedBy(6.dp)
+                }
+            ) {
+                items(6) {
+                    InsightCategoryCard(
+                        modifier = Modifier.padding(paddingMedium),
+                    )
+                }
+            }
         }
     }
 }
