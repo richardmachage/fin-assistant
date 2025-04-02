@@ -1,5 +1,7 @@
 package com.transsion.financialassistant.data.di
 
+import com.transsion.financialassistant.data.repository.pin.PinRepo
+import com.transsion.financialassistant.data.repository.pin.PinRepoImpl
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.data.repository.security.SecurityRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
@@ -50,4 +52,10 @@ abstract class RepositoryModule {
     internal abstract fun bindBuyGoodsRepo(
         buyGoodsRepoImpl: BuyGoodsRepoImpl
     ): BuyGoodsRepo
+
+    @Binds
+    internal abstract fun bindPinRepo(
+        pinRepoImpl: PinRepoImpl
+    ): PinRepo
+
 }

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
-                    startDestination = OnboardingRoutes.Login
+                    startDestination = OnboardingRoutes.Welcome
                 )
             }
 

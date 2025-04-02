@@ -55,9 +55,6 @@ fun ConfirmNumberDualScreen(
     onStart: (String) -> Unit = {},
     context: Context = LocalContext.current
 ) {
-    /*val phoneNumbers by viewModel.mpesaNumbers.collectAsState()
-    val errorMessage by viewModel.errorMessage.collectAsState()
-    val selectedNumber by viewModel.selectedNumber.collectAsState()*/
 
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -190,6 +187,8 @@ fun ConfirmNumberDualScreen(
                     .padding(paddingLarge)
                     .align(Alignment.BottomCenter),
                 onClick = {
+                    viewModel.onCompletedOnboarding()
+
                     navController.navigate(OnboardingRoutes.CreatePin) {
                         popUpTo<OnboardingRoutes.ConfirmNumberDual> {
                             inclusive = true
