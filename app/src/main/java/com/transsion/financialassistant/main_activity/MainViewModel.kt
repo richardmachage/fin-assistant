@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.getMpesaMessagesByTransactionType
+import com.transsion.financialassistant.data.repository.pin.PinRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
+import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val transactionRepo: TransactionRepo
+    private val transactionRepo: TransactionRepo,
+    private val onboardingRepo: OnboardingRepo,
+    private val pinRepo: PinRepo
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ScreenState())
@@ -46,18 +50,24 @@ class MainViewModel @Inject constructor(
     }
 
     fun getStartDestination(): Any {
-
         //when onboarding has completed
-            // when PIN login is enabled
-            // --> Go to login screen
+        if (onboardingRepo.hasCompletedOnboarding()) {
+            //onboarding has completed, check if pin is set
 
-            //when PIN login is disabled
-            // --> Go to home screen
+            if (pinRepo.isPinSet()) {
+                //pin is set, go to login
+                return OnboardingRoutes.Login
+            } else {
+                //pin not set, go to home
+                return OnboardingRoutes.Login// FIXME change to insights
+            }
+        } else {
+            //Onboarding has not completed
+            //show welcome screen
+            return OnboardingRoutes.Welcome
 
+        }
 
-        //when onboarding has NOT completed
-        // --> Go to Welcome screen to complete onboarding
-        return OnboardingRoutes.Welcome
 
     }
 }
