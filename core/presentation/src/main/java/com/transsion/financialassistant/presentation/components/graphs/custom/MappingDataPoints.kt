@@ -1,7 +1,8 @@
-package com.transsion.financialassistant.presentation.components.graphs
+package com.transsion.financialassistant.presentation.components.graphs.custom
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 
 fun mapToOffsets(dataPoints: List<DataPoint>, size: Size, spacingX: Float): List<Offset> {
     val maxY = dataPoints.maxOf { it.y }

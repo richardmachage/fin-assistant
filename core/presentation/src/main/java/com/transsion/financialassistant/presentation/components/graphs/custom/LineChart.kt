@@ -1,7 +1,6 @@
-package com.transsion.financialassistant.presentation.components.graphs
+package com.transsion.financialassistant.presentation.components.graphs.custom
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -36,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
 @Composable
@@ -44,7 +43,7 @@ fun LineChart(
     modifier: Modifier = Modifier,
     dataPoints: List<DataPoint>,
 
-) {
+    ) {
 
     val selectedPoint = remember { mutableStateOf<DataPoint?>(null) }
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -73,7 +72,6 @@ fun LineChart(
                 // .height(canvasHeight.dp)
                 .horizontalScroll(scrollState)
                 .width(chartWidth)
-                .background(FAColors.green)
         ) {
             Canvas(
                 modifier = Modifier

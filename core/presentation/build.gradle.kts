@@ -12,4 +12,7 @@ android {
 
 dependencies {
     debugImplementation(libs.ui.tooling)
+
+    implementation(libs.vico.compose.m3)
+
 }

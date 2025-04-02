@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.presentation.components.graphs
+package com.transsion.financialassistant.presentation.components.graphs.custom
 
 import androidx.compose.runtime.Composable
 
