@@ -28,8 +28,8 @@ class BiometricPromptManager (
         // Defining the Biometric Prompt
         val manager = BiometricManager.from(activity)
         val authenticators = if (Build.VERSION.SDK_INT >= 30) {
-            BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            BiometricManager.Authenticators.BIOMETRIC_STRONG //or
+                    //BiometricManager.Authenticators.DEVICE_CREDENTIAL
         } else
             BiometricManager.Authenticators.BIOMETRIC_STRONG
 
@@ -63,7 +63,7 @@ class BiometricPromptManager (
         }
 
         val prompt = BiometricPrompt(
-            activity, // ComponentActivity instance
+            activity, // AppCompatActivity instance
             ContextCompat.getMainExecutor(activity),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {

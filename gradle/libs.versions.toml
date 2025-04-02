@@ -33,8 +33,6 @@ androidxWork = "2.10.0"
 biometricKtx = "1.1.0"
 securityCryptoKtx = "1.0.0"
 
-
-
 [libraries]
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
