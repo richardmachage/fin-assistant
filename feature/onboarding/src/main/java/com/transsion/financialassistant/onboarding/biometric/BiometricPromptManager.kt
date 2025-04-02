@@ -1,21 +1,20 @@
-package com.transsion.financialassistant.data.biometric
+package com.transsion.financialassistant.onboarding.biometric
 
+import android.content.Context
 import android.os.Build
-import androidx.activity.ComponentActivity
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 
 class BiometricPromptManager (
     // For Biometric functionality the class has to extend Activity
-    private val activity: AppCompatActivity
-) {
+    private val context: Context//AppCompatActivity
+) : AppCompatActivity() {
     private val resultChannel = Channel<BiometricResult>()
     val promptResult = resultChannel.receiveAsFlow()
 
@@ -26,10 +25,10 @@ class BiometricPromptManager (
         description: String
     ){
         // Defining the Biometric Prompt
-        val manager = BiometricManager.from(activity)
+        val manager = BiometricManager.from(context)
         val authenticators = if (Build.VERSION.SDK_INT >= 30) {
-            BiometricManager.Authenticators.BIOMETRIC_STRONG //or
-                    //BiometricManager.Authenticators.DEVICE_CREDENTIAL
+            BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
         } else
             BiometricManager.Authenticators.BIOMETRIC_STRONG
 
@@ -63,8 +62,8 @@ class BiometricPromptManager (
         }
 
         val prompt = BiometricPrompt(
-            activity, // AppCompatActivity instance
-            ContextCompat.getMainExecutor(activity),
+            context as AppCompatActivity, // ComponentActivity instance
+            ContextCompat.getMainExecutor(context),
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     super.onAuthenticationError(errorCode, errString)
@@ -87,3 +86,6 @@ class BiometricPromptManager (
         prompt.authenticate(promptInfo.build())
     }
 }
+
+
+

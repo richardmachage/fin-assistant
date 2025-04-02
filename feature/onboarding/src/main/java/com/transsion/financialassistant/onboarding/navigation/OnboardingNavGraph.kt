@@ -1,20 +1,15 @@
 package com.transsion.financialassistant.onboarding.navigation
 
-import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.transsion.financialassistant.onboarding.biometric_auth.BiometricAuth
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.SetPasswordPromptScreen
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
-import com.transsion.financialassistant.onboarding.screens.login.LoginActivity
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.surveys.PersonalTrackerSurvey
@@ -36,11 +31,7 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.Login> {
-        // Upon reaching login screen, trigger LoginActivity
-        val context = LocalContext.current
-        val intent = Intent(context, LoginActivity::class.java)
-        context.startActivity(intent)
-        navController.popBackStack()
+        LoginScreen(navController = navController)
     }
 
     composable<OnboardingRoutes.ChangeNumber> {
@@ -65,13 +56,6 @@ fun NavGraphBuilder.onboardingNavGraph(
 
     composable<OnboardingRoutes.PersonalTrackerSurvey> {
         PersonalTrackerSurvey(navController = navController)
-    }
-
-    composable<OnboardingRoutes.BiometricAuth> {
-        BiometricAuth(
-            navController = navController,
-            activity = AppCompatActivity()
-        )
     }
 
 
