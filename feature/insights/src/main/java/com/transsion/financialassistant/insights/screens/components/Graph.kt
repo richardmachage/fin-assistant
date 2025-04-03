@@ -9,11 +9,13 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.sp
 import com.transsion.financialassistant.presentation.components.graphs.custom.sampleData
+import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import com.transsion.financialassistant.presentation.components.graphs.vico.LineChartVico
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -26,8 +28,11 @@ import com.transsion.financialassistant.presentation.utils.paddingLarge
 fun Graph(
     modifier: Modifier,
     title: String,
-    subtitle: String
+    subtitle: String,
+    dataPoints: List<DataPoint> = sampleData,
+    lineColor: Color = FAColors.green
 ) {
+    if (dataPoints.isNotEmpty())
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(10)
@@ -50,8 +55,8 @@ fun Graph(
             HorizontalDivider()
 
             LineChartVico(
-                dataPoints = sampleData,
-                lineColor = FAColors.green
+                dataPoints = dataPoints,
+                lineColor = lineColor
                 )
 
 

@@ -2,4 +2,7 @@
 <resources>
 
     <string name="insights">Insights</string>
+    <string name="no_data_to_plot_graph">No data to plot gragh</string>
+    <string name="personal_finances">Personal finances</string>
+    <string name="business_finances">Business finances</string>
 </resources>

@@ -42,6 +42,7 @@ fun StackedBarChart(
     legendHeight: Int = 80
 ) {
     var showLegend by remember { mutableStateOf(true) }
+    if (categories.isNotEmpty())
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(10),

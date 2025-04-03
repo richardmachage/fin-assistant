@@ -35,11 +35,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.R
+import com.transsion.financialassistant.insights.model.InsightCategories
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
 import com.transsion.financialassistant.insights.screens.components.InsightCategoryCard
 import com.transsion.financialassistant.insights.screens.components.MoneyToggle
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
+import com.transsion.financialassistant.presentation.components.graphs.custom.StackedBarChart
+import com.transsion.financialassistant.presentation.components.graphs.custom.sampleCategories
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -81,7 +84,7 @@ fun InsightsScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val menuOptions = listOf("Personal finances", "Business finances")
-                var currentOption by remember { mutableStateOf(menuOptions[0]) }
+                var currentOption by remember { mutableStateOf(InsightCategories.PERSONAL) }
                 var showMenu by remember { mutableStateOf(false) }
                 //personal finances/business switch
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -90,19 +93,20 @@ fun InsightsScreen() {
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
-                        menuOptions.forEach {
+                        InsightCategories.entries.forEach {
                             DropdownMenuItem(
-                                text = { Text(text = it) },
+                                text = { Text(text = stringResource(it.description)) },
                                 onClick = {
-                                    currentOption = it
+                                    if (currentOption != it) {
+                                        currentOption = it
+                                    }
                                     showMenu = false
                                 }
                             )
                         }
-
                     }
 
-                    NormalText(text = currentOption)
+                    NormalText(text = stringResource(currentOption.description))
                     HorizontalSpacer(5)
                     IconButtonFa(
                         onClick = {
@@ -112,7 +116,6 @@ fun InsightsScreen() {
                         colors = IconButtonDefaults.iconButtonColors()
                             .copy(containerColor = Color.Transparent)
                     )
-
 
                 }
 
@@ -184,6 +187,12 @@ fun InsightsScreen() {
                     .align(Alignment.CenterHorizontally)
             )
 
+            //stackedBarchart
+            VerticalSpacer(5)
+
+            StackedBarChart(
+                categories = sampleCategories
+            )
 
             //categories
             LazyVerticalGrid(
