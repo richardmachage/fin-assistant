@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.insights.screens.insights
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
@@ -9,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -16,6 +18,11 @@ class InsightsViewModel @Inject constructor() : ViewModel() {
     private var _state = MutableStateFlow(InsightsScreenState())
     val state = _state.asStateFlow()
 
+    fun getMoneyIn() {
+        viewModelScope.launch {
+            //
+        }
+    }
 
     fun switchTransactionCategory(transactionCategory: TransactionCategory) {
         _state.update { it.copy(transactionCategory = transactionCategory) }

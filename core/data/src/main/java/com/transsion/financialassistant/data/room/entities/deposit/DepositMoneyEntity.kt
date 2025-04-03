@@ -3,6 +3,7 @@ package com.transsion.financialassistant.data.room.entities.deposit
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 
 @Entity
 data class DepositMoneyEntity(
@@ -14,5 +15,6 @@ data class DepositMoneyEntity(
     val mpesaBalance: Double,
     val date: String,
     val time: String,
-    val transactionCategory: TransactionCategory = TransactionCategory.IN
+    val transactionCategory: TransactionCategory = TransactionCategory.IN,
+    val transactionType: TransactionType = TransactionType.DEPOSIT
 )

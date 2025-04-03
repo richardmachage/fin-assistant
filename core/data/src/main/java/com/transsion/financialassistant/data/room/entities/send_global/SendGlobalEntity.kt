@@ -15,5 +15,6 @@ data class SendGlobalEntity(
     val transactionCost: Double,
     val date: String,
     val time: String,
-    val transactionCategory: TransactionCategory = TransactionCategory.OUT
+    val transactionCategory: TransactionCategory = TransactionCategory.OUT,
+    // transactionType: TransactionType  //FIXME
 )

@@ -1,6 +1,5 @@
 package com.transsion.financialassistant.insights.model
 
-import android.util.Log
 import androidx.annotation.StringRes
 import com.transsion.financialassistant.insights.R
 import java.time.DayOfWeek
@@ -32,8 +31,6 @@ enum class InsightTimeline(@StringRes val description: Int) {
                 val currentDate = now.toLocalDate()
                 val startOfWeek = currentDate.with(DayOfWeek.SUNDAY)
                 val endOfWeek = currentDate.with(DayOfWeek.SATURDAY)
-
-                Log.d("Timeline", "getTimeline2: ${endOfWeek.format(formatter2)}")
 
                 InsightTimelineRange(
                     startDate = startOfWeek.format(formatter2),

@@ -9,5 +9,10 @@ data class InsightsScreenState(
     val toastMessage: String? = null,
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
     val insightCategory: InsightCategory = InsightCategory.PERSONAL,
-    val insightTimeline: InsightTimeline = InsightTimeline.TODAY
+    val insightTimeline: InsightTimeline = InsightTimeline.TODAY,
+
+    val moneyIn: String? = null,
+    val moneyOut: String? = null,
+    val transactionsIn: String? = null,
+    val transactionsOut: String? = null
 )

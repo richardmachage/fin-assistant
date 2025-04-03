@@ -62,6 +62,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun sendMshwariDao(): SendMshwariDao
     abstract fun receiveMshwariDao(): ReceiveMshwariDao
     abstract fun bundlesPurchaseDao(): BundlesPurchaseDao
+    abstract fun financialAssistantDao(): FinancialAssistantDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null

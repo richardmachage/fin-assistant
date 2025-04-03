@@ -3,6 +3,7 @@ package com.transsion.financialassistant.data.room.entities.withdraw
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 
 @Entity
 data class WithdrawMoneyEntity(
@@ -16,5 +17,6 @@ data class WithdrawMoneyEntity(
     val transactionCost: Double,
     val agent: String,
     //val agentNumber: String,
-    val transactionCategory: TransactionCategory = TransactionCategory.OUT
+    val transactionCategory: TransactionCategory = TransactionCategory.OUT,
+    val transactionType: TransactionType = TransactionType.WITHDRAWAL
 )
