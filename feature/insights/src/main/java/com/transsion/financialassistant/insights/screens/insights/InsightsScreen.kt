@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightTimeline
@@ -48,6 +49,7 @@ import com.transsion.financialassistant.presentation.components.graphs.custom.St
 import com.transsion.financialassistant.presentation.components.graphs.custom.sampleCategories
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -193,7 +195,11 @@ fun InsightsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
+                lineColor = when (state.transactionCategory) {
+                    TransactionCategory.IN -> FAColors.green
+                    TransactionCategory.OUT -> Color.Red
+                }
             )
 
             //stackedBarchart

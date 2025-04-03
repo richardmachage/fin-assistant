@@ -32,34 +32,33 @@ fun Graph(
     dataPoints: List<DataPoint> = sampleData,
     lineColor: Color = FAColors.green
 ) {
-    if (dataPoints.isNotEmpty())
-    ElevatedCard(
-        modifier = modifier,
-        shape = RoundedCornerShape(10)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingLarge)
+    if (dataPoints.isNotEmpty()) {
+        ElevatedCard(
+            modifier = modifier,
+            shape = RoundedCornerShape(10)
         ) {
-            //Tittle
-            BigTittleText(text = title)
-            VerticalSpacer(5)
-            //subtitle, date descriptions
-            FaintText(
-                text = subtitle,
-                fontSize = 13.sp
-            )
-            VerticalSpacer(5)
-
-            HorizontalDivider()
-
-            LineChartVico(
-                dataPoints = dataPoints,
-                lineColor = lineColor
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingLarge)
+            ) {
+                //Tittle
+                BigTittleText(text = title, textColor = lineColor)
+                VerticalSpacer(5)
+                //subtitle, date descriptions
+                FaintText(
+                    text = subtitle,
+                    fontSize = 13.sp
                 )
+                VerticalSpacer(5)
 
+                HorizontalDivider()
 
+                LineChartVico(
+                    dataPoints = dataPoints,
+                    lineColor = lineColor
+                )
+            }
         }
     }
 }
