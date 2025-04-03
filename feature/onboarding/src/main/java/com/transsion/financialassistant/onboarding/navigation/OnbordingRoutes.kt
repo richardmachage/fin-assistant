@@ -33,6 +33,7 @@ sealed interface OnboardingRoutes {
     object PersonalTrackerSurvey: OnboardingRoutes
 
     @Serializable
-    object BiometricAuth: OnboardingRoutes
+    object SurveyBusinessScreens: OnboardingRoutes
+
 
 }

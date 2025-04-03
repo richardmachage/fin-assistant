@@ -13,6 +13,7 @@ import com.transsion.financialassistant.onboarding.screens.get_started.GetStarte
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.surveys.PersonalTrackerSurvey
+import com.transsion.financialassistant.onboarding.screens.surveys.SurveyBusinessScreens
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -56,6 +57,10 @@ fun NavGraphBuilder.onboardingNavGraph(
 
     composable<OnboardingRoutes.PersonalTrackerSurvey> {
         PersonalTrackerSurvey(navController = navController)
+    }
+
+    composable<OnboardingRoutes.SurveyBusinessScreens> {
+        SurveyBusinessScreens(navController = navController)
     }
 
 
