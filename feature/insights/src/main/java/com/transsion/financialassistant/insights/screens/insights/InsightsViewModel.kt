@@ -73,6 +73,7 @@ class InsightsViewModel @Inject constructor(
         _state.update { it.copy(insightTimeline = insightTimeline) }
     }
 
+
     val dummyInsightCategories = listOf(
         InsightCategoryCardItem(
             tittle = "Shopping",
