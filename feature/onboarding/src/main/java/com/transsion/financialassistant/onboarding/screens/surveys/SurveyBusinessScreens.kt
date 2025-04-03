@@ -55,12 +55,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyState
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
@@ -89,8 +91,8 @@ fun SurveyBusinessScreens(
         stringResource(R.string.professional_services) to drawable.shopping_basket_03,
         stringResource(R.string.travel_transportation) to drawable.travel,
         stringResource(R.string.savings) to drawable.savings,
-       stringResource(R.string.transaction_costs) to drawable.transaction,
-      stringResource(R.string.stock) to drawable.store_02,
+        stringResource(R.string.transaction_costs) to drawable.transaction,
+        stringResource(R.string.stock) to drawable.store_02,
     )
 
     val optionsPay = listOf(
@@ -98,18 +100,18 @@ fun SurveyBusinessScreens(
         stringResource(R.string.pochi_la_biashara) to drawable.mobile_security,
     )
 
-
     Surface(
-        modifier = Modifier.fillMaxSize()) {
+        modifier = Modifier.fillMaxSize()
+    ) {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
-        Box (
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .background(MaterialTheme.colorScheme.background),
 
-        ) {
+            ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -127,7 +129,7 @@ fun SurveyBusinessScreens(
                             .fillMaxWidth()
                             .padding(top = paddingLarge),
                         contentAlignment = Alignment.CenterStart
-                    ){
+                    ) {
                         Row(
                             modifier = Modifier,
                             horizontalArrangement = Arrangement.Start,
@@ -180,7 +182,7 @@ fun SurveyBusinessScreens(
                                     textAlign = TextAlign.Start
                                 )
 
-                               VerticalSpacer(16)
+                                VerticalSpacer(16)
 
                                 when (it.answerType) {
                                     AnswerType.SINGLE_CHOICE -> {
@@ -211,7 +213,7 @@ fun SurveyBusinessScreens(
                                                                 )
                                                             }
                                                         )
-                                                       VerticalSpacer(8)
+                                                        VerticalSpacer(8)
                                                         NormalText(text = option)
                                                     }
                                                 }
@@ -223,23 +225,30 @@ fun SurveyBusinessScreens(
 
                                     AnswerType.MULTI_CHOICE -> {
                                         it.options?.let { options ->
-                                            val selectedItems = remember { mutableStateListOf<String>() }
+                                            val selectedItems =
+                                                remember { mutableStateListOf<String>() }
 
                                             FlowRow(
                                                 modifier = Modifier.fillMaxWidth(),
                                             ) {
                                                 options.forEach { option ->
                                                     val isSelected = selectedItems.contains(option)
-                                                    val iconRes = optionIcons[option] ?: R.drawable.stash_question // Fallback icon
+                                                    val iconRes = optionIcons[option]
+                                                        ?: R.drawable.stash_question // Fallback icon
 
                                                     FilterChip(
                                                         selected = isSelected,
                                                         onClick = {
-                                                            if (isSelected) selectedItems.remove(option)
+                                                            if (isSelected) selectedItems.remove(
+                                                                option
+                                                            )
                                                             else selectedItems.add(option)
 
                                                             // Update ViewModel with selected choices
-                                                            surveyViewModel.answerQuestion(it.id, selectedItems.toList())
+                                                            surveyViewModel.answerQuestion(
+                                                                it.id,
+                                                                selectedItems.toList()
+                                                            )
                                                         },
                                                         label = {
                                                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -259,7 +268,7 @@ fun SurveyBusinessScreens(
                                     }
 
                                     AnswerType.MULTI_CHOICE_PAY -> {
-                                        it.options?.let {
+                                        it.options?.let { optionsPay ->
                                             val selectedItems = remember { mutableStateListOf<String>() }
 
                                             LazyVerticalGrid(
@@ -267,7 +276,13 @@ fun SurveyBusinessScreens(
                                                 modifier = Modifier.fillMaxSize(),
                                                 contentPadding = paddingValues
                                             ) {
-                                                items(optionsPay) { (option, iconRes) ->
+                                                val orderedOptions = listOf(
+                                                    "Cash" to drawable.cash,
+                                                    "Send Money" to drawable.mobile_security,
+                                                    "Pochi La Biashara" to drawable.mobile_security
+                                                )
+
+                                                items(orderedOptions) { (option, iconRes) ->
                                                     val isSelected = selectedItems.contains(option)
 
                                                     Card(
@@ -282,55 +297,52 @@ fun SurveyBusinessScreens(
                                                                 shape = RoundedCornerShape(12.dp)
                                                             )
                                                             .clickable {
-                                                                if (isSelected) selectedItems.remove(
-                                                                    option
-                                                                )
+                                                                if (isSelected) selectedItems.remove(option)
                                                                 else selectedItems.add(option)
 
                                                                 // Update ViewModel
-                                                                surveyViewModel.answerQuestion(
-                                                                    4,
-                                                                    selectedItems.toList()
-                                                                )
+                                                                surveyViewModel.answerQuestion(4, selectedItems.toList())
                                                             }
                                                     ) {
-                                                        Column(
+                                                        Box(
                                                             modifier = Modifier
                                                                 .fillMaxSize()
-                                                                .padding(12.dp),
-                                                            horizontalAlignment = Alignment.CenterHorizontally,
-                                                            verticalArrangement = Arrangement.Center
+                                                                .padding(12.dp)
                                                         ) {
-                                                            Icon(
-                                                                painter = painterResource(id = iconRes),
-                                                                contentDescription = option,
-                                                                tint = if (isSelected) FAColors.lightGreen else Color.Gray
-                                                            )
-
-                                                            Spacer(modifier = Modifier.height(8.dp))
-
-                                                            NormalText(
+                                                            // Option Name at Top Start
+                                                            Text(
                                                                 text = option,
                                                                 fontSize = 16.sp,
+                                                                fontWeight = FontWeight.Bold,
+                                                                color = Color.Black,
+                                                                modifier = Modifier.align(Alignment.TopStart)
                                                             )
 
-                                                            Spacer(modifier = Modifier.height(8.dp))
-
-                                                            Text(
-                                                                text = "KES 6,900.90", // Dummy amount, replace with dynamic value
-                                                                fontSize = 14.sp,
-                                                                color = Color.Gray
-                                                            )
-
-                                                            Spacer(modifier = Modifier.height(8.dp))
-
+                                                            // Selected Indicator at TopEnd
                                                             if (isSelected) {
                                                                 Icon(
                                                                     imageVector = Icons.Filled.CheckCircle,
                                                                     contentDescription = "Selected",
-                                                                    tint = FAColors.lightGreen
+                                                                    tint = FAColors.lightGreen,
+                                                                    modifier = Modifier.align(Alignment.TopEnd)
                                                                 )
                                                             }
+
+                                                            // Amount at Center
+                                                            Text(
+                                                                text = "KES 6,900.90", // Replace with dynamic value
+                                                                fontSize = 14.sp,
+                                                                color = Color.Gray,
+                                                                modifier = Modifier.align(Alignment.Center)
+                                                            )
+
+                                                            // Icon at Bottom Start
+                                                            Icon(
+                                                                painter = painterResource(id = iconRes),
+                                                                contentDescription = option,
+                                                                tint = if (isSelected) FAColors.lightGreen else Color.Gray,
+                                                                modifier = Modifier.align(Alignment.BottomStart)
+                                                            )
                                                         }
                                                     }
                                                 }
@@ -375,20 +387,11 @@ fun SurveyBusinessScreens(
                     }
 
                     if (state.isSurveyComplete) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                Icons.Filled.CheckCircle,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(64.dp),
-                                contentDescription = null
-                            )
-                            NormalText(
-                                text = stringResource(R.string.survey_completed),
-                                modifier = Modifier.padding(paddingValues)
-                            )
+                        navController.navigate(OnboardingRoutes.HomeScreen){
+                            popUpTo(OnboardingRoutes.HomeScreen) {
+                                inclusive = true
+                            }
+
                         }
                     }
 
@@ -405,15 +408,15 @@ fun SurveyBusinessScreens(
                     .align(Alignment.BottomCenter)
                     .padding(bottom = paddingLarge),
                 contentAlignment = Alignment.Center
-            ){
+            ) {
                 FilledButtonFa(
                     text = stringResource(R.string.next),
                     onClick = {
-                       surveyViewModel.loadNextQuestion()
+                        surveyViewModel.loadNextQuestion()
                     },
                     enabled = state.currentQuestion != null,
 
-                )
+                    )
             }
         }
     }

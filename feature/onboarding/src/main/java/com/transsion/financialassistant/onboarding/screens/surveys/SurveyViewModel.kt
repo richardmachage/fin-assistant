@@ -142,7 +142,8 @@ class SurveyViewModel @Inject constructor(
     // calculate progress for the progress bar
     val progress: LiveData<Float> = _surveyState.map { state ->
         if (questions.isNotEmpty()) {
-            (state.currentQuestionIndex.toFloat() / questions.size.toFloat())
+            //(state.currentQuestionIndex.toFloat() / questions.size.toFloat())
+            (state.currentQuestionIndex + 1).toFloat() / questions.size.toFloat() // Adding +1 to match UI steps
         } else {
             0f
         }
