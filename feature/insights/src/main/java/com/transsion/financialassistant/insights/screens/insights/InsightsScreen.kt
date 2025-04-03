@@ -191,7 +191,7 @@ fun InsightsScreen(
             VerticalSpacer(5)
             Graph(
                 title = state.transactionCategory.description,
-                subtitle = state.insightTimeline.getTimeline(),
+                subtitle = state.insightTimeline.getTimeline().displayInfo,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
