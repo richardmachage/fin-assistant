@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -33,9 +34,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.transsion.financialassistant.data.models.TransactionCategory
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.insights.R
-import com.transsion.financialassistant.insights.model.InsightCategories
+import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
 import com.transsion.financialassistant.insights.screens.components.InsightCategoryCard
@@ -52,8 +54,13 @@ import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable
-fun InsightsScreen() {
+fun InsightsScreen(
+    viewModel: InsightsViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val screeHeight = LocalConfiguration.current.screenHeightDp
+
+
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
@@ -83,8 +90,7 @@ fun InsightsScreen() {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val menuOptions = listOf("Personal finances", "Business finances")
-                var currentOption by remember { mutableStateOf(InsightCategories.PERSONAL) }
+                //var currentOption by remember { mutableStateOf(InsightCategory.PERSONAL) }
                 var showMenu by remember { mutableStateOf(false) }
                 //personal finances/business switch
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -93,12 +99,12 @@ fun InsightsScreen() {
                         expanded = showMenu,
                         onDismissRequest = { showMenu = false }
                     ) {
-                        InsightCategories.entries.forEach {
+                        InsightCategory.entries.forEach {
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(it.description)) },
                                 onClick = {
-                                    if (currentOption != it) {
-                                        currentOption = it
+                                    if (state.insightCategory != it) {
+                                        viewModel.switchInsightCategory(it)
                                     }
                                     showMenu = false
                                 }
@@ -106,7 +112,7 @@ fun InsightsScreen() {
                         }
                     }
 
-                    NormalText(text = stringResource(currentOption.description))
+                    NormalText(text = stringResource(state.insightCategory.description))
                     HorizontalSpacer(5)
                     IconButtonFa(
                         onClick = {
@@ -169,18 +175,20 @@ fun InsightsScreen() {
             VerticalSpacer(5)
 
             //Money In/Out toggle buttons
-            var selectedMoneyToggleOption by remember { mutableStateOf(TransactionCategory.IN) }
+//            var selectedMoneyToggleOption by remember { mutableStateOf(TransactionCategory.IN) }
             MoneyToggle(
-                selectedOption = selectedMoneyToggleOption,
-                onOptionSelected = { selectedMoneyToggleOption = it }
+                selectedOption = state.transactionCategory,//selectedMoneyToggleOption,
+                onOptionSelected = {
+                    viewModel.switchTransactionCategory(it)
+                }
             )
 
 
             //Graph
             VerticalSpacer(5)
             Graph(
-                title = stringResource(com.transsion.financialassistant.presentation.R.string.money_in),
-                subtitle = "From 27 Mar - 2 Apr, 2025, 9:50AM",
+                title = state.transactionCategory.description,//stringResource(com.transsion.financialassistant.presentation.R.string.money_in),
+                subtitle = "From 27 Mar - 2 Apr, 2025, 9:50AM", //FIXME
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
@@ -204,9 +212,14 @@ fun InsightsScreen() {
                     spacedBy(6.dp)
                 }
             ) {
-                items(6) {
+
+                items(viewModel.dummyInsightCategories) { item ->
                     InsightCategoryCard(
                         modifier = Modifier.padding(paddingMedium),
+                        item = item,
+                        onClick = {
+                            //TODO: navigate to  specific category screen
+                        }
                     )
                 }
             }

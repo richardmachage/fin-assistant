@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +31,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -43,10 +43,12 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun InsightCategoryCard(
     modifier: Modifier = Modifier,
-    title: String = "Shopping",
-    amount: String = "14,520.00",
+    item: InsightCategoryCardItem = InsightCategoryCardItem(
+        tittle = "Shopping",
+        amount = "14,520.00",
+        categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+    ),
     onClick: () -> Unit = {},
-    categoryIcon: Painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined)
 ) {
     ElevatedCard(
         modifier = modifier
@@ -71,7 +73,7 @@ fun InsightCategoryCard(
             ) {
                 NormalText(
                     modifier = Modifier.weight(1f),
-                    text = title,
+                    text = item.tittle,
                     textAlign = TextAlign.Left
                 )
 
@@ -104,14 +106,14 @@ fun InsightCategoryCard(
                 )
 
                 BigTittleText(
-                    text = amount
+                    text = item.amount
                 )
 
             }
 
             IconButtonFa(
                 modifier = Modifier.align(Alignment.BottomStart),
-                icon = categoryIcon,
+                icon = painterResource(item.categoryIcon),
                 colors = IconButtonDefaults.iconButtonColors().copy(
                     containerColor = FAColors.faintText.copy(0.3F)
                 )
