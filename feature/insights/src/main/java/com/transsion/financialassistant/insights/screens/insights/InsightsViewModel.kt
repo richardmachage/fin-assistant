@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,6 +23,10 @@ class InsightsViewModel @Inject constructor() : ViewModel() {
 
     fun switchInsightCategory(insightCategory: InsightCategory) {
         _state.update { it.copy(insightCategory = insightCategory) }
+    }
+
+    fun switchInsightTimeline(insightTimeline: InsightTimeline) {
+        _state.update { it.copy(insightTimeline = insightTimeline) }
     }
 
     val dummyInsightCategories = listOf(

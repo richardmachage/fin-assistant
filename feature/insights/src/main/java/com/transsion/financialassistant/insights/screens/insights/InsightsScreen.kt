@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategory
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
 import com.transsion.financialassistant.insights.screens.components.InsightCategoryCard
@@ -90,7 +91,7 @@ fun InsightsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                //var currentOption by remember { mutableStateOf(InsightCategory.PERSONAL) }
+
                 var showMenu by remember { mutableStateOf(false) }
                 //personal finances/business switch
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -127,7 +128,7 @@ fun InsightsScreen(
 
 
                 //Timeline switch
-                var currentTimeline by remember { mutableStateOf("Today") }
+                //var currentTimeline by remember { mutableStateOf("Today") }
                 var showTimelineMenu by remember { mutableStateOf(false) }
                 OutlinedButton(
                     modifier = Modifier
@@ -138,16 +139,18 @@ fun InsightsScreen(
                     }
                 ) {
 
-                    val timelineOptions = listOf("Today", "This week", "This month")
+                    //val timelineOptions = listOf("Today", "This week", "This month")
                     DropdownMenu(
                         expanded = showTimelineMenu,
                         onDismissRequest = { showTimelineMenu = false }
                     ) {
-                        timelineOptions.forEach {
+                        InsightTimeline.entries.forEach {
                             DropdownMenuItem(
-                                text = { Text(text = it) },
+                                text = { Text(text = stringResource(it.description)) },
                                 onClick = {
-                                    currentTimeline = it
+                                    if (state.insightTimeline != it) {
+                                        viewModel.switchInsightTimeline(it)
+                                    }
                                     showTimelineMenu = false
                                 }
                             )
@@ -159,7 +162,7 @@ fun InsightsScreen(
                         contentDescription = "calender"
                     )
                     HorizontalSpacer(5)
-                    NormalText(text = currentTimeline)
+                    NormalText(text = stringResource(state.insightTimeline.description))
                 }
             }
 
@@ -175,20 +178,18 @@ fun InsightsScreen(
             VerticalSpacer(5)
 
             //Money In/Out toggle buttons
-//            var selectedMoneyToggleOption by remember { mutableStateOf(TransactionCategory.IN) }
             MoneyToggle(
-                selectedOption = state.transactionCategory,//selectedMoneyToggleOption,
+                selectedOption = state.transactionCategory,
                 onOptionSelected = {
                     viewModel.switchTransactionCategory(it)
                 }
             )
 
-
             //Graph
             VerticalSpacer(5)
             Graph(
-                title = state.transactionCategory.description,//stringResource(com.transsion.financialassistant.presentation.R.string.money_in),
-                subtitle = "From 27 Mar - 2 Apr, 2025, 9:50AM", //FIXME
+                title = state.transactionCategory.description,
+                subtitle = state.insightTimeline.getTimeline(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
