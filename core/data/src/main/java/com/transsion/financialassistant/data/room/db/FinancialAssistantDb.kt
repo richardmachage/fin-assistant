@@ -18,6 +18,7 @@ import com.transsion.financialassistant.data.room.entities.receive_money.Receive
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
@@ -43,7 +44,9 @@ import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMone
         ReceiveMshwariEntity::class,
         SendGlobalEntity::class,
         BundlesPurchaseEntity::class,
+        ReceivePochiEntity::class
     ],
+    views = [UnifiedIncomingTransaction::class],
     version = 1,
     exportSchema = true
 

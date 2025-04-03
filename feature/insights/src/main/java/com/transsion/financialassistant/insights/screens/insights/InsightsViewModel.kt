@@ -3,6 +3,7 @@ package com.transsion.financialassistant.insights.screens.insights
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.insights.model.InsightTimeline
@@ -14,14 +15,50 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class InsightsViewModel @Inject constructor() : ViewModel() {
+class InsightsViewModel @Inject constructor(
+    private val insightsRepo: InsightsRepo
+) : ViewModel() {
     private var _state = MutableStateFlow(InsightsScreenState())
     val state = _state.asStateFlow()
 
-    fun getMoneyIn() {
+    init {
+        getMoneyIn()
+        getNumberOfTransactionsIn()
+    }
+
+    fun getMoneyIn(
+        startDate: String = "2023-01-01",
+        endDate: String = "2023-12-31"
+    ) {
         viewModelScope.launch {
-            //
+            //so this one should fetch the data from the repo and update the state
+            insightsRepo.getTotalMoneyIn(startDate, endDate).apply {
+                onSuccess { totalMoneyIn ->
+                    _state.update { it.copy(moneyIn = totalMoneyIn.toString()) }
+                }
+
+                onFailure {
+                    //TODO
+                }
+            }
         }
+    }
+
+    fun getNumberOfTransactionsIn(
+        startDate: String = "2023-01-01",
+        endDate: String = "2023-12-31"
+    ) {
+        viewModelScope.launch {
+            insightsRepo.getTransactionsNumOfIn(startDate, endDate).apply {
+                onSuccess { numberOfTransactions ->
+                    _state.update { it.copy(transactionsIn = numberOfTransactions.toString()) }
+                }
+                onFailure {
+                    //TODO
+                }
+            }
+        }
+
     }
 
     fun switchTransactionCategory(transactionCategory: TransactionCategory) {

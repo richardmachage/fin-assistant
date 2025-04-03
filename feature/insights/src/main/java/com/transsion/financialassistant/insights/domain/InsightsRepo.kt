@@ -1,11 +1,11 @@
 package com.transsion.financialassistant.insights.domain
 
 interface InsightsRepo {
-    fun getTotalMoneyIn(startDate: String, endDate: String)
+    suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double>
 
-    fun getMoneyOut(startDate: String, endDate: String)
+    suspend fun getMoneyOut(startDate: String, endDate: String): Result<Double>
 
-    fun getTransactionsIn(startDate: String, endDate: String)
+    suspend fun getTransactionsNumOfIn(startDate: String, endDate: String): Result<Int>
 
     fun getTransactionsOut(startDate: String, endDate: String)
 

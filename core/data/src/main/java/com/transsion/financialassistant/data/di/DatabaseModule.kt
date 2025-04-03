@@ -77,5 +77,10 @@ object DatabaseModule {
     fun providesSendGlobalDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.sendGlobalDao()
 
+    @Provides
+    @Singleton
+    fun providesFinancialAssistantDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.financialAssistantDao()
+
 
 }

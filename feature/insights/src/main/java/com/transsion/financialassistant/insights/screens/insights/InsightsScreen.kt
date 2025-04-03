@@ -172,9 +172,9 @@ fun InsightsScreen(
             //Money in and Out summary Card
             InOutCard(
                 modifier = Modifier.padding(paddingSmall),
-                moneyIn = "236,900.90",
+                moneyIn = state.moneyIn ?: "0.0",
                 moneyOut = "177,500.90",
-                transactionsIn = "14",
+                transactionsIn = state.transactionsIn ?: "0",
                 transactionsOut = "256"
             )
             VerticalSpacer(5)

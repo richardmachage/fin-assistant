@@ -2,7 +2,6 @@ package com.transsion.financialassistant.data.room.db
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.transsion.financialassistant.data.room.models.UnifiedIncomingTransaction
 
 
 /**
@@ -13,23 +12,42 @@ that are not mapped to a single specific entity i.e queries with JIONs for sever
 interface FinancialAssistantDao {
 
 
-    @Query(
-        """
-  SELECT transactionCode,phone, amount, date, time, transactionType FROM ReceiveMoneyEntity
-  UNION ALL
-  SELECT transactionCode,phone, amount, date, time, transactionType FROM ReceiveMshwariEntity
-  UNION ALL
-  SELECT transactionCode,phone, amount, date, time, transactionType FROM ReceivePochiEntity
-  UNION ALL
-  SELECT transactionCode,phone, amount, date, time, transactionType FROM DepositMoneyEntity
-  WHERE date BETWEEN :startDate AND :endDate
-  ORDER BY date DESC, time DESC
- """
-    )
-    suspend fun getAllMoneyInTransactions(
-        startDate: String,
-        endDate: String
-    ): List<UnifiedIncomingTransaction>
+ @Query(
+  """
+        SELECT * FROM UnifiedIncomingTransaction
+        WHERE date BETWEEN :startDate AND :endDate
+        ORDER BY date DESC, time DESC
+    """
+ )
+ suspend fun getAllMoneyInTransactions(
+  startDate: String,
+  endDate: String
+ ): List<UnifiedIncomingTransaction>
+
+
+ @Query(
+  """
+    SELECT SUM(amount) FROM unifiedincomingtransaction
+    WHERE  date BETWEEN :startDate AND :endDate
+    """
+ )
+ suspend fun getTotalMoneyInAmount(
+  startDate: String,
+  endDate: String
+ ): Double?
+
+
+ @Query(
+  """
+    SELECT COUNT (*) FROM unifiedincomingtransaction
+    WHERE  date BETWEEN :startDate AND :endDate
+    """
+ )
+ suspend fun getNumberOfTransactionsIn(
+  startDate: String,
+  endDate: String
+ ): Int?
+
 
 
 }
