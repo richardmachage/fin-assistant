@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
+import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.home.viewModel.ReceiveMoneyViewModel
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
@@ -145,7 +146,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun TransactionList(transactions: List<ReceiveMoneyEntity>){
+fun TransactionList(transactions: List<SendMoneyEntity>){
     LazyColumn {
         items(transactions){transaction ->
             TransactionItem(transaction)
@@ -154,7 +155,7 @@ fun TransactionList(transactions: List<ReceiveMoneyEntity>){
 }
 
 @Composable
-fun TransactionItem(transaction: ReceiveMoneyEntity){
+fun TransactionItem(transaction: SendMoneyEntity){
     Row  (
         modifier = Modifier
             .fillMaxWidth()
@@ -168,8 +169,9 @@ fun TransactionItem(transaction: ReceiveMoneyEntity){
                 .background(Color.Gray, shape = CircleShape),
             contentAlignment = Alignment.Center
         ){
+            HorizontalSpacer(4)
             NormalText(
-                text = transaction.receiveFromName.first().toString(),
+                text = transaction.sentToName.first().toString(),
                 fontWeight = FontWeight.Bold
             )
         }
@@ -178,7 +180,7 @@ fun TransactionItem(transaction: ReceiveMoneyEntity){
         // Transaction Details
         Column(modifier = Modifier.weight(1f)) {
             NormalText(
-                text = transaction.receiveFromName,
+                text = transaction.sentToName,
                 fontWeight = FontWeight.Bold
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -194,6 +196,10 @@ fun TransactionItem(transaction: ReceiveMoneyEntity){
                 text = "+ KES ${transaction.amount}",
                 textColor = Color.Red,
                 fontWeight = FontWeight.Bold
+            )
+            BigTittleText(
+                text = transaction.mpesaBalance.toString(),
+                textColor = Color.Blue,
             )
             NormalText(
                 text = transaction.date,

@@ -77,5 +77,23 @@ object DatabaseModule {
     fun providesSendGlobalDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.sendGlobalDao()
 
+    @Provides
+    @Singleton
+    fun providesBuyAirtimeDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.buyAirtimeDao()
 
+    @Provides
+    @Singleton
+    fun providesPurchaseBundlesDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.bundlesPurchaseDao()
+
+    @Provides
+    @Singleton
+    fun providesSendMshwariDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.sendMshwariDao()
+
+    @Provides
+    @Singleton
+    fun providesReceiveMshwariDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.receiveMshwariDao()
 }
