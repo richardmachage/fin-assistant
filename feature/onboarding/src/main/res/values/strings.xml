@@ -107,4 +107,8 @@
     <string name="survey_completed">Survey Completed!</string>
     <string name="pochi_la_biashara">Pochi La Biashara</string>
     <string name="cash">Cash</string>
+    <string name="sms_permission_title">Allow Financial Assistant to Read your Messages</string>
+    <string name="sms_permission_message">We need to access your messages</string>
+    <string name="allow">Allow</string>
+    <string name="sms_permission_rationale">Financial Asistant Needs to Read Your Messages</string>
 </resources>
