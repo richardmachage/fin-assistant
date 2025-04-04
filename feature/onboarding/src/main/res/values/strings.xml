@@ -111,4 +111,6 @@
     <string name="sms_permission_message">We need to access your messages</string>
     <string name="allow">Allow</string>
     <string name="sms_permission_rationale">Financial Asistant Needs to Read Your Messages</string>
+    <string name="no_transactions_found">No Transactions Found</string>
+    <string name="received_money">Received Money</string>
 </resources>
