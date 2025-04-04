@@ -12,6 +12,7 @@ that are not mapped to a single specific entity i.e queries with JIONs for sever
 interface FinancialAssistantDao {
 
 
+
  @Query(
   """
         SELECT * FROM UnifiedIncomingTransaction
@@ -24,6 +25,17 @@ interface FinancialAssistantDao {
   endDate: String
  ): List<UnifiedIncomingTransaction>
 
+ @Query(
+  """
+  SELECT * FROM UnifiedOutGoingTransaction
+ WHERE date BETWEEN :startDate AND :endDate
+ ORDER BY date DESC, time DESC
+ """
+ )
+ suspend fun getAllMoneyOutTransactions(
+  startDate: String,
+  endDate: String
+ ): List<UnifiedOutGoingTransaction>
 
  @Query(
   """
@@ -36,6 +48,17 @@ interface FinancialAssistantDao {
   endDate: String
  ): Double?
 
+ @Query(
+  """
+    SELECT SUM(amount) FROM unifiedoutgoingtransaction
+    WHERE  date BETWEEN :startDate AND :endDate
+    """
+ )
+ suspend fun getTotalMoneyOutAmount(
+  startDate: String,
+  endDate: String
+ ): Double?
+
 
  @Query(
   """
@@ -44,6 +67,17 @@ interface FinancialAssistantDao {
     """
  )
  suspend fun getNumberOfTransactionsIn(
+  startDate: String,
+  endDate: String
+ ): Int?
+
+ @Query(
+  """
+  SELECT COUNT (*) FROM unifiedoutgoingtransaction
+  WHERE  date BETWEEN :startDate AND :endDate
+ """
+ )
+ suspend fun getNumberOfTransactionsOut(
   startDate: String,
   endDate: String
  ): Int?

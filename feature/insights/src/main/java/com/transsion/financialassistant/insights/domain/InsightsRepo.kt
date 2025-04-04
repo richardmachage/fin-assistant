@@ -1,14 +1,30 @@
 package com.transsion.financialassistant.insights.domain
 
+import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.insights.model.InsightCategory
+import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
+import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
+
 interface InsightsRepo {
+    val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
+
     suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double>
 
-    suspend fun getMoneyOut(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalMoneyOut(startDate: String, endDate: String): Result<Double>
 
-    suspend fun getTransactionsNumOfIn(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfTransactionsIn(startDate: String, endDate: String): Result<Int>
 
-    fun getTransactionsOut(startDate: String, endDate: String)
+    suspend fun getNumOfTransactionsOut(startDate: String, endDate: String): Result<Int>
 
     fun getTotalTransactions(startDate: String, endDate: String)
+
+    fun getDataPoints(
+        insightCategory: InsightCategory,
+        startDate: String,
+        endDate: String,
+        transactionCategory: TransactionCategory
+    ): Flow<List<DataPoint>>
 
 }

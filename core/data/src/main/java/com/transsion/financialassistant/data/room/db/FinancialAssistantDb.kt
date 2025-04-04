@@ -46,7 +46,7 @@ import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMone
         BundlesPurchaseEntity::class,
         ReceivePochiEntity::class
     ],
-    views = [UnifiedIncomingTransaction::class],
+    views = [UnifiedIncomingTransaction::class, UnifiedOutGoingTransaction::class],
     version = 1,
     exportSchema = true
 

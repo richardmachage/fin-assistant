@@ -8,8 +8,14 @@ import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.insights.model.InsightTimeline
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,10 +27,41 @@ class InsightsViewModel @Inject constructor(
     private var _state = MutableStateFlow(InsightsScreenState())
     val state = _state.asStateFlow()
 
+    val graphDataFlow = getGraphData()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+    val categoryDistributionFlow = insightsRepo.categoryDistributionFlow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
     init {
         getMoneyIn()
+        getMoneyOut()
         getNumberOfTransactionsIn()
+        getNumberOfTransactionsOut()
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun getGraphData() = state
+        .map { it.selector() }
+        .distinctUntilChanged()
+        .flatMapLatest { selection ->
+            insightsRepo.getDataPoints(
+                insightCategory = selection.insightCategory,
+                startDate = selection.insightTimeline.getTimeline().startDate,
+                endDate = selection.insightTimeline.getTimeline().endDate,
+                transactionCategory = selection.transactionCategory
+
+            )
+            // .onStart {  } TODO ->  implement loading state on the graph alone based on this
+        }
+
 
     fun getMoneyIn(
         startDate: String = "2023-01-01",
@@ -49,7 +86,7 @@ class InsightsViewModel @Inject constructor(
         endDate: String = "2023-12-31"
     ) {
         viewModelScope.launch {
-            insightsRepo.getTransactionsNumOfIn(startDate, endDate).apply {
+            insightsRepo.getNumOfTransactionsIn(startDate, endDate).apply {
                 onSuccess { numberOfTransactions ->
                     _state.update { it.copy(transactionsIn = numberOfTransactions.toString()) }
                 }
@@ -59,6 +96,38 @@ class InsightsViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun getMoneyOut(
+        startDate: String = "2023-01-01",
+        endDate: String = "2023-12-31"
+    ) {
+        viewModelScope.launch {
+            insightsRepo.getTotalMoneyOut(startDate, endDate).apply {
+                onSuccess { totalMoneyOut ->
+                    _state.update { it.copy(moneyOut = totalMoneyOut.toString()) }
+                }
+                onFailure {
+                    //TODO
+                }
+            }
+        }
+    }
+
+    private fun getNumberOfTransactionsOut(
+        startDate: String = "2023-01-01",
+        endDate: String = "2023-12-31"
+    ) {
+        viewModelScope.launch {
+            insightsRepo.getNumOfTransactionsOut(startDate, endDate).apply {
+                onSuccess { numberOfTransactions ->
+                    _state.update { it.copy(transactionsOut = numberOfTransactions.toString()) }
+                }
+                onFailure {
+                    //TODO
+                }
+            }
+        }
     }
 
     fun switchTransactionCategory(transactionCategory: TransactionCategory) {
@@ -72,6 +141,16 @@ class InsightsViewModel @Inject constructor(
     fun switchInsightTimeline(insightTimeline: InsightTimeline) {
         _state.update { it.copy(insightTimeline = insightTimeline) }
     }
+
+
+    data class GraphSelection(
+        val transactionCategory: TransactionCategory,
+        val insightCategory: InsightCategory,
+        val insightTimeline: InsightTimeline
+    )
+
+    fun InsightsScreenState.selector(): GraphSelection =
+        GraphSelection(transactionCategory, insightCategory, insightTimeline)
 
 
     val dummyInsightCategories = listOf(

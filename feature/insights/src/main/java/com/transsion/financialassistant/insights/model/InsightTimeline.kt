@@ -22,6 +22,8 @@ enum class InsightTimeline(@StringRes val description: Int) {
             TODAY -> {
                 val date = now.toLocalDate().format(formatter)
                 InsightTimelineRange(
+                    startDate = date,
+                    endDate = date,
                     time = now.format(timeFormatter),
                     displayInfo = "Today $date, ${now.format(timeFormatter)}"
                 )

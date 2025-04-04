@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategory
+import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
@@ -46,7 +47,6 @@ import com.transsion.financialassistant.insights.screens.components.InsightCateg
 import com.transsion.financialassistant.insights.screens.components.MoneyToggle
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.graphs.custom.StackedBarChart
-import com.transsion.financialassistant.presentation.components.graphs.custom.sampleCategories
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -61,6 +61,9 @@ fun InsightsScreen(
     viewModel: InsightsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val graphData by viewModel.graphDataFlow.collectAsStateWithLifecycle()
+    val categoryDistribution by viewModel.categoryDistributionFlow.collectAsStateWithLifecycle()
+
     val screeHeight = LocalConfiguration.current.screenHeightDp
 
 
@@ -128,7 +131,6 @@ fun InsightsScreen(
 
                 }
 
-
                 //Timeline switch
                 //var currentTimeline by remember { mutableStateOf("Today") }
                 var showTimelineMenu by remember { mutableStateOf(false) }
@@ -173,9 +175,9 @@ fun InsightsScreen(
             InOutCard(
                 modifier = Modifier.padding(paddingSmall),
                 moneyIn = state.moneyIn ?: "0.0",
-                moneyOut = "177,500.90",
+                moneyOut = state.moneyOut ?: "0.0",
                 transactionsIn = state.transactionsIn ?: "0",
-                transactionsOut = "256"
+                transactionsOut = state.transactionsOut ?: "0"
             )
             VerticalSpacer(5)
 
@@ -199,14 +201,15 @@ fun InsightsScreen(
                 lineColor = when (state.transactionCategory) {
                     TransactionCategory.IN -> FAColors.green
                     TransactionCategory.OUT -> Color.Red
-                }
+                },
+                dataPoints = graphData
             )
 
             //stackedBarchart
             VerticalSpacer(5)
 
             StackedBarChart(
-                categories = sampleCategories
+                categories = categoryDistribution//sampleCategories
             )
 
             //categories
@@ -220,10 +223,14 @@ fun InsightsScreen(
                 }
             ) {
 
-                items(viewModel.dummyInsightCategories) { item ->
+                items(categoryDistribution) { item ->
                     InsightCategoryCard(
                         modifier = Modifier.padding(paddingMedium),
-                        item = item,
+                        item = InsightCategoryCardItem(
+                            tittle = item.name,
+                            amount = item.amount.toString(),
+                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+                        ),
                         onClick = {
                             //TODO: navigate to  specific category screen
                         }

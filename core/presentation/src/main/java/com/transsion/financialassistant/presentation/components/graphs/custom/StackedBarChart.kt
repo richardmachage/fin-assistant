@@ -42,54 +42,55 @@ fun StackedBarChart(
     legendHeight: Int = 80
 ) {
     var showLegend by remember { mutableStateOf(true) }
-    if (categories.isNotEmpty())
-    ElevatedCard(
-        modifier = modifier,
-        shape = RoundedCornerShape(10),
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(if (showLegend) paddingMedium else 0.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+    if (categories.isNotEmpty()) {
+        ElevatedCard(
+            modifier = modifier,
+            shape = RoundedCornerShape(10),
         ) {
-            //chart
-            Row(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(barHeight.dp)
-                    .clip(RoundedCornerShape(20))
-                    .clickable {
-                        showLegend = !showLegend
-                    }
+                    .padding(if (showLegend) paddingMedium else 0.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                categories.forEach { category ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(category.percentage)
-                            .background(category.color)
-                    )
-                }
-            }
-            VerticalSpacer(5)
-
-            //Legend
-            AnimatedVisibility(showLegend) {
-                Column(
-                    Modifier
+                //chart
+                Row(
+                    modifier = Modifier
                         .fillMaxWidth()
-                        .height(legendHeight.dp)
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .height(barHeight.dp)
+                        .clip(RoundedCornerShape(20))
+                        .clickable {
+                            showLegend = !showLegend
+                        }
                 ) {
-                    categories.forEach {
-                        LegendItem(it)
+                    categories.forEach { category ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(category.percentage)
+                                .background(category.color)
+                        )
                     }
                 }
+                VerticalSpacer(5)
+
+                //Legend
+                AnimatedVisibility(showLegend) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(legendHeight.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        categories.forEach {
+                            LegendItem(it)
+                        }
+                    }
+                }
+
+
             }
-
-
         }
     }
 
@@ -115,10 +116,10 @@ fun LegendItem(category: CategoryDistribution) {
 }
 
 val sampleCategories = listOf(
-    CategoryDistribution("General", 76f, Color(0xFF007F7F)),
-    CategoryDistribution("Side-hustle", 13f, Color(0xFFFF4081)),
-    CategoryDistribution("Gifts & Donations", 7f, Color(0xFFFFD700)),
-    CategoryDistribution("Salary", 4f, Color(0xFF00CFFF))
+    CategoryDistribution("General", 76f, Color(0xFF007F7F), 1000.00f),
+    CategoryDistribution("Side-hustle", 13f, Color(0xFFFF4081), 46725282.90f),
+    CategoryDistribution("Gifts & Donations", 7f, Color(0xFFFFD700), 98765f),
+    CategoryDistribution("Salary", 4f, Color(0xFF00CFFF), 788262f)
 )
 
 
