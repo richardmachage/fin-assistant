@@ -64,12 +64,13 @@ class InsightsViewModel @Inject constructor(
 
 
     fun getMoneyIn(
-        startDate: String = "2023-01-01",
-        endDate: String = "2023-12-31"
     ) {
         viewModelScope.launch {
             //so this one should fetch the data from the repo and update the state
-            insightsRepo.getTotalMoneyIn(startDate, endDate).apply {
+            insightsRepo.getTotalMoneyIn(
+                startDate = state.value.insightTimeline.getTimeline().startDate,
+                endDate = state.value.insightTimeline.getTimeline().endDate
+            ).apply {
                 onSuccess { totalMoneyIn ->
                     _state.update { it.copy(moneyIn = totalMoneyIn.toString()) }
                 }
@@ -86,7 +87,10 @@ class InsightsViewModel @Inject constructor(
         endDate: String = "2023-12-31"
     ) {
         viewModelScope.launch {
-            insightsRepo.getNumOfTransactionsIn(startDate, endDate).apply {
+            insightsRepo.getNumOfTransactionsIn(
+                startDate = state.value.insightTimeline.getTimeline().startDate,
+                endDate = state.value.insightTimeline.getTimeline().endDate
+            ).apply {
                 onSuccess { numberOfTransactions ->
                     _state.update { it.copy(transactionsIn = numberOfTransactions.toString()) }
                 }
@@ -98,12 +102,12 @@ class InsightsViewModel @Inject constructor(
 
     }
 
-    private fun getMoneyOut(
-        startDate: String = "2023-01-01",
-        endDate: String = "2023-12-31"
-    ) {
+    private fun getMoneyOut() {
         viewModelScope.launch {
-            insightsRepo.getTotalMoneyOut(startDate, endDate).apply {
+            insightsRepo.getTotalMoneyOut(
+                startDate = state.value.insightTimeline.getTimeline().startDate,
+                endDate = state.value.insightTimeline.getTimeline().endDate
+            ).apply {
                 onSuccess { totalMoneyOut ->
                     _state.update { it.copy(moneyOut = totalMoneyOut.toString()) }
                 }
@@ -115,11 +119,12 @@ class InsightsViewModel @Inject constructor(
     }
 
     private fun getNumberOfTransactionsOut(
-        startDate: String = "2023-01-01",
-        endDate: String = "2023-12-31"
     ) {
         viewModelScope.launch {
-            insightsRepo.getNumOfTransactionsOut(startDate, endDate).apply {
+            insightsRepo.getNumOfTransactionsOut(
+                startDate = state.value.insightTimeline.getTimeline().startDate,
+                endDate = state.value.insightTimeline.getTimeline().endDate
+            ).apply {
                 onSuccess { numberOfTransactions ->
                     _state.update { it.copy(transactionsOut = numberOfTransactions.toString()) }
                 }

@@ -59,8 +59,13 @@ fun LineChartVico(
             ),
             bottomAxis = HorizontalAxis.rememberBottom(
                 tick = null,
-                valueFormatter = { _, value, _ ->
-                    dataPoints[value.toInt()].x
+                valueFormatter = { context, value, verticalAxisPosition ->
+                    try {
+                        dataPoints[value.toInt()].x
+                    } catch (e: Exception) {
+                        "j"
+                    }
+                    //value.toString()
                 }
             ),
             marker = marker,

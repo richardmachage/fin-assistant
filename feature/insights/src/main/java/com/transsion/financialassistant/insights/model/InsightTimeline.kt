@@ -18,12 +18,14 @@ enum class InsightTimeline(@StringRes val description: Int) {
         val formatter2 = DateTimeFormatter.ofPattern("d/M/yy", Locale.getDefault())
         val timeFormatter = DateTimeFormatter.ofPattern("h:mma", Locale.getDefault())
 
+        val roomFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+
         return when (this) {
             TODAY -> {
                 val date = now.toLocalDate().format(formatter)
                 InsightTimelineRange(
-                    startDate = date,
-                    endDate = date,
+                    startDate = now.format(formatter2),
+                    endDate = now.format(formatter2),
                     time = now.format(timeFormatter),
                     displayInfo = "Today $date, ${now.format(timeFormatter)}"
                 )
@@ -31,8 +33,9 @@ enum class InsightTimeline(@StringRes val description: Int) {
 
             WEEK -> {
                 val currentDate = now.toLocalDate()
-                val startOfWeek = currentDate.with(DayOfWeek.SUNDAY)
-                val endOfWeek = currentDate.with(DayOfWeek.SATURDAY)
+                val startOfWeek = currentDate.with(DayOfWeek.MONDAY)
+                val endOfWeek = currentDate.with(DayOfWeek.SUNDAY)
+
 
                 InsightTimelineRange(
                     startDate = startOfWeek.format(formatter2),

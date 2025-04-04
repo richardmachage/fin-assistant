@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
-                    startDestination = viewmodel.getStartDestination()//OnboardingRoutes.Welcome
+                    startDestination = InsightsRoutes.Insights//viewmodel.getStartDestination()//OnboardingRoutes.Welcome
                 )
             }
 

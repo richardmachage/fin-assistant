@@ -111,7 +111,7 @@ fun LegendItem(category: CategoryDistribution) {
 
         //label
         NormalText(text = category.name, modifier = Modifier.weight(1f), textAlign = TextAlign.Left)
-        NormalText(text = "${category.percentage.toInt()}%")
+        NormalText(text = "${(category.percentage.roundTo(2) * 100)}%")
     }
 }
 
@@ -136,4 +136,9 @@ fun StackedBarChartPreview() {
             )
         }
     }
+}
+
+
+fun Float.roundTo(decimals: Int): Float {
+    return "%.${decimals}f".format(this).toFloat()
 }

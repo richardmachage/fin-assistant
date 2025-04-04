@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.insights.screens.insights
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,8 +65,14 @@ fun InsightsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val graphData by viewModel.graphDataFlow.collectAsStateWithLifecycle()
     val categoryDistribution by viewModel.categoryDistributionFlow.collectAsStateWithLifecycle()
-
     val screeHeight = LocalConfiguration.current.screenHeightDp
+
+
+    LaunchedEffect(categoryDistribution) {
+        categoryDistribution.forEach {
+            Log.d("TAG", "inVM : ${it.name} , Perc : ${it.percentage}, amount: ${it.amount} ")
+        }
+    }
 
 
     Scaffold { innerPadding ->
@@ -156,6 +164,11 @@ fun InsightsScreen(
                                         viewModel.switchInsightTimeline(it)
                                     }
                                     showTimelineMenu = false
+                                    Log.d(
+                                        "TAG",
+                                        "date in VM start : ${state.insightTimeline.getTimeline().startDate} end: ${state.insightTimeline.getTimeline().endDate}"
+                                    )
+
                                 }
                             )
                         }

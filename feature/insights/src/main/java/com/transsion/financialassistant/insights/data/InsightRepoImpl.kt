@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.insights.data
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.TransactionCategory
@@ -24,7 +25,6 @@ class InsightRepoImpl @Inject constructor(
         MutableStateFlow<List<CategoryDistribution>>(emptyList())
     override val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
         get() = _categoryDistributionFlow
-    //val categoryDistributionFlow: StateFlow<List<CategoryDistribution>> = _categoryDistributionFlow
 
 
     override suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double> {
@@ -119,11 +119,16 @@ class InsightRepoImpl @Inject constructor(
         data: List<CategoryDataPoint>
     ): List<CategoryDistribution> {
         val total = data.sumOf { it.amount }
+        Log.d("TAG", "Total: $total")
         if (total == 0.0) return emptyList()
         return data
-            .groupBy { it.category }
+            .groupBy {
+                //Log.d("TAG", "Category: ${it.category}")
+                it.category
+            }
             .mapValues { (_, items) -> items.sumOf { it.amount } }
             .map { (category, sum) ->
+                //Log.d("TAG", "Category: $category, Sum: $sum, Perce: ${sum / total}"  )
                 CategoryDistribution(
                     name = category,
                     percentage = (sum / total).toFloat(),
@@ -131,7 +136,7 @@ class InsightRepoImpl @Inject constructor(
                     amount = sum.toFloat()
                 )
             }
-            .sortedBy { it.percentage }
+            .sortedByDescending { it.percentage } //{ it.percentage }
 
     }
 
@@ -151,6 +156,9 @@ class InsightRepoImpl @Inject constructor(
 
         if (cachedData != null && cachedCategories != null) {
             _categoryDistributionFlow.value = cachedCategories
+            cachedCategories.forEach {
+                Log.d("TAG", "FromCache :getDataPoints: ${it.name} : ${it.percentage}")
+            }
             emit(cachedData)
         } else {
             val dataPoints = when (transactionCategory) {
@@ -160,12 +168,16 @@ class InsightRepoImpl @Inject constructor(
 
                     //update the categories
                     val categorizedData = data.map {
+                        //Log.d("TAG", "getDataPoints: ${it.transactionType.description} : ${it.amount}" )
                         CategoryDataPoint(
                             category = it.transactionType.description,
                             amount = it.amount
                         )
                     }
                     val distribution = getCategoryDistribution(categorizedData)
+                    distribution.forEach {
+                        Log.d("TAG", "getDataPoints: ${it.name} : ${it.percentage}")
+                    }
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
 
@@ -187,7 +199,9 @@ class InsightRepoImpl @Inject constructor(
                             amount = it.amount
                         )
                     }
-                    _categoryDistributionFlow.value = getCategoryDistribution(categorizedData)
+                    val distribution = getCategoryDistribution(categorizedData)
+                    _categoryDistributionFlow.value = distribution
+                    // _categoryDistributionFlow.value = getCategoryDistribution(categorizedData)
 
                     data.map {
                         DataPoint(x = it.date, y = it.amount.toFloat())
