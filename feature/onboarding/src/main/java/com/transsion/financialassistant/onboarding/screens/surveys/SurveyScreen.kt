@@ -18,39 +18,39 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
-import com.transsion.financialassistant.presentation.theme.ThemeColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
-import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 
 @Composable
 fun SurveyScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: SurveyViewModel = hiltViewModel()
 ) {
     var selected by remember { mutableStateOf(false) }
 
@@ -81,6 +81,7 @@ fun SurveyScreen(
                         .padding(start = paddingMedium),
                     horizontalAlignment = Alignment.Start
                 ) {
+
                     BigTittleText(
                         text = stringResource(R.string.what_do_you_want_to_do),
                         textAlign = TextAlign.Start,
@@ -152,6 +153,10 @@ fun SurveyScreen(
                     text = stringResource(R.string.next_btn),
                     onClick = {
                         if (selectedOption == stringOptions[0]) navController.navigate(OnboardingRoutes.PersonalTrackerSurvey){
+                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
+                        } else if (selectedOption == stringOptions[1]) navController.navigate(OnboardingRoutes.SurveyBusinessScreens){
+                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
+                        } else if (selectedOption == stringOptions[2]) navController.navigate(OnboardingRoutes.SurveyBusinessScreens){
                             popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
                         }
                               },

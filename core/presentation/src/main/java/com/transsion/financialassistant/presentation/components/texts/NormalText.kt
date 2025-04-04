@@ -18,12 +18,13 @@ fun NormalText(
     lineHeight: TextUnit = 17.sp,
     textColor: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Center,
+    fontWeight: FontWeight = FontWeight(400)
 ) {
     Text(
         modifier = modifier,
         textAlign = textAlign,
         text = text,
-        fontWeight = FontWeight(400),
+        fontWeight = fontWeight,
         fontSize = fontSize,
         lineHeight = lineHeight,
         color = textColor

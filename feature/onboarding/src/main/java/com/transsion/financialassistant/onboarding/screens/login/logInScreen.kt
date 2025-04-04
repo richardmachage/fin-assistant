@@ -1,6 +1,8 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +43,8 @@ import androidx.wear.compose.material.Button
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.Text
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.biometric.BiometricPromptManager
+import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -51,17 +54,19 @@ import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val context = LocalContext.current
-    val state by  viewModel.state.collectAsStateWithLifecycle()
-    var pin by remember { mutableStateOf("") }
-    //val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsState()
 
+    // BiometricPromptManager for biometric authentication
+    val promptManager by remember { mutableStateOf(BiometricPromptManager(context)) }
+    val biometricResult by promptManager.promptResult.collectAsState(initial = null)
 
 
     CircularLoading(
@@ -72,7 +77,7 @@ fun LoginScreen(
     //Toast handler
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let {
-            Toast.makeText(context,state.toastMessage,Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, state.toastMessage, Toast.LENGTH_SHORT).show()
             viewModel.resetToast()
         }
     }
@@ -80,24 +85,22 @@ fun LoginScreen(
 
 
     LaunchedEffect(state.pin) {
-        if (state.pin.length == 4){
+        if (state.pin.length == 4) {
             viewModel.validatePin(state.pin)
-            }
         }
+    }
 
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess){
-            viewModel.onLogin(onSuccess = {})
+    LaunchedEffect(state.isValidationSuccess) {
+        if (state.isValidationSuccess) {
             viewModel.clearPin()
-            navController.navigate(OnboardingRoutes.SurveyScreen){
-                popUpTo(OnboardingRoutes.Login){inclusive = true}
+            navController.navigate(OnboardingRoutes.SurveyScreen) {
+                popUpTo(OnboardingRoutes.Login) { inclusive = true }
             }
         }
     }
 
-
     Surface {
-        when (state.isSuccess) {
+        when (state.isValidationSuccess) {
             //is PinState.Loading -> CircularLoading()
             true -> CircularLoading(true)
             else -> {
@@ -161,23 +164,26 @@ fun LoginScreen(
                                         }
                                     }
                                 }
-
                             }
 
                             VerticalSpacer(8)
 
-                            if (!errorMessage.isNullOrEmpty()){
+                            if (!errorMessage.isNullOrEmpty()) {
                                 Text(
                                     text = errorMessage!!,
                                     color = Color.Red,
                                     fontSize = 11.sp
                                 )
+
+                                // reset the error message after displaying
+                                viewModel.resetErrorMessage()
                             }
+
                         }
                     }
 
 
-//second half
+                    //second half
                     Box(
                         modifier = Modifier
                             .fillMaxHeight(0.5F)
@@ -203,7 +209,7 @@ fun LoginScreen(
                                     row.forEach { digit ->
                                         NumberButton(digit) {
                                             viewModel.onPinChange(digit)
-                                          viewModel.onPinEntered(digit)
+                                            viewModel.onPinEntered(digit)
 
                                         }
                                     }
@@ -218,7 +224,12 @@ fun LoginScreen(
                             ) {
                                 // Fingerprint Button
                                 CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
-                                    // Implement Fingerprint Authentication
+                                    // Trigger biometric authentication when fingerprint button is clicked
+                                    promptManager.showBiometricPrompt(
+                                        title = context.getString(R.string.biometric_authentication),
+                                        description = context.getString(R.string.please_authenticate_to_continue)
+                                    )
+
                                 }
 
                                 // Zero Button
@@ -230,6 +241,17 @@ fun LoginScreen(
                                 // Delete Button
                                 CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
                                     if (state.pin.isNotEmpty()) viewModel.onBackSpace()
+                                }
+
+                                //val intent = Intent(context, LoginActivity::class.java)
+
+                                // Display biometric authentication result
+                                biometricResult?.let { result ->
+                                    if (result is BiometricResult.AuthenticationSuccess) {
+                                        navController.navigate(OnboardingRoutes.SurveyScreen) {
+                                            // popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -282,11 +304,10 @@ fun CircularIconButton(icon: Int, onClick: () -> Unit) {
 }
 
 
-
 @PreviewScreenSizes
 @Composable
-fun PrevLogIn(){
+fun PrevLogIn() {
     FinancialAssistantTheme {
-       // LoginScreen()
+        // LoginScreen()
     }
 }

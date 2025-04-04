@@ -1,17 +1,30 @@
 package com.transsion.financialassistant.data.di
 
+import com.transsion.financialassistant.data.repository.pin.PinRepo
+import com.transsion.financialassistant.data.repository.pin.PinRepoImpl
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.data.repository.security.SecurityRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.bundles_purchase.BundlesPurchaseRepo
+import com.transsion.financialassistant.data.repository.transaction.bundles_purchase.BundlesPurchaseRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepo
+import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
+import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
+import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepoImpl
+import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao_Impl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -50,4 +63,38 @@ abstract class RepositoryModule {
     internal abstract fun bindBuyGoodsRepo(
         buyGoodsRepoImpl: BuyGoodsRepoImpl
     ): BuyGoodsRepo
+
+    @Binds
+    internal abstract fun bindPinRepo(
+        pinRepoImpl: PinRepoImpl
+    ): PinRepo
+
+    @Binds
+    internal abstract fun bindWithdrawMoneyRepo(
+        withdrawMoneyRepoImpl: WithdrawMoneyRepoImpl
+    ): WithdrawMoneyRepo
+
+    @Binds
+    internal abstract fun bindSendMshwari(
+        sendMshwariRepoImpl: SendMshwariRepoImpl
+    ): SendMshwariRepo
+
+    @Binds
+    internal abstract fun bindBuyAirtimeRepo(
+        buyAirtimeRepoImpl: BuyAirtimeRepoImpl
+    ): BuyAirtimeRepo
+
+    @Binds
+    internal abstract fun bindBundlesPurchaseRepo(
+        bundlesPurchaseRepoImpl: BundlesPurchaseRepoImpl
+    ): BundlesPurchaseRepo
+
+    @Binds
+    internal abstract fun bindReceiveMshwariRepo(
+        receiveMshwariRepoImpl: ReceiveMshwariRepoImpl
+    ): ReceiveMshwariRepo
+
+
+
+
 }

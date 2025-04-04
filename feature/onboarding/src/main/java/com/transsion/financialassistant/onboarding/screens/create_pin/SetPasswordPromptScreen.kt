@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.onboarding.screens.create_pin
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -210,6 +211,7 @@ fun SetPasswordPromptScreen(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
+                        Log.d("SetPasswordPromptScreen", "Onskip clicked: ")
                         onSkip()
                     },
                     text = stringResource(R.string.skip)

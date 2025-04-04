@@ -3,6 +3,12 @@ package com.transsion.financialassistant.data.preferences
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.security.keystore.KeyGenParameterSpec
+import android.security.keystore.KeyProperties
+import androidx.security.crypto.EncryptedSharedPreferences
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import androidx.core.content.edit
 
 @SuppressLint("ApplySharedPref")
 class SharedPreferences(
@@ -10,6 +16,7 @@ class SharedPreferences(
 ) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREFERENCES_FILE_KEY, Context.MODE_PRIVATE)
+
 
     companion object {
         private const val PREFERENCES_FILE_KEY = "financialassistant.SHARED_PREFERENCES"
@@ -26,18 +33,25 @@ class SharedPreferences(
         }
     }
 
+    // Save the entered PIN
+    fun savePin(pin: String) {
+        sharedPreferences.edit { putString(PIN_KEY, pin) }
+    }
+
+
+
     fun loadData(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
 
     fun deleteData(key: String) {
         sharedPreferences
-            .edit()
-            .remove(key)
-            .commit()
+            .edit(commit = true) {
+                remove(key)
+            }
     }
 
     fun clearAll() {
-        sharedPreferences.edit().clear().commit()
+        sharedPreferences.edit(commit = true) { clear() }
     }
 }

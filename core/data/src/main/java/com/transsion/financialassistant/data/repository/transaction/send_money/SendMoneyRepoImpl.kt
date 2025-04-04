@@ -6,6 +6,8 @@ import androidx.annotation.RequiresPermission
 import com.transsion.financialassistant.data.repository.getReceivingAddress
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
+import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class SendMoneyRepoImpl @Inject constructor(
@@ -44,6 +46,10 @@ class SendMoneyRepoImpl @Inject constructor(
         } catch (e: Exception) {
             onFailure(e.message ?: "Unknown error")
         }
+    }
+
+    override suspend fun getAllSendMoneyTransactions(): Flow<List<SendMoneyEntity>> {
+        return sendMoneyDao.getAll()
     }
 
 }

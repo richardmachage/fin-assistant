@@ -12,6 +12,7 @@ import com.transsion.financialassistant.data.SAFARICOM_MCC_MNC
 import com.transsion.financialassistant.data.SAFARICOM_MCC_MNC_0
 import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.preferences.SharedPreferences
+import com.transsion.financialassistant.data.repository.pin.PinRepoImpl
 import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import javax.inject.Inject
@@ -20,7 +21,8 @@ class OnboardingRepoImpl @Inject constructor(
     private val datastorePreferences: DatastorePreferences,
     private val sharedPreferences: SharedPreferences,
     private val securityRepo: SecurityRepo
-) : OnboardingRepo {
+) : OnboardingRepo,
+    PinRepoImpl(sharedPreferences = sharedPreferences, securityRepo = securityRepo) {
 
 
     override fun hasCompletedOnboarding(): Boolean {
@@ -119,28 +121,7 @@ class OnboardingRepoImpl @Inject constructor(
         onSuccess: () -> Unit,
         onFailure: (errorMessage: String) -> Unit
     ) {
-        try {
-
-            if (pin.isBlank()) throw Exception("Invalid PIN")
-
-            //hash pin
-            val hashedPin = securityRepo.doHash(pin)
-            //encrypt the hashed pin
-            val encryptedData = securityRepo.encryptData(hashedPin)
-            //save encrypted pin to shared preferences
-            sharedPreferences.saveData(
-                key = SharedPreferences.PIN_KEY,
-                value = encryptedData.data
-            )
-            //save iv to shared preferences
-            sharedPreferences.saveData(
-                key = SharedPreferences.IV_KEY,
-                value = encryptedData.iv
-            )
-            onSuccess()
-        } catch (e: Exception) {
-            onFailure(e.message.toString())
-        }
+        super.setPin(pin, onSuccess, onFailure)
     }
 
     override fun verifyPin(

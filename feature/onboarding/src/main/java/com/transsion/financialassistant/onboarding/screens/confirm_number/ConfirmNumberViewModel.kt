@@ -74,4 +74,8 @@ class ConfirmNumberViewModel @Inject constructor(
 
     }
 
+    fun onCompletedOnboarding() {
+        onboardingRepo.setCompletedOnboarding()
+    }
+
 }

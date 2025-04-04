@@ -91,7 +91,11 @@ fun CreatePinScreen(
     when (showPrompt) {
         true -> SetPasswordPromptScreen(
             onSkip = {
-                //Navigate to surveys
+                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                    popUpTo<OnboardingRoutes.CreatePin> {
+                        inclusive = true
+                    }
+                }
             }, onContinue = {
                 viewModel.setShowPrompt(false)
             }

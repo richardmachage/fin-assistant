@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.transsion.financialassistant.home.screens.HomeScreen
 import com.transsion.financialassistant.onboarding.screens.change_number.ChangePhoneNumberInstructions
 import com.transsion.financialassistant.onboarding.screens.confirm_number.ConfirmNumberDualScreen
 import com.transsion.financialassistant.onboarding.screens.create_pin.CreatePinScreen
@@ -13,6 +14,7 @@ import com.transsion.financialassistant.onboarding.screens.get_started.GetStarte
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
 import com.transsion.financialassistant.onboarding.screens.surveys.PersonalTrackerSurvey
+import com.transsion.financialassistant.onboarding.screens.surveys.SurveyBusinessScreens
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -56,6 +58,14 @@ fun NavGraphBuilder.onboardingNavGraph(
 
     composable<OnboardingRoutes.PersonalTrackerSurvey> {
         PersonalTrackerSurvey(navController = navController)
+    }
+
+    composable<OnboardingRoutes.SurveyBusinessScreens> {
+        SurveyBusinessScreens(navController = navController)
+    }
+
+    composable<OnboardingRoutes.HomeScreen> {
+        HomeScreen()
     }
 
 

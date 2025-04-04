@@ -12,6 +12,8 @@ android {
 dependencies {
     //project dependencies
     implementation(projects.core.security)
+    implementation(libs.androidx.appcompat)
+    implementation (libs.androidx.security.crypto)
 
     //room
     ksp(libs.room.compiler)
