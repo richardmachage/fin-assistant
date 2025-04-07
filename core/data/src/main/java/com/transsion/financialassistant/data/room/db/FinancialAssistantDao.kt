@@ -17,7 +17,7 @@ interface FinancialAssistantDao {
   """
         SELECT * FROM UnifiedIncomingTransaction
         WHERE date BETWEEN :startDate AND :endDate
-        ORDER BY date DESC, time DESC
+        ORDER BY date ASC, time ASC
     """
  )
  suspend fun getAllMoneyInTransactions(
@@ -29,7 +29,7 @@ interface FinancialAssistantDao {
   """
   SELECT * FROM UnifiedOutGoingTransaction
  WHERE date BETWEEN :startDate AND :endDate
- ORDER BY date DESC, time DESC
+ ORDER BY date ASC, time ASC
  """
  )
  suspend fun getAllMoneyOutTransactions(
