@@ -6,9 +6,10 @@ import java.util.Locale
 
 private val appFormatter =
     DateTimeFormatter.ofPattern("d/M/yy", Locale.getDefault()) // e.g. 1/3/25
-private val dbFormatter = DateTimeFormatter.ISO_LOCAL_DATE // e.g. 2025-03-01
+private val dbFormatter =
+    DateTimeFormatter.ofPattern("yyyy/MM/dd")//DateTimeFormatter.ISO_LOCAL_DATE // e.g. 2025-03-01
 
-fun String.toDbDate(): String? {
+fun String.toDbDate(): String {
     return this.let {
         try {
             val parsedDate = LocalDate.parse(it, appFormatter)
@@ -19,7 +20,7 @@ fun String.toDbDate(): String? {
     }
 }
 
-fun String.toMpesaDate(): String? {
+fun String.toMpesaDate(): String {
     return this.let {
         try {
             val parsedDate = LocalDate.parse(it, dbFormatter)

@@ -27,19 +27,19 @@ data class UnifiedIncomingTransaction(
 
 @DatabaseView(
     value = """
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM BundlesPurchaseEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM BundlesPurchaseEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM BuyAirtimeEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,transactionCost FROM BuyAirtimeEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM BuyGoodsEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM BuyGoodsEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM PayBillEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM PayBillEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM SendMoneyEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM SendMoneyEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM SendPochiEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM SendPochiEntity
                 UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory FROM SendMshwariEntity
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost FROM SendMshwariEntity
 
     """
 )
@@ -49,6 +49,7 @@ data class UnifiedOutGoingTransaction(
     val amount: Double,
     val date: String,
     val time: String,
+    val transactionCost: Double,
     val transactionCategory: TransactionCategory,
     val transactionType: TransactionType
 )

@@ -249,6 +249,20 @@ fun InsightsScreen(
                         }
                     )
                 }
+                items(1) {
+                    InsightCategoryCard(
+                        modifier = Modifier.padding(paddingMedium),
+                        item = InsightCategoryCardItem(
+                            tittle = stringResource(R.string.transaction_costs),
+                            amount = state.totalTransactionCost ?: "0.0",
+                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+                        ),
+                        onClick = {
+                            //TODO: navigate to  specific category screen
+                        }
+                    )
+
+                }
             }
         }
     }

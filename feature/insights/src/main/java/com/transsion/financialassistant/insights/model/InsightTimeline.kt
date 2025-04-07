@@ -18,14 +18,14 @@ enum class InsightTimeline(@StringRes val description: Int) {
         val formatter2 = DateTimeFormatter.ofPattern("d/M/yy", Locale.getDefault())
         val timeFormatter = DateTimeFormatter.ofPattern("h:mma", Locale.getDefault())
 
-        val roomFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.getDefault())
+        val roomFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
 
         return when (this) {
             TODAY -> {
                 val date = now.toLocalDate().format(formatter)
                 InsightTimelineRange(
-                    startDate = now.format(formatter2),
-                    endDate = now.format(formatter2),
+                    startDate = now.format(roomFormatter),
+                    endDate = now.format(roomFormatter),
                     time = now.format(timeFormatter),
                     displayInfo = "Today $date, ${now.format(timeFormatter)}"
                 )
@@ -38,8 +38,8 @@ enum class InsightTimeline(@StringRes val description: Int) {
 
 
                 InsightTimelineRange(
-                    startDate = startOfWeek.format(formatter2),
-                    endDate = endOfWeek.format(formatter2),
+                    startDate = startOfWeek.format(roomFormatter),
+                    endDate = endOfWeek.format(roomFormatter),
                     time = now.format(timeFormatter),
                     displayInfo = "From ${startOfWeek.format(formatter)} - ${
                         endOfWeek.format(
@@ -55,8 +55,8 @@ enum class InsightTimeline(@StringRes val description: Int) {
                 val endOfMonth = currentDate.withDayOfMonth(currentDate.lengthOfMonth())
 
                 InsightTimelineRange(
-                    startDate = startOfMonth.format(formatter2),
-                    endDate = endOfMonth.format(formatter2),
+                    startDate = startOfMonth.format(roomFormatter),
+                    endDate = endOfMonth.format(roomFormatter),
                     time = now.format(timeFormatter),
                     displayInfo = "From ${startOfMonth.format(formatter)} - ${
                         endOfMonth.format(

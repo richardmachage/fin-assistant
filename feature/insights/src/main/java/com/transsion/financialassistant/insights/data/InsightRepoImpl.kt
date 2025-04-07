@@ -46,6 +46,27 @@ class InsightRepoImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTotalTransactionCost(
+        startDate: String,
+        endDate: String
+    ): Result<Double> {
+        val cacheKey = "total_transaction_cost$startDate$endDate"
+
+        return try {
+            val cache = AppCache.get<Double>(cacheKey)
+            cache?.let {
+                Result.success(it)
+            } ?: run {
+                val totalTransactionCost =
+                    dao.getTotalTransactionCost(startDate = startDate, endDate = endDate) ?: 0.0
+                AppCache.put(key = cacheKey, value = totalTransactionCost)
+                Result.success(totalTransactionCost)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override suspend fun getTotalMoneyOut(startDate: String, endDate: String): Result<Double> {
         val cacheKey = "total_money_out$startDate$endDate"
         return try {

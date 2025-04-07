@@ -14,5 +14,6 @@ data class InsightsScreenState(
     val moneyIn: String? = null,
     val moneyOut: String? = null,
     val transactionsIn: String? = null,
-    val transactionsOut: String? = null
+    val transactionsOut: String? = null,
+    val totalTransactionCost: String? = null
 )

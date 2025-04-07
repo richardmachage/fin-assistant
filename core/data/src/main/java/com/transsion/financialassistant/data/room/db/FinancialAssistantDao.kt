@@ -37,6 +37,17 @@ interface FinancialAssistantDao {
   endDate: String
  ): List<UnifiedOutGoingTransaction>
 
+
+ @Query(
+  """
+ SELECT SUM(transactionCost) FROM unifiedoutgoingtransaction WHERE date BETWEEN :startDate AND :endDate
+ """
+ )
+ suspend fun getTotalTransactionCost(
+  startDate: String,
+  endDate: String
+ ): Double?
+
  @Query(
   """
     SELECT SUM(amount) FROM unifiedincomingtransaction
