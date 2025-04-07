@@ -13,13 +13,13 @@ fun NavGraphBuilder.insightsNavGraph(
 
     composable<InsightsRoutes.Insights> {
         InsightsScreen(
-            //navController = navController
+            navController = navController
         )
     }
 
     composable<InsightsRoutes.CategoryInsights> {
         CategoryInsightsScreen(
-            //navController = navController
+            navController = navController
         )
 
     }

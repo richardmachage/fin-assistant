@@ -136,20 +136,17 @@ class InsightRepoImpl @Inject constructor(
         val amount: Double
     )
 
-    fun getCategoryDistribution(
+    private fun getCategoryDistribution(
         data: List<CategoryDataPoint>
     ): List<CategoryDistribution> {
         val total = data.sumOf { it.amount }
-        Log.d("TAG", "Total: $total")
         if (total == 0.0) return emptyList()
         return data
             .groupBy {
-                //Log.d("TAG", "Category: ${it.category}")
                 it.category
             }
             .mapValues { (_, items) -> items.sumOf { it.amount } }
             .map { (category, sum) ->
-                //Log.d("TAG", "Category: $category, Sum: $sum, Perce: ${sum / total}"  )
                 CategoryDistribution(
                     name = category,
                     percentage = (sum / total).toFloat(),

@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.R
@@ -61,6 +62,7 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable
 fun InsightsScreen(
+    navController: NavController,
     viewModel: InsightsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
