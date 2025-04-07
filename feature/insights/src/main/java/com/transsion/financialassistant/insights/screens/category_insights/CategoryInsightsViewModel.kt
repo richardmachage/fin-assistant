@@ -2,13 +2,14 @@ package com.transsion.financialassistant.insights.screens.category_insights
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.domain.InsightsRepo
-import com.transsion.financialassistant.insights.model.InsightCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,15 +29,15 @@ class CategoryInsightsViewModel @Inject constructor(
     var state = _state.asStateFlow()
 
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun getGraphData() = {
-        insightsRepo.getDataPoints(
-            insightCategory = InsightCategory.valueOf(insightCategory),
-            startDate = startDate,
-            endDate = endDate,
-            transactionCategory = selection.transactionCategory
-        )
-    }
+    val categoryGraphData = insightsRepo.getDataPointsForCategory(
+        startDate = startDate,
+        endDate = endDate,
+        transactionType = getCategoryEnum()
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList()
+    )
 
 
     private fun getCategoryEnum(): TransactionType {

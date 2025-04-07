@@ -175,13 +175,12 @@ class InsightRepoImpl @Inject constructor(
     }
 
     override fun getDataPointsForCategory(
-        insightCategory: InsightCategory,
         startDate: String,
         endDate: String,
         transactionType: TransactionType
     ): Flow<List<DataPoint>> = flow {
         val cacheKey =
-            "data_points_for_category${insightCategory.name}$startDate$endDate${transactionType.description}"
+            "data_points_for_category$startDate$endDate${transactionType.description}"
 
         val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
 
@@ -189,7 +188,7 @@ class InsightRepoImpl @Inject constructor(
             emit(cachedData)
         } else {
             val dataPoints = when (transactionType) {
-                TransactionType.DEPOSIT -> depositMoneyDao
+                TransactionType.DEPOSIT -> TODO()
                 TransactionType.WITHDRAWAL -> TODO()
                 TransactionType.SEND_MONEY -> TODO()
                 TransactionType.RECEIVE_MONEY -> TODO()
@@ -203,7 +202,11 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.BUNDLES_PURCHASE -> TODO()
                 TransactionType.UNKNOWN -> TODO()
             }
+            AppCache.put(key = cacheKey, value = dataPoints)
+            emit(dataPoints)
         }
+    }.catch {
+        emit(emptyList())
     }
     override fun getDataPoints(
         insightCategory: InsightCategory,

@@ -31,7 +31,6 @@ interface InsightsRepo {
     suspend fun getTotalTransactionCost(startDate: String, endDate: String): Result<Double>
 
     fun getDataPointsForCategory(
-        insightCategory: InsightCategory,
         startDate: String,
         endDate: String,
         transactionType: TransactionType
