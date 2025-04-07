@@ -20,11 +20,9 @@ import javax.inject.Inject
 class OnboardingRepoImpl @Inject constructor(
     private val datastorePreferences: DatastorePreferences,
     private val sharedPreferences: SharedPreferences,
-    private val securityRepo: SecurityRepo
+    private val securityRepo: SecurityRepo,
 ) : OnboardingRepo,
     PinRepoImpl(sharedPreferences = sharedPreferences, securityRepo = securityRepo) {
-
-
     override fun hasCompletedOnboarding(): Boolean {
         val status = sharedPreferences.loadData(SharedPreferences.ONBOARDING_COMPLETED_KEY)
         return status?.let { true } ?: false

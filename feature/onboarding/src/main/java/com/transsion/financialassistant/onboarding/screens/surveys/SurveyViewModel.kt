@@ -6,10 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.data.OnboardingRepositoryImpl
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
+import com.transsion.financialassistant.onboarding.screens.surveys.utils.OnboardingState
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyQuestion
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,10 +23,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SurveyViewModel @Inject constructor(
-   @ApplicationContext private val context: Context
+   @ApplicationContext private val context: Context,
+    private val repository: OnboardingRepositoryImpl
 ) : ViewModel() {
     private val _surveyState = MutableLiveData(SurveyState())
     val surveyState: LiveData<SurveyState> = _surveyState
+
+    private val _state = mutableStateOf(OnboardingState())
+    val state: State<OnboardingState> = _state
 
     private val _currentStep = mutableStateOf(1) // Start at step 1
     val currentStep: State<Int> = _currentStep
@@ -42,7 +49,8 @@ class SurveyViewModel @Inject constructor(
                 context.getString(R.string.online_selling),
                 context.getString(R.string.services),
                 context.getString(R.string.other),
-                )),
+                )
+        ),
 
         SurveyQuestion(2,
             context.getString(R.string.what_expenses_does_your_business_incur),
@@ -68,6 +76,8 @@ class SurveyViewModel @Inject constructor(
                 ))
     )
 
+    val onboardingCompleted: LiveData<Boolean> = repository.onboardingCompleted.asLiveData()
+
     init {
         _surveyState.value = SurveyState(
             currentQuestionIndex = 0, // Start from first question
@@ -75,6 +85,73 @@ class SurveyViewModel @Inject constructor(
             totalQuestions = questions.size
         )
     }
+
+    fun setPurpose(purpose: String) {
+        _state.value = _state.value.copy(purpose = purpose)
+    }
+
+    fun setPersonalExpenses(expenses: String) {
+        _state.value = _state.value.copy(personalExpenses = expenses)
+    }
+
+    fun setBusinessType(type: String) {
+        _state.value = _state.value.copy(businessType = type)
+    }
+
+    fun setBusinessExpenses(expenses: List<String>) {
+        _state.value = _state.value.copy(businessExpenses = expenses)
+    }
+
+    fun setPaymentMethod(paymentMethod: String) {
+        _state.value = _state.value.copy(paymentMethod = paymentMethod)
+    }
+
+    fun completeOnboarding(){
+        viewModelScope.launch {
+            val purpose = _state.value.purpose
+            repository.savePurpose(purpose)
+
+            if(purpose == context.getString(R.string.personal_finance_needs)){
+                val personalExpenses = _state.value.personalExpenses
+                repository.savePersonalExpenses(personalExpenses)
+            } else {
+                val businessType = _state.value.businessType
+                val businessExpenses = _state.value.businessExpenses
+                val paymentMethod = _state.value.paymentMethod
+                repository.saveBusinessDetails(businessType, businessExpenses.toString(), paymentMethod)
+            }
+            repository.setOnboardingCompleted(true)
+        }
+    }
+
+    fun validateAndMoveToNextQuestion() {
+        val currentQuestion = _surveyState.value?.currentQuestion
+        if (currentQuestion != null && isAnswerValid(currentQuestion)) {
+            loadNextQuestion()
+        } else {
+            // Show an error or prompt the user to answer the question
+        }
+    }
+
+    private fun isAnswerValid(question: SurveyQuestion): Boolean {
+        // validation logic based on the question type
+        return when (question.answerType) {
+            AnswerType.SINGLE_CHOICE -> {
+                // Ensure an answer is selected for single choice questions
+                val selectedAnswer = _surveyState.value?.answers?.get(question.id)
+                selectedAnswer != null
+            }
+            AnswerType.MULTI_CHOICE -> {
+                // Ensure at least one answer is selected for multi-choice questions
+                val selectedAnswers = _surveyState.value?.answers?.get(question.id) as? List<*>
+                selectedAnswers?.isNotEmpty() == true
+            }
+            else -> true
+        }
+    }
+
+
+
 
     // Move to the next question
      fun loadNextQuestion(){

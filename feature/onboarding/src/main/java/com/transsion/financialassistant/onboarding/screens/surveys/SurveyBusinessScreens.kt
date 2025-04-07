@@ -412,7 +412,15 @@ fun SurveyBusinessScreens(
                 FilledButtonFa(
                     text = stringResource(R.string.next),
                     onClick = {
-                        surveyViewModel.loadNextQuestion()
+                        if (state.currentQuestion == null) return@FilledButtonFa
+
+                        // store answers
+                        surveyViewModel.validateAndMoveToNextQuestion() // Proceed to the next question
+
+                        // check if survey is completed
+                        if (state.isSurveyComplete) {
+                            surveyViewModel.completeOnboarding() // save data when survey is completed
+                        }
                     },
                     enabled = state.currentQuestion != null,
 
