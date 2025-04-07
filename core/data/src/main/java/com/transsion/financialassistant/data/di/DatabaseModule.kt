@@ -54,6 +54,11 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun providesReceivePochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.receivePochiDao()
+
+    @Provides
+    @Singleton
     fun providesWithdrawMoneyDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.withdrawMoneyDao()
 

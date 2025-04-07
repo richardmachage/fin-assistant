@@ -18,6 +18,7 @@ import com.transsion.financialassistant.data.room.entities.receive_money.Receive
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalEntity
@@ -66,6 +67,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun receiveMshwariDao(): ReceiveMshwariDao
     abstract fun bundlesPurchaseDao(): BundlesPurchaseDao
     abstract fun financialAssistantDao(): FinancialAssistantDao
+    abstract fun receivePochiDao(): ReceivePochiDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null

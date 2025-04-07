@@ -31,9 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
-import com.transsion.financialassistant.home.viewModel.ReceiveMoneyViewModel
+import com.transsion.financialassistant.home.viewModel.TransactionsViewModel
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.dialogs.InfoDialog
@@ -48,7 +47,7 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 @Composable
 fun HomeScreen(
-    receiveViewModel: ReceiveMoneyViewModel = hiltViewModel()
+    receiveViewModel: TransactionsViewModel = hiltViewModel()
 ) {
     val receivedMoneyTransactions = receiveViewModel.reveivedMoneyTransactions.collectAsState()
     val context = LocalContext.current
@@ -78,7 +77,7 @@ fun HomeScreen(
     )
 
     LaunchedEffect(Unit) {
-        receiveViewModel.fetchReceivedMoneyTransactions(context)
+        receiveViewModel.fetchTransactions(context)
     }
 
     Scaffold { paddingValues ->
