@@ -10,11 +10,14 @@ import com.transsion.financialassistant.data.repository.transaction.TransactionR
 import com.transsion.financialassistant.data.repository.transaction.bundles_purchase.BundlesPurchaseRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
+import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
+import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.onboarding.R
@@ -33,9 +36,11 @@ class ReceiveMoneyViewModel @Inject constructor(
     private val paybilRepo: PayBillRepo,
     private val buyGoodsRepo: BuyGoodsRepo,
     private val buyAirtime: BuyAirtimeRepo,
-    //private val depositRepo: DepositMoneyRepo,
+    private val depositRepo: DepositRepo,
     private val bundlesPurchaseRepo: BundlesPurchaseRepo,
     private val receiveMshwariRepo: ReceiveMshwariRepo,
+    private val receivePochiRepo: ReceivePochiRepo,
+    private val sendPochiRepo: SendPochiRepo,
     private val transactionRepo: TransactionRepo
 ): ViewModel() {
     private val _receivedMoneyTransactions = MutableStateFlow<List<SendMoneyEntity>>(emptyList())
@@ -68,16 +73,16 @@ class ReceiveMoneyViewModel @Inject constructor(
                         )
 
                         // Insert Received Money Transaction and Refresh
-//                        messages.forEach { mpesaMessage ->
-//                            depositRepo.insertPayBillTransaction(
-//                                message = mpesaMessage.body,
-//                                context = context,
-//                                subId = 0, //mpesaMessage.subscriptionId.toInt(),
-//                                onSuccess = {}, // UI updates automatically
-//                                onFailure = { error -> Log.e("Error inserting transaction:", error) },
-//                                phone = mpesaMessage.subscriptionId
-//                            )
-//                        }
+                        messages.forEach { mpesaMessage ->
+                            depositRepo.insertDepositTransaction(
+                                message = mpesaMessage.body,
+                                context = context,
+                                subId = 0, //mpesaMessage.subscriptionId.toInt(),
+                                onSuccess = {}, // UI updates automatically
+                                onFailure = { error -> Log.e("Error inserting transaction:", error) },
+                                phone = mpesaMessage.subscriptionId
+                            )
+                        }
                     }
                     TransactionType.WITHDRAWAL -> {
                         val messages = getMpesaMessagesByTransactionType(
@@ -294,11 +299,51 @@ class ReceiveMoneyViewModel @Inject constructor(
                         }
                     }
 
-                    TransactionType.RECEIVE_POCHI -> {}
+                    TransactionType.RECEIVE_POCHI -> {
+                        val messages = getMpesaMessagesByTransactionType(
+                            filterValue = TransactionType.RECEIVE_POCHI,
+                            context = context,
+                            getExecutionTime = { duration ->
+                                Log.d("MpesaSync", "Fetched messages in $duration")
+                            },
+                            transactionRepo = transactionRepo
+                        )
+
+                        // Insert send to paybill Money Transaction and Refresh
+                        messages.forEach { mpesaMessage ->
+                            receivePochiRepo.insertReceivePochiTransaction(
+                                message = mpesaMessage.body,
+                                context = context,
+                                subId = 0, //mpesaMessage.subscriptionId.toInt(),
+                                onSuccess = {}, // UI updates automatically
+                                onFailure = { error -> Log.e("Error inserting transaction:", error) },
+                                phone = mpesaMessage.subscriptionId
+                            )
+                        }
+                    }
 
                     // send to pochi
                     TransactionType.SEND_POCHI -> {
+                        val messages = getMpesaMessagesByTransactionType(
+                            filterValue = TransactionType.SEND_POCHI,
+                            context = context,
+                            getExecutionTime = { duration ->
+                                Log.d("MpesaSync", "Fetched messages in $duration")
+                            },
+                            transactionRepo = transactionRepo
+                        )
 
+                        // Insert send to paybill Money Transaction and Refresh
+                        messages.forEach { mpesaMessage ->
+                            sendPochiRepo.insertSendPochiTransaction(
+                                message = mpesaMessage.body,
+                                context = context,
+                                subId = 0, //mpesaMessage.subscriptionId.toInt(),
+                                onSuccess = {}, // UI updates automatically
+                                onFailure = { error -> Log.e("Error inserting transaction:", error) },
+                                phone = mpesaMessage.subscriptionId
+                            )
+                        }
                     }
 
                     TransactionType.UNKNOWN -> {

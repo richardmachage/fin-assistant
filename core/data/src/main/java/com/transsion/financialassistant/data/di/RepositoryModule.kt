@@ -12,19 +12,23 @@ import com.transsion.financialassistant.data.repository.transaction.buy_airtime.
 import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
+import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepoImpl
-import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao_Impl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -94,7 +98,19 @@ abstract class RepositoryModule {
         receiveMshwariRepoImpl: ReceiveMshwariRepoImpl
     ): ReceiveMshwariRepo
 
+    @Binds
+    internal abstract fun bindDepositMoneyDao(
+        depositRepo: DepositRepoImpl
+    ): DepositRepo
 
+    @Binds
+    internal abstract fun bindReceivePochiRepo(
+        receivePochiRepo: ReceivePochiRepo
+    ): ReceivePochiRepo
 
+    @Binds
+    internal abstract fun bindSendPochiRepo(
+        sendPochiRepo: SendPochiRepoImpl
+    ): SendPochiRepo
 
 }
