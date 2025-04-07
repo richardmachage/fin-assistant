@@ -10,16 +10,22 @@ import com.transsion.financialassistant.data.repository.transaction.buy_airtime.
 import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
+import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepoImpl
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDb
@@ -45,6 +51,9 @@ class RoomDbTests {
     private lateinit var receiveMshwariRepo: ReceiveMshwariRepo
     private lateinit var bundlesPurchaseRepo: BundlesPurchaseRepo
     private lateinit var appContext: Context
+    private lateinit var sendPochiRepo: SendPochiRepo
+    private lateinit var receivePochiRepo: ReceivePochiRepo
+    private lateinit var depositRepo: DepositRepo
 
     @Before
     fun setUp() {
@@ -68,6 +77,10 @@ class RoomDbTests {
         sendMshwariRepo = SendMshwariRepoImpl(sendMshwariDao = db.sendMshwariDao())
         receiveMshwariRepo = ReceiveMshwariRepoImpl(receiveMshwariDao = db.receiveMshwariDao())
         bundlesPurchaseRepo = BundlesPurchaseRepoImpl(bundlesPurchaseDao = db.bundlesPurchaseDao())
+        sendPochiRepo = SendPochiRepoImpl(sendPochiDao = db.sendPochiDao())
+        receivePochiRepo = ReceivePochiRepoImpl(receivePochiDao = db.receivePochiDao())
+        depositRepo = DepositRepoImpl(depositMoneyDao = db.depositMoneyDao())
+
     }
 
     @After
@@ -261,4 +274,75 @@ class RoomDbTests {
         assertTrue(successCalled)
     }
 
+    @Test
+    fun testSendPochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard  machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
+
+        var successCalled = false
+        sendPochiRepo.insertSendPochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted successfully!")
+                successCalled = true
+            },
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+
+        assertTrue(successCalled)
+    }
+
+    @Test
+    fun testReceivePochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TCH01GAG8Y Confirmed.You have received Ksh10.00 from RICHARD  MACHAGE on 17/3/25 at 12:03 PM  New business balance is Ksh10.00. To access your funds, Dial *334#,select Pochi la Biashara & Withdraw funds."
+
+        var successCalled = false
+
+        receivePochiRepo.insertReceivePochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted successfully!")
+                successCalled = true
+            },
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+        assertTrue(successCalled)
+    }
+
+    @Test
+    fun testDepositTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TA6678JM3W Confirmed. On 6/1/25 at 4:22 PM Give Ksh1,000.00 cash to HASHI COMM Evalast EnterprisesGITHURAI 44 New M-PESA balance is Ksh1,335.89. You can now access M-PESA via *334#"
+        var successCalled = false
+
+        depositRepo.insertDepositTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted Successfully")
+                successCalled = true
+            },
+
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+        assertTrue(successCalled)
+    }
 }

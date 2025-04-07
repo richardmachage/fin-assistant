@@ -35,7 +35,6 @@ class ReceiveMoneyViewModel @Inject constructor(
     private val buyAirtime: BuyAirtimeRepo,
     //private val depositRepo: DepositMoneyRepo,
     private val bundlesPurchaseRepo: BundlesPurchaseRepo,
-    private val receiveMshwari: ReceiveMshwariRepo,
     private val receiveMshwariRepo: ReceiveMshwariRepo,
     private val transactionRepo: TransactionRepo
 ): ViewModel() {
@@ -175,11 +174,6 @@ class ReceiveMoneyViewModel @Inject constructor(
                         }
                     }
 
-                    // send to pochi
-                    TransactionType.SEND_POCHI -> {
-
-                    }
-
                     // Sent to Paybill
                     TransactionType.PAY_BILL -> {
                             val messages = getMpesaMessagesByTransactionType(
@@ -299,11 +293,17 @@ class ReceiveMoneyViewModel @Inject constructor(
                             )
                         }
                     }
-                    TransactionType.UNKNOWN -> {
-                       context.getString(R.string.unknown_transaction_type)
-                    }
 
                     TransactionType.RECEIVE_POCHI -> {}
+
+                    // send to pochi
+                    TransactionType.SEND_POCHI -> {
+
+                    }
+
+                    TransactionType.UNKNOWN -> {
+                        context.getString(R.string.unknown_transaction_type)
+                    }
                 }
 
             }

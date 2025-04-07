@@ -5,13 +5,13 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="GraphPrev">
+      <SelectionState runConfigName="testSendPochiTransaction_withPhone_shouldSucceed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="InsightsPrev">
+      <SelectionState runConfigName="testReceivePochiTransaction_withPhone_shouldSucceed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="MainActivity">
+      <SelectionState runConfigName="testDepositTransaction_withPhone_shouldSucceed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
