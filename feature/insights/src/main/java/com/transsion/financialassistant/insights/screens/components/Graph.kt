@@ -30,7 +30,9 @@ fun Graph(
     title: String,
     subtitle: String,
     dataPoints: List<DataPoint> = sampleData,
-    lineColor: Color = FAColors.green
+    lineColor: Color = FAColors.green,
+    bottomValueFormatter: (value: String) -> String = { value -> value }
+
 ) {
     if (dataPoints.isNotEmpty()) {
         ElevatedCard(
@@ -56,7 +58,8 @@ fun Graph(
 
                 LineChartVico(
                     dataPoints = dataPoints,
-                    lineColor = lineColor
+                    lineColor = lineColor,
+                    bottomValueFormatter = bottomValueFormatter
                 )
             }
         }

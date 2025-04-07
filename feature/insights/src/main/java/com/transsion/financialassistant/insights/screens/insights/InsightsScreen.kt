@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
@@ -215,7 +216,10 @@ fun InsightsScreen(
                     TransactionCategory.IN -> FAColors.green
                     TransactionCategory.OUT -> Color.Red
                 },
-                dataPoints = graphData
+                dataPoints = graphData,
+                bottomValueFormatter = { value ->
+                    value.toMonthDayDate()
+                }
             )
 
             //stackedBarchart

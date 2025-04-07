@@ -28,7 +28,8 @@ import kotlinx.coroutines.runBlocking
 fun LineChartVico(
     modifier: Modifier = Modifier,
     dataPoints: List<DataPoint>,
-    lineColor: Color = Color(0xFFFCA251)//FAColors.green
+    lineColor: Color = Color(0xFFFCA251),//FAColors.green,
+    bottomValueFormatter: (value: String) -> String = { value -> value }
 ) {
     val marker = rememberMarker()
 
@@ -61,11 +62,10 @@ fun LineChartVico(
                 tick = null,
                 valueFormatter = { context, value, verticalAxisPosition ->
                     try {
-                        dataPoints[value.toInt()].x
+                        bottomValueFormatter(dataPoints[value.toInt()].x)
                     } catch (e: Exception) {
                         "j"
                     }
-                    //value.toString()
                 }
             ),
             marker = marker,
