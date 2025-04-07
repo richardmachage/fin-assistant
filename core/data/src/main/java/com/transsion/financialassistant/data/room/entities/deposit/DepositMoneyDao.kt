@@ -19,6 +19,9 @@ interface DepositMoneyDao {
     @Query("SELECT * FROM DepositMoneyEntity WHERE transactionCode = :transactionCode")
     suspend fun getDepositMoneyTransactionByCode(transactionCode: String): DepositMoneyEntity?
 
+    @Query("SELECT * FROM DepositMoneyEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getDepositMoneyTransactionsByDate(startDate: String, endDate: String): List<DepositMoneyEntity>
+
     @Query("SELECT * FROM DepositMoneyEntity")
     fun getAllDepositMoneyTransactions(): Flow<List<DepositMoneyEntity>>
 

@@ -15,6 +15,8 @@ data class BuyGoodsEntity(
     val amount: Double,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT,
     val date: String,
+    val startDate: String? = null,
+    val endDate: String? = null,
     val time: String,
     val mpesaBalance: Double,
     val transactionCost: Double,

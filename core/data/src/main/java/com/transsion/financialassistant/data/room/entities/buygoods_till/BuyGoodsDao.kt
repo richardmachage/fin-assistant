@@ -21,5 +21,7 @@ interface BuyGoodsDao {
     @Query("SELECT * FROM BuyGoodsEntity")
     fun getAll(): Flow<List<BuyGoodsEntity>>
 
+    @Query("SELECT * FROM BuyGoodsEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getBuyGoodsTransactionsByDate(startDate: String, endDate: String): List<BuyGoodsEntity>
 
 }

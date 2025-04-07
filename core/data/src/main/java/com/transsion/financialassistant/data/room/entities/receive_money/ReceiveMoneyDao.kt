@@ -22,7 +22,6 @@ interface ReceiveMoneyDao {
     @Query("SELECT * FROM ReceiveMoneyEntity")
     fun getAll(): Flow<List<ReceiveMoneyEntity>>
 
-
-
-
+    @Query("SELECT * FROM ReceiveMoneyEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getReceiveMoneyTransactionsByDate(startDate: String, endDate: String): List<ReceiveMoneyEntity>
 }

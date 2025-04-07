@@ -27,5 +27,6 @@ interface SendMoneyDao {
     @Delete
     suspend fun delete(sendMoneyEntity: SendMoneyEntity)
 
-
+    @Query("SELECT * FROM SendMoneyEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getSendMoneyTransactionsByDate(startDate: String, endDate: String): List<SendMoneyEntity>
 }

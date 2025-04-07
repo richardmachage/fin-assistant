@@ -15,6 +15,8 @@ data class ReceiveMoneyEntity(
     val amount: Double,
     val mpesaBalance: Double,
     val date: String,
+    val startDate: String? = null,
+    val endDate: String? = null,
     val time: String,
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
     val transactionType: TransactionType = TransactionType.RECEIVE_MONEY

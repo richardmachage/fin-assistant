@@ -47,5 +47,28 @@ class WithdrawMoneyRepoImpl @Inject constructor(
         }
 
     }
+
+    override suspend fun getWithdrawMoneyTransactionsByDate(
+        startDate: String,
+        endDate: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    ) {
+
+        try {
+            val withdrawMoneyEntity = withdrawMoneyDao.getWithdrawMoneyTransactionsByDate(startDate = startDate, endDate = endDate)
+            // get transaction from DB by date
+
+            withdrawMoneyEntity.let {
+                withdrawMoneyDao.getWithdrawMoneyTransactionsByDate(startDate = "30/11/24", endDate = "2/12/24")
+                onSuccess()
+            }?: run {
+                onFailure("Failed to get withdraw money transactions by date")
+            }
+        } catch (e: Exception) {
+            onFailure(e.message ?: "Unknown error")
+        }
+
+    }
 }
 

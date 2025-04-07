@@ -25,4 +25,7 @@ interface SendMshwariDao {
     @Query("SELECT * FROM SendMshwariEntity")
     fun getAll(): Flow<List<SendMshwariEntity>>
 
+    @Query("SELECT * FROM SendMshwariEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getSendMshwariTransactionsByDate(startDate: String, endDate: String): List<SendMshwariEntity>
+
 }

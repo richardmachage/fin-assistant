@@ -25,4 +25,7 @@ interface SendGlobalDao {
     @Query("SELECT * FROM SendGlobalEntity")
     fun getAll(): Flow<List<SendGlobalEntity>>
 
+    @Query("SELECT * FROM SendGlobalEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getSendGlobalTransactionsByDate(startDate: String, endDate: String): List<SendGlobalEntity>
+
 }

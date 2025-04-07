@@ -25,4 +25,7 @@ interface ReceivePochiDao {
     @Query("SELECT * FROM ReceivePochiEntity")
     fun getAll(): Flow<List<ReceivePochiEntity>>
 
+    @Query("SELECT * FROM ReceivePochiEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getReceivePochiTransactionsByDate(startDate: String, endDate: String): List<ReceivePochiEntity>
+
 }

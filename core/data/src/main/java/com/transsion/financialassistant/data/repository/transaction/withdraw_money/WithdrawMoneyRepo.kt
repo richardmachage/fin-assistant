@@ -11,4 +11,12 @@ interface WithdrawMoneyRepo {
         onFailure: (String) -> Unit,
         phone: String? = null
     )
+
+    suspend fun getWithdrawMoneyTransactionsByDate(
+        startDate: String,
+        endDate: String,
+        onSuccess: () -> Unit,
+        onFailure: (String) -> Unit
+    )
+
 }
