@@ -257,7 +257,7 @@ fun InsightsScreen(
                                     category = item.name,
                                     startDate = state.insightTimeline.getTimeline().startDate,
                                     endDate = state.insightTimeline.getTimeline().endDate,
-                                    insightCategory = state.insightCategory.name
+                                    timeLine = state.insightTimeline.getTimeline().displayInfo
                                 )
                             )
                         }
@@ -272,14 +272,14 @@ fun InsightsScreen(
                             categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
                         ),
                         onClick = {
-                            navController.navigate(
+                            /*navController.navigate(
                                 InsightsRoutes.CategoryInsights(
                                     category = "transaction_costs",
                                     startDate = state.insightTimeline.getTimeline().startDate,
                                     endDate = state.insightTimeline.getTimeline().endDate,
-                                    insightCategory = state.insightCategory.name
+                                    timeLine = state.insightTimeline.getTimeline().displayInfo
                                 )
-                            )
+                            )*/
                         }
                     )
 

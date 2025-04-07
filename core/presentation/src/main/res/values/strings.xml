@@ -7,4 +7,5 @@
     <string name="kes">KES</string>
     <string name="transactions">transactions</string>
     <string name="money_out">Money out</string>
+    <string name="transactions_">Transactions</string>
 </resources>

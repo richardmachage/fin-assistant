@@ -25,7 +25,7 @@ enum class TransactionType(val description: String) {
 
             SEND_MONEY -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z ]+) (\\d{10}) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.  Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
 
-            RECEIVE_MONEY -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z ]+) (\\d+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\s+New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
+            RECEIVE_MONEY -> "(\\b[A-Z0-9]+\\b) Confirmed\\.\\s?You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9 ]+) (\\d+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} (?:AM|PM))\\s+New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
             RECEIVE_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) {2}New business balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex()
 

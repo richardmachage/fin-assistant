@@ -13,7 +13,7 @@ sealed interface InsightsRoutes {
         val category: String? = null,
         val startDate: String? = null,
         val endDate: String? = null,
-        val insightCategory: String? = null
+        val timeLine: String? = null
     ) : InsightsRoutes
 
 }

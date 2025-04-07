@@ -26,6 +26,8 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect RECEIVE_MONEY transaction`() {
+        val me =
+            "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
         val result = transactionRepo.getTransactionType(message)

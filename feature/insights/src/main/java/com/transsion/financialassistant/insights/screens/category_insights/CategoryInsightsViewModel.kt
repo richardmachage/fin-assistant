@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.insights.screens.category_insights
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,8 +22,7 @@ class CategoryInsightsViewModel @Inject constructor(
     val category = params.get<String>("category") ?: throw Exception("No category provided")
     val startDate = params.get<String>("startDate") ?: throw Exception("No start date provided")
     val endDate = params.get<String>("endDate") ?: throw Exception("No end date provided")
-    val insightCategory =
-        params.get<String>("insightCategory") ?: throw Exception("No insight category provided")
+    val timeLine = params.get<String>("timeLine") ?: throw Exception("No time line provided")
 
 
     private var _state = MutableStateFlow(CategoryInsightsScreenState())
@@ -39,10 +39,21 @@ class CategoryInsightsViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
+    val listOfTransactions = insightsRepo.getDataForCategory(
+        startDate = startDate,
+        endDate = endDate,
+        transactionType = getCategoryEnum()
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList()
+    )
+
 
     private fun getCategoryEnum(): TransactionType {
         TransactionType.entries.forEach {
             if (it.description == category) {
+                Log.d("TAG", "getCategoryEnum: $it")
                 return it
             }
         }

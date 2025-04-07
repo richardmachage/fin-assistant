@@ -11,8 +11,13 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
+import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
+import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
+import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
+import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.TransactionUi
@@ -34,8 +39,12 @@ class InsightRepoImpl @Inject constructor(
     private val buyGoodsDao: BuyGoodsDao,
     private val depositMoneyDao: DepositMoneyDao,
     private val receiveMoneyDao: ReceiveMoneyDao,
+    private val receivePochiDao: ReceivePochiDao,
+    private val sendPochiDao: SendPochiDao,
     private val buyAirtimeDao: BuyAirtimeDao,
-    private val bundlesPurchaseDao: BundlesPurchaseDao
+    private val bundlesPurchaseDao: BundlesPurchaseDao,
+    private val sendMshwariDao: SendMshwariDao,
+    private val receiveMshwariDao: ReceiveMshwariDao,
 ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
@@ -188,19 +197,171 @@ class InsightRepoImpl @Inject constructor(
             emit(cachedData)
         } else {
             val data = when (transactionType) {
-                TransactionType.DEPOSIT -> TODO()
-                TransactionType.WITHDRAWAL -> TODO()
-                TransactionType.SEND_MONEY -> TODO()
-                TransactionType.RECEIVE_MONEY -> TODO()
-                TransactionType.RECEIVE_POCHI -> TODO()
-                TransactionType.SEND_POCHI -> TODO()
-                TransactionType.PAY_BILL -> TODO()
-                TransactionType.BUY_GOODS -> TODO()
-                TransactionType.SEND_MSHWARI -> TODO()
-                TransactionType.RECEIVE_MSHWARI -> TODO()
-                TransactionType.AIRTIME_PURCHASE -> TODO()
-                TransactionType.BUNDLES_PURCHASE -> TODO()
-                TransactionType.UNKNOWN -> TODO()
+                TransactionType.DEPOSIT -> {
+                    depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.agentDepositedTo,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.WITHDRAWAL -> {
+                    withdrawalDao.getWithdrawMoneyTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    )
+                        .map {
+                            TransactionUi(
+                                title = it.agent,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.SEND_MONEY -> {
+                    sendMoneyDao.getSendMoneyTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.sentToName,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.RECEIVE_MONEY -> {
+                    receiveMoneyDao.getReceiveMoneyTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.receiveFromName,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.RECEIVE_POCHI -> {
+                    receivePochiDao.getReceivePochiTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.receiveFromName,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.SEND_POCHI -> {
+                    sendPochiDao.getSendPochiTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.sentToName,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.PAY_BILL -> {
+                    payBillDao.getPayBillTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.paidToName,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.BUY_GOODS -> {
+                    buyGoodsDao.getBuyGoodsTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = it.paidTo,
+                            type = it.transactionType,
+                            inOrOut = it.transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+
+                }
+
+                TransactionType.SEND_MSHWARI -> {
+                    sendMshwariDao.getSendMshwariTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        TransactionUi(
+                            title = "M-SHWARI",
+                            type = it.transactionType,
+                            inOrOut = it.transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
+
+                TransactionType.RECEIVE_MSHWARI -> {
+                    receiveMshwariDao.getReceiveMshwariTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        TransactionUi(
+                            title = "M-SHWARI",
+                            type = it.transactionType,
+                            inOrOut = it.transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
+
+                TransactionType.AIRTIME_PURCHASE -> {
+                    buyAirtimeDao.getBuyAirtimeTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = "AIRTIME",
+                            type = it.transactionType,
+                            inOrOut = it.transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
+
+                TransactionType.BUNDLES_PURCHASE -> {
+                    bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = "DATA BUNDLES",
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
+                TransactionType.UNKNOWN -> {
+                    emptyList()
+                }
             }
             AppCache.put(key = cacheKey, value = data)
             emit(data)
@@ -220,20 +381,133 @@ class InsightRepoImpl @Inject constructor(
             emit(cachedData)
         } else {
             val dataPoints = when (transactionType) {
-                TransactionType.DEPOSIT -> TODO()
-                TransactionType.WITHDRAWAL -> TODO()
-                TransactionType.SEND_MONEY -> TODO()
-                TransactionType.RECEIVE_MONEY -> TODO()
-                TransactionType.RECEIVE_POCHI -> TODO()
-                TransactionType.SEND_POCHI -> TODO()
-                TransactionType.PAY_BILL -> TODO()
-                TransactionType.BUY_GOODS -> TODO()
-                TransactionType.SEND_MSHWARI -> TODO()
-                TransactionType.RECEIVE_MSHWARI -> TODO()
-                TransactionType.AIRTIME_PURCHASE -> TODO()
-                TransactionType.BUNDLES_PURCHASE -> TODO()
-                TransactionType.UNKNOWN -> TODO()
+                TransactionType.DEPOSIT -> {
+                    depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
+                        .map {
+                            DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+
+                }
+
+                TransactionType.WITHDRAWAL -> {
+                    withdrawalDao.getWithdrawMoneyTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.SEND_MONEY -> {
+                    sendMoneyDao.getSendMoneyTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.RECEIVE_MONEY -> {
+                    receiveMoneyDao.getReceiveMoneyTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.RECEIVE_POCHI -> {
+                    receivePochiDao.getReceivePochiTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.SEND_POCHI -> {
+                    sendPochiDao.getSendPochiTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.PAY_BILL -> {
+                    payBillDao.getPayBillTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.BUY_GOODS -> {
+                    buyGoodsDao.getBuyGoodsTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.SEND_MSHWARI -> {
+                    sendMshwariDao.getSendMshwariTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.RECEIVE_MSHWARI -> {
+                    receiveMshwariDao.getReceiveMshwariTransactionsByDate(
+                        startDate = startDate,
+                        endDate = endDate
+                    ).map { DataPoint(x = it.date, y = it.amount.toFloat()) }
+                }
+
+                TransactionType.AIRTIME_PURCHASE -> {
+                    buyAirtimeDao.getBuyAirtimeTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.BUNDLES_PURCHASE -> {
+                    bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
+                        .map {
+                            DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                }
+
+                TransactionType.UNKNOWN -> emptyList()
             }
+
             AppCache.put(key = cacheKey, value = dataPoints)
             emit(dataPoints)
         }

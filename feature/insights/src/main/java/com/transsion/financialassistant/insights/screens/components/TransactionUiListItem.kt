@@ -1,6 +1,6 @@
 package com.transsion.financialassistant.insights.screens.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.wear.compose.material.Text
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.model.TransactionUi
@@ -28,7 +30,6 @@ import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import kotlin.random.Random
 
 
 @Composable
@@ -56,11 +57,14 @@ fun TransactionUiListItem(
                     //.padding(paddingSmall)
                     .size(50.dp)
                     .clip(CircleShape)
-                    .background(
-                        MaterialTheme.colorScheme.background.copy(
-                            alpha = Random(1).nextFloat(),
-                            red = Random(1).nextFloat()
-                        )
+                    .border(
+                        width = 1.dp,
+                        color = when (transactionUi.inOrOut) {
+                            TransactionCategory.IN -> FAColors.green
+                            TransactionCategory.OUT -> Color.Red
+                        },
+                        shape = CircleShape
+
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -73,7 +77,14 @@ fun TransactionUiListItem(
             HorizontalSpacer(5)
 
             //tittle
-            TitleText(text = transactionUi.title)
+
+            Text(
+                modifier = Modifier.fillMaxWidth(0.5f),
+                text = transactionUi.title,
+                overflow = TextOverflow.Clip,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+
 
         }
 
