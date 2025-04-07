@@ -3,6 +3,7 @@ package com.transsion.financialassistant.insights.domain
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.model.InsightCategory
+import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface InsightsRepo {
     val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
+
 
     suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double>
 
@@ -35,4 +37,10 @@ interface InsightsRepo {
         endDate: String,
         transactionType: TransactionType
     ): Flow<List<DataPoint>>
+
+    fun getDataForCategory(
+        startDate: String,
+        endDate: String,
+        transactionType: TransactionType
+    ): Flow<List<TransactionUi>>
 }

@@ -15,6 +15,7 @@ import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyD
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightCategory
+import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import kotlinx.coroutines.flow.Flow
@@ -41,6 +42,7 @@ class InsightRepoImpl @Inject constructor(
         MutableStateFlow<List<CategoryDistribution>>(emptyList())
     override val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
         get() = _categoryDistributionFlow
+
 
 
     override suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double> {
@@ -174,16 +176,46 @@ class InsightRepoImpl @Inject constructor(
 
     }
 
+    override fun getDataForCategory(
+        startDate: String,
+        endDate: String,
+        transactionType: TransactionType
+    ): Flow<List<TransactionUi>> = flow<List<TransactionUi>> {
+        val cacheKey = "data_for_category$startDate$endDate${transactionType.description}"
+
+        val cachedData = AppCache.get<List<TransactionUi>>(cacheKey)
+        if (cachedData != null) {
+            emit(cachedData)
+        } else {
+            val data = when (transactionType) {
+                TransactionType.DEPOSIT -> TODO()
+                TransactionType.WITHDRAWAL -> TODO()
+                TransactionType.SEND_MONEY -> TODO()
+                TransactionType.RECEIVE_MONEY -> TODO()
+                TransactionType.RECEIVE_POCHI -> TODO()
+                TransactionType.SEND_POCHI -> TODO()
+                TransactionType.PAY_BILL -> TODO()
+                TransactionType.BUY_GOODS -> TODO()
+                TransactionType.SEND_MSHWARI -> TODO()
+                TransactionType.RECEIVE_MSHWARI -> TODO()
+                TransactionType.AIRTIME_PURCHASE -> TODO()
+                TransactionType.BUNDLES_PURCHASE -> TODO()
+                TransactionType.UNKNOWN -> TODO()
+            }
+            AppCache.put(key = cacheKey, value = data)
+            emit(data)
+        }
+    }.catch {
+        emit(emptyList())
+    }
     override fun getDataPointsForCategory(
         startDate: String,
         endDate: String,
         transactionType: TransactionType
     ): Flow<List<DataPoint>> = flow {
-        val cacheKey =
-            "data_points_for_category$startDate$endDate${transactionType.description}"
+        val cacheKey = "data_points_for_category$startDate$endDate${transactionType.description}"
 
         val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
-
         if (cachedData != null) {
             emit(cachedData)
         } else {
