@@ -25,4 +25,11 @@ interface DepositMoneyDao {
     @Delete
     suspend fun deleteDepositMoneyTransaction(depositMoneyEntity: DepositMoneyEntity)
 
+    @Query("SELECT * FROM DepositMoneyEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getAllDepositMoneyTransactions(
+        startDate: String,
+        endDate: String
+    ): List<DepositMoneyEntity>
+
+
 }
