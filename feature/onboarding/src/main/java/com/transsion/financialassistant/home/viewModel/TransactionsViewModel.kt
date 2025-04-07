@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReceiveMoneyViewModel @Inject constructor(
+class TransactionsViewModel @Inject constructor(
     private val withdrawMoneyRepo: WithdrawMoneyRepo,
     private val sendMoneyRepo: SendMoneyRepo,
     private val receiveMoneyRepo: ReceiveMoneyRepo,
@@ -56,7 +56,7 @@ class ReceiveMoneyViewModel @Inject constructor(
     }
 
     // Fetch Received Money Transactions from DB
-    fun fetchReceivedMoneyTransactions(context: Context) {
+    fun fetchTransactions(context: Context) {
         viewModelScope.launch {
 
             TransactionType.entries.forEach{type->

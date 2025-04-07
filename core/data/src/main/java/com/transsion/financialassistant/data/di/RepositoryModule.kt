@@ -21,6 +21,7 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mone
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
@@ -105,7 +106,7 @@ abstract class RepositoryModule {
 
     @Binds
     internal abstract fun bindReceivePochiRepo(
-        receivePochiRepo: ReceivePochiRepo
+        receivePochiRepo: ReceivePochiRepoImpl
     ): ReceivePochiRepo
 
     @Binds
