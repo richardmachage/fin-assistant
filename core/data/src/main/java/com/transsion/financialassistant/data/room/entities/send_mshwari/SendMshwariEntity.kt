@@ -13,6 +13,8 @@ data class SendMshwariEntity(
     val phone: String,
     //val account: String,
     val date: String,
+    val startDate: String? = null,
+    val endDate: String? = null,
     val time: String,
     val mpesaBalance: Double,
     val mshwariBalance: Double,

@@ -34,4 +34,7 @@ interface ReceiveMshwariDao {
     @Query("SELECT * FROM ReceiveMshwariEntity WHERE transactionCode = :transactionCode")
     suspend fun getByTransactionCode(transactionCode: String): ReceiveMshwariEntity?
 
+    @Query("SELECT * FROM ReceiveMshwariEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getReceiveMshwariTransactionsByDate(startDate: String, endDate: String): List<ReceiveMshwariEntity>
+
 }

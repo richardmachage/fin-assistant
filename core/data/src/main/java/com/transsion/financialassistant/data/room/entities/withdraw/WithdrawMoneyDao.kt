@@ -26,4 +26,7 @@ interface WithdrawMoneyDao {
     //delete
     @Delete
     suspend fun delete(withdrawMoneyEntity: WithdrawMoneyEntity)
+
+    @Query("SELECT * FROM WithdrawMoneyEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getWithdrawMoneyTransactionsByDate(startDate: String, endDate: String): List<WithdrawMoneyEntity>
 }

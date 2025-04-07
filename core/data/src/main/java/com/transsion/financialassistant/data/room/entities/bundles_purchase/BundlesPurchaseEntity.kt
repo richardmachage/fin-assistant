@@ -15,6 +15,8 @@ data class BundlesPurchaseEntity(
     val accountNumber: String,
     val mpesaBalance: Double,
     val date: String,
+    val startDate: String? = null,
+    val endDate: String? = null,
     val time: String,
     val transactionCost: Double,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT,

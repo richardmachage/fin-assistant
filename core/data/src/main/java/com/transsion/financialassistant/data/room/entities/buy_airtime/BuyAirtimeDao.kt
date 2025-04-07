@@ -21,6 +21,10 @@ interface BuyAirtimeDao {
     @Delete
     suspend fun delete(buyAirtimeEntity: BuyAirtimeEntity)
 
+    //order by date
+    @Query("SELECT * FROM BuyAirtimeEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getBuyAirtimeTransactionsByDate(startDate: String, endDate: String): List<BuyAirtimeEntity>
+
     //read
     @Query("SELECT * FROM BuyAirtimeEntity")
     fun getAll(): Flow<List<BuyAirtimeEntity>>

@@ -8,6 +8,9 @@
       <SelectionState runConfigName="InsightsPrev">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
+      <SelectionState runConfigName="testInsertWithdrawMoneyTransaction_withPhone_shouldSucceed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
     </selectionStates>
   </component>
 </project>

@@ -182,6 +182,14 @@ class RoomDbTests {
             onFailure = { fail(it) }
         )
 
+        // testing select withdraw transaction by date
+        withdrawMoneyRepo.getWithdrawMoneyTransactionsByDate(
+            startDate = "30/11/24",
+            endDate = "2/12/24",
+            onSuccess = { successCalled = true },
+            onFailure = { fail(it) }
+        )
+
         assertTrue(successCalled)
     }
 

@@ -22,6 +22,6 @@ interface PayBillDao {
     @Query("SELECT * FROM PayBillEntity")
     fun getAll(): Flow<List<PayBillEntity>>
 
-
-
+    @Query("SELECT * FROM PayBillEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getPayBillTransactionsByDate(startDate: String, endDate: String): List<PayBillEntity>
 }
