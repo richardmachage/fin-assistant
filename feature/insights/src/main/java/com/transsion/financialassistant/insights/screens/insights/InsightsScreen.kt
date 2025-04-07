@@ -45,6 +45,7 @@ import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.insights.model.InsightTimeline
+import com.transsion.financialassistant.insights.navigation.InsightsRoutes
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.InOutCard
 import com.transsion.financialassistant.insights.screens.components.InsightCategoryCard
@@ -251,7 +252,14 @@ fun InsightsScreen(
                             categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
                         ),
                         onClick = {
-                            //TODO: navigate to  specific category screen
+                            navController.navigate(
+                                InsightsRoutes.CategoryInsights(
+                                    category = item.name,
+                                    startDate = state.insightTimeline.getTimeline().startDate,
+                                    endDate = state.insightTimeline.getTimeline().endDate,
+                                    insightCategory = state.insightCategory.name
+                                )
+                            )
                         }
                     )
                 }
@@ -264,7 +272,14 @@ fun InsightsScreen(
                             categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
                         ),
                         onClick = {
-                            //TODO: navigate to  specific category screen
+                            navController.navigate(
+                                InsightsRoutes.CategoryInsights(
+                                    category = "transaction_costs",
+                                    startDate = state.insightTimeline.getTimeline().startDate,
+                                    endDate = state.insightTimeline.getTimeline().endDate,
+                                    insightCategory = state.insightCategory.name
+                                )
+                            )
                         }
                     )
 
@@ -279,6 +294,6 @@ fun InsightsScreen(
 @Composable
 fun InsightsPrev() {
     FinancialAssistantTheme {
-        InsightsScreen()
+        //InsightsScreen()
     }
 }

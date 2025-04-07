@@ -1,10 +1,18 @@
 package com.transsion.financialassistant.insights.data
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
+import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseDao
+import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeDao
+import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsDao
+import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
+import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
+import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
+import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
+import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
@@ -18,7 +26,15 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class InsightRepoImpl @Inject constructor(
-    private val dao: FinancialAssistantDao
+    private val dao: FinancialAssistantDao,
+    private val sendMoneyDao: SendMoneyDao,
+    private val withdrawalDao: WithdrawMoneyDao,
+    private val payBillDao: PayBillDao,
+    private val buyGoodsDao: BuyGoodsDao,
+    private val depositMoneyDao: DepositMoneyDao,
+    private val receiveMoneyDao: ReceiveMoneyDao,
+    private val buyAirtimeDao: BuyAirtimeDao,
+    private val bundlesPurchaseDao: BundlesPurchaseDao
 ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
@@ -158,6 +174,37 @@ class InsightRepoImpl @Inject constructor(
 
     }
 
+    override fun getDataPointsForCategory(
+        insightCategory: InsightCategory,
+        startDate: String,
+        endDate: String,
+        transactionType: TransactionType
+    ): Flow<List<DataPoint>> = flow {
+        val cacheKey =
+            "data_points_for_category${insightCategory.name}$startDate$endDate${transactionType.description}"
+
+        val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
+
+        if (cachedData != null) {
+            emit(cachedData)
+        } else {
+            val dataPoints = when (transactionType) {
+                TransactionType.DEPOSIT -> depositMoneyDao
+                TransactionType.WITHDRAWAL -> TODO()
+                TransactionType.SEND_MONEY -> TODO()
+                TransactionType.RECEIVE_MONEY -> TODO()
+                TransactionType.RECEIVE_POCHI -> TODO()
+                TransactionType.SEND_POCHI -> TODO()
+                TransactionType.PAY_BILL -> TODO()
+                TransactionType.BUY_GOODS -> TODO()
+                TransactionType.SEND_MSHWARI -> TODO()
+                TransactionType.RECEIVE_MSHWARI -> TODO()
+                TransactionType.AIRTIME_PURCHASE -> TODO()
+                TransactionType.BUNDLES_PURCHASE -> TODO()
+                TransactionType.UNKNOWN -> TODO()
+            }
+        }
+    }
     override fun getDataPoints(
         insightCategory: InsightCategory,
         startDate: String,
@@ -174,9 +221,6 @@ class InsightRepoImpl @Inject constructor(
 
         if (cachedData != null && cachedCategories != null) {
             _categoryDistributionFlow.value = cachedCategories
-            cachedCategories.forEach {
-                Log.d("TAG", "FromCache :getDataPoints: ${it.name} : ${it.percentage}")
-            }
             emit(cachedData)
         } else {
             val dataPoints = when (transactionCategory) {
@@ -193,9 +237,7 @@ class InsightRepoImpl @Inject constructor(
                         )
                     }
                     val distribution = getCategoryDistribution(categorizedData)
-                    distribution.forEach {
-                        Log.d("TAG", "getDataPoints: ${it.name} : ${it.percentage}")
-                    }
+
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
 

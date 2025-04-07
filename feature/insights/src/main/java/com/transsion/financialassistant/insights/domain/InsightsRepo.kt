@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.insights.domain
 
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
@@ -28,4 +29,11 @@ interface InsightsRepo {
     ): Flow<List<DataPoint>>
 
     suspend fun getTotalTransactionCost(startDate: String, endDate: String): Result<Double>
+
+    fun getDataPointsForCategory(
+        insightCategory: InsightCategory,
+        startDate: String,
+        endDate: String,
+        transactionType: TransactionType
+    ): Flow<List<DataPoint>>
 }
