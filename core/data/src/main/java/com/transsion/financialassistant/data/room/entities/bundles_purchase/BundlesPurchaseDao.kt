@@ -24,6 +24,8 @@ interface BundlesPurchaseDao {
     // read
 
     @Query("SELECT * FROM BundlesPurchaseEntity")
-    fun getAll(): Flow<List<BundlesPurchaseEntity>>
+    suspend fun getAll(): List<BundlesPurchaseEntity>
 
+    @Query("SELECT * FROM BundlesPurchaseEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getBundlesPurchaseTransactionsByDate(startDate: String, endDate: String): List<BundlesPurchaseEntity>
 }
