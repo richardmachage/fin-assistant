@@ -2,6 +2,7 @@ package com.transsion.financialassistant.insights.data
 
 import androidx.compose.ui.graphics.Color
 import com.transsion.financialassistant.data.cache.AppCache
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
@@ -19,7 +20,6 @@ import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiD
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
-import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint

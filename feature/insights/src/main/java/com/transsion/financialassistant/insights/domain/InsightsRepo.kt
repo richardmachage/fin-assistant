@@ -1,8 +1,8 @@
 package com.transsion.financialassistant.insights.domain
 
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
-import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint

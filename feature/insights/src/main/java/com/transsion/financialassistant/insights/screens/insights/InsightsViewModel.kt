@@ -2,9 +2,9 @@ package com.transsion.financialassistant.insights.screens.insights
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.insights.domain.InsightsRepo
-import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightTimeline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

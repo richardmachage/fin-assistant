@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="today">Today</string>
+    <string name="mpesa_balance">MPESA balance</string>
+    <string name="recent_transactions">Recent transactions</string>
+    <string name="view_all">View all</string>
+</resources>

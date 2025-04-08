@@ -39,10 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.R
-import com.transsion.financialassistant.insights.model.InsightCategory
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
 import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.navigation.InsightsRoutes

@@ -6,7 +6,7 @@ enum class TransactionType(val description: String) {
     SEND_MONEY("Send Money"),
     RECEIVE_MONEY("Receive Money"),
     RECEIVE_POCHI("Receive in Pochi la Biashara"),
-    SEND_POCHI("Pay via Pochi la biashara"),
+    SEND_POCHI("Pay with Pochi"),
     PAY_BILL("Pay Bill"),
     BUY_GOODS("Buy Goods Till"),
     SEND_MSHWARI("Send money to Mshwari"),
