@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.transsion.financialassistant.home.navigation.homeNavGraph
 import com.transsion.financialassistant.insights.navigation.insightsNavGraph
 import com.transsion.financialassistant.onboarding.navigation.onboardingNavGraph
 import com.transsion.financialassistant.presentation.landing_screen.LandingScreen
@@ -20,13 +21,11 @@ fun FinancialAssistantNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        onboardingNavGraph(
-            navController = navController
-        )
+        onboardingNavGraph(navController = navController)
 
-        insightsNavGraph(
-            navController = navController
-        )
+        insightsNavGraph(navController = navController)
+
+        homeNavGraph(navController = navController)
 
         composable<FinancialAssistantRoutes.Landing> {
             LandingScreen(
