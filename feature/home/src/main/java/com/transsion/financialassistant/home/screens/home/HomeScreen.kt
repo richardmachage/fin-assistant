@@ -9,10 +9,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
@@ -132,7 +135,12 @@ fun HomeScreen(
             }
         }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState()),
+
+            ) {
 
             MpesaBalanceCard(
                 balance = "1,900.0"
@@ -181,8 +189,10 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
-            ) {
-                items(4) {
+                    .heightIn(max = (screenHeight / 4).dp),
+
+                ) {
+                items(3) {
                     TransactionUiListItem(
                         transactionUi = TransactionUi(
                             title = "NAIVAS",
@@ -200,7 +210,6 @@ fun HomeScreen(
             LazyRow(
                 modifier = Modifier
                     .padding(paddingMedium)
-                    .height((screenHeight / 4).dp),
             ) {
                 items(5)
                 {
