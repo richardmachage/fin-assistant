@@ -18,7 +18,7 @@ class SharedPreferences(
         const val PIN_KEY = "encrypted_hashed_pin"
         const val IV_KEY = "pin_iv"
         const val SALT_KEY = "pin_salt"
-       // const val HAS_COMPLETED_PIN_SETUP = "has_completed_pin_setup"
+       const val HAS_COMPLETED_PIN_SETUP = "has_completed_pin_setup"
 
     }
 
@@ -32,12 +32,12 @@ class SharedPreferences(
     // Save the entered PIN
     fun savePinSetupStatus(completed: Boolean) {
         sharedPreferences.edit {
-            putBoolean(ONBOARDING_COMPLETED_KEY, completed)
+            putBoolean(HAS_COMPLETED_PIN_SETUP, completed)
         }
     }
 
     fun isPinSetupCompleted(): Boolean {
-        return sharedPreferences.getBoolean(ONBOARDING_COMPLETED_KEY, false)
+        return sharedPreferences.getBoolean(HAS_COMPLETED_PIN_SETUP, false)
     }
 
 

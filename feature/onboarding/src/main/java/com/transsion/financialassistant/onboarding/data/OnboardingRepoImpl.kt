@@ -127,19 +127,19 @@ class OnboardingRepoImpl @Inject constructor(
         onSuccess: () -> Unit,
         onFailure: (errorMessage: String) -> Unit
     ) {
-        try {
-            val hashedPin = securityRepo.doHash(pin)
-            val encryptedPin = securityRepo.encryptData(hashedPin)
-            sharedPreferences.saveData(SharedPreferences.PIN_KEY, encryptedPin.toString())
-
-            // Mark the Pin Setup is completed
-            sharedPreferences.savePinSetupStatus(true)
-
-            onSuccess()
-        } catch (e: Exception){
-            onFailure("Failed to set PIN. ${e.message}")
-        }
-        //super.setPin(pin, onSuccess, onFailure)
+//        try {
+//            val hashedPin = securityRepo.doHash(pin)
+//            val encryptedPin = securityRepo.encryptData(hashedPin)
+//            sharedPreferences.saveData(SharedPreferences.PIN_KEY, encryptedPin.toString())
+//
+//            // Mark the Pin Setup is completed
+//            sharedPreferences.savePinSetupStatus(true)
+//
+//            onSuccess()
+//        } catch (e: Exception) {
+//            onFailure("Failed to set PIN. ${e.message}")
+//        }
+        super.setPin(pin, onSuccess, onFailure)
     }
 
     override fun verifyPin(
