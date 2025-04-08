@@ -44,6 +44,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
@@ -99,6 +100,21 @@ fun SurveyBusinessScreens(
         stringResource(R.string.cash) to drawable.cash,
         stringResource(R.string.pochi_la_biashara) to drawable.mobile_security,
     )
+
+    // if onboarding is completed, navigate to home screen
+//    val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
+//
+//    LaunchedEffect(isOnboardingCompleted) {
+//        if (isOnboardingCompleted){
+//            navController.navigate(OnboardingRoutes.HomeScreen) {
+//                popUpTo(OnboardingRoutes.Login) { inclusive = true }
+//            }
+//        } else {
+//            navController.navigate(OnboardingRoutes.SurveyScreen) {
+//                popUpTo(OnboardingRoutes.Login) { inclusive = true }
+//            }
+//        }
+//    }
 
     Surface(
         modifier = Modifier.fillMaxSize()

@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -46,6 +47,7 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.biometric.BiometricPromptManager
 import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.onboarding.screens.surveys.SurveyViewModel
 import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -58,6 +60,7 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
+    surveyViewModel: SurveyViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val context = LocalContext.current
@@ -67,6 +70,9 @@ fun LoginScreen(
     // BiometricPromptManager for biometric authentication
     val promptManager by remember { mutableStateOf(BiometricPromptManager(context)) }
     val biometricResult by promptManager.promptResult.collectAsState(initial = null)
+
+    // if onboarding is completed, navigate to home screen
+    val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
 
 
     CircularLoading(
@@ -93,8 +99,14 @@ fun LoginScreen(
     LaunchedEffect(state.isValidationSuccess) {
         if (state.isValidationSuccess) {
             viewModel.clearPin()
-            navController.navigate(OnboardingRoutes.SurveyScreen) {
-                popUpTo(OnboardingRoutes.Login) { inclusive = true }
+            if (isOnboardingCompleted) {
+                navController.navigate(OnboardingRoutes.HomeScreen) {
+                    popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                }
+            } else {
+                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                    popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                }
             }
         }
     }
@@ -248,8 +260,14 @@ fun LoginScreen(
                                 // Display biometric authentication result
                                 biometricResult?.let { result ->
                                     if (result is BiometricResult.AuthenticationSuccess) {
-                                        navController.navigate(OnboardingRoutes.SurveyScreen) {
-                                            // popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                        if (isOnboardingCompleted) {
+                                            navController.navigate(OnboardingRoutes.HomeScreen) {
+                                                // popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                            }
+                                        } else {
+                                            navController.navigate(OnboardingRoutes.SurveyScreen) {
+                                                // popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                            }
                                         }
                                     }
                                 }
