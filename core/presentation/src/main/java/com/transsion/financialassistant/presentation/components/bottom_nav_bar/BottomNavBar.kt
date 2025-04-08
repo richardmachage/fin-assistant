@@ -44,7 +44,7 @@ fun BottomNavBar(
                 NavigationBarItem(
                     selected = selected,
                     onClick = {
-                        if (currentRoute != bottomBarItem.route) {
+                        if (selected.not()) {
                             navController.navigate(bottomBarItem.route) {
                                 popUpTo(navController.graph.findStartDestination().id)
                                 launchSingleTop = true
