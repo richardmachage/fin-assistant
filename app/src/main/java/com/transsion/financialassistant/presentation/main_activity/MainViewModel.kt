@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.main_activity
+package com.transsion.financialassistant.presentation.main_activity
 
 import android.content.Context
 import androidx.lifecycle.ViewModel

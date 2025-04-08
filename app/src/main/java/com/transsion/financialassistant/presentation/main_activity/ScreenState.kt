@@ -1,4 +1,4 @@
-package com.transsion.financialassistant.main_activity
+package com.transsion.financialassistant.presentation.main_activity
 
 import kotlin.time.Duration
 

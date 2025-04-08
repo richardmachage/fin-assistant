@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         tools:targetApi="31">
         <activity
-            android:name=".main_activity.MainActivity"
+            android:name=".presentation.main_activity.MainActivity"
             android:theme = "@style/Theme.FinancialAssistant.Splash"
             android:exported="true"
             android:label="@string/app_name">
