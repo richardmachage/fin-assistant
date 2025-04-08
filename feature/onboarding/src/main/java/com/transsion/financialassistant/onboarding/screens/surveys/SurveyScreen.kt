@@ -64,16 +64,6 @@ fun SurveyScreen(
 
     var selectedOption by remember { mutableStateOf(stringOptions[0]) }
 
-    // if onboarding is completed, navigate to home screen
-//    val isOnboardingCompleted by viewModel.onboardingCompleted.observeAsState(false)
-//
-//    LaunchedEffect(isOnboardingCompleted) {
-//        if (isOnboardingCompleted){
-//            navController.navigate(OnboardingRoutes.HomeScreen) {
-//                popUpTo(OnboardingRoutes.Login) { inclusive = true }
-//            }
-//        }
-//    }
 
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()

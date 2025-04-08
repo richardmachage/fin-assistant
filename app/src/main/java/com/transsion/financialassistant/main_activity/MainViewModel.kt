@@ -59,7 +59,7 @@ class MainViewModel @Inject constructor(
                 return OnboardingRoutes.Login
             } else {
                 //pin not set, go to home
-                return OnboardingRoutes.Login// FIXME change to insights
+                return OnboardingRoutes.HomeScreen// FIXME change to insights
             }
         } else {
             //Onboarding has not completed

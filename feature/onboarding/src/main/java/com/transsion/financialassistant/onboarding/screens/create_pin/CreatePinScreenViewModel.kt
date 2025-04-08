@@ -2,6 +2,7 @@ package com.transsion.financialassistant.onboarding.screens.create_pin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.data.preferences.SharedPreferences
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,8 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CreatePinScreenViewModel @Inject constructor(
-    private val repository: OnboardingRepo
+    private val repository: OnboardingRepo,
+    private val sharedPreferences: SharedPreferences
 ): ViewModel() {
+
     //private val _pinState = MutableStateFlow<PinState>(PinState.Idle)
     private val _pinState = MutableStateFlow(CreatePinScreenState()) // Default state
 
@@ -30,6 +33,11 @@ class CreatePinScreenViewModel @Inject constructor(
     fun setShowPrompt(show: Boolean) {
         _showPrompt.update { show }
     }
+
+    fun hasCompletedOnboarding(): Boolean {
+        return repository.hasCompletedOnboarding()
+    }
+
 
     fun setUserPin(pin: String) {
         viewModelScope.launch {
@@ -72,6 +80,20 @@ class CreatePinScreenViewModel @Inject constructor(
                     _pinState.value = CreatePinScreenState(error = it)
                 }
             )
+        }
+    }
+
+    fun skipPinSetup(){
+        viewModelScope.launch {
+            repository.setPinSetupCompleted(false) // Save status as false
+            _pinState.update {
+                it.copy(
+                    success = true,
+                    isLoading = false,
+                    error = null,
+                    toastMessage = "Pin Setup Skipped"
+                )
+            }
         }
     }
 

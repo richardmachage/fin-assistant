@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import androidx.datastore.preferences.preferencesDataStore
 
 @SuppressLint("ApplySharedPref")
 class SharedPreferences(
@@ -11,15 +12,13 @@ class SharedPreferences(
 ) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREFERENCES_FILE_KEY, Context.MODE_PRIVATE)
-
-
-
     companion object {
         private const val PREFERENCES_FILE_KEY = "financialassistant.SHARED_PREFERENCES"
         const val ONBOARDING_COMPLETED_KEY = "onboarding_completed"
         const val PIN_KEY = "encrypted_hashed_pin"
         const val IV_KEY = "pin_iv"
         const val SALT_KEY = "pin_salt"
+       // const val HAS_COMPLETED_PIN_SETUP = "has_completed_pin_setup"
 
     }
 
@@ -31,10 +30,15 @@ class SharedPreferences(
     }
 
     // Save the entered PIN
-    fun savePin(pin: String) {
-        sharedPreferences.edit { putString(PIN_KEY, pin) }
+    fun savePinSetupStatus(completed: Boolean) {
+        sharedPreferences.edit {
+            putBoolean(ONBOARDING_COMPLETED_KEY, completed)
+        }
     }
 
+    fun isPinSetupCompleted(): Boolean {
+        return sharedPreferences.getBoolean(ONBOARDING_COMPLETED_KEY, false)
+    }
 
 
     fun loadData(key: String): String? {
