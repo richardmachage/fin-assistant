@@ -3,11 +3,10 @@ plugins {
 }
 
 android {
-    namespace = "com.transsion.financialassistant.insights"
+    namespace = "com.transsion.financialassistant.home"
 }
 
 dependencies {
-
     //project dependencies
     implementation(projects.core.presentation)
     implementation(projects.core.data)
