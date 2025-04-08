@@ -130,6 +130,7 @@ class SurveyViewModel @Inject constructor(
             loadNextQuestion()
         } else {
             // Show an error or prompt the user to answer the question
+            error(context.getString(R.string.please_answer_the_question))
         }
     }
 

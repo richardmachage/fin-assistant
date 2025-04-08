@@ -159,7 +159,9 @@ fun PersonalTrackerSurvey(
                     FilledButtonFa(
                         text = stringResource(R.string.next_btn),
                         onClick = {
-                            navController.navigate(OnboardingRoutes.HomeScreen)
+                            navController.navigate(OnboardingRoutes.HomeScreen){
+                                popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
+                            }
                             viewModel.completeOnboarding()
                         },
                         enabled = if (selectedItems.isNotEmpty()) true else false,
