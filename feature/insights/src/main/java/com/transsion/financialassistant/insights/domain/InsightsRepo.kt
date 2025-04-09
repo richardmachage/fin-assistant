@@ -26,11 +26,8 @@ interface InsightsRepo {
 
     fun getDataPoints(
         insightCategory: InsightCategory,
-        startDate: String,
-        endDate: String,
         transactionCategory: TransactionCategory,
         insightTimeline: InsightTimeline
-
     ): Flow<List<DataPoint>>
 
     suspend fun getTotalTransactionCost(startDate: String, endDate: String): Result<Double>

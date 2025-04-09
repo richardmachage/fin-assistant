@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
 import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
+import com.transsion.financialassistant.data.models.DailyTransactionsTime
 
 
 /**
@@ -14,86 +15,110 @@ that are not mapped to a single specific entity i.e queries with JIONs for sever
 interface FinancialAssistantDao {
 
 
-
- @Query(
-  """
+    @Query(
+        """
         SELECT * FROM UnifiedIncomingTransaction
         WHERE date BETWEEN :startDate AND :endDate
         ORDER BY date ASC, time ASC
     """
- )
- suspend fun getAllMoneyInTransactions(
-  startDate: String,
-  endDate: String
- ): List<UnifiedIncomingTransaction>
+    )
+    suspend fun getAllMoneyInTransactions(
+        startDate: String,
+        endDate: String
+    ): List<UnifiedIncomingTransaction>
 
- @Query(
-  """
+    @Query(
+        """
   SELECT * FROM UnifiedOutGoingTransaction
  WHERE date BETWEEN :startDate AND :endDate
  ORDER BY date ASC, time ASC
  """
- )
- suspend fun getAllMoneyOutTransactions(
-  startDate: String,
-  endDate: String
- ): List<UnifiedOutGoingTransaction>
+    )
+    suspend fun getAllMoneyOutTransactions(
+        startDate: String,
+        endDate: String
+    ): List<UnifiedOutGoingTransaction>
 
 
- @Query(
-  """
+    @Query(
+        """
  SELECT SUM(transactionCost) FROM unifiedoutgoingtransaction WHERE date BETWEEN :startDate AND :endDate
  """
- )
- suspend fun getTotalTransactionCost(
-  startDate: String,
-  endDate: String
- ): Double?
+    )
+    suspend fun getTotalTransactionCost(
+        startDate: String,
+        endDate: String
+    ): Double?
 
- @Query(
-  """
+    @Query(
+        """
     SELECT SUM(amount) FROM unifiedincomingtransaction
     WHERE  date BETWEEN :startDate AND :endDate
     """
- )
- suspend fun getTotalMoneyInAmount(
-  startDate: String,
-  endDate: String
- ): Double?
+    )
+    suspend fun getTotalMoneyInAmount(
+        startDate: String,
+        endDate: String
+    ): Double?
 
- @Query(
-  """
+    @Query(
+        """
     SELECT SUM(amount) FROM unifiedoutgoingtransaction
     WHERE  date BETWEEN :startDate AND :endDate
     """
- )
- suspend fun getTotalMoneyOutAmount(
-  startDate: String,
-  endDate: String
- ): Double?
+    )
+    suspend fun getTotalMoneyOutAmount(
+        startDate: String,
+        endDate: String
+    ): Double?
 
 
- @Query(
-  """
+    @Query(
+        """
     SELECT COUNT (*) FROM unifiedincomingtransaction
     WHERE  date BETWEEN :startDate AND :endDate
     """
- )
- suspend fun getNumberOfTransactionsIn(
-  startDate: String,
-  endDate: String
- ): Int?
+    )
+    suspend fun getNumberOfTransactionsIn(
+        startDate: String,
+        endDate: String
+    ): Int?
 
- @Query(
-  """
+    @Query(
+        """
   SELECT COUNT (*) FROM unifiedoutgoingtransaction
   WHERE  date BETWEEN :startDate AND :endDate
  """
- )
- suspend fun getNumberOfTransactionsOut(
-  startDate: String,
-  endDate: String
- ): Int?
+    )
+    suspend fun getNumberOfTransactionsOut(
+        startDate: String,
+        endDate: String
+    ): Int?
+
+
+    @Query(
+        """
+        SELECT time, amount
+        FROM UnifiedOutGoingTransaction
+        WHERE date = :date
+        ORDER BY time ASC
+    """
+    )
+    suspend fun getTransactionsOutForDate(
+        date: String,
+    ): List<DailyTransactionsTime>
+
+    @Query(
+        """
+        SELECT time, amount
+        FROM UnifiedIncomingTransaction
+        WHERE date = :date
+        ORDER BY time ASC
+    """
+    )
+    suspend fun getTransactionsInForDate(
+        date: String,
+    ): List<DailyTransactionsTime>
 
 
     @Query(

@@ -518,12 +518,13 @@ class InsightRepoImpl @Inject constructor(
 
     override fun getDataPoints(
         insightCategory: InsightCategory,
-        startDate: String,
-        endDate: String,
         transactionCategory: TransactionCategory,
         insightTimeline: InsightTimeline
 
     ): Flow<List<DataPoint>> = flow {
+        val startDate = insightTimeline.getTimeline().startDate
+        val endDate = insightTimeline.getTimeline().endDate
+
         val cacheKey =
             "data_points${insightCategory.name}$startDate$endDate${transactionCategory.name}"
         val categoryCacheKey =
@@ -538,8 +539,32 @@ class InsightRepoImpl @Inject constructor(
         } else {
             val dataPoints = when (transactionCategory) {
                 TransactionCategory.IN -> {
-                    val data =
-                        dao.getTotalTransactionsInPerDay(startDate = startDate, endDate = endDate)
+                    val data = when (insightTimeline) {
+                        InsightTimeline.TODAY -> {
+                            dao.getTransactionsInForDate(startDate).map {
+                                DataPoint(x = it.time, y = it.amount.toFloat())
+                            }
+                        }
+
+                        InsightTimeline.WEEK -> {
+                            dao.getTotalTransactionsInPerDay(
+                                startDate = startDate,
+                                endDate = endDate
+                            ).map {
+                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                            }
+                        }
+
+                        InsightTimeline.MONTH -> {
+                            dao.getTotalTransactionsInPerDay(
+                                startDate = startDate,
+                                endDate = endDate
+                            ).map {
+                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                            }
+                        }
+                    }
+
 
                     val distributionData =
                         dao.getTotalTransactionsInPerType(startDate = startDate, endDate = endDate)
@@ -555,16 +580,39 @@ class InsightRepoImpl @Inject constructor(
 
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
+
                     //return the rest of the data
-                    data.map {
-                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                    }
+                    data
+
                 }
 
                 TransactionCategory.OUT -> {
                     val data =
-                        dao.getTotalTransactionsOutPerDay(startDate = startDate, endDate = endDate)
-                    // dao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> {
+                                dao.getTransactionsOutForDate(startDate).map {
+                                    DataPoint(x = it.time, y = it.amount.toFloat())
+                                }
+                            }
+
+                            InsightTimeline.WEEK -> {
+                                dao.getTotalTransactionsOutPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                ).map {
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
+                            }
+
+                            InsightTimeline.MONTH -> {
+                                dao.getTotalTransactionsOutPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                ).map {
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
+                            }
+                        }
 
                     //update the categories
                     val distributionData =
@@ -590,10 +638,8 @@ class InsightRepoImpl @Inject constructor(
 
                     _categoryDistributionFlow.value = distribution
                     // _categoryDistributionFlow.value = getCategoryDistribution(categorizedData)
-
-                    data.map {
-                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                    }
+                    //return the rest of the data
+                    data
                 }
             }
             AppCache.put(key = cacheKey, value = dataPoints)
