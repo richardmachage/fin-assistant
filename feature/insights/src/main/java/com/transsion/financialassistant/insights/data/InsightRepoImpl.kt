@@ -20,6 +20,7 @@ import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiD
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
@@ -518,7 +519,9 @@ class InsightRepoImpl @Inject constructor(
         insightCategory: InsightCategory,
         startDate: String,
         endDate: String,
-        transactionCategory: TransactionCategory
+        transactionCategory: TransactionCategory,
+        insightTimeline: InsightTimeline
+
     ): Flow<List<DataPoint>> = flow {
         val cacheKey =
             "data_points${insightCategory.name}$startDate$endDate${transactionCategory.name}"
@@ -535,17 +538,38 @@ class InsightRepoImpl @Inject constructor(
             val dataPoints = when (transactionCategory) {
                 TransactionCategory.IN -> {
                     val data =
-                        dao.getAllMoneyInTransactions(startDate = startDate, endDate = endDate)
+                        dao.getTotalTransactionsInPerDay(startDate = startDate, endDate = endDate)
+                    //dao.getAllMoneyInTransactions(startDate = startDate, endDate = endDate)
 
                     //update the categories
-                    val categorizedData = data.map {
+                    /*val categorizedData =
+                        dao.getTotalTransactionsInPerType(startDate=startDate,endDate=endDate)
+                            .map {
+                                CategoryDataPoint(
+                                    category = it.transactionType.description,
+                                    amount = it.totalAmount
+                                )
+                            }
+                        data.map {
                         //Log.d("TAG", "getDataPoints: ${it.transactionType.description} : ${it.amount}" )
                         CategoryDataPoint(
                             category = it.transactionType.description,
                             amount = it.amount
                         )
-                    }
-                    val distribution = getCategoryDistribution(categorizedData)
+                    }*/
+                    val distribution =
+                        //getCategoryDistribution(categorizedData)
+
+                        dao.getTotalTransactionsInPerType(startDate = startDate, endDate = endDate)
+                            .map {
+                                CategoryDistribution(
+                                    name = it.transactionType.description,
+                                    percentage = it.totalAmount.toFloat(),
+                                    color = generateColorFromCategory(it.transactionType.description),
+                                    amount = it.totalAmount.toFloat()
+                                )
+                            }
+
 
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
@@ -553,7 +577,7 @@ class InsightRepoImpl @Inject constructor(
 
                     //return the rest of the data
                     data.map {
-                        DataPoint(x = it.date, y = it.amount.toFloat())
+                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
                     }
                 }
 

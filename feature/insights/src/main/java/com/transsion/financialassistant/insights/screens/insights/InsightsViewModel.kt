@@ -54,8 +54,8 @@ class InsightsViewModel @Inject constructor(
                 insightCategory = selection.insightCategory,
                 startDate = selection.insightTimeline.getTimeline().startDate,
                 endDate = selection.insightTimeline.getTimeline().endDate,
-                transactionCategory = selection.transactionCategory
-
+                transactionCategory = selection.transactionCategory,
+                insightTimeline = selection.insightTimeline
             )
             // .onStart {  } TODO ->  implement loading state on the graph alone based on this
         }

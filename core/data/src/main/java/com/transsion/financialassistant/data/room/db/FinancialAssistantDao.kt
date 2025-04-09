@@ -2,6 +2,8 @@ package com.transsion.financialassistant.data.room.db
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.transsion.financialassistant.data.models.DailyTransactionTotal
+import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
 
 
 /**
@@ -93,6 +95,66 @@ interface FinancialAssistantDao {
   endDate: String
  ): Int?
 
+
+    @Query(
+        """
+        SELECT date,time, SUM(amount) as totalAmount
+        FROM UnifiedIncomingTransaction
+        WHERE date BETWEEN :startDate AND :endDate
+        GROUP BY date
+        ORDER BY date ASC
+    """
+    )
+    suspend fun getTotalTransactionsInPerDay(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTotal>
+
+
+    @Query(
+        """
+        SELECT date,time, SUM(amount) as totalAmount
+        FROM UnifiedOutGoingTransaction
+        WHERE date BETWEEN :startDate AND :endDate
+        GROUP BY date
+        ORDER BY date ASC
+    """
+    )
+    suspend fun getTotalTransactionsOutPerDay(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTotal>
+
+    @Query(
+        """
+   SELECT transactionType, SUM(amount) AS totalAmount
+FROM UnifiedIncomingTransaction
+WHERE date BETWEEN :startDate AND :endDate
+GROUP BY transactionType
+ORDER BY totalAmount DESC;
+
+  """
+    )
+    suspend fun getTotalTransactionsInPerType(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTypeTotal>
+
+
+    @Query(
+        """
+   SELECT transactionType, SUM(amount) AS totalAmount
+FROM UnifiedOutGoingTransaction
+WHERE date BETWEEN :startDate AND :endDate
+GROUP BY transactionType
+ORDER BY totalAmount DESC;
+
+  """
+    )
+    suspend fun getTotalTransactionsOutPerType(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTypeTotal>
 
 
 }
