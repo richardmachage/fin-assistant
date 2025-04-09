@@ -9,12 +9,35 @@ sealed interface OnboardingRoutes {
     object Welcome : OnboardingRoutes
 
     @Serializable
-    object ConfirmNumber : OnboardingRoutes
-
-    @Serializable
     object CreatePin : OnboardingRoutes
 
     @Serializable
     object Login : OnboardingRoutes
+
+    @Serializable
+    object ChangeNumber : OnboardingRoutes
+
+    @Serializable
+    object ConfirmNumberDual : OnboardingRoutes
+
+    @Serializable
+    object SetPassword : OnboardingRoutes
+
+    @Serializable
+    object EnableNotifications : OnboardingRoutes
+
+    @Serializable
+    object SurveyScreen: OnboardingRoutes
+
+    @Serializable
+    object PersonalTrackerSurvey: OnboardingRoutes
+
+    @Serializable
+    object SurveyBusinessScreens: OnboardingRoutes
+
+    @Serializable
+    object HomeScreen: OnboardingRoutes
+
+
 
 }

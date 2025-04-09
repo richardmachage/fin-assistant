@@ -2,4 +2,10 @@
 <resources>
 
     <style name="Theme.FinancialAssistant" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.FinancialAssistant.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splashScreenBackground</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat.NoActionBar</item>
+    </style>
+
 </resources>

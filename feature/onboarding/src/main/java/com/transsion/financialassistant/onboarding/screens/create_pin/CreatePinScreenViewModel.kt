@@ -1,26 +1,83 @@
 package com.transsion.financialassistant.onboarding.screens.create_pin
 
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
-import com.transsion.financialassistant.onboarding.R
-import com.transsion.financialassistant.presentation.components.texts.BigTittleText
-import com.transsion.financialassistant.presentation.components.texts.FaintText
-import com.transsion.financialassistant.presentation.utils.VerticalSpacer
+import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.LocalTime
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CreatePinScreenViewModel @Inject constructor(): ViewModel() {
-    
-    fun getGreetingBasedOnTime(): Int {
-        val currentHour = LocalTime.now().hour
-        return when (currentHour) {
-            in 5..11 -> R.string.good_morning
-            in 12..16 ->R.string.good_afternoon
-            in 17..20 -> R.string.good_evening
-            else -> R.string.good_night
+class CreatePinScreenViewModel @Inject constructor(
+    private val repository: OnboardingRepo
+): ViewModel() {
+    //private val _pinState = MutableStateFlow<PinState>(PinState.Idle)
+    private val _pinState = MutableStateFlow(CreatePinScreenState()) // Default state
+
+    //val pinState : StateFlow<PinState> = _pinState
+    val pinState: StateFlow<CreatePinScreenState> =
+        _pinState.asStateFlow() // Expose the state as a read-only StateFlow
+
+
+    private var _showPrompt = MutableStateFlow(true)
+    val showPrompt = _showPrompt.asStateFlow()
+
+
+    fun setShowPrompt(show: Boolean) {
+        _showPrompt.update { show }
+    }
+
+    fun setUserPin(pin: String) {
+        viewModelScope.launch {
+
+            // ---- Loading state ------
+            //_pinState.value = PinState.Loading
+            _pinState.update {
+                it.copy(isLoading = true, isIdle = false, error = null, toastMessage = null)
+            }
+
+            repository.setPin(
+                pin = pin,
+                onSuccess = {
+                    // ----Success state ------
+                    //_pinState.value = PinState.Success
+                    // check if pin meets requirements
+                    if (pin.length >= 4) {
+                        _pinState.update {
+                            it.copy(
+                                success = true,
+                                isLoading = false,
+                                error = null,
+                                //toastMessage = "Pin Created Successfully"
+                            )
+                        }
+                    } else {
+                        _pinState.update {
+                            it.copy(
+                                success = false,
+                                isLoading = false,
+                                error = "Pin must be at least 4 digits",
+                                //toastMessage = "Pin must be at least 4 digits"
+                            )
+                        }
+                    }
+                },
+                onFailure = {
+                    // ----Error state ------
+                    //_pinState.value = PinState.Error(message = it)
+                    _pinState.value = CreatePinScreenState(error = it)
+                }
+            )
         }
+    }
+
+    // function to reset to initial state
+    fun clearPin() {
+        _pinState.update { it.copy(error = null, toastMessage = null) }
     }
 }
 

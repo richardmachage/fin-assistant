@@ -1,3 +1,0 @@
-package com.transsion.financialassistant.navigation
-
-interface FinancialAssistantRoutes
