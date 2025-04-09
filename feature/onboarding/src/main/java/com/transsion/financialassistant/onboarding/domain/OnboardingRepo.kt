@@ -17,6 +17,12 @@ interface OnboardingRepo {
         onFailure: (errorMessage: String) -> Unit
     )
 
+    // skip create pin
+    fun setPinSetupCompleted(completed: Boolean)
+
+    fun setPinSetupComplete(completed: Boolean)
+
+
     /** set mpesa phone number */
     suspend fun setMpesaNumber(
         mpesaNumber: String,

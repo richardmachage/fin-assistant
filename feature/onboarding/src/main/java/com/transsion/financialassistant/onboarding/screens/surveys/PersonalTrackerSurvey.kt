@@ -35,9 +35,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.R.drawable
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -53,7 +55,8 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PersonalTrackerSurvey(
-    navController: NavController
+    navController: NavController,
+    viewModel: SurveyViewModel = hiltViewModel()
 ){
     val categories = listOf(
         stringResource(R.string.baby_clothes) to drawable.baby_02,
@@ -155,7 +158,12 @@ fun PersonalTrackerSurvey(
                 }
                     FilledButtonFa(
                         text = stringResource(R.string.next_btn),
-                        onClick = {},
+                        onClick = {
+                            navController.navigate(OnboardingRoutes.HomeScreen){
+                                popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
+                            }
+                            viewModel.completeOnboarding()
+                        },
                         enabled = if (selectedItems.isNotEmpty()) true else false,
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
