@@ -37,6 +37,9 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect PAY_BILL transaction`() {
+        val me2 =
+            "TD15YG1YNH Confirmed. Ksh20,000.00 sent to MALI for account Wealth Management on 1/4/25 at 3:54 PM New M-PESA balance is Ksh12,483.13. Transaction cost, Ksh0.00.Amount you can transact within the day is 449,680.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+
         val message =
             "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
