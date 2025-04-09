@@ -76,25 +76,25 @@ fun CreatePinScreen(
             .joinToString(""))
         TransformedText(transformedText, OffsetMapping.Identity)
     }
+
+    val hasPinSetupCompleted = viewModel.hasCompletedOnboarding()
+
     // After succefully creating the pin, it should clear the CreatePinScreen Route from the backstack
     LaunchedEffect(pinState.success) {
         if (pinState.success) {
             viewModel.clearPin()
-            navController.navigate(OnboardingRoutes.Login) {
-                popUpTo<OnboardingRoutes.CreatePin> {
-                    inclusive = true
-                }
-            }
         }
     }
 
     when (showPrompt) {
         true -> SetPasswordPromptScreen(
             onSkip = {
+                viewModel.skipPinSetup()
                 navController.navigate(OnboardingRoutes.SurveyScreen) {
                     popUpTo<OnboardingRoutes.CreatePin> {
                         inclusive = true
                     }
+                    launchSingleTop = true
                 }
             }, onContinue = {
                 viewModel.setShowPrompt(false)

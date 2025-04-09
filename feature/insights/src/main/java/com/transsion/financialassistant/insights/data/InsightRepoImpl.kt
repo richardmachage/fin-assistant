@@ -158,32 +158,32 @@ class InsightRepoImpl @Inject constructor(
     }
 
 
-    data class CategoryDataPoint(
+    /*data class CategoryDataPoint(
         val category: String,
         val amount: Double
-    )
+    )*/
 
-    private fun getCategoryDistribution(
-        data: List<CategoryDataPoint>
-    ): List<CategoryDistribution> {
-        val total = data.sumOf { it.amount }
-        if (total == 0.0) return emptyList()
-        return data
-            .groupBy {
-                it.category
-            }
-            .mapValues { (_, items) -> items.sumOf { it.amount } }
-            .map { (category, sum) ->
-                CategoryDistribution(
-                    name = category,
-                    percentage = (sum / total).toFloat(),
-                    color = generateColorFromCategory(category),
-                    amount = sum.toFloat()
-                )
-            }
-            .sortedByDescending { it.percentage } //{ it.percentage }
+    /*  private fun getCategoryDistribution(
+          data: List<CategoryDataPoint>
+      ): List<CategoryDistribution> {
+          val total = data.sumOf { it.amount }
+          if (total == 0.0) return emptyList()
+          return data
+              .groupBy {
+                  it.category
+              }
+              .mapValues { (_, items) -> items.sumOf { it.amount } }
+              .map { (category, sum) ->
+                  CategoryDistribution(
+                      name = category,
+                      percentage = (sum / total).toFloat(),
+                      color = generateColorFromCategory(category),
+                      amount = sum.toFloat()
+                  )
+              }
+              .sortedByDescending { it.percentage } //{ it.percentage }
 
-    }
+      }*/
 
     override fun getDataForCategory(
         startDate: String,
@@ -518,12 +518,13 @@ class InsightRepoImpl @Inject constructor(
 
     override fun getDataPoints(
         insightCategory: InsightCategory,
-        startDate: String,
-        endDate: String,
         transactionCategory: TransactionCategory,
         insightTimeline: InsightTimeline
 
     ): Flow<List<DataPoint>> = flow {
+        val startDate = insightTimeline.getTimeline().startDate
+        val endDate = insightTimeline.getTimeline().endDate
+
         val cacheKey =
             "data_points${insightCategory.name}$startDate$endDate${transactionCategory.name}"
         val categoryCacheKey =
@@ -538,8 +539,32 @@ class InsightRepoImpl @Inject constructor(
         } else {
             val dataPoints = when (transactionCategory) {
                 TransactionCategory.IN -> {
-                    val data =
-                        dao.getTotalTransactionsInPerDay(startDate = startDate, endDate = endDate)
+                    val data = when (insightTimeline) {
+                        InsightTimeline.TODAY -> {
+                            dao.getTransactionsInForDate(startDate).map {
+                                DataPoint(x = it.time, y = it.amount.toFloat())
+                            }
+                        }
+
+                        InsightTimeline.WEEK -> {
+                            dao.getTotalTransactionsInPerDay(
+                                startDate = startDate,
+                                endDate = endDate
+                            ).map {
+                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                            }
+                        }
+
+                        InsightTimeline.MONTH -> {
+                            dao.getTotalTransactionsInPerDay(
+                                startDate = startDate,
+                                endDate = endDate
+                            ).map {
+                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                            }
+                        }
+                    }
+
 
                     val distributionData =
                         dao.getTotalTransactionsInPerType(startDate = startDate, endDate = endDate)
@@ -549,22 +574,60 @@ class InsightRepoImpl @Inject constructor(
                             name = it.transactionType.description,
                             percentage = it.totalAmount.toFloat() / totalAmount,
                             color = generateColorFromCategory(it.transactionType.description),
-                            amount = it.totalAmount.toFloat()
+                            amount = it.totalAmount.toFloat(),
+                            icon = when (it.transactionType) {
+                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
+                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.UNKNOWN -> null
+                            }
                         )
                     }
 
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
+
                     //return the rest of the data
-                    data.map {
-                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                    }
+                    data
+
                 }
 
                 TransactionCategory.OUT -> {
                     val data =
-                        dao.getTotalTransactionsOutPerDay(startDate = startDate, endDate = endDate)
-                    // dao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> {
+                                dao.getTransactionsOutForDate(startDate).map {
+                                    DataPoint(x = it.time, y = it.amount.toFloat())
+                                }
+                            }
+
+                            InsightTimeline.WEEK -> {
+                                dao.getTotalTransactionsOutPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                ).map {
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
+                            }
+
+                            InsightTimeline.MONTH -> {
+                                dao.getTotalTransactionsOutPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                ).map {
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
+                            }
+                        }
 
                     //update the categories
                     val distributionData =
@@ -576,7 +639,22 @@ class InsightRepoImpl @Inject constructor(
                             name = it.transactionType.description,
                             percentage = it.totalAmount.toFloat() / totalAmount,
                             color = generateColorFromCategory(it.transactionType.description),
-                            amount = it.totalAmount.toFloat()
+                            amount = it.totalAmount.toFloat(),
+                            icon = when (it.transactionType) {
+                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
+                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.UNKNOWN -> null
+                            }
                         )
                     }
 
@@ -590,10 +668,8 @@ class InsightRepoImpl @Inject constructor(
 
                     _categoryDistributionFlow.value = distribution
                     // _categoryDistributionFlow.value = getCategoryDistribution(categorizedData)
-
-                    data.map {
-                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                    }
+                    //return the rest of the data
+                    data
                 }
             }
             AppCache.put(key = cacheKey, value = dataPoints)

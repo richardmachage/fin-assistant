@@ -52,8 +52,6 @@ class InsightsViewModel @Inject constructor(
 
             insightsRepo.getDataPoints(
                 insightCategory = selection.insightCategory,
-                startDate = selection.insightTimeline.getTimeline().startDate,
-                endDate = selection.insightTimeline.getTimeline().endDate,
                 transactionCategory = selection.transactionCategory,
                 insightTimeline = selection.insightTimeline
             )

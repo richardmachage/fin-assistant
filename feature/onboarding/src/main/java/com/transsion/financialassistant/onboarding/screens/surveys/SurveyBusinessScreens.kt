@@ -44,6 +44,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
@@ -412,7 +413,15 @@ fun SurveyBusinessScreens(
                 FilledButtonFa(
                     text = stringResource(R.string.next),
                     onClick = {
-                        surveyViewModel.loadNextQuestion()
+                        if (state.currentQuestion == null) return@FilledButtonFa
+
+                        // store answers
+                        surveyViewModel.validateAndMoveToNextQuestion() // Proceed to the next question
+
+                        // check if survey is completed
+                        if (state.isSurveyComplete) {
+                            surveyViewModel.completeOnboarding() // save data when survey is completed
+                        }
                     },
                     enabled = state.currentQuestion != null,
 
