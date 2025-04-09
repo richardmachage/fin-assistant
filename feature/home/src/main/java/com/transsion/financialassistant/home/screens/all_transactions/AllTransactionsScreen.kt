@@ -35,6 +35,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.wear.compose.material.Colors
@@ -44,6 +46,8 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
+import com.transsion.financialassistant.home.screens.all_transactions.filter_values.components.TransactionFilterDialog
+import com.transsion.financialassistant.home.screens.all_transactions.filter_values.viewmodel.FilterViewModel
 import com.transsion.financialassistant.home.screens.components.InOutCard
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
@@ -58,8 +62,10 @@ import com.transsion.financialassistant.presentation.utils.paddingMedium
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllTransactionsScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: FilterViewModel = hiltViewModel()
 ){
+    var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -91,13 +97,25 @@ fun AllTransactionsScreen(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
-                            navController.navigateUp()
+                          // TODO Handle Search
                         }
                     )
                 }
             )
         }
     ) { paddingValues ->
+
+        // Filter Dialog
+        if (showDialog) {
+            TransactionFilterDialog(
+                viewModel = viewModel,
+                onDismiss = { showDialog = false },
+                onApply = { filterState ->
+                    // Use the applied filter state
+                    println("Apply filters: $filterState")
+                }
+            )
+        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,9 +125,7 @@ fun AllTransactionsScreen(
                     start = paddingMedium,
                     end = paddingMedium
                 )
-                .verticalScroll(rememberScrollState())
         ) {
-            val screenHeight = LocalConfiguration.current.screenHeightDp
             // Money In/Out Transaction Card
             InOutCard(
                 moneyIn = "236,900.60",
@@ -146,18 +162,12 @@ fun AllTransactionsScreen(
                         disabledContentColor = Color.Transparent
                     ),
                     onClick = {
-                        // TODO
+                       showDialog = true
                     }
                 )
             }
             VerticalSpacer(16)
-            Column (
-                modifier = Modifier
-                    .fillMaxHeight(0.7f),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.Start
-            ){
-                NormalText(text = stringResource(R.string.today))
+
 
                 VerticalSpacer(8)
 
@@ -165,9 +175,11 @@ fun AllTransactionsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(paddingMedium)
-                        .heightIn(max = (screenHeight / 4).dp),
+                      //  .heightIn(max = (screenHeight / 4).dp)
+                    ,
 
                     ) {
+                    item {   NormalText(text = stringResource(R.string.today))}
                     items(5) {
                         TransactionUiListItem(
                             transactionUi = TransactionUi(
@@ -179,23 +191,14 @@ fun AllTransactionsScreen(
                             )
                         )
                     }
-                }
 
 
-                // Yesterday Transactions
-                NormalText(text = stringResource(R.string.yesterday))
+                   item {   NormalText(text = stringResource(R.string.yesterday))}
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingMedium)
-                        .heightIn(max = (screenHeight / 4).dp),
-
-                    ) {
                     items(5) {
                         TransactionUiListItem(
                             transactionUi = TransactionUi(
-                                title = "Nancy Muthama",
+                                title = "KPLC",
                                 type = if (it % 2 != 0) TransactionType.SEND_MONEY else TransactionType.PAY_BILL,
                                 amount = "50.00",
                                 inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
@@ -203,22 +206,12 @@ fun AllTransactionsScreen(
                             )
                         )
                     }
-                }
 
-                // Sunday, Jan 26, 2025
-                NormalText(text = stringResource(R.string.sunday_jan_26_2025))
-
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingMedium)
-                        .heightIn(max = (screenHeight / 4).dp),
-
-                    ) {
+                    item {   NormalText(text = stringResource(R.string.sunday_jan_26_2025))}
                     items(5) {
                         TransactionUiListItem(
                             transactionUi = TransactionUi(
-                                title = "Nancy Muthama",
+                                title = "Peter Mwangangi",
                                 type = if (it % 2 != 0) TransactionType.SEND_MONEY else TransactionType.PAY_BILL,
                                 amount = "50.00",
                                 inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
@@ -226,7 +219,6 @@ fun AllTransactionsScreen(
                             )
                         )
                     }
-                }
             }
         }
     }
