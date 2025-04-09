@@ -31,7 +31,12 @@ fun LineChartVico(
     lineColor: Color = Color(0xFFFCA251),//FAColors.green,
     bottomValueFormatter: (value: String) -> String = { value -> value }
 ) {
-    val marker = rememberMarker()
+    val marker = rememberMarker(
+        valueFormatter = getValueFormatter(
+            dataPoints = dataPoints,
+            xFormater = bottomValueFormatter
+        )
+    )
 
     val modelProducer = remember { CartesianChartModelProducer() }
 

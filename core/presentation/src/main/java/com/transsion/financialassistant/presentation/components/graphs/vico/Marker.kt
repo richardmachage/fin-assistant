@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.presentation.components.graphs.vico
 
 import android.text.Layout
+import android.text.SpannableStringBuilder
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
@@ -18,11 +19,31 @@ import com.patrykandpatrick.vico.core.common.LayeredComponent
 import com.patrykandpatrick.vico.core.common.component.ShapeComponent
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
+import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
+
+fun getValueFormatter(
+    dataPoints: List<DataPoint>,
+    xFormater: (value: String) -> String = { value -> value }
+) = DefaultCartesianMarker.ValueFormatter { _, targets ->
+    val builder = SpannableStringBuilder()
+
+    targets.forEachIndexed { index, target ->
+        val xIndex = target.x.toInt()
+        val dataPoint = dataPoints.getOrNull(xIndex)
+
+        if (dataPoint != null) {
+            builder.append("${xFormater(dataPoint.x)}, KES ${dataPoint.y}")
+            if (index != targets.lastIndex) {
+                builder.append("\n")
+            }
+        }
+    }
+    builder
+}
 
 @Composable
 internal fun rememberMarker(
-    valueFormatter: DefaultCartesianMarker.ValueFormatter =
-        DefaultCartesianMarker.ValueFormatter.default(),
+    valueFormatter: DefaultCartesianMarker.ValueFormatter,
     showIndicator: Boolean = true,
 ): CartesianMarker {
     val labelBackgroundShape = markerCorneredShape(CorneredShape.Corner.Rounded)
