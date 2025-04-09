@@ -13,4 +13,5 @@ sealed interface HomeRoutes {
 
     @Serializable
     data object AllTransactions : HomeRoutes
+
 }

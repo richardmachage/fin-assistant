@@ -4,4 +4,7 @@
     <string name="mpesa_balance">MPESA balance</string>
     <string name="recent_transactions">Recent transactions</string>
     <string name="view_all">View all</string>
+    <string name="all_transactions">All Transactions</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="sunday_jan_26_2025">Sunday, Jan 26, 2025</string>
 </resources>
