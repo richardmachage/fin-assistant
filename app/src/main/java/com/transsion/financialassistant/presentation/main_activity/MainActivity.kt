@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
                     startDestination = FinancialAssistantRoutes.Landing //InsightsRoutes.Insights //viewmodel.getStartDestination()//OnboardingRoutes.Welcome
                 )
             }
-
         }
     }
 }

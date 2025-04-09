@@ -23,7 +23,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,13 +69,6 @@ fun InsightsScreen(
     val graphData by viewModel.graphDataFlow.collectAsStateWithLifecycle()
     val categoryDistribution by viewModel.categoryDistributionFlow.collectAsStateWithLifecycle()
     val screeHeight = LocalConfiguration.current.screenHeightDp
-
-
-    LaunchedEffect(categoryDistribution) {
-        categoryDistribution.forEach {
-            Log.d("TAG", "inVM : ${it.name} , Perc : ${it.percentage}, amount: ${it.amount} ")
-        }
-    }
 
 
     Scaffold { innerPadding ->
@@ -144,7 +136,6 @@ fun InsightsScreen(
                 }
 
                 //Timeline switch
-                //var currentTimeline by remember { mutableStateOf("Today") }
                 var showTimelineMenu by remember { mutableStateOf(false) }
                 OutlinedButton(
                     modifier = Modifier
@@ -229,7 +220,7 @@ fun InsightsScreen(
             VerticalSpacer(5)
 
             StackedBarChart(
-                categories = categoryDistribution//sampleCategories
+                categories = categoryDistribution
             )
 
             //categories
@@ -249,7 +240,8 @@ fun InsightsScreen(
                         item = InsightCategoryCardItem(
                             tittle = item.name,
                             amount = item.amount.toString(),
-                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+                            categoryIcon = item.icon
+                                ?: com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
                         ),
                         onClick = {
                             navController.navigate(

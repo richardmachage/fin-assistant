@@ -158,32 +158,32 @@ class InsightRepoImpl @Inject constructor(
     }
 
 
-    data class CategoryDataPoint(
+    /*data class CategoryDataPoint(
         val category: String,
         val amount: Double
-    )
+    )*/
 
-    private fun getCategoryDistribution(
-        data: List<CategoryDataPoint>
-    ): List<CategoryDistribution> {
-        val total = data.sumOf { it.amount }
-        if (total == 0.0) return emptyList()
-        return data
-            .groupBy {
-                it.category
-            }
-            .mapValues { (_, items) -> items.sumOf { it.amount } }
-            .map { (category, sum) ->
-                CategoryDistribution(
-                    name = category,
-                    percentage = (sum / total).toFloat(),
-                    color = generateColorFromCategory(category),
-                    amount = sum.toFloat()
-                )
-            }
-            .sortedByDescending { it.percentage } //{ it.percentage }
+    /*  private fun getCategoryDistribution(
+          data: List<CategoryDataPoint>
+      ): List<CategoryDistribution> {
+          val total = data.sumOf { it.amount }
+          if (total == 0.0) return emptyList()
+          return data
+              .groupBy {
+                  it.category
+              }
+              .mapValues { (_, items) -> items.sumOf { it.amount } }
+              .map { (category, sum) ->
+                  CategoryDistribution(
+                      name = category,
+                      percentage = (sum / total).toFloat(),
+                      color = generateColorFromCategory(category),
+                      amount = sum.toFloat()
+                  )
+              }
+              .sortedByDescending { it.percentage } //{ it.percentage }
 
-    }
+      }*/
 
     override fun getDataForCategory(
         startDate: String,
@@ -574,7 +574,22 @@ class InsightRepoImpl @Inject constructor(
                             name = it.transactionType.description,
                             percentage = it.totalAmount.toFloat() / totalAmount,
                             color = generateColorFromCategory(it.transactionType.description),
-                            amount = it.totalAmount.toFloat()
+                            amount = it.totalAmount.toFloat(),
+                            icon = when (it.transactionType) {
+                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
+                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.UNKNOWN -> null
+                            }
                         )
                     }
 
@@ -624,7 +639,22 @@ class InsightRepoImpl @Inject constructor(
                             name = it.transactionType.description,
                             percentage = it.totalAmount.toFloat() / totalAmount,
                             color = generateColorFromCategory(it.transactionType.description),
-                            amount = it.totalAmount.toFloat()
+                            amount = it.totalAmount.toFloat(),
+                            icon = when (it.transactionType) {
+                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
+                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.UNKNOWN -> null
+                            }
                         )
                     }
 
