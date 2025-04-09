@@ -52,8 +52,8 @@ import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
+import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
-import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -96,8 +96,8 @@ fun HomeScreen(
                 },
                 title = {
                     Column {
-                        NormalText(text = "Good Morning,")
-                        TitleText(text = "Katei")
+                        BigTittleText(text = "Good Morning,")
+
                     }
                 },
                 actions = {
@@ -106,7 +106,7 @@ fun HomeScreen(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
-                            //TODO
+                            //TODO navigate to search screen
                         }
                     )
                     //more

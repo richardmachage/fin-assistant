@@ -54,7 +54,6 @@ class InsightRepoImpl @Inject constructor(
         get() = _categoryDistributionFlow
 
 
-
     override suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double> {
         val cacheKey = "total_money_in$startDate$endDate"
         return try {
@@ -370,6 +369,7 @@ class InsightRepoImpl @Inject constructor(
     }.catch {
         emit(emptyList())
     }
+
     override fun getDataPointsForCategory(
         startDate: String,
         endDate: String,
@@ -515,6 +515,7 @@ class InsightRepoImpl @Inject constructor(
     }.catch {
         emit(emptyList())
     }
+
     override fun getDataPoints(
         insightCategory: InsightCategory,
         startDate: String,
@@ -539,42 +540,21 @@ class InsightRepoImpl @Inject constructor(
                 TransactionCategory.IN -> {
                     val data =
                         dao.getTotalTransactionsInPerDay(startDate = startDate, endDate = endDate)
-                    //dao.getAllMoneyInTransactions(startDate = startDate, endDate = endDate)
 
-                    //update the categories
-                    /*val categorizedData =
-                        dao.getTotalTransactionsInPerType(startDate=startDate,endDate=endDate)
-                            .map {
-                                CategoryDataPoint(
-                                    category = it.transactionType.description,
-                                    amount = it.totalAmount
-                                )
-                            }
-                        data.map {
-                        //Log.d("TAG", "getDataPoints: ${it.transactionType.description} : ${it.amount}" )
-                        CategoryDataPoint(
-                            category = it.transactionType.description,
-                            amount = it.amount
-                        )
-                    }*/
-                    val distribution =
-                        //getCategoryDistribution(categorizedData)
-
+                    val distributionData =
                         dao.getTotalTransactionsInPerType(startDate = startDate, endDate = endDate)
-                            .map {
-                                CategoryDistribution(
-                                    name = it.transactionType.description,
-                                    percentage = it.totalAmount.toFloat(),
-                                    color = generateColorFromCategory(it.transactionType.description),
-                                    amount = it.totalAmount.toFloat()
-                                )
-                            }
-
+                    val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
+                    val distribution = distributionData.map {
+                        CategoryDistribution(
+                            name = it.transactionType.description,
+                            percentage = it.totalAmount.toFloat() / totalAmount,
+                            color = generateColorFromCategory(it.transactionType.description),
+                            amount = it.totalAmount.toFloat()
+                        )
+                    }
 
                     _categoryDistributionFlow.value = distribution
                     AppCache.put(categoryCacheKey, distribution)
-
-
                     //return the rest of the data
                     data.map {
                         DataPoint(x = it.date, y = it.totalAmount.toFloat())
@@ -583,23 +563,37 @@ class InsightRepoImpl @Inject constructor(
 
                 TransactionCategory.OUT -> {
                     val data =
-                        dao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
+                        dao.getTotalTransactionsOutPerDay(startDate = startDate, endDate = endDate)
+                    // dao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
 
                     //update the categories
-                    val categorizedData = data.map {
-                        CategoryDataPoint(
-                            category = it.transactionType.description,
-                            amount = it.amount
+                    val distributionData =
+                        dao.getTotalTransactionsOutPerType(startDate = startDate, endDate = endDate)
+
+                    val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
+                    val distribution = distributionData.map {
+                        CategoryDistribution(
+                            name = it.transactionType.description,
+                            percentage = it.totalAmount.toFloat() / totalAmount,
+                            color = generateColorFromCategory(it.transactionType.description),
+                            amount = it.totalAmount.toFloat()
                         )
                     }
-                    val distribution = getCategoryDistribution(categorizedData)
+
+                    /* val categorizedData = data.map {
+                         CategoryDataPoint(
+                             category = it.transactionType.description,
+                             amount = it.amount
+                         )
+                     }
+                     val distribution = getCategoryDistribution(categorizedData)*/
+
                     _categoryDistributionFlow.value = distribution
                     // _categoryDistributionFlow.value = getCategoryDistribution(categorizedData)
 
                     data.map {
-                        DataPoint(x = it.date, y = it.amount.toFloat())
+                        DataPoint(x = it.date, y = it.totalAmount.toFloat())
                     }
-
                 }
             }
             AppCache.put(key = cacheKey, value = dataPoints)
