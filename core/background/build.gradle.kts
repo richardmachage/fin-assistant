@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.financialassistant.core.module)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {

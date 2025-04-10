@@ -41,7 +41,7 @@ class InsertTransactionsWorker @AssistedInject constructor(
 
             // now save transactions  to DB,
             transactionResults.entries.forEach { (type, messages) ->
-                val saveAction = saveStrategies[type]
+                val saveAction = saveStrategies(repos = repos, context = context)[type]
 
                 if (saveAction != null) {
                     messages.forEach { message ->
@@ -87,110 +87,115 @@ class InsertTransactionsWorker @AssistedInject constructor(
         )
     }
 
-    val saveStrategies: Map<TransactionType, suspend (MpesaMessage) -> Unit> = mapOf(
-        TransactionType.DEPOSIT to { message ->
-            repos.depositRepo.insertDepositTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {},
-            )
-        },
-        TransactionType.WITHDRAWAL to { message ->
-            repos.withdrawMoneyRepo.insertWithdrawMoneyTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.SEND_MONEY to { message ->
-            repos.sendMoneyRepo.insertSendMoneyTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.RECEIVE_MONEY to { message ->
-            repos.receiveMoneyRepo.insertReceiveMoneyTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.RECEIVE_POCHI to { message ->
-            repos.receivePochiRepo.insertReceivePochiTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.SEND_POCHI to { message ->
-            repos.sendPochiRepo.insertSendPochiTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.PAY_BILL to { message ->
-            repos.payBillRepo.insertPayBillTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.BUY_GOODS to { message ->
-            repos.buyGoodsRepo.insertBuyGoodsTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.SEND_MSHWARI to { message ->
-            repos.sendMshwariRepo.insertSendMshwariTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.RECEIVE_MSHWARI to { message ->
-            repos.receiveMshwariRepo.insertReceiveMshwariTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.AIRTIME_PURCHASE to { message ->
-            repos.buyAirtime.insertBuyAirtimeTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.BUNDLES_PURCHASE to { message ->
-            repos.bundlesPurchaseRepo.insertBundlesPurchaseTransaction(
-                message = message.body,
-                context = context,
-                subId = message.subscriptionId.toIntOrNull() ?: 0,
-                onSuccess = {},
-                onFailure = {})
-        },
-        TransactionType.UNKNOWN to { _: MpesaMessage ->
-            // No-op or maybe log it
-            Log.w("InsertWorker", "Skipping UNKNOWN transaction")
-        }
-
-    )
 }
+
+
+fun saveStrategies(
+    repos: Repos,
+    context: Context
+): Map<TransactionType, suspend (MpesaMessage) -> Unit> = mapOf(
+    TransactionType.DEPOSIT to { message ->
+        repos.depositRepo.insertDepositTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {},
+        )
+    },
+    TransactionType.WITHDRAWAL to { message ->
+        repos.withdrawMoneyRepo.insertWithdrawMoneyTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.SEND_MONEY to { message ->
+        repos.sendMoneyRepo.insertSendMoneyTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.RECEIVE_MONEY to { message ->
+        repos.receiveMoneyRepo.insertReceiveMoneyTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.RECEIVE_POCHI to { message ->
+        repos.receivePochiRepo.insertReceivePochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.SEND_POCHI to { message ->
+        repos.sendPochiRepo.insertSendPochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.PAY_BILL to { message ->
+        repos.payBillRepo.insertPayBillTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.BUY_GOODS to { message ->
+        repos.buyGoodsRepo.insertBuyGoodsTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.SEND_MSHWARI to { message ->
+        repos.sendMshwariRepo.insertSendMshwariTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.RECEIVE_MSHWARI to { message ->
+        repos.receiveMshwariRepo.insertReceiveMshwariTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.AIRTIME_PURCHASE to { message ->
+        repos.buyAirtime.insertBuyAirtimeTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.BUNDLES_PURCHASE to { message ->
+        repos.bundlesPurchaseRepo.insertBundlesPurchaseTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {})
+    },
+    TransactionType.UNKNOWN to { _: MpesaMessage ->
+        // No-op or maybe log it
+        Log.w("InsertWorker", "Skipping UNKNOWN transaction")
+    }
+
+)
 
 
