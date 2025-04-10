@@ -181,6 +181,8 @@ fun LandingScreen(
 
             val permission = arrayOf(
                 Manifest.permission.READ_SMS,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.RECEIVE_SMS
             )
 
             val launcher = requestMultiplePermissions(
