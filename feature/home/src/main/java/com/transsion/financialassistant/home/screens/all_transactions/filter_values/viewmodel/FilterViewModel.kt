@@ -25,6 +25,10 @@ class FilterViewModel @Inject constructor(): ViewModel() {
         _filterState.update { it.copy(period = period) }
     }
 
+    /* allows users to select or deselect transaction categories
+    dynamically when` filtering transaction history.
+     */
+     
     fun toggleCategory(category: FilterCategory) {
         _filterState.update {
             val current = it.selectedCategories

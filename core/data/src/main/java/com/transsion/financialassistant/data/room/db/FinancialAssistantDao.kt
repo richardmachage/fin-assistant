@@ -182,4 +182,40 @@ ORDER BY totalAmount DESC;
     ): List<DailyTransactionTypeTotal>
 
 
+    /** This is a general All Transactions Dao regardless of Time of the Transactions
+     */
+    @Query(
+        """
+            SELECT SUM(amount) FROM unifiedincomingtransaction
+
+    """
+    )
+    suspend fun getAllTransactionMoneyInAmount(): Double?
+
+
+    @Query(
+        """
+        SELECT SUM(amount) FROM unifiedoutgoingtransaction
+    """
+    )
+
+    suspend fun getAllTransactionMoneyOutAmount():Double?
+
+    @Query(
+        """
+            SELECT COUNT(*) FROM UnifiedIncomingTransaction
+        """
+    )
+
+    suspend fun getNumberofAllTransactionsIn():Int?
+
+    @Query(
+        """
+            SELECT COUNT(*) FROM UnifiedOutGoingTransaction
+        """
+    )
+
+    suspend fun getNumberofAllTransactionsOut():Int?
+
+
 }

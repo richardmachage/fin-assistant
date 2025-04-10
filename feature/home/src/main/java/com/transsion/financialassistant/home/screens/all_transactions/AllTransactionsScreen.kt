@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -63,9 +65,11 @@ import com.transsion.financialassistant.presentation.utils.paddingMedium
 @Composable
 fun AllTransactionsScreen(
     navController: NavController,
-    viewModel: FilterViewModel = hiltViewModel()
+    viewModel: FilterViewModel = hiltViewModel(),
+    allTransactionsViewModel: AllTransactionsViewModel = hiltViewModel()
 ){
     var showDialog by remember { mutableStateOf(false) }
+    val state by allTransactionsViewModel.state.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
@@ -128,10 +132,10 @@ fun AllTransactionsScreen(
         ) {
             // Money In/Out Transaction Card
             InOutCard(
-                moneyIn = "236,900.60",
-                moneyOut = "177,500.90",
-                transactionsIn = "14",
-                transactionsOut = "256"
+                moneyIn = state.moneyIn ?: "0.0",
+                moneyOut = state.moneyOut ?: "0.0",
+                transactionsIn = state.transactionsIn ?: "0",
+                transactionsOut = state.transactionsOut ?: "0"
             )
 
             VerticalSpacer(8)
