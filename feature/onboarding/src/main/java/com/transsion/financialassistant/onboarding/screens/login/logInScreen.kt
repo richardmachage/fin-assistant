@@ -3,6 +3,7 @@ package com.transsion.financialassistant.onboarding.screens.login
 import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -49,6 +50,7 @@ import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyViewModel
 import com.transsion.financialassistant.presentation.components.CircularLoading
+import com.transsion.financialassistant.presentation.components.ThreeDotsLoader
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -61,7 +63,8 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
     surveyViewModel: SurveyViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    goToLanding: (route: Any) -> Unit
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -100,9 +103,8 @@ fun LoginScreen(
         if (state.isValidationSuccess) {
             viewModel.clearPin()
             if (isOnboardingCompleted) {
-                navController.navigate(OnboardingRoutes.HomeScreen) {
-                    popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                }
+                goToLanding(OnboardingRoutes.Login)
+
             } else {
                 navController.navigate(OnboardingRoutes.SurveyScreen) {
                     popUpTo(OnboardingRoutes.Login) { inclusive = true }
@@ -112,10 +114,7 @@ fun LoginScreen(
     }
 
     Surface {
-        when (state.isValidationSuccess) {
-            //is PinState.Loading -> CircularLoading()
-            true -> CircularLoading(true)
-            else -> {
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -176,6 +175,7 @@ fun LoginScreen(
                                         }
                                     }
                                 }
+
                             }
 
                             VerticalSpacer(8)
@@ -194,7 +194,19 @@ fun LoginScreen(
                         }
                     }
 
-
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight(0.1F),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+                        AnimatedVisibility(
+                            visible = state.isLoading
+                        ) {
+                            ThreeDotsLoader(
+                                animationDelay = 500
+                            )
+                        }
+                    }
                     //second half
                     Box(
                         modifier = Modifier
@@ -261,9 +273,10 @@ fun LoginScreen(
                                 biometricResult?.let { result ->
                                     if (result is BiometricResult.AuthenticationSuccess) {
                                         if (isOnboardingCompleted) {
-                                            navController.navigate(OnboardingRoutes.HomeScreen) {
+                                            goToLanding(OnboardingRoutes.Login)
+                                            /*navController.navigate(*//*OnboardingRoutes.HomeScreen*//*) {
                                                 // popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                                            }
+                                            }*/
                                         } else {
                                             navController.navigate(OnboardingRoutes.SurveyScreen) {
                                                 // popUpTo(OnboardingRoutes.Login) { inclusive = true }
@@ -276,8 +289,7 @@ fun LoginScreen(
                     }
                 }
             }
-        }
-    }
+
 
 }
 

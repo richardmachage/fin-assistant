@@ -25,5 +25,16 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+
+
+    //worker
+    implementation(libs.androidx.work.ktx)
+    implementation(libs.hilt.work)
+    implementation(libs.androidx.appcompat)
+    ksp(libs.hilt.ext.compiler)
+    testImplementation(libs.work.testing)
+    androidTestImplementation(libs.work.testing)
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(libs.junit)
 }
 

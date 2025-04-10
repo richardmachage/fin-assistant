@@ -35,7 +35,7 @@
         </activity>
 
 
-        <!--<provider
+        <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
@@ -44,8 +44,7 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
-        </provider>-->
+        </provider>
     </application>
-
 
 </manifest>
