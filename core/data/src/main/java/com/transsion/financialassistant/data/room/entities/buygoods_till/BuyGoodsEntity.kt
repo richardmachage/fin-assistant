@@ -8,7 +8,6 @@ import com.transsion.financialassistant.data.models.TransactionType
 @Entity
 data class BuyGoodsEntity(
     @PrimaryKey
-    val id: Int = 0,
     val transactionCode: String,
     val phone: String,
     val paidTo: String,
