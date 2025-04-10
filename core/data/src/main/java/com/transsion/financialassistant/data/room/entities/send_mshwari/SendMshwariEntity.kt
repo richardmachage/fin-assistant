@@ -11,7 +11,6 @@ data class SendMshwariEntity(
     val transactionCode: String,
     val amount: Double,
     val phone: String,
-    //val account: String,
     val date: String,
     val time: String,
     val mpesaBalance: Double,
