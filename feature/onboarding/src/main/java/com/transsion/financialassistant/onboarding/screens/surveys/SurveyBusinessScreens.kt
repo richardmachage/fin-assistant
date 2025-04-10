@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -44,7 +43,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
@@ -66,6 +64,7 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyState
+import com.transsion.financialassistant.presentation.R.drawable
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -75,13 +74,13 @@ import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
-import com.transsion.financialassistant.presentation.R.drawable
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SurveyBusinessScreens(
     navController: NavController,
     surveyViewModel: SurveyViewModel = hiltViewModel(),
+    goToLanding: (route: Any) -> Unit
 ) {
     val state by surveyViewModel.surveyState.observeAsState(SurveyState())
 
@@ -298,11 +297,16 @@ fun SurveyBusinessScreens(
                                                                 shape = RoundedCornerShape(12.dp)
                                                             )
                                                             .clickable {
-                                                                if (isSelected) selectedItems.remove(option)
+                                                                if (isSelected) selectedItems.remove(
+                                                                    option
+                                                                )
                                                                 else selectedItems.add(option)
 
                                                                 // Update ViewModel
-                                                                surveyViewModel.answerQuestion(4, selectedItems.toList())
+                                                                surveyViewModel.answerQuestion(
+                                                                    4,
+                                                                    selectedItems.toList()
+                                                                )
                                                             }
                                                     ) {
                                                         Box(
@@ -388,12 +392,8 @@ fun SurveyBusinessScreens(
                     }
 
                     if (state.isSurveyComplete) {
-                        navController.navigate(OnboardingRoutes.HomeScreen){
-                            popUpTo(OnboardingRoutes.HomeScreen) {
-                                inclusive = true
-                            }
 
-                        }
+                        goToLanding(OnboardingRoutes.SurveyBusinessScreens)
                     }
 
                     state.error?.let {

@@ -21,7 +21,16 @@ fun FinancialAssistantNavHost(
         navController = navController,
         startDestination = startDestination
     ) {
-        onboardingNavGraph(navController = navController)
+        onboardingNavGraph(
+            navController = navController,
+            goToLanding = { route ->
+                navController.navigate(route = FinancialAssistantRoutes.Landing) {
+                    popUpTo(route = route) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
 
         insightsNavGraph(navController = navController)
 

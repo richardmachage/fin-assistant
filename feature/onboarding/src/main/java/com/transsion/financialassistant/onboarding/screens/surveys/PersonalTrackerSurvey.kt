@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,17 +26,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.R.drawable
@@ -56,7 +52,8 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun PersonalTrackerSurvey(
     navController: NavController,
-    viewModel: SurveyViewModel = hiltViewModel()
+    viewModel: SurveyViewModel = hiltViewModel(),
+    goToLanding: (route: Any) -> Unit
 ){
     val categories = listOf(
         stringResource(R.string.baby_clothes) to drawable.baby_02,
@@ -159,9 +156,8 @@ fun PersonalTrackerSurvey(
                     FilledButtonFa(
                         text = stringResource(R.string.next_btn),
                         onClick = {
-                            navController.navigate(OnboardingRoutes.HomeScreen){
-                                popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
-                            }
+                            goToLanding(OnboardingRoutes.PersonalTrackerSurvey)
+
                             viewModel.completeOnboarding()
                         },
                         enabled = if (selectedItems.isNotEmpty()) true else false,
