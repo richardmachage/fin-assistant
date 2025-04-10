@@ -14,8 +14,6 @@ data class DepositMoneyEntity(
     val agentDepositedTo: String,
     val mpesaBalance: Double,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
     val transactionType: TransactionType = TransactionType.DEPOSIT

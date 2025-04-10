@@ -13,8 +13,6 @@ data class ReceiveMshwariEntity(
     val account: String,
     val amount: Double,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val mpesaBalance: Double,
     val mshwariBalance: Double,
