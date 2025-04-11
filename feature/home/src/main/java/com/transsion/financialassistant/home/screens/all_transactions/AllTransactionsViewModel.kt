@@ -2,10 +2,14 @@ package com.transsion.financialassistant.home.screens.all_transactions
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.transsion.financialassistant.home.screens.all_transactions.domain.AllTransactionsRepo
+import androidx.paging.cachedIn
+import com.transsion.financialassistant.home.domain.AllTransactionsRepo
+import com.transsion.financialassistant.home.screens.all_transactions.filter.FilterState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,9 +21,20 @@ class AllTransactionsViewModel @Inject constructor(
     private var _state = MutableStateFlow(AllTransactionsScreenState())
     val state = _state.asStateFlow()
 
+    private var _filters = MutableStateFlow(FilterState())
+    val filters = _filters.asStateFlow()
+
     init {
         refreshMoneyInOutCardInfo()
     }
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val filterResults = filters
+        .flatMapLatest {
+            allTransactionsRepo.getAllTransactions()
+                .cachedIn(viewModelScope)
+        }
 
     private fun getMoneyIn() {
         viewModelScope.launch {
@@ -31,6 +46,10 @@ class AllTransactionsViewModel @Inject constructor(
                     //TODO
                 }
         }
+    }
+
+    fun onChangeFilters(filterState: FilterState) {
+        _filters.update { filterState }
     }
 
     private fun getNumberOfTransactionsIn() {
