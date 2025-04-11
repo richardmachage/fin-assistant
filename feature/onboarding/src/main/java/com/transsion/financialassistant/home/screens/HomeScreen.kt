@@ -54,7 +54,6 @@ fun HomeScreen(
 
     var isGranted by remember {
         mutableStateOf( context.isPermissionGranted(Manifest.permission.READ_SMS)
-                //&& context.isPermissionGranted(Manifest.permission.READ_PHONE_NUMBERS)
         )
     }
 
@@ -63,7 +62,6 @@ fun HomeScreen(
 
     val permission = arrayOf(
         Manifest.permission.READ_SMS,
-        //Manifest.permission.READ_PHONE_NUMBERS
     )
 
     val launcher = requestMultiplePermissions(

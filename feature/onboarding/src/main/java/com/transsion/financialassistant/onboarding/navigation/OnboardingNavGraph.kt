@@ -19,7 +19,8 @@ import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
 
 @RequiresApi(Build.VERSION_CODES.Q)
 fun NavGraphBuilder.onboardingNavGraph(
-    navController: NavController
+    navController: NavController,
+    goToLanding: (route: Any) -> Unit
 ) {
     composable<OnboardingRoutes.Welcome> {
         GetStarted(
@@ -33,7 +34,10 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.Login> {
-        LoginScreen(navController = navController)
+        LoginScreen(
+            navController = navController,
+            goToLanding = goToLanding
+        )
     }
 
     composable<OnboardingRoutes.ChangeNumber> {
@@ -57,11 +61,17 @@ fun NavGraphBuilder.onboardingNavGraph(
     }
 
     composable<OnboardingRoutes.PersonalTrackerSurvey> {
-        PersonalTrackerSurvey(navController = navController)
+        PersonalTrackerSurvey(
+            navController = navController,
+            goToLanding = goToLanding
+        )
     }
 
     composable<OnboardingRoutes.SurveyBusinessScreens> {
-        SurveyBusinessScreens(navController = navController)
+        SurveyBusinessScreens(
+            navController = navController,
+            goToLanding = goToLanding
+        )
     }
 
     composable<OnboardingRoutes.HomeScreen> {

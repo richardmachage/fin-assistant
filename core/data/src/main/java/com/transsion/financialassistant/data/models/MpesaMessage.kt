@@ -2,7 +2,7 @@ package com.transsion.financialassistant.data.models
 
 
 data class MpesaMessage(
-    val body: String,
+    var body: String,
     val subscriptionId: String
 )
 
