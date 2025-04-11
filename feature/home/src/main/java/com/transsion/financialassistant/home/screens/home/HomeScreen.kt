@@ -47,6 +47,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
+import com.transsion.financialassistant.home.navigation.HomeRoutes
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
@@ -181,7 +182,10 @@ fun HomeScreen(
                 //view all
                 val viewAll = stringResource(R.string.view_all)
                 val allTransactions = 214
-                ClickableText(text = "$viewAll ($allTransactions)", onClick = {})
+                ClickableText(
+                    text = "$viewAll ($allTransactions)",
+                    onClick = {navController.navigate(HomeRoutes.AllTransactions)}
+                )
 
             }
 

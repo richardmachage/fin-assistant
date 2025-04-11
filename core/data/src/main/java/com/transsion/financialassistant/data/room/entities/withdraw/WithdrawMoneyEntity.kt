@@ -13,8 +13,6 @@ data class WithdrawMoneyEntity(
     val amount: Double,
     val mpesaBalance: Double,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val transactionCost: Double,
     val agent: String,

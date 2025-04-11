@@ -13,8 +13,6 @@ data class ReceivePochiEntity(
     val receiveFromName: String,
     val amount: Double,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val businessBalance: Double,
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
