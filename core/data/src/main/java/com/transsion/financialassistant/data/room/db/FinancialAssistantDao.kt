@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.data.room.db
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
@@ -214,8 +215,18 @@ ORDER BY totalAmount DESC;
             SELECT COUNT(*) FROM UnifiedOutGoingTransaction
         """
     )
-
     suspend fun getNumberofAllTransactionsOut():Int?
 
+
+    /**
+    This query returns all transaction from db ordered by date, it combines both incoming and outgoing transactions
+     */
+    @Query(
+        """
+        SELECT * FROM UnifiedTransaction
+        ORDER BY date DESC, time DESC
+    """
+    )
+    fun getAllTransactions(): PagingSource<Int, UnifiedTransaction>
 
 }

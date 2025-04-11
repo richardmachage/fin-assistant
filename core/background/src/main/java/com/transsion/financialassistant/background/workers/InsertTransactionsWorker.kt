@@ -100,7 +100,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {},
+            onFailure = {
+                Log.e("DepositRepo", it)
+            },
         )
     },
     TransactionType.WITHDRAWAL to { message ->
@@ -109,7 +111,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("WithdrawMoneyRepo", it)
+            })
     },
     TransactionType.SEND_MONEY to { message ->
         repos.sendMoneyRepo.insertSendMoneyTransaction(
@@ -117,7 +121,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("SendMoneyRepo", it)
+            })
     },
     TransactionType.RECEIVE_MONEY to { message ->
         repos.receiveMoneyRepo.insertReceiveMoneyTransaction(
@@ -125,7 +131,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("ReceiveMoneyRepo", it)
+            })
     },
     TransactionType.RECEIVE_POCHI to { message ->
         repos.receivePochiRepo.insertReceivePochiTransaction(
@@ -133,7 +141,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("ReceivePochiRepo", it)
+            })
     },
     TransactionType.SEND_POCHI to { message ->
         repos.sendPochiRepo.insertSendPochiTransaction(
@@ -141,7 +151,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("SendPochiRepo", it)
+            })
     },
     TransactionType.PAY_BILL to { message ->
         repos.payBillRepo.insertPayBillTransaction(
@@ -149,7 +161,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("PayBillRepo", it)
+            })
     },
     TransactionType.BUY_GOODS to { message ->
         repos.buyGoodsRepo.insertBuyGoodsTransaction(
@@ -157,7 +171,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("BuyGoodsRepo", it)
+            })
     },
     TransactionType.SEND_MSHWARI to { message ->
         repos.sendMshwariRepo.insertSendMshwariTransaction(
@@ -165,7 +181,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("SendMshwariRepo", it)
+            })
     },
     TransactionType.RECEIVE_MSHWARI to { message ->
         repos.receiveMshwariRepo.insertReceiveMshwariTransaction(
@@ -173,7 +191,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("ReceiveMshwariRepo", it)
+            })
     },
     TransactionType.AIRTIME_PURCHASE to { message ->
         repos.buyAirtime.insertBuyAirtimeTransaction(
@@ -181,7 +201,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("BuyAirtimeRepo", it)
+            })
     },
     TransactionType.BUNDLES_PURCHASE to { message ->
         repos.bundlesPurchaseRepo.insertBundlesPurchaseTransaction(
@@ -189,7 +211,9 @@ fun saveStrategies(
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
             onSuccess = {},
-            onFailure = {})
+            onFailure = {
+                Log.e("BundlesPurchaseRepo", it)
+            })
     },
     TransactionType.UNKNOWN to { _: MpesaMessage ->
         // No-op or maybe log it
