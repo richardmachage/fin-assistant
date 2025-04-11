@@ -1,13 +1,18 @@
-package com.transsion.financialassistant.home.screens.all_transactions.data
+package com.transsion.financialassistant.home.data
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
-import com.transsion.financialassistant.home.screens.all_transactions.domain.AllTransactionsRepo
+import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.home.domain.AllTransactionsRepo
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AllTransactionsRepoImpl @Inject constructor(
     val dao: FinancialAssistantDao
-): AllTransactionsRepo {
+) : AllTransactionsRepo {
     override suspend fun getTotalMoneyIn(): Result<Double> {
         val cacheKey = "total_money_in"
         return try {
@@ -21,7 +26,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                 AppCache.put(key = cacheKey, value = totalMoneyIn)
                 Result.success(totalMoneyIn)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -40,7 +45,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                 AppCache.put(key = cacheKey, value = totalMoneyOut)
                 Result.success(totalMoneyOut)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
     }
@@ -83,5 +88,14 @@ class AllTransactionsRepoImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override fun getAllTransactions(): Flow<PagingData<UnifiedTransaction>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+            ),
+            pagingSourceFactory = { dao.getAllTransactions() }
+        ).flow
     }
 }
