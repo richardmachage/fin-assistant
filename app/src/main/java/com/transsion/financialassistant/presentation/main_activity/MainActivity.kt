@@ -29,7 +29,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantNavHost
-import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
-                    startDestination = FinancialAssistantRoutes.Landing// viewmodel.getStartDestination()/*FinancialAssistantRoutes.Landing*/ //InsightsRoutes.Insights //viewmodel.getStartDestination()//OnboardingRoutes.Welcome
+                    startDestination = viewmodel.getStartDestination()/*FinancialAssistantRoutes.Landing*/ //InsightsRoutes.Insights //viewmodel.getStartDestination()//OnboardingRoutes.Welcome
                 )
             }
         }
