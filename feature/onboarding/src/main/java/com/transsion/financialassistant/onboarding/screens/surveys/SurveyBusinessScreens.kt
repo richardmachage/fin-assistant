@@ -270,7 +270,8 @@ fun SurveyBusinessScreens(
 
                                     AnswerType.MULTI_CHOICE_PAY -> {
                                         it.options?.let { optionsPay ->
-                                            val selectedItems = remember { mutableStateListOf<String>() }
+                                            val selectedItems =
+                                                remember { mutableStateListOf<String>() }
 
                                             LazyVerticalGrid(
                                                 columns = GridCells.Fixed(2),
@@ -298,11 +299,16 @@ fun SurveyBusinessScreens(
                                                                 shape = RoundedCornerShape(12.dp)
                                                             )
                                                             .clickable {
-                                                                if (isSelected) selectedItems.remove(option)
+                                                                if (isSelected) selectedItems.remove(
+                                                                    option
+                                                                )
                                                                 else selectedItems.add(option)
 
                                                                 // Update ViewModel
-                                                                surveyViewModel.answerQuestion(4, selectedItems.toList())
+                                                                surveyViewModel.answerQuestion(
+                                                                    it.id,
+                                                                    selectedItems.toList()
+                                                                )
                                                             }
                                                     ) {
                                                         Box(
@@ -325,7 +331,9 @@ fun SurveyBusinessScreens(
                                                                     imageVector = Icons.Filled.CheckCircle,
                                                                     contentDescription = "Selected",
                                                                     tint = FAColors.lightGreen,
-                                                                    modifier = Modifier.align(Alignment.TopEnd)
+                                                                    modifier = Modifier.align(
+                                                                        Alignment.TopEnd
+                                                                    )
                                                                 )
                                                             }
 
@@ -388,7 +396,7 @@ fun SurveyBusinessScreens(
                     }
 
                     if (state.isSurveyComplete) {
-                        navController.navigate(OnboardingRoutes.HomeScreen){
+                        navController.navigate(OnboardingRoutes.HomeScreen) {
                             popUpTo(OnboardingRoutes.HomeScreen) {
                                 inclusive = true
                             }
@@ -423,7 +431,15 @@ fun SurveyBusinessScreens(
                             surveyViewModel.completeOnboarding() // save data when survey is completed
                         }
                     },
-                    enabled = state.currentQuestion != null,
+                    enabled = state.currentQuestion?.let { question ->
+                        val answer = state.answers[question.id]
+                        when(question.answerType) {
+                            AnswerType.SINGLE_CHOICE -> answer is String && answer.isNotBlank()
+                            AnswerType.MULTI_CHOICE,
+                            AnswerType.MULTI_CHOICE_PAY -> answer is List<*> && answer.isNotEmpty()
+                            AnswerType.TEXT_INPUT -> answer is String && answer.isNotBlank()
+                        }
+                    }?: false
 
                     )
             }
