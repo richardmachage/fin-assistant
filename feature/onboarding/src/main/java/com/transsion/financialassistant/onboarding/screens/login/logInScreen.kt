@@ -53,6 +53,7 @@ import com.transsion.financialassistant.onboarding.biometric.BiometricPromptMana
 import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyViewModel
+import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.ThreeDotsLoader
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -104,9 +105,9 @@ fun LoginScreen(
                 goToLanding(OnboardingRoutes.Login)
 
             } else {
-                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                navController.navigate(OnboardingRoutes.SurveyScreen)/* {
                     popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                }
+                }*/
             }
         }
     }

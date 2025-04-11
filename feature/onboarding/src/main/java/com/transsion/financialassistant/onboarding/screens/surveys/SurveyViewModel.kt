@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.onboarding.screens.surveys
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -86,40 +87,28 @@ class SurveyViewModel @Inject constructor(
         )
     }
 
-    fun setPurpose(purpose: String) {
-        _state.value = _state.value.copy(purpose = purpose)
-    }
-
-    fun setPersonalExpenses(expenses: String) {
-        _state.value = _state.value.copy(personalExpenses = expenses)
-    }
-
-    fun setBusinessType(type: String) {
-        _state.value = _state.value.copy(businessType = type)
-    }
-
-    fun setBusinessExpenses(expenses: List<String>) {
-        _state.value = _state.value.copy(businessExpenses = expenses)
-    }
-
-    fun setPaymentMethod(paymentMethod: String) {
-        _state.value = _state.value.copy(paymentMethod = paymentMethod)
-    }
-
     fun completeOnboarding(){
         viewModelScope.launch {
             val purpose = _state.value.purpose
             repository.savePurpose(purpose)
+            Log.d("Onboarding", "Saving Purpose: $purpose")
+
+
 
             if(purpose == context.getString(R.string.personal_finance_needs)){
                 val personalExpenses = _state.value.personalExpenses
                 repository.savePersonalExpenses(personalExpenses)
+                Log.d("Onboarding", "Saving Personal Expenses: ${_state.value.personalExpenses}")
             } else {
                 val businessType = _state.value.businessType
                 val businessExpenses = _state.value.businessExpenses
                 val paymentMethod = _state.value.paymentMethod
                 repository.saveBusinessDetails(businessType, businessExpenses.toString(), paymentMethod)
+                Log.d("Onboarding", "Saving Business Details - Type: $businessType, Expenses: $businessExpenses, Payment: $paymentMethod")
+
             }
+
+            Log.d("Onboarding", "Setting Onboarding Completed to true")
             repository.setOnboardingCompleted(true)
         }
     }
