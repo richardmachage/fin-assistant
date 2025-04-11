@@ -1,10 +1,12 @@
-package com.transsion.financialassistant.home.screens.all_transactions.filter_values.components
+package com.transsion.financialassistant.home.screens.all_transactions.filter
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -25,12 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.home.R
-import com.transsion.financialassistant.home.model.all_transactions.FilterCategory
-import com.transsion.financialassistant.home.model.all_transactions.FilterPeriod
-import com.transsion.financialassistant.home.model.all_transactions.FilterSource
-import com.transsion.financialassistant.home.model.all_transactions.FilterState
-import com.transsion.financialassistant.home.screens.all_transactions.filter_values.viewmodel.FilterViewModel
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.NormalText
@@ -51,7 +49,7 @@ fun TransactionFilterDialog(
 
     Dialog(onDismissRequest = onDismiss) {
         Surface (
-            shape = RoundedCornerShape(16.dp),
+            shape = RoundedCornerShape(15),
             color = MaterialTheme.colorScheme.background,
             tonalElevation = 8.dp
         ){
@@ -66,13 +64,19 @@ fun TransactionFilterDialog(
                 TitleText(
                     text = stringResource(R.string.filter_by_source)
                 )
-                Row {
-                    RadioButtonWithLabel(stringResource(R.string.money_in), filterState.source == FilterSource.MONEY_IN) {
-                        viewModel.onSourceChanged(FilterSource.MONEY_IN)
-                    }
-                   HorizontalSpacer(8)
-                    RadioButtonWithLabel(stringResource(R.string.money_out), filterState.source == FilterSource.MONEY_OUT) {
-                        viewModel.onSourceChanged(FilterSource.MONEY_OUT)
+                VerticalSpacer(10)
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    TransactionCategory.entries.forEach { source ->
+                        RadioButtonWithLabel(
+                            text = source.description,
+                            selected = filterState.source == source,
+                            onClick = {
+                                viewModel.onSourceChanged(source)
+                            }
+                        )
                     }
                 }
 
@@ -83,10 +87,10 @@ fun TransactionFilterDialog(
                     text = stringResource(R.string.filter_by_period)
                 )
 
-                FlowRow() {
+                FlowRow {
                     FilterPeriod.entries.forEach { period ->
                         FilterChip(
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(15),
                             selected = filterState.period == period,
                             onClick = { viewModel.onPeriodChanged(period) },
                             label = { NormalText(text = period.label) },
@@ -102,27 +106,11 @@ fun TransactionFilterDialog(
                         HorizontalSpacer(4)
                     }
                 }
-                // Filter by Category
-                /* TitleText(
-                  text = stringResource(R.string.filter_by_category)
-              )
 
-            FlowRow (){
-                  FilterCategory.entries.forEach { category ->
-                      FilterChip(
-                          selected = category in filterState.selectedCategories,
-                          onClick = { viewModel.toggleCategory(category) },
-                          label = { NormalText(text = category.label) }
-                      )
-                      HorizontalSpacer(4)
-                  }
-              }*/
                 VerticalSpacer(24)
 
                 // Apply and Discard Button
-
                 Row (
-                   //horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
                         .fillMaxWidth()
                 ){
