@@ -1,10 +1,7 @@
-package com.transsion.financialassistant.home.screens.all_transactions.filter_values.viewmodel
+package com.transsion.financialassistant.home.screens.all_transactions.filter
 
 import androidx.lifecycle.ViewModel
-import com.transsion.financialassistant.home.model.all_transactions.FilterCategory
-import com.transsion.financialassistant.home.model.all_transactions.FilterPeriod
-import com.transsion.financialassistant.home.model.all_transactions.FilterSource
-import com.transsion.financialassistant.home.model.all_transactions.FilterState
+import com.transsion.financialassistant.data.models.TransactionCategory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +14,7 @@ class FilterViewModel @Inject constructor(): ViewModel() {
     private val _filterState = MutableStateFlow(FilterState())
     val filterState: StateFlow<FilterState> = _filterState.asStateFlow()
 
-    fun onSourceChanged(source: FilterSource) {
+    fun onSourceChanged(source: TransactionCategory) {
         _filterState.update { it.copy(source = source) }
     }
 
@@ -25,10 +22,9 @@ class FilterViewModel @Inject constructor(): ViewModel() {
         _filterState.update { it.copy(period = period) }
     }
 
-    /* allows users to select or deselect transaction categories
+    /** allows users to select or deselect transaction categories
     dynamically when` filtering transaction history.
      */
-     
     fun toggleCategory(category: FilterCategory) {
         _filterState.update {
             val current = it.selectedCategories
@@ -43,7 +39,7 @@ class FilterViewModel @Inject constructor(): ViewModel() {
         _filterState.value = FilterState() // Reset to Default
     }
 
-    fun applyFilters(): FilterState{
+    fun applyFilters(): FilterState {
         return _filterState.value
     }
 

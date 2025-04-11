@@ -1,14 +1,15 @@
-package com.transsion.financialassistant.home.model.all_transactions
+package com.transsion.financialassistant.home.screens.all_transactions.filter
 
+import com.transsion.financialassistant.data.models.TransactionCategory
 
 
 data class FilterState(
-    val source: FilterSource = FilterSource.MONEY_OUT,
-    val period: FilterPeriod = FilterPeriod.LAST_MONTH,
+    val source: TransactionCategory? = null,
+    val period: FilterPeriod? = null,
     val selectedCategories: List<FilterCategory> = emptyList()
 )
 
-enum class FilterSource { MONEY_IN, MONEY_OUT }
+//enum class FilterSource { MONEY_IN, MONEY_OUT }
 
 // Filter by Period Enum Class
 enum class FilterPeriod(val label: String){
