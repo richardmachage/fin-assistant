@@ -53,7 +53,6 @@ import com.transsion.financialassistant.onboarding.biometric.BiometricPromptMana
 import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.SurveyViewModel
-import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.ThreeDotsLoader
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -81,11 +80,6 @@ fun LoginScreen(
     // if onboarding is completed, navigate to home screen
     val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
 
-
-    CircularLoading(
-        isLoading = state.isLoading,
-        loadingMessage = "Logging in"
-    )
 
     //Toast handler
     LaunchedEffect(state.toastMessage) {
@@ -120,176 +114,174 @@ fun LoginScreen(
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
-        when (state.isValidationSuccess) {
+        /*when (state.isValidationSuccess) {
             //is PinState.Loading -> CircularLoading()
-            true -> CircularLoading(true)
-            else -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .background(MaterialTheme.colorScheme.background),
-                    contentAlignment = Alignment.Center
+            true -> CircularLoading(true)*/
+        // else -> {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(MaterialTheme.colorScheme.background),
+            contentAlignment = Alignment.Center
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxHeight(0.4f),
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopCenter)
-                            .fillMaxHeight(0.4f),
-                        contentAlignment = Alignment.Center
+
+                    BigTittleText(
+                        text = stringResource(viewModel.getGreetingBasedOnTime())
+                    )
+                    VerticalSpacer(8)
+
+                    FaintText(
+                        modifier = Modifier.fillMaxWidth(0.7F),
+                        text = stringResource(R.string.login_description)
+                    )
+
+                }
+                // PIN Display
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(0.6f),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-
-                        ) {
-
-                            BigTittleText(
-                                text = stringResource(viewModel.getGreetingBasedOnTime())
-                            )
-                            VerticalSpacer(8)
-
-                            FaintText(
-                                modifier = Modifier.fillMaxWidth(0.7F),
-                                text = stringResource(R.string.login_description)
-                            )
-
-                        }
-                        // PIN Display
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(0.6f),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
+                        repeat(4) { index ->
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .border(
+                                        BorderStroke(2.dp, FAColors.green),
+                                        shape = RoundedCornerShape(8.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
                             ) {
-                                repeat(4) { index ->
-                                    Box(
-                                        modifier = Modifier
-                                            .size(48.dp)
-                                            .border(
-                                                BorderStroke(2.dp, FAColors.green),
-                                                shape = RoundedCornerShape(8.dp)
-                                            ),
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        if (index < state.pin.length) {
-                                            NormalText(
-                                                text = if (index < state.pin.length) "*" else "",
-                                            )
-                                        }
-                                    }
+                                if (index < state.pin.length) {
+                                    NormalText(
+                                        text = if (index < state.pin.length) "*" else "",
+                                    )
                                 }
                             }
-
-                            VerticalSpacer(8)
-
-                            if (!errorMessage.isNullOrEmpty()) {
-                                Text(
-                                    text = errorMessage!!,
-                                    color = Color.Red,
-                                    fontSize = 11.sp
-                                )
-
-                                // reset the error message after displaying
-                                viewModel.resetErrorMessage()
-                            }
-
                         }
                     }
 
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight(0.1F),
-                        contentAlignment = Alignment.TopCenter
-                    ) {
-                        AnimatedVisibility(
-                            visible = state.isLoading
-                        ) {
-                            ThreeDotsLoader(
-                                animationDelay = 500
-                            )
-                        }
-                    }
-                    //second half
-                    Box(
-                        modifier = Modifier
-                            .fillMaxHeight(0.5F)
-                            .align(Alignment.BottomCenter)
-                    ) {
-                        //custom key pad
-                        // KeyPad Number Layout
-                        val keyPadNumbers = listOf(
-                            listOf("1", "2", "3"),
-                            listOf("4", "5", "6"),
-                            listOf("7", "8", "9")
+                    VerticalSpacer(8)
+
+                    if (!errorMessage.isNullOrEmpty()) {
+                        Text(
+                            text = errorMessage!!,
+                            color = Color.Red,
+                            fontSize = 11.sp
                         )
 
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        // reset the error message after displaying
+                        viewModel.resetErrorMessage()
+                    }
+
+                }
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(0.1F),
+                contentAlignment = Alignment.TopCenter
+            ) {
+                AnimatedVisibility(
+                    visible = state.isLoading
+                ) {
+                    ThreeDotsLoader(
+                        animationDelay = 500
+                    )
+                }
+            }
+            //second half
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(0.5F)
+                    .align(Alignment.BottomCenter)
+            ) {
+                //custom key pad
+                // KeyPad Number Layout
+                val keyPadNumbers = listOf(
+                    listOf("1", "2", "3"),
+                    listOf("4", "5", "6"),
+                    listOf("7", "8", "9")
+                )
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    keyPadNumbers.forEach { row ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(0.8F),
+                            horizontalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            keyPadNumbers.forEach { row ->
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(0.8F),
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
-                                ) {
-                                    row.forEach { digit ->
-                                        NumberButton(digit) {
-                                            viewModel.onPinChange(digit)
-                                            viewModel.onPinEntered(digit)
+                            row.forEach { digit ->
+                                NumberButton(digit) {
+                                    viewModel.onPinChange(digit)
+                                    viewModel.onPinEntered(digit)
 
-                                        }
-                                    }
                                 }
-                                VerticalSpacer(8)
                             }
+                        }
+                        VerticalSpacer(8)
+                    }
 
-                            // Last row: Fingerprint, 0, Delete
-                            Row(
-                                modifier = Modifier.fillMaxWidth(0.8F),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                            ) {
-                                // Fingerprint Button
-                                CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
-                                    // Trigger biometric authentication when fingerprint button is clicked
-                                    promptManager.showBiometricPrompt(
-                                        title = context.getString(R.string.biometric_authentication),
-                                        description = context.getString(R.string.please_authenticate_to_continue)
-                                    )
+                    // Last row: Fingerprint, 0, Delete
+                    Row(
+                        modifier = Modifier.fillMaxWidth(0.8F),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                    ) {
+                        // Fingerprint Button
+                        CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint) {
+                            // Trigger biometric authentication when fingerprint button is clicked
+                            promptManager.showBiometricPrompt(
+                                title = context.getString(R.string.biometric_authentication),
+                                description = context.getString(R.string.please_authenticate_to_continue)
+                            )
 
-                                }
+                        }
 
-                                // Zero Button
-                                NumberButton("0") {
-                                    viewModel.onPinChange("0")
-                                    viewModel.onPinEntered(digit = "0")
-                                }
+                        // Zero Button
+                        NumberButton("0") {
+                            viewModel.onPinChange("0")
+                            viewModel.onPinEntered(digit = "0")
+                        }
 
-                                // Delete Button
-                                CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
-                                    if (state.pin.isNotEmpty()) viewModel.onBackSpace()
-                                }
+                        // Delete Button
+                        CircularIconButton(com.transsion.financialassistant.presentation.R.drawable.backspace) {
+                            if (state.pin.isNotEmpty()) viewModel.onBackSpace()
+                        }
 
-                                //val intent = Intent(context, LoginActivity::class.java)
+                        //val intent = Intent(context, LoginActivity::class.java)
 
-                                // Display biometric authentication result
-                                biometricResult?.let { result ->
-                                    if (result is BiometricResult.AuthenticationSuccess) {
-                                        if (isOnboardingCompleted) {
-                                            goToLanding(OnboardingRoutes.Login)
-                                            /*navController.navigate(*//*OnboardingRoutes.HomeScreen*//*) {
+                        // Display biometric authentication result
+                        biometricResult?.let { result ->
+                            if (result is BiometricResult.AuthenticationSuccess) {
+                                if (isOnboardingCompleted) {
+                                    goToLanding(OnboardingRoutes.Login)
+                                    /*navController.navigate(*//*OnboardingRoutes.HomeScreen*//*) {
                                                 // popUpTo(OnboardingRoutes.Login) { inclusive = true }
                                             }*/
-                                        } else {
-                                            navController.navigate(OnboardingRoutes.SurveyScreen) {
-                                                // popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                                            }
-                                        }
+                                } else {
+                                    navController.navigate(OnboardingRoutes.SurveyScreen) {
+                                        // popUpTo(OnboardingRoutes.Login) { inclusive = true }
                                     }
                                 }
                             }
