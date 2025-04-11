@@ -8,18 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
@@ -123,7 +118,8 @@ fun HomeScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
+            /*FloatingActionButton(
+                modifier = Modifier.offset(y = (35).dp),
                 onClick = {
                     //TODO
                 },
@@ -134,13 +130,12 @@ fun HomeScreen(
                     imageVector = Icons.Default.Add,
                     contentDescription = "add"
                 )
-            }
+            }*/
         }
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
-                .verticalScroll(rememberScrollState()),
+                .padding(top = innerPadding.calculateTopPadding()),
 
             ) {
 
@@ -193,10 +188,9 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
-                    .heightIn(max = (screenHeight / 4).dp),
-
+                ///.heightIn(max = (screenHeight / 4).dp),
                 ) {
-                items(5) {
+                items(10) {
                     TransactionUiListItem(
                         transactionUi = TransactionUi(
                             title = "NAIVAS",
@@ -209,9 +203,11 @@ fun HomeScreen(
                 }
             }
 
-            HorizontalDivider()
 
-            LazyRow(
+            if (false) {
+                HorizontalDivider()
+
+                LazyRow(
                 modifier = Modifier
                     .padding(paddingMedium)
             ) {
@@ -219,6 +215,7 @@ fun HomeScreen(
                 {
                     MyBudgetsCard()
                 }
+            }
             }
         }
     }

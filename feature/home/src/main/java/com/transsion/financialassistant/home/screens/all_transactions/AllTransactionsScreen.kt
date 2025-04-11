@@ -186,46 +186,7 @@ fun AllTransactionsScreen(
 
                 }
 
-                /* item {   NormalText(text = stringResource(R.string.today))}
-                 items(5) {
-                     TransactionUiListItem(
-                         transactionUi = TransactionUi(
-                             title = "Nancy Muthama",
-                             type = if (it % 2 != 0) TransactionType.SEND_MONEY else TransactionType.PAY_BILL,
-                             amount = "50.00",
-                             inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                             dateAndTime = "Jan 12, 9:47 AM"
-                         )
-                     )
-                 }
 
-
-                item {   NormalText(text = stringResource(R.string.yesterday))}
-
-                 items(5) {
-                     TransactionUiListItem(
-                         transactionUi = TransactionUi(
-                             title = "KPLC",
-                             type = if (it % 2 != 0) TransactionType.SEND_MONEY else TransactionType.PAY_BILL,
-                             amount = "50.00",
-                             inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                             dateAndTime = "Jan 12, 9:47 AM"
-                         )
-                     )
-                 }
-
-                 item {   NormalText(text = stringResource(R.string.sunday_jan_26_2025))}
-                 items(5) {
-                     TransactionUiListItem(
-                         transactionUi = TransactionUi(
-                             title = "Peter Mwangangi",
-                             type = if (it % 2 != 0) TransactionType.SEND_MONEY else TransactionType.PAY_BILL,
-                             amount = "50.00",
-                             inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                             dateAndTime = "Jan 12, 9:47 AM"
-                         )
-                     )
-                 }*/
             }
         }
     }

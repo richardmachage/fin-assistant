@@ -17,9 +17,13 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect SEND_MONEY transaction`() {
+        val oo =
+            "SJD6YQBGKY Confirmed. Ksh80.00 sent to MARTIN  NG'ANG'A on 13/10/24 at 7:05 PM. New M-PESA balance is Ksh783.74. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,625.00. Sign up for Lipa Na M-PESA Till online https://m-pesaforbusiness.co.ke"
+        val main =
+            "TBH4G13194 Confirmed. Ksh1,100.00 sent to ERIC  MAINA 0724354182 on 17/2/25 at 7:59 PM. New M-PESA balance is Ksh1,545.05. Transaction cost, Ksh23.00. Amount you can transact within the day is 498,450.00. Thank you for being our valued customer, we appreciate you."
         val message =
             "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
-        val result = transactionRepo.getTransactionType(message)
+        val result = transactionRepo.getTransactionType(main)
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY)
     }
@@ -35,7 +39,7 @@ class TransactionTypeTests {
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
         val result = transactionRepo.getTransactionType(kcbMessage)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(message)?.groupValues
+        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(kcbMessage)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
@@ -44,6 +48,13 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect PAY_BILL transaction`() {
+
+        val easyCoach =
+            "TD943EF52A Confirmed. Ksh2,850.00 sent to EASY COACH RAILWAYS-NRB(HQ) 6 for account 816492 on 9/4/25 at 6:14 PM New M-PESA balance is Ksh4,445.13. Transaction cost, Ksh25.00.Amount you can transact within the day is 496,620.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val coop =
+            "TCT8KFQMR8 Confirmed. Ksh6,000.00 sent to Co-operative Bank Money Transfer for account 836993 on 29/3/25 at 2:53 PM New M-PESA balance is Ksh1,631.13. Transaction cost, Ksh42.00.Amount you can transact within the day is 493,850.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val global =
+            "TC397N1PP3 Confirmed. Ksh1,100.00 sent to M-PESA  GLOBAL for account 255754992504 on 3/3/25 at 2:11 PM New M-PESA balance is Ksh8,096.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 430,170.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val me2 =
             "TD15YG1YNH Confirmed. Ksh20,000.00 sent to MALI for account Wealth Management on 1/4/25 at 3:54 PM New M-PESA balance is Ksh12,483.13. Transaction cost, Ksh0.00.Amount you can transact within the day is 449,680.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
@@ -51,8 +62,8 @@ class TransactionTypeTests {
             "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
         //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        val result = transactionRepo.getTransactionType(message)
-        val groups = TransactionType.PAY_BILL.getRegex().find(message)?.groupValues
+        val result = transactionRepo.getTransactionType(coop)
+        val groups = TransactionType.PAY_BILL.getRegex().find(coop)?.groupValues
 
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
@@ -64,10 +75,12 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect BUY_GOODS transaction`() {
+        val eco =
+            "TBP9D0EL9H Confirmed. Ksh80.00 paid to ECOLOGICAL DESTINATIONS SAFARIS LIMITED-426H. on 25/2/25 at 7:13 AM.New M-PESA balance is Ksh937.05. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,920.00. Download new M-PESA app on http://bit.ly/mpesappsm & get 500MB FREE data."
         val mm ="TDA65K5PRY Confirmed. Ksh50.00 paid to FANAKA MERCHANTS LIMITED 929. on 10/4/25 at 8:33 AM.New M-PESA balance is Ksh53.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,950.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val message =
             "TCG3YADR1X Confirmed. Ksh2,045.00 paid to POWERMART SUPERMARKET. on 16/3/25 at 7:51 PM.New M-PESA balance is Ksh1,324.13. Transaction cost, Ksh0.00. Amount you can transact within the day is 497,455.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        val result = transactionRepo.getTransactionType(message)
+        val result = transactionRepo.getTransactionType(eco)
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.BUY_GOODS)
@@ -75,9 +88,11 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect AIRTIME_PURCHASE transaction`() {
+        val mess =
+            "SIU9GEQ7IX confirmed.You bought Ksh70.00 of airtime for 254796487729 on 30/9/24 at 10:01 PM.New  balance is Ksh2,024.74. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,865.00.You can now access M-PESA via *334#"
         val message =
             "TBC5RBYBPR confirmed.You bought Ksh20.00 of airtime on 12/2/25 at 4:57 PM.New M-PESA balance is Ksh1,685.97. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,660.00. Buy airtime from 1 bob via M-PESA today & keep that conversation going!"
-        val result = transactionRepo.getTransactionType(message)
+        val result = transactionRepo.getTransactionType(mess)
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.AIRTIME_PURCHASE)
