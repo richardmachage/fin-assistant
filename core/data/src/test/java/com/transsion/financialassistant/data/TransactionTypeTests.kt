@@ -60,6 +60,7 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect BUY_GOODS transaction`() {
+        val mm ="TDA65K5PRY Confirmed. Ksh50.00 paid to FANAKA MERCHANTS LIMITED 929. on 10/4/25 at 8:33 AM.New M-PESA balance is Ksh53.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,950.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val message =
             "TCG3YADR1X Confirmed. Ksh2,045.00 paid to POWERMART SUPERMARKET. on 16/3/25 at 7:51 PM.New M-PESA balance is Ksh1,324.13. Transaction cost, Ksh0.00. Amount you can transact within the day is 497,455.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val result = transactionRepo.getTransactionType(message)
