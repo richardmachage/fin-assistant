@@ -110,9 +110,9 @@ fun LoginScreen(
                 goToLanding(OnboardingRoutes.Login)
 
             } else {
-                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                navController.navigate(OnboardingRoutes.SurveyScreen)/* {
                     popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                }
+                }*/
             }
         }
     }
@@ -286,9 +286,9 @@ fun LoginScreen(
                                                 // popUpTo(OnboardingRoutes.Login) { inclusive = true }
                                             }*/
                                         } else {
-                                            navController.navigate(OnboardingRoutes.SurveyScreen) {
-                                                // popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                                            }
+                                            navController.navigate(OnboardingRoutes.SurveyScreen)/* {
+                                                 popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                            }*/
                                         }
                                     }
                                 }
