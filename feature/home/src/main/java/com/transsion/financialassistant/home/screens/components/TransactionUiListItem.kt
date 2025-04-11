@@ -80,7 +80,7 @@ fun TransactionUiListItem(
                 //tittle
                 Text(
                     modifier = Modifier.fillMaxWidth(0.5f),
-                    text = transactionUi.title,
+                    text = transactionUi.title.uppercase(),
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
