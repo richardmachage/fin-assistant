@@ -1,7 +1,7 @@
-package com.transsion.financialassistant.home.screens.all_transactions.di
+package com.transsion.financialassistant.home.di
 
-import com.transsion.financialassistant.home.screens.all_transactions.data.AllTransactionsRepoImpl
-import com.transsion.financialassistant.home.screens.all_transactions.domain.AllTransactionsRepo
+import com.transsion.financialassistant.home.data.AllTransactionsRepoImpl
+import com.transsion.financialassistant.home.domain.AllTransactionsRepo
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -9,7 +9,7 @@ import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
-abstract class AllTransactionsModule {
+abstract class HomeModule {
 
     @Binds
     abstract fun bindAllTransactionsRepo(
