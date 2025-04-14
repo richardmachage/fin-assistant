@@ -33,18 +33,4 @@ class HomeViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList<UnifiedTransaction>()
     )
-
-
-    }
- /*   private fun getRecentTransactions(){
-        viewModelScope.launch {
-            val result = recentTransactionsRepo.getRecentTransactions()
-            result.onSuccess { recentTransactions ->
-                val uiList = recentTransactions.map { it.toRecentsUI() }
-                _recents.value = _recents.value.copy(recentTransactions = uiList)
-                Log.d("TAG", "Fetched recent transactions: $recentTransactions")
-            }.onFailure { e ->
-                Log.e("TAG", "Failed to fetch recent transactions", e)
-            }
-        }*/
-    //}
+}
