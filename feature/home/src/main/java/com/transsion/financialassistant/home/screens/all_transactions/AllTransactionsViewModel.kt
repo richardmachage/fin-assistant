@@ -33,7 +33,7 @@ class AllTransactionsViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val filterResults = filters
         .flatMapLatest {
-            allTransactionsRepo.getAllTransactions()
+            allTransactionsRepo.getAllTransactions(it)
                 .cachedIn(viewModelScope)
         }
 
