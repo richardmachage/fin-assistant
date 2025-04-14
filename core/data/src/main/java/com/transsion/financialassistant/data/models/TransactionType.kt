@@ -18,6 +18,7 @@ enum class TransactionType(val description: String) {
 //    RECEIVE_MONEY_BANK("Received from Bank");
 
     fun getRegex(): Regex {
+        //FIXME allow for all name recognitions to match any character, use the send money regex for reference
         return when (this) {
             DEPOSIT -> "(\\b[A-Z0-9]+\\b) Confirmed\\. On (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) Give Ksh([\\d,]+\\.?\\d{0,2}) cash to ([A-Za-z0-9 ]+) New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
 
