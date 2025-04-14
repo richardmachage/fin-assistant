@@ -164,14 +164,13 @@ fun SurveyScreen(
                         else if (selectedOption == stringOptions[2]) navController.navigate(
                             OnboardingRoutes.SurveyBusinessScreens
                         )
-
+                        viewModel.onboardingCompleted
                     },
 
                     enabled = if (selectedOption.isNotEmpty()) true else false,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth(0.8f),
-
                     )
 
             }

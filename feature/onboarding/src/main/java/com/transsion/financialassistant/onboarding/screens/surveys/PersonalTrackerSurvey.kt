@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.FilterChip
@@ -32,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
@@ -126,6 +128,7 @@ fun PersonalTrackerSurvey(
                         categories.forEach { (category, iconRes) ->
                             val isSelected = selectedItems.contains(category)
                             FilterChip(
+
                                 selected = isSelected,
                                 onClick = {
                                     if (isSelected) selectedItems.remove(category)
@@ -142,13 +145,9 @@ fun PersonalTrackerSurvey(
                                     }
 
                                 },
-//                              leadingIcon = if (isSelected){
-//                                  { Icon(
-//                                      imageVector = Icons.Filled.Check,
-//                                      contentDescription = "Selected")
-//                                  }
-//                              } else null,
-                                modifier = Modifier.padding(paddingSmall)
+                                modifier = Modifier
+                                    .padding(paddingSmall),
+                                shape = RoundedCornerShape(40.dp)
                             )
                         }
                     }

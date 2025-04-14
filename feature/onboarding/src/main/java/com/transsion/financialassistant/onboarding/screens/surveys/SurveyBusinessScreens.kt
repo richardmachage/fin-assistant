@@ -282,7 +282,8 @@ fun SurveyBusinessScreens(
                                                                 Text(option)
                                                             }
                                                         },
-                                                        modifier = Modifier.padding(4.dp)
+                                                        modifier = Modifier.padding(4.dp),
+                                                        shape = RoundedCornerShape(40.dp)
                                                     )
                                                 }
                                             }
