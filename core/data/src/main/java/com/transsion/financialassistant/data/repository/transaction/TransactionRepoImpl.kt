@@ -14,6 +14,7 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import com.transsion.financialassistant.data.utils.toDbDate
+import com.transsion.financialassistant.data.utils.toDbTime
 import javax.inject.Inject
 
 open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
@@ -78,7 +79,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             mpesaBalance = groups[7].replace(",", "").toDouble(),
             transactionCost = groups[8].replace(",", "").toDouble(),
             date = groups[5].toDbDate(),
-            time = groups[6]
+            time = groups[6].toDbTime()
         )
     }
 
@@ -97,7 +98,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             receiveFromPhone = groups[4],
             amount = groups[2].replace("," , "").toDouble(),
             mpesaBalance = groups[7].replace(",", "").toDouble(),
-            time = groups[6],
+            time = groups[6].toDbTime(),
             date = groups[5].toDbDate()
         )
     }
@@ -118,7 +119,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             paidToAccountNo = groups[4],
             amount = groups[2].replace(",","").toDouble(),
             mpesaBalance = groups[7].replace(",","").toDouble(),
-            time = groups[6],
+            time = groups[6].toDbTime(),
             date = groups[5].toDbDate(),
             transactionCost = groups[8].toDouble(),
         )
@@ -138,7 +139,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             paidTo = groups[3],
             amount = groups[2].replace(",", "").toDouble(),
             mpesaBalance = groups[6].replace(",", "").toDouble(),
-            time = groups[5],
+            time = groups[5].toDbTime(),
             date = groups[4].toDbDate(),
             transactionCost = groups[7].toDouble()
 
@@ -159,7 +160,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             sentToName = groups[3],
             amount = groups[2].replace(",", "").toDouble(),
             mpesaBalance = groups[6].replace(",", "").toDouble(),
-            time = groups[5],
+            time = groups[5].toDbTime(),
             date = groups[4].toDbDate(),
             transactionCost = groups[7].toDouble()
         )
@@ -180,7 +181,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             agentDepositedTo = groups[5],
             mpesaBalance = groups[6].replace(",","").toDouble(),
             date = groups[2].toDbDate(),
-            time = groups[3]
+            time = groups[3].toDbTime()
         )
     }
 
@@ -198,7 +199,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             amount = groups[2].replace(",","").toDouble(),
             receiveFromName = groups[3],
             date = groups[4].toDbDate(),
-            time = groups[5],
+            time = groups[5].toDbTime(),
             businessBalance = groups[6].replace(",","").toDouble()
         )
     }
@@ -219,7 +220,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             accountNumber = groups[4],
             mpesaBalance = groups[7].replace(",","").toDouble(),
             date = groups[5].toDbDate(),
-            time = groups[6],
+            time = groups[6].toDbTime(),
             transactionCost = groups[8].toDouble()
         )
     }
@@ -238,7 +239,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             amount = groups[2].replace(",","").toDouble(),
             account = groups[3],
             date = groups[3].toDbDate(),
-            time = groups[4],
+            time = groups[4].toDbTime(),
             mshwariBalance = groups[5].replace(",", "").toDouble(),
             mpesaBalance = groups[6].replace(",", "").toDouble(),
             transactionCost = groups[7].toDouble()
@@ -260,7 +261,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             amount = groups[2].replace(",","").toDouble(),
             mpesaBalance = groups[5].replace(",","").toDouble(),
             date = groups[3].toDbDate(),
-            time = groups[4],
+            time = groups[4].toDbTime(),
             mshwariBalance = groups[6].replace(",","").toDouble(),
             transactionCost = groups[7].toDouble()
         )
@@ -280,7 +281,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             amount = groups[2].replace(",","").toDouble(),
             mpesaBalance = groups[6].replace(",", "").toDouble(),
             date = groups[4].toDbDate(),
-            time = groups[5],
+            time = groups[5].toDbTime(),
             transactionCost = groups[7].toDouble()
         )
     }
@@ -299,8 +300,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             amount = groups[4].replace(",","").toDouble(),
             mpesaBalance = groups[6].replace(",","").toDouble(),
             date = groups[2].toDbDate(),
-            time = groups[3],
-            //agentName = groups[5],
+            time = groups[3].toDbTime(),
             agent = groups[5],
             transactionCost = groups[7].toDouble()
         )

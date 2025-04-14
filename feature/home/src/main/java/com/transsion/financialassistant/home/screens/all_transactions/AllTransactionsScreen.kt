@@ -35,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.wear.compose.material.Icon
 import com.transsion.financialassistant.data.models.InsightCategory
+import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
@@ -177,7 +178,7 @@ fun AllTransactionsScreen(
                                 type = item.transactionType,
                                 amount = item.amount.toString(),
                                 inOrOut = item.transactionCategory,
-                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time}"
+                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
                             )
                         )
                         VerticalSpacer(5)
