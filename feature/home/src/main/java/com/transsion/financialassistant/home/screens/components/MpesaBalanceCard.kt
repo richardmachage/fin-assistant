@@ -51,8 +51,8 @@ fun MpesaBalanceCard(
     balance: String = "236,900.60",
     moneyIn: String = "236,900.60",
     moneyOut: String = "177,500.90",
-    transactionsIn: String = "14",
-    transactionsOut: String = "256",
+    // transactionsIn: String = "14",
+    //transactionsOut: String = "256",
 ) {
     ElevatedCard(
         modifier = modifier,
@@ -114,7 +114,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.IN,
                 amount = moneyIn,
-                transactions = transactionsIn
+                // transactions = transactionsIn
             )
             //divider
             VerticalDivider(
@@ -127,7 +127,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.OUT,
                 amount = moneyOut,
-                transactions = transactionsOut
+                // transactions = transactionsOut
             )
         }
         VerticalSpacer(10)
@@ -140,7 +140,7 @@ fun InOutCardCategory(
     modifier: Modifier = Modifier,
     category: TransactionCategory = TransactionCategory.IN,
     amount: String = "236,900.60",
-    transactions: String = "14"
+    transactions: String? = null
 ) {
     Column(modifier = modifier) {
         Row(
@@ -185,10 +185,12 @@ fun InOutCardCategory(
 
         }
         VerticalSpacer(5)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val transaction =
-                stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
-            NormalText(text = "$transactions $transaction")
+        transactions?.let {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val transaction =
+                    stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
+                NormalText(text = "$transactions $transaction")
+            }
         }
     }
 
