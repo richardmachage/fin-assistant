@@ -350,7 +350,7 @@ class InsightRepoImpl @Inject constructor(
                     bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
-                                title = "DATA BUNDLES",
+                                title = "DATA & BUNDLES",
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),

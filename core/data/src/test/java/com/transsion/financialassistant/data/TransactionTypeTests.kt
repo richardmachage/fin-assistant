@@ -19,11 +19,9 @@ class TransactionTypeTests {
     fun `should detect SEND_MONEY transaction`() {
 
         val anci =
-            "TDD6KGR4H2 Confirmed. Ksh2,000.00 sent to ANCILLAH  CHACHA 0711360814 on 13/4/25 at 11:51 AM. New M-PESA balance is Ksh1,354.13. Transaction cost, Ksh33.00.  Amount you can transact within the day is 498,000.00. "
+            "TDD6KGR4H2 Confirmed. Ksh2,000.00 sent to ANCI-LLAH  CH*ACHA 0711360814 on 13/4/25 at 11:51 AM. New M-PESA balance is Ksh1,354.13. Transaction cost, Ksh33.00.  Amount you can transact within the day is 498,000.00. "
         val thi =
             "TDE1NTEGQX Confirmed. Ksh100.00 sent to MICHAEL NJUKI 0724354182 on 14/4/25 at 7:06 AM. New M-PESA balance is Ksh144.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,900.00. "
-        val main =
-            "TBH4G13194 Confirmed. Ksh1,100.00 sent to MARTIN NG'ANG'A 0724354182 on 17/2/25 at 7:59 AM. New M-PESA balance is Ksh1,545.05. Transaction cost, Ksh23.00. Amount you can transact within the day is 498,450.00. "
         val message =
             "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
 
@@ -100,7 +98,11 @@ class TransactionTypeTests {
             "SIU9GEQ7IX confirmed.You bought Ksh70.00 of airtime for 254796487729 on 30/9/24 at 10:01 PM.New  balance is Ksh2,024.74. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,865.00.You can now access M-PESA via *334#"
         val message =
             "TBC5RBYBPR confirmed.You bought Ksh20.00 of airtime on 12/2/25 at 4:57 PM.New M-PESA balance is Ksh1,685.97. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,660.00. Buy airtime from 1 bob via M-PESA today & keep that conversation going!"
-        val result = transactionRepo.getTransactionType(mess)
+        val result = transactionRepo.getTransactionType(message)
+        val groups = TransactionType.AIRTIME_PURCHASE.getRegex().find(message)?.groupValues
+        groups?.forEachIndexed { index, value ->
+            println("$index : $value")
+        }
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.AIRTIME_PURCHASE)
@@ -150,7 +152,7 @@ class TransactionTypeTests {
     @Test
     fun `should detect send pochi transaction`() {
         val message =
-            "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard  machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
+            "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
         val result = transactionRepo.getTransactionType(message)
         println("Transaction type: ${result.description}")
 

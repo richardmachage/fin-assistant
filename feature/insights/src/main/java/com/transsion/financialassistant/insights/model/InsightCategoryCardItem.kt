@@ -7,3 +7,4 @@ data class InsightCategoryCardItem(
     val amount: String,
     @DrawableRes val categoryIcon: Int,
 )
+

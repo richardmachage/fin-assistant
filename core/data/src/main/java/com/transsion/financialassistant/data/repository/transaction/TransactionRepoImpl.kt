@@ -278,10 +278,10 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             transactionCode = groups[1],
             phone = phone,
             amount = groups[2].replace(",","").toDouble(),
-            mpesaBalance = groups[5].replace(",","").toDouble(),
-            date = groups[3].toDbDate(),
-            time = groups[4],
-            transactionCost = groups[6].toDouble()
+            mpesaBalance = groups[6].replace(",", "").toDouble(),
+            date = groups[4].toDbDate(),
+            time = groups[5],
+            transactionCost = groups[7].toDouble()
         )
     }
 
