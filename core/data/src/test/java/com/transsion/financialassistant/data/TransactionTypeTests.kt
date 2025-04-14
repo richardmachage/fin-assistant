@@ -17,13 +17,21 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect SEND_MONEY transaction`() {
-        val oo =
-            "SJD6YQBGKY Confirmed. Ksh80.00 sent to MARTIN  NG'ANG'A on 13/10/24 at 7:05 PM. New M-PESA balance is Ksh783.74. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,625.00. Sign up for Lipa Na M-PESA Till online https://m-pesaforbusiness.co.ke"
+
+        val anci =
+            "TDD6KGR4H2 Confirmed. Ksh2,000.00 sent to ANCILLAH  CHACHA 0711360814 on 13/4/25 at 11:51 AM. New M-PESA balance is Ksh1,354.13. Transaction cost, Ksh33.00.  Amount you can transact within the day is 498,000.00. "
+        val thi =
+            "TDE1NTEGQX Confirmed. Ksh100.00 sent to MICHAEL NJUKI 0724354182 on 14/4/25 at 7:06 AM. New M-PESA balance is Ksh144.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,900.00. "
         val main =
-            "TBH4G13194 Confirmed. Ksh1,100.00 sent to ERIC  MAINA 0724354182 on 17/2/25 at 7:59 PM. New M-PESA balance is Ksh1,545.05. Transaction cost, Ksh23.00. Amount you can transact within the day is 498,450.00. Thank you for being our valued customer, we appreciate you."
+            "TBH4G13194 Confirmed. Ksh1,100.00 sent to MARTIN NG'ANG'A 0724354182 on 17/2/25 at 7:59 AM. New M-PESA balance is Ksh1,545.05. Transaction cost, Ksh23.00. Amount you can transact within the day is 498,450.00. "
         val message =
             "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
-        val result = transactionRepo.getTransactionType(main)
+
+        val groups = TransactionType.SEND_MONEY.getRegex().find(anci)?.groupValues
+        groups?.forEachIndexed { index, value ->
+            println("$index : $value")
+        }
+        val result = transactionRepo.getTransactionType(anci)
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY)
     }
