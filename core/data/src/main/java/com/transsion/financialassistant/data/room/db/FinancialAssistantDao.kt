@@ -6,6 +6,7 @@ import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
 import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
 import com.transsion.financialassistant.data.models.DailyTransactionsTime
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -228,5 +229,19 @@ ORDER BY totalAmount DESC;
     """
     )
     fun getAllTransactions(): PagingSource<Int, UnifiedTransaction>
+
+
+    /** This query returns recent 10 transactions from db ordered by date, it combines both incoming and outgoing transactions
+     */
+
+    @Query(
+        """
+        SELECT * FROM UnifiedTransaction
+        ORDER BY date DESC, time DESC
+        LIMIT 10
+        """
+    )
+
+    fun getRecentTransactions(): Flow<List<UnifiedTransaction>>
 
 }

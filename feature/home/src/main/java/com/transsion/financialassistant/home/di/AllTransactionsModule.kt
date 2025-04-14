@@ -1,6 +1,8 @@
 package com.transsion.financialassistant.home.di
 
 import com.transsion.financialassistant.home.data.AllTransactionsRepoImpl
+import com.transsion.financialassistant.home.domain.RecentTransactionRepo
+import com.transsion.financialassistant.home.data.RecentTransactionRepoImpl
 import com.transsion.financialassistant.home.domain.AllTransactionsRepo
 import dagger.Binds
 import dagger.Module
@@ -15,5 +17,11 @@ abstract class HomeModule {
     abstract fun bindAllTransactionsRepo(
         allTransactionsRepoImpl: AllTransactionsRepoImpl
     ): AllTransactionsRepo
+
+    @Binds
+    abstract fun bindRecentTransactionRepo(
+        recentTransactionRepoImpl: RecentTransactionRepoImpl
+    ): RecentTransactionRepo
+
 
 }

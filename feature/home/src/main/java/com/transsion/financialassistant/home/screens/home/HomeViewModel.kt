@@ -1,18 +1,50 @@
 package com.transsion.financialassistant.home.screens.home
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.transsion.financialassistant.home.screens.all_transactions.AllTransactionsScreenState
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import androidx.paging.map
+import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.home.domain.RecentTransactionRepo
+import com.transsion.financialassistant.home.model.toRecentsUI
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
-    private var _state = MutableStateFlow(AllTransactionsScreenState())
-    val state = _state.asStateFlow()
+class HomeViewModel @Inject constructor(
+    private val recentTransactionsRepo: RecentTransactionRepo
+) : ViewModel() {
 
-    fun getMoneyIn(){
+    private var _recents = MutableStateFlow(HomeScreenState())
+    val recents = _recents.asStateFlow()
+
+    val recentTransactions = recentTransactionsRepo.getRecentTransactions().stateIn(
+        viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList<UnifiedTransaction>()
+    )
+
 
     }
-}
+ /*   private fun getRecentTransactions(){
+        viewModelScope.launch {
+            val result = recentTransactionsRepo.getRecentTransactions()
+            result.onSuccess { recentTransactions ->
+                val uiList = recentTransactions.map { it.toRecentsUI() }
+                _recents.value = _recents.value.copy(recentTransactions = uiList)
+                Log.d("TAG", "Fetched recent transactions: $recentTransactions")
+            }.onFailure { e ->
+                Log.e("TAG", "Failed to fetch recent transactions", e)
+            }
+        }*/
+    //}

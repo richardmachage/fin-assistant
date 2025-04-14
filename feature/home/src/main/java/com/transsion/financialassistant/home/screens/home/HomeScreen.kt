@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -39,13 +40,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.models.TransactionCategory
-import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.navigation.HomeRoutes
-import com.transsion.financialassistant.home.screens.all_transactions.AllTransactionsViewModel
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
@@ -63,10 +63,13 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: AllTransactionsViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    val state by viewModel.state.collectAsStateWithLifecycle()
+    val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
+        initialValue = emptyList<UnifiedTransaction>()
+    )
+    val recentTransactions = viewModel.recentTransactions.collectAsStateWithLifecycle(initialValue = emptyList<UnifiedTransaction>())
 
     Scaffold(
         topBar = {
@@ -146,10 +149,6 @@ fun HomeScreen(
 
             MpesaBalanceCard(
                 balance = "1,900.0",
-                moneyIn = state.moneyIn.toString(),
-                moneyOut = state.moneyOut.toString(),
-                transactionsIn = state.transactionsIn.toString(),
-                transactionsOut = state.transactionsOut.toString()
             )
 
             var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
@@ -199,16 +198,18 @@ fun HomeScreen(
                     .padding(paddingMedium)
                 ///.heightIn(max = (screenHeight / 4).dp),
                 ) {
-                items(10) {
-                    TransactionUiListItem(
-                        transactionUi = TransactionUi(
-                            title = "NAIVAS",
-                            type = if (it % 2 != 0) TransactionType.SEND_POCHI else TransactionType.BUY_GOODS,
-                            amount = "50.00",
-                            inOrOut = if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                            dateAndTime = "Jan 12, 9:47 AM"
+                items(recents.size) {
+                    val item = recents[it]
+                        TransactionUiListItem(
+                            transactionUi = TransactionUi(
+                                title = item.name ?: item.transactionCode,//"NAIVAS",
+                                type = item.transactionType,//if (it % 2 != 0) TransactionType.SEND_POCHI else TransactionType.BUY_GOODS,
+                                amount = item.amount.toString(),//"50.00",
+                                inOrOut = item.transactionCategory,//if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
+                                dateAndTime = item.date//"Jan 12, 9:47 AM"
+                            )
                         )
-                    )
+                    }
                 }
             }
 
@@ -228,7 +229,6 @@ fun HomeScreen(
             }
         }
     }
-}
 
 
 @Composable
