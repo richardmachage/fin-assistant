@@ -43,9 +43,9 @@ class TransactionTypeTests {
             "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
-        val result = transactionRepo.getTransactionType(kcbMessage)
+        val result = transactionRepo.getTransactionType(ncbaMessage)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(kcbMessage)?.groupValues
+        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(ncbaMessage)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
@@ -179,3 +179,15 @@ class TransactionTypeTests {
         assertTrue(result == TransactionType.UNKNOWN)
     }
 }
+
+
+val sendToZiidi =
+    "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
+val fulizaCut =
+    "SKT7KAQMRH Confirmed. Ksh 241.19 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh 700.00. M-PESA balance is Ksh558.81."
+val fulizaAmount =
+    "SKT9JYXWRJ Confirmed. Fuliza M-PESA amount is Ksh 238.80. Interest charged Ksh 2.39. Total Fuliza M-PESA outstanding amount is Ksh 241.19 due on 29/12/24. To check daily charges, Dial *234*0#OK Select Query Charges"
+val reversal =
+    "SJP5C9HAIJ confirmed. Reversal of transaction SJH5DP029L has been successfully reversed  on 25/10/24  at 2:04 PM and Ksh1.00 is credited to your M-PESA account. New M-PESA account balance is Ksh1,778.12."
+val dataBundlesEmptyAccoountNumer =
+    "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
