@@ -64,9 +64,14 @@ fun SurveyScreen(
 
     var selectedOption by remember { mutableStateOf(stringOptions[0]) }
 
-
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
+
+        if (viewModel.onboardingCompleted.value == true){
+            LaunchedEffect(Unit) {
+                navController.navigate(OnboardingRoutes.HomeScreen)
+            }
+        } else {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,18 +169,16 @@ fun SurveyScreen(
                         else if (selectedOption == stringOptions[2]) navController.navigate(
                             OnboardingRoutes.SurveyBusinessScreens
                         )
-
                     },
 
                     enabled = if (selectedOption.isNotEmpty()) true else false,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth(0.8f),
-
-                    )
-
+                )
             }
         }
+            }
     }
 }
 

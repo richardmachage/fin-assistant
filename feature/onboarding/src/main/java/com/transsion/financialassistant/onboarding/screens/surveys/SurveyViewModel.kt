@@ -19,6 +19,8 @@ import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -92,7 +94,6 @@ class SurveyViewModel @Inject constructor(
             val purpose = _state.value.purpose
             repository.savePurpose(purpose)
             Log.d("Onboarding", "Saving Purpose: $purpose")
-
 
 
             if(purpose == context.getString(R.string.personal_finance_needs)){
