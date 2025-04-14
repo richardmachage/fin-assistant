@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -40,7 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.home.R
@@ -65,6 +63,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
         initialValue = emptyList<UnifiedTransaction>()
@@ -149,6 +148,8 @@ fun HomeScreen(
 
             MpesaBalanceCard(
                 balance = "1,900.0",
+                moneyIn = state.moneyIn,
+                moneyOut = state.moneyOut
             )
 
             var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
