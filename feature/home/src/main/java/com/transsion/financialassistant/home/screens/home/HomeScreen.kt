@@ -35,6 +35,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.data.models.InsightCategory
@@ -43,6 +45,7 @@ import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.navigation.HomeRoutes
+import com.transsion.financialassistant.home.screens.all_transactions.AllTransactionsViewModel
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
@@ -59,9 +62,11 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AllTransactionsViewModel = hiltViewModel()
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -140,7 +145,11 @@ fun HomeScreen(
             ) {
 
             MpesaBalanceCard(
-                balance = "1,900.0"
+                balance = "1,900.0",
+                moneyIn = state.moneyIn.toString(),
+                moneyOut = state.moneyOut.toString(),
+                transactionsIn = state.transactionsIn.toString(),
+                transactionsOut = state.transactionsOut.toString()
             )
 
             var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
