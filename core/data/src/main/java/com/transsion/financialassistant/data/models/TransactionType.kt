@@ -12,7 +12,7 @@ enum class TransactionType(val description: String) {
     SEND_MSHWARI("Send money to Mshwari"),
     RECEIVE_MSHWARI("Receive money from Mshwari"),
     AIRTIME_PURCHASE("Purchase Airtime"),
-    BUNDLES_PURCHASE("Purchase Data Bundles"),
+    BUNDLES_PURCHASE("Purchase Data & Bundles"),
     UNKNOWN("Unknown"),
     ;
 
