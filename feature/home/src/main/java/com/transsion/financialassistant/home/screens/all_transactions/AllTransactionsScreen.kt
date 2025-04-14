@@ -109,6 +109,7 @@ fun AllTransactionsScreen(
                 }
             )
         }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()

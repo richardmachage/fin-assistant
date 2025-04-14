@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.data.utils
 
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -65,6 +66,20 @@ fun String.toMonthDayDate(): String {
     return try {
         val parsedDate = LocalDate.parse(this, dbFormatter)
         parsedDate.format(monthDayFormatter)
+    } catch (e: Exception) {
+        this
+    }
+}
+
+fun String.formatAsCurrency(locale: Locale = Locale.US, maxFractionDigits: Int = 2): String {
+    return try {
+        val number = this.replace(",", "").replace("\\", "").toDouble()
+        val formatter = NumberFormat.getNumberInstance(locale).apply {
+            isGroupingUsed = true
+            maximumFractionDigits = maxFractionDigits
+            minimumFractionDigits = 0
+        }
+        formatter.format(number)
     } catch (e: Exception) {
         this
     }
