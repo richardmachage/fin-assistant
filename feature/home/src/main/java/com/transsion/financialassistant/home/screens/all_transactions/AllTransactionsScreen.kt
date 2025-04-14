@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.home.screens.all_transactions
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -105,6 +106,7 @@ fun AllTransactionsScreen(
                 onDismiss = { showDialog = false },
                 onApply = { filterState ->
                     // Use the applied filter state
+                    Log.d("AllTransactionsScreen", "filter : $filterState")
                     viewModel.onChangeFilters(filterState)
                 }
             )

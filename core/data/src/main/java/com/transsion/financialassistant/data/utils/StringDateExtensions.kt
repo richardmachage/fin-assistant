@@ -1,16 +1,18 @@
 package com.transsion.financialassistant.data.utils
 
 import java.text.NumberFormat
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 private val monthDayFormatter = DateTimeFormatter.ofPattern("MMM d")
 
-private val appFormatter =
+val appFormatter =
     DateTimeFormatter.ofPattern("d/M/yy") // e.g. 1/3/25
-private val dbFormatter =
+val dbFormatter =
     DateTimeFormatter.ofPattern("yyyy/MM/dd")//DateTimeFormatter.ISO_LOCAL_DATE // e.g. 2025-03-01
 private val dbTimeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
 private val appTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
@@ -83,4 +85,40 @@ fun String.formatAsCurrency(locale: Locale = Locale.US, maxFractionDigits: Int =
     } catch (e: Exception) {
         this
     }
+}
+
+
+fun LocalDate.getWeekRange(startOfWeek: DayOfWeek = DayOfWeek.MONDAY): Pair<String, String> {
+    val currentDayOfWeek = this.dayOfWeek
+    val daysFromStart = (7 + currentDayOfWeek.value - startOfWeek.value) % 7
+    val startDate = this.minusDays(daysFromStart.toLong())
+    val endDate = startDate.plusDays(6)
+    return startDate.format(dbFormatter) to endDate.format(dbFormatter)
+}
+
+fun LocalDate.getLastWeekRange(startOfWeek: DayOfWeek = DayOfWeek.MONDAY): Pair<String, String> {
+    val currentDayOfWeek = this.dayOfWeek
+    val daysFromStart = (7 + currentDayOfWeek.value - startOfWeek.value) % 7
+    val thisWeekStartDate = this.minusDays(daysFromStart.toLong())
+    val lastWeekStartDate = thisWeekStartDate.minusWeeks(1)
+    val lastWeekEndDate = lastWeekStartDate.plusDays(6)
+
+
+    return lastWeekStartDate.format(dbFormatter) to lastWeekEndDate.format(dbFormatter)
+}
+
+
+fun LocalDate.getMonthRange(): Pair<String, String> {
+    val yearMonth = YearMonth.from(this)
+    val start = yearMonth.atDay(1)
+    val end = yearMonth.atEndOfMonth()
+    return start.format(dbFormatter) to end.format(dbFormatter)
+}
+
+fun LocalDate.getLastMonthRange(): Pair<String, String> {
+    val lastMonth = YearMonth.from(this).minusMonths(1)
+    val lastMonthStart = lastMonth.atDay(1)
+    val lastMonthEnd = lastMonth.atEndOfMonth()
+    return lastMonthStart.format(dbFormatter) to lastMonthEnd.format(dbFormatter)
+
 }

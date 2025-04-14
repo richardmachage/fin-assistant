@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.data
 
+import com.transsion.financialassistant.data.utils.getWeekRange
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toDbDate
 import com.transsion.financialassistant.data.utils.toDbTime
@@ -7,6 +8,8 @@ import com.transsion.financialassistant.data.utils.toMpesaDate
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 class DateConversion {
 
@@ -53,6 +56,14 @@ class DateConversion {
         val input = "99:99"
         val result = input.toAppTime()
         assertEquals("99:99", result)
+    }
+
+    @Test
+    fun `get week range`() {
+        val (s, e) = LocalDate.now().getWeekRange(startOfWeek = DayOfWeek.SUNDAY)
+        println(
+            "start: $s, end: $e"
+        )
     }
 
 }

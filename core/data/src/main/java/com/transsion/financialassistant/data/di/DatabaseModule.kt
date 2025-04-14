@@ -106,4 +106,9 @@ object DatabaseModule {
     @Singleton
     fun providesReceiveMshwariDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.receiveMshwariDao()
+
+    @Provides
+    @Singleton
+    fun providesUnifiedTransactionsDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unifiedTransactionsDao()
 }

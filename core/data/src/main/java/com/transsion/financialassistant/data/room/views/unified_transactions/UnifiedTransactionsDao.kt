@@ -7,16 +7,35 @@ import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 
 @Dao
 interface UnifiedTransactionsDao {
-    @Query("SELECT * FROM UnifiedTransaction WHERE transactionType = 'IN' ORDER BY date DESC, time DESC")
+
+    @Query("SELECT * FROM UnifiedTransaction ORDER BY date DESC, time DESC")
+    fun getAllTransactions(): PagingSource<Int, UnifiedTransaction>
+
+    @Query("SELECT * FROM UnifiedTransaction ORDER BY date ASC, time ASC")
+    fun getAllTransactionsReverse(): PagingSource<Int, UnifiedTransaction>
+
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'IN' ORDER BY date DESC, time DESC")
     fun getAllTransactionsIn(): PagingSource<Int, UnifiedTransaction>
 
-    @Query("SELECT * FROM UnifiedTransaction WHERE transactionType = 'IN' ORDER BY date ASC, time ASC")
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'IN' AND date BETWEEN :startDate AND :endDate ORDER BY date DESC, time DESC")
+    fun getAllTransactionsInForDate(
+        startDate: String,
+        endDate: String
+    ): PagingSource<Int, UnifiedTransaction>
+
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'IN' ORDER BY date ASC, time ASC")
     fun getAllTransactionsInReverse(): PagingSource<Int, UnifiedTransaction>
 
-    @Query("SELECT * FROM UnifiedTransaction WHERE transactionType = 'OUT' ORDER BY date DESC, time DESC")
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'OUT' ORDER BY date DESC, time DESC")
     fun getAllTransactionsOut(): PagingSource<Int, UnifiedTransaction>
 
-    @Query("SELECT * FROM UnifiedTransaction WHERE transactionType = 'OUT' ORDER BY date ASC, time ASC")
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'OUT' AND date BETWEEN :startDate AND :endDate ORDER BY date DESC, time DESC")
+    fun getAllTransactionsOutForDate(
+        startDate: String,
+        endDate: String
+    ): PagingSource<Int, UnifiedTransaction>
+
+    @Query("SELECT * FROM UnifiedTransaction WHERE transactionCategory = 'OUT' ORDER BY date ASC, time ASC")
     fun getAllTransactionsOutReverse(): PagingSource<Int, UnifiedTransaction>
 
     @Query("SELECT * FROM UnifiedTransaction WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC, time DESC")

@@ -30,6 +30,7 @@ import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiD
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
+import com.transsion.financialassistant.data.room.views.unified_transactions.UnifiedTransactionsDao
 
 @Database(
     entities = [
@@ -68,6 +69,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun bundlesPurchaseDao(): BundlesPurchaseDao
     abstract fun financialAssistantDao(): FinancialAssistantDao
     abstract fun receivePochiDao(): ReceivePochiDao
+    abstract fun unifiedTransactionsDao(): UnifiedTransactionsDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
