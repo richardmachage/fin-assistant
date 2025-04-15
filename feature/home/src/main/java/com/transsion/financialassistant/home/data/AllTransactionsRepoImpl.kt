@@ -8,6 +8,8 @@ import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
 import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
 import com.transsion.financialassistant.data.room.views.unified_transactions.UnifiedTransactionsDao
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.data.utils.getLastMonthRange
@@ -20,13 +22,13 @@ import com.transsion.financialassistant.home.screens.all_transactions.filter.Fil
 import kotlinx.coroutines.flow.Flow
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 
 class AllTransactionsRepoImpl @Inject constructor(
     val dao: FinancialAssistantDao,
-    private val unifiedTransactionsDao: UnifiedTransactionsDao
+    private val unifiedTransactionsDao: UnifiedTransactionsDao,
+    private val receivePochiDao: ReceivePochiDao
 ) : AllTransactionsRepo {
 
     private val TAG = "AllTransactionRepoImpl"
@@ -120,6 +122,17 @@ class AllTransactionsRepoImpl @Inject constructor(
         ).flow
     }
 
+    override fun getAllBusinessTransactions(): Flow<PagingData<ReceivePochiEntity>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20
+            ),
+            pagingSourceFactory = {
+                receivePochiDao.getAllPaged()
+            }
+        ).flow
+    }
+
     private fun byPeriodFilter(period: FilterPeriod?) = when (period) {
         FilterPeriod.MOST_RECENT -> {
             unifiedTransactionsDao.getAllTransactions()
@@ -165,136 +178,6 @@ class AllTransactionsRepoImpl @Inject constructor(
         }
     }
 
-    private fun byPeriodAndSource(filterState: FilterState) = when (filterState.period) {
-        FilterPeriod.MOST_RECENT -> {
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsIn()
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOut()
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.OLDEST_FIRST -> {
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInReverse()
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutReverse()
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.TODAY -> {
-            val today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    today,
-                    today
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutForDate(
-                    today,
-                    today
-                )
-
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.YESTERDAY -> {
-            val yesterday =
-                LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    yesterday,
-                    yesterday
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsForDate(
-                    yesterday,
-                    yesterday
-                )
-
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.THIS_WEEK -> {
-            val (startWeek, endWeek) = LocalDate.now().getWeekRange(DayOfWeek.SUNDAY)
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    startWeek,
-                    endWeek
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutForDate(
-                    startWeek,
-                    endWeek
-                )
-
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.LAST_WEEK -> {
-            val (startWeek, endWeek) = LocalDate.now().getLastWeekRange(DayOfWeek.SUNDAY)
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    startWeek,
-                    endWeek
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutForDate(
-                    startWeek,
-                    endWeek
-                )
-
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        FilterPeriod.THIS_MONTH -> {
-            val (startMonth, endMonth) = LocalDate.now().getMonthRange()
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    startMonth,
-                    endMonth
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutForDate(
-                    startMonth,
-                    endMonth
-                )
-
-                null -> byPeriodFilter(filterState.period)
-
-            }
-        }
-
-        FilterPeriod.LAST_MONTH -> {
-            val (startMonth, endMonth) = LocalDate.now().getLastMonthRange()
-            //unifiedTransactionsDao.getAllTransactionsForDate(startMonth, endMonth)
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInForDate(
-                    startMonth,
-                    endMonth
-                )
-
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutForDate(
-                    startMonth,
-                    endMonth
-                )
-
-                null -> byPeriodFilter(filterState.period)
-            }
-        }
-
-        null -> {
-            when (filterState.source) {
-                TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsIn()
-                TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOut()
-                null -> byPeriodFilter(null)
-            }
-        }
-    }
 
     private fun byPeriodAndSourceLogs(filterState: FilterState) = when (filterState.period) {
         FilterPeriod.MOST_RECENT -> {
