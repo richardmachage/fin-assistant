@@ -78,7 +78,7 @@ class LandingViewModel @Inject constructor(
                     // Step 6: If work succeeds, proceed to mark messages as read
                     when (info?.state) {
                         WorkInfo.State.ENQUEUED -> {
-                            _workerState.value = "Waiting for conditions..."
+                            _workerState.value = "Initializing Process"
                         }
 
                         WorkInfo.State.RUNNING -> {
