@@ -16,5 +16,5 @@ data class ReceivePochiEntity(
     val time: String,
     val businessBalance: Double,
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
-    val transactionType: TransactionType = TransactionType.RECEIVE_MSHWARI
+    val transactionType: TransactionType = TransactionType.RECEIVE_POCHI
 )
