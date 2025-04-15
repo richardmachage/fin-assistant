@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -24,9 +22,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,8 +35,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
@@ -50,7 +43,6 @@ import com.transsion.financialassistant.home.screens.components.InsightCateToggl
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
-import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -68,9 +60,8 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
-        initialValue = emptyList<UnifiedTransaction>()
+        initialValue = emptyList()
     )
-    val recentTransactions = viewModel.recentTransactions.collectAsStateWithLifecycle(initialValue = emptyList<UnifiedTransaction>())
     val mpesaBalance by viewModel.mpesaBalance.collectAsState()
 
     Scaffold(
@@ -108,22 +99,22 @@ fun HomeScreen(
                 },
                 actions = {
                     //search
-                    IconButtonFa(
+                    /*IconButtonFa(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
                             //TODO navigate to search screen
                         }
-                    )
+                    )*/
                     //more
 
-                    IconButtonFa(
+                    /*IconButtonFa(
                         icon = Icons.Default.MoreVert,
                         colors = colors(),
                         onClick = {
                             //TODO
                         }
-                    )
+                    )*/
                 }
             )
         },
@@ -155,8 +146,7 @@ fun HomeScreen(
                 moneyOut = state.moneyOut
             )
 
-            var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
-
+            // var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
 
             Box(
                 modifier = Modifier
@@ -167,12 +157,13 @@ fun HomeScreen(
                 InsightCateToggleSegmentedButton(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    selectedOption = selectedCat,
+                    selectedOption = state.insightCategory,
                     onOptionSelected = {
-                        selectedCat = it
+                        viewModel.onInsightCategoryChange(it)
                     }
                 )
             }
+
             VerticalSpacer(10)
             HorizontalDivider()
 
@@ -193,7 +184,6 @@ fun HomeScreen(
                     text = "$viewAll ($allTransactions)",
                     onClick = {navController.navigate(HomeRoutes.AllTransactions)}
                 )
-
             }
 
             LazyColumn(

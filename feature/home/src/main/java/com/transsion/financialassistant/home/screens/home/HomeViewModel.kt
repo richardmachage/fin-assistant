@@ -2,13 +2,17 @@ package com.transsion.financialassistant.home.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,7 +30,15 @@ class HomeViewModel @Inject constructor(
     init {
         getTotalMoneyInAndOutToday()
     }
-    val recentTransactions = recentTransactionsRepo.getRecentTransactions().stateIn(
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val recentTransactions =
+        state.map { it.insightCategory }
+            .flatMapLatest {
+                recentTransactionsRepo.getRecentTransactions(it)
+            }
+
+            .stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = emptyList<UnifiedTransaction>()
@@ -59,6 +71,12 @@ class HomeViewModel @Inject constructor(
             }
 
 
+        }
+    }
+
+    fun onInsightCategoryChange(insightCategory: InsightCategory) {
+        _state.update {
+            it.copy(insightCategory = insightCategory)
         }
     }
 }
