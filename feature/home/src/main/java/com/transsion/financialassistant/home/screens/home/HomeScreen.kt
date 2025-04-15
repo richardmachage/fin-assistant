@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,6 +64,7 @@ fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
@@ -99,7 +101,9 @@ fun HomeScreen(
                 },
                 title = {
                     Column {
-                        BigTittleText(text = "Good Morning,")
+                        BigTittleText(
+                            text = viewModel.getGreetingBasedOnTime(context)
+                        )
 
                     }
                 },
