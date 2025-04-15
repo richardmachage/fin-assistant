@@ -201,7 +201,7 @@ ORDER BY totalAmount DESC;
     """
     )
 
-    suspend fun getAllTransactionMoneyOutAmount():Double?
+    suspend fun getAllTransactionMoneyOutAmount(): Double?
 
     @Query(
         """
@@ -209,14 +209,14 @@ ORDER BY totalAmount DESC;
         """
     )
 
-    suspend fun getNumberofAllTransactionsIn():Int?
+    suspend fun getNumberofAllTransactionsIn(): Int?
 
     @Query(
         """
             SELECT COUNT(*) FROM UnifiedOutGoingTransaction
         """
     )
-    suspend fun getNumberofAllTransactionsOut():Int?
+    suspend fun getNumberofAllTransactionsOut(): Int?
 
 
     /**
@@ -243,6 +243,17 @@ ORDER BY totalAmount DESC;
     )
 
     fun getRecentTransactions(): Flow<List<UnifiedTransaction>>
+
+
+    /**Get Mpesa balance*/
+    @Query(
+        """
+        SELECT mpesaBalance FROM UnifiedTransaction 
+        ORDER BY date DESC, time DESC  
+        LIMIT 1
+            """
+    )
+    fun getMpesaBalance(): Flow<Double>
 
 
 }
