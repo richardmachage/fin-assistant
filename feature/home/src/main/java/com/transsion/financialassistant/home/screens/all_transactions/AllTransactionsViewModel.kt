@@ -3,6 +3,9 @@ package com.transsion.financialassistant.home.screens.all_transactions
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.map
+import com.transsion.financialassistant.data.models.InsightCategory
+import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.domain.AllTransactionsRepo
 import com.transsion.financialassistant.home.screens.all_transactions.filter.FilterState
@@ -10,7 +13,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AllTransactionsViewModel @Inject constructor(
     private val allTransactionsRepo: AllTransactionsRepo
-): ViewModel() {
+) : ViewModel() {
     private var _state = MutableStateFlow(AllTransactionsScreenState())
     val state = _state.asStateFlow()
 
@@ -31,11 +36,33 @@ class AllTransactionsViewModel @Inject constructor(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val filterResults = filters
-        .flatMapLatest {
-            allTransactionsRepo.getAllTransactions(it)
-                .cachedIn(viewModelScope)
+    val filterResults =
+        combine(filters, state.map { it.insightCategory }) { filters, insightCategory ->
+            filters to insightCategory
         }
+            .flatMapLatest { (filters, insightCategory) ->
+                when (insightCategory) {
+                    InsightCategory.PERSONAL -> allTransactionsRepo.getAllTransactions(filters)
+                    InsightCategory.BUSINESS -> allTransactionsRepo.getAllBusinessTransactions()
+                        .map {
+                            it.map { re ->
+                                UnifiedTransaction(
+                                    transactionCode = re.transactionCode,
+                                    phone = re.phone,
+                                    amount = re.amount,
+                                    date = re.date,
+                                    time = re.time,
+                                    name = re.receiveFromName,
+                                    transactionCost = 0.0,
+                                    mpesaBalance = re.businessBalance,
+                                    transactionCategory = re.transactionCategory,
+                                    transactionType = re.transactionType
+                                )
+                            }
+                        }
+                }
+                    .cachedIn(viewModelScope)
+            }
 
     private fun getMoneyIn() {
         viewModelScope.launch {
@@ -65,7 +92,7 @@ class AllTransactionsViewModel @Inject constructor(
         }
     }
 
-    private fun getMoneyOut(){
+    private fun getMoneyOut() {
         viewModelScope.launch {
             allTransactionsRepo.getTotalMoneyOut()
                 .onSuccess { totalMoneyOut ->
@@ -79,7 +106,7 @@ class AllTransactionsViewModel @Inject constructor(
                     // TODO
                 }
 
-            }
+        }
     }
 
     private fun getNumberOfTransactionsOut() {
@@ -94,7 +121,12 @@ class AllTransactionsViewModel @Inject constructor(
         }
     }
 
-    private fun refreshMoneyInOutCardInfo(){
+    fun onInsightCategoryChange(insightCategory: InsightCategory) {
+        _state.update { it.copy(insightCategory = insightCategory) }
+        refreshMoneyInOutCardInfo()
+    }
+
+    private fun refreshMoneyInOutCardInfo() {
         getMoneyIn()
         getMoneyOut()
         getNumberOfTransactionsIn()

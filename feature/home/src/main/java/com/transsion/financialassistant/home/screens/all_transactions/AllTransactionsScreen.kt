@@ -42,7 +42,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.wear.compose.material.Icon
-import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.home.R
@@ -167,13 +166,13 @@ fun AllTransactionsScreen(
                 AnimatedContent(targetState = viewModel.filters.collectAsState()) { filters ->
                     when (filters.value.isFilterEmpty()) {
                         true -> {
-                            var selectedCategory by remember { mutableStateOf(InsightCategory.PERSONAL) }
+                            // var selectedCategory by remember { mutableStateOf(InsightCategory.PERSONAL) }
 
                             InsightCateToggleSegmentedButton(
                                 modifier = Modifier.fillMaxWidth(0.8f),
-                                selectedOption = selectedCategory,
+                                selectedOption = state.insightCategory,
                                 onOptionSelected = {
-                                    selectedCategory = it
+                                    viewModel.onInsightCategoryChange(it)
                                 }
                             )
                         }
