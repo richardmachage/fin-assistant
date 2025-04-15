@@ -55,4 +55,12 @@ interface ReceivePochiDao {
     )
     fun getMpesaBalance(): Flow<Double>
 
+
+    @Query(
+        """
+            SELECT COUNT(transactionCode) FROM ReceivePochiEntity
+        """
+    )
+    fun getNumOfAllTransactions(): Flow<Int>
+
 }

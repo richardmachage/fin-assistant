@@ -65,6 +65,7 @@ fun HomeScreen(
         initialValue = emptyList()
     )
     val mpesaBalance by viewModel.mpesaBalance.collectAsState()
+    val numOfAllTransactions by viewModel.numOfAllTransactions.collectAsState()
 
     Scaffold(
         topBar = {
@@ -180,9 +181,8 @@ fun HomeScreen(
 
                 //view all
                 val viewAll = stringResource(R.string.view_all)
-                val allTransactions = 214
                 ClickableText(
-                    text = "$viewAll ($allTransactions)",
+                    text = "$viewAll ($numOfAllTransactions)",
                     onClick = {navController.navigate(HomeRoutes.AllTransactions)}
                 )
             }
