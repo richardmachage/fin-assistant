@@ -59,7 +59,10 @@ class RecentTransactionRepoImpl @Inject constructor(
         }
     }
 
-    override fun getMpesaBalance(): Flow<Double> {
-        return dao.getMpesaBalance()
+    override fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double> {
+        return when (insightCategory) {
+            InsightCategory.PERSONAL -> dao.getMpesaBalance()
+            InsightCategory.BUSINESS -> receivePochiDao.getMpesaBalance()
+        }
     }
 }
