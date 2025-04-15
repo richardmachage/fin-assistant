@@ -241,7 +241,6 @@ ORDER BY totalAmount DESC;
         LIMIT 10
         """
     )
-
     fun getRecentTransactions(): Flow<List<UnifiedTransaction>>
 
 
