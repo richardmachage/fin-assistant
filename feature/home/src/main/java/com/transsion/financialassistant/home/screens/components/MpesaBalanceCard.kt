@@ -51,8 +51,6 @@ fun MpesaBalanceCard(
     balance: String = "236,900.60",
     moneyIn: String = "236,900.60",
     moneyOut: String = "177,500.90",
-    // transactionsIn: String = "14",
-    //transactionsOut: String = "256",
 ) {
     ElevatedCard(
         modifier = modifier,
