@@ -141,7 +141,8 @@ fun HomeScreen(
             MpesaBalanceCard(
                 balance = mpesaBalance.toString().formatAsCurrency(),
                 moneyIn = state.moneyIn,
-                moneyOut = state.moneyOut
+                moneyOut = state.moneyOut,
+                insightCategory = state.insightCategory
             )
 
             Box(

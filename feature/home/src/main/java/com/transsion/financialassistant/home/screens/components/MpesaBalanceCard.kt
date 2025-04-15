@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.presentation.components.KesAmount
@@ -51,11 +52,11 @@ fun MpesaBalanceCard(
     balance: String = "236,900.60",
     moneyIn: String = "236,900.60",
     moneyOut: String = "177,500.90",
+    insightCategory: InsightCategory = InsightCategory.PERSONAL
 ) {
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(10),
-
         ) {
         VerticalSpacer(10)
 
@@ -66,16 +67,23 @@ fun MpesaBalanceCard(
             text = "$today, ${getAmOrPm()}"
         )
 
-
         //balance
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(
-                text = stringResource(R.string.mpesa_balance), fontSize = 13.sp
-            )
+            when (insightCategory) {
+                InsightCategory.PERSONAL -> TitleText(
+                    text = stringResource(R.string.mpesa_balance),
+                    fontSize = 13.sp
+                )
+
+                InsightCategory.BUSINESS -> TitleText(
+                    text = stringResource(R.string.pochi_balance),
+                    fontSize = 13.sp
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
@@ -101,35 +109,37 @@ fun MpesaBalanceCard(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingMedium),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //money In
-            InOutCardCategory(
-                category = TransactionCategory.IN,
-                amount = moneyIn,
-                // transactions = transactionsIn
-            )
-            //divider
-            VerticalDivider(
-                Modifier
-                    .height(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
 
-            //money out
-            InOutCardCategory(
-                category = TransactionCategory.OUT,
-                amount = moneyOut,
-                // transactions = transactionsOut
-            )
+        if (insightCategory == InsightCategory.PERSONAL) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingMedium),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //money In
+                InOutCardCategory(
+                    category = TransactionCategory.IN,
+                    amount = moneyIn,
+                    // transactions = transactionsIn
+                )
+                //divider
+                VerticalDivider(
+                    Modifier
+                        .height(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
+
+                //money out
+                InOutCardCategory(
+                    category = TransactionCategory.OUT,
+                    amount = moneyOut,
+                    // transactions = transactionsOut
+                )
+            }
+            VerticalSpacer(10)
         }
-        VerticalSpacer(10)
-
     }
 }
 
