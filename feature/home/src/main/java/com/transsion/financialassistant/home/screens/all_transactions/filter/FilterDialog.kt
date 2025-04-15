@@ -20,13 +20,14 @@ import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
@@ -41,18 +42,18 @@ import com.transsion.financialassistant.presentation.utils.paddingLarge
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun TransactionFilterDialog(
-    viewModel: FilterViewModel = hiltViewModel(),
+    filter: FilterState,//viewModel: FilterViewModel = hiltViewModel(),
     onDismiss: () -> Unit,
     onApply: (FilterState) -> Unit
-){
-    val filterState by viewModel.filterState.collectAsStateWithLifecycle()
+) {
+    var filterState by remember { mutableStateOf(filter) }
 
     Dialog(onDismissRequest = onDismiss) {
-        Surface (
+        Surface(
             shape = RoundedCornerShape(15),
             color = MaterialTheme.colorScheme.background,
             tonalElevation = 8.dp
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -74,7 +75,8 @@ fun TransactionFilterDialog(
                             text = source.description,
                             selected = filterState.source == source,
                             onClick = {
-                                viewModel.onSourceChanged(source)
+                                filterState = filterState.copy(source = source)
+                                //viewModel.onSourceChanged(source)
                             }
                         )
                     }
@@ -92,7 +94,9 @@ fun TransactionFilterDialog(
                         FilterChip(
                             shape = RoundedCornerShape(15),
                             selected = filterState.period == period,
-                            onClick = { viewModel.onPeriodChanged(period) },
+                            onClick = {
+                                filterState = filterState.copy(period = period)
+                            },
                             label = { NormalText(text = period.label) },
                             colors = FilterChipDefaults.filterChipColors(
                                 labelColor = MaterialTheme.colorScheme.onBackground,
@@ -110,14 +114,13 @@ fun TransactionFilterDialog(
                 VerticalSpacer(24)
 
                 // Apply and Discard Button
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                ){
+                ) {
                     OutlineButtonFa(
                         text = stringResource(R.string.discard),
                         onClick = {
-                            viewModel.resetFilters()
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f)
@@ -128,7 +131,7 @@ fun TransactionFilterDialog(
                     FilledButtonFa(
                         text = stringResource(R.string.apply),
                         onClick = {
-                            onApply(viewModel.applyFilters())
+                            onApply(filterState)
                             onDismiss()
                         },
                         modifier = Modifier.weight(1f)

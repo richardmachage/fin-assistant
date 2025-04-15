@@ -4,10 +4,12 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 
 
 data class FilterState(
-    val source: TransactionCategory? = null,
-    val period: FilterPeriod? = null,
-    val selectedCategories: List<FilterCategory> = emptyList()
+    var source: TransactionCategory? = null,
+    var period: FilterPeriod? = null,
+    var selectedCategories: List<FilterCategory> = emptyList()
 )
+
+fun FilterState.isFilterEmpty() = source == null && period == null && selectedCategories.isEmpty()
 
 //enum class FilterSource { MONEY_IN, MONEY_OUT }
 
