@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -211,10 +210,15 @@ fun LandingScreen(
                                     }
                                     VerticalSpacer(5)
                                     //Loading transactions... text
-                                    TitleText(text = stringResource(R.string.loading_transactions))
+                                    TitleText(
+                                        text = stringResource(
+                                            if (progress < 0.1f)
+                                                R.string.querying_data
+                                            else R.string.loading_transactions
+                                        )
+                                    )
                                     VerticalSpacer(10)
                                 }
-
 
                                 /*Column(
                                     modifier = Modifier.fillMaxWidth()
@@ -297,101 +301,6 @@ fun LandingScreen(
                     onClick = { showPermissionDialog = true },
                     text = "Please allow permission to read transactions"
                 )
-            }
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun Prev2() {
-    val progress by remember { mutableStateOf(0.12f) }
-    val currentType by remember { mutableStateOf("Initializing Process") }
-    val processState by remember { mutableStateOf("Process is running") }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            // var started by remember { mutableStateOf(false) }
-
-            ElevatedCard(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(15)
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                )
-                {
-                    //circular progress bar
-                    //-> to be shown when process state is loading
-                    AnimatedVisibility(
-                        visible = processState == "Initializing Process"
-                    ) {
-                        CircularProgressIndicator(
-                            color = FAColors.green,
-                            strokeWidth = 2.dp
-                        )
-                    }
-                    AnimatedVisibility(
-                        modifier = Modifier.fillMaxWidth(),
-                        visible = processState == "Process is running"
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(paddingMedium),
-                        ) {
-                            LinearProgressIndicator(
-                                modifier = Modifier
-                                    .padding(paddingMedium)
-                                    .fillMaxWidth(),
-                                progress = { progress },
-                                color = FAColors.lightGreen,
-                                trackColor = FAColors.green,
-                                drawStopIndicator = {},
-                            )
-                            NormalText(
-                                fontWeight = FontWeight.Bold,
-                                text = "${(progress * 100).toInt()}%",
-                                fontSize = 16.sp
-                            )
-
-                        }
-                    }
-                    //Loading transactions... text
-                    TitleText(
-                        text = stringResource(
-                            when (processState) {
-                                "Initializing Process" -> R.string.querying_data
-                                "Process is running" -> R.string.loading_transactions
-                                "Completed successfully" -> R.string.completed_loading
-                                else -> R.string.loading_transactions
-                            }
-                        )
-                    )
-                }
-
-
-                /*Column(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    NormalText(text = "Processing : $currentType")
-                    VerticalSpacer(8)
-                    LinearProgressIndicator(
-                        modifier = Modifier
-                            .padding(paddingSmall)
-                            .fillMaxWidth(),
-                        progress = { progress },
-                    )
-                    VerticalSpacer(8)
-                    NormalText(text = "${progress * 100}% completed")
-                }*/
             }
         }
     }
