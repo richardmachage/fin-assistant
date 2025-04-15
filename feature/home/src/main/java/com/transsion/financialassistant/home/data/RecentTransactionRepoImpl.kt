@@ -1,16 +1,20 @@
 package com.transsion.financialassistant.home.data
 
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
 import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapNotNull
 import java.time.LocalDate
 import javax.inject.Inject
 
 class RecentTransactionRepoImpl @Inject constructor(
-    private val dao: FinancialAssistantDao
-): RecentTransactionRepo {
+    private val dao: FinancialAssistantDao,
+    private val receivePochiDao: ReceivePochiDao
+) : RecentTransactionRepo {
     private val todayDate = LocalDate.now().format(dbFormatter)
 
     override suspend fun getTotalMoneyIn(): Result<Double> {
@@ -33,8 +37,26 @@ class RecentTransactionRepoImpl @Inject constructor(
         }
     }
 
-    override  fun getRecentTransactions(): Flow<List<UnifiedTransaction>> {
-        return dao.getRecentTransactions()
+    override fun getRecentTransactions(insightCategory: InsightCategory): Flow<List<UnifiedTransaction>> {
+        return when (insightCategory) {
+            InsightCategory.PERSONAL -> dao.getRecentTransactions()
+            InsightCategory.BUSINESS -> receivePochiDao.getRecentTransactions().mapNotNull { list ->
+                list.mapNotNull {
+                    UnifiedTransaction(
+                        transactionCode = it.transactionCode,
+                        phone = it.phone,
+                        amount = it.amount,
+                        date = it.date,
+                        time = it.time,
+                        name = it.receiveFromName,
+                        transactionCost = 0.0,
+                        mpesaBalance = it.businessBalance,
+                        transactionCategory = it.transactionCategory,
+                        transactionType = it.transactionType
+                    )
+                }
+            }
+        }
     }
 
     override fun getMpesaBalance(): Flow<Double> {
