@@ -88,8 +88,6 @@ fun HomeScreen(
                             tint = FAColors.green
                         )
                     }
-
-
                 },
                 title = {
                     Column {
@@ -145,8 +143,6 @@ fun HomeScreen(
                 moneyIn = state.moneyIn,
                 moneyOut = state.moneyOut
             )
-
-            // var selectedCat by remember { mutableStateOf(InsightCategory.PERSONAL) }
 
             Box(
                 modifier = Modifier
