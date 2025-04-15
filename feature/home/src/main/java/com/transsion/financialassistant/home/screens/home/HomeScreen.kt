@@ -183,7 +183,9 @@ fun HomeScreen(
                 val viewAll = stringResource(R.string.view_all)
                 ClickableText(
                     text = "$viewAll ($numOfAllTransactions)",
-                    onClick = {navController.navigate(HomeRoutes.AllTransactions)}
+                    onClick = {
+                        navController.navigate(HomeRoutes.AllTransactions(insightCategory = state.insightCategory))
+                    }
                 )
             }
 
