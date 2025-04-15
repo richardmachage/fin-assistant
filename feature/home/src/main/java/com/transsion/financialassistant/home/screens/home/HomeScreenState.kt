@@ -9,5 +9,6 @@ data class HomeScreenState(
     val insightCategory: InsightCategory = InsightCategory.PERSONAL,
     val recentTransactions: List<RecentsUI> = emptyList(),
     val moneyIn: String = "0.0",
-    val moneyOut: String = ".0",
+    val moneyOut: String = "0.0",
+    val mpesaBalance: String = "0.0"
 )

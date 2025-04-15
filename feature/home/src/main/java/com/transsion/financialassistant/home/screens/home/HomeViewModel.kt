@@ -32,6 +32,13 @@ class HomeViewModel @Inject constructor(
         initialValue = emptyList<UnifiedTransaction>()
     )
 
+    val mpesaBalance = recentTransactionsRepo.getMpesaBalance()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = 0.0
+        )
+
     private fun getTotalMoneyInAndOutToday() {
         viewModelScope.launch {
 
@@ -50,6 +57,7 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+
 
         }
     }

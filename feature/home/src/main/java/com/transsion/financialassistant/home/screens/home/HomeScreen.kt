@@ -22,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.navigation.HomeRoutes
@@ -69,6 +71,7 @@ fun HomeScreen(
         initialValue = emptyList<UnifiedTransaction>()
     )
     val recentTransactions = viewModel.recentTransactions.collectAsStateWithLifecycle(initialValue = emptyList<UnifiedTransaction>())
+    val mpesaBalance by viewModel.mpesaBalance.collectAsState()
 
     Scaffold(
         topBar = {
@@ -147,7 +150,7 @@ fun HomeScreen(
             ) {
 
             MpesaBalanceCard(
-                balance = "1,900.0",
+                balance = mpesaBalance.toString().formatAsCurrency(),
                 moneyIn = state.moneyIn,
                 moneyOut = state.moneyOut
             )
