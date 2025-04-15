@@ -10,8 +10,6 @@ import com.transsion.financialassistant.data.models.TransactionType
         UNION ALL
         SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, NULL AS name  FROM ReceiveMshwariEntity
         UNION ALL
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,businessBalance as mpesaBalance, NULL AS name FROM ReceivePochiEntity
-        UNION ALL
         SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, agentDepositedTo as Name FROM DepositMoneyEntity
     """
 )
