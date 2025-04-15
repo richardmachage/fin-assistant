@@ -3,7 +3,6 @@ package com.transsion.financialassistant.home.screens.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val recentTransactionsRepo: RecentTransactionRepo
@@ -41,10 +41,13 @@ class HomeViewModel @Inject constructor(
             .stateIn(
         viewModelScope,
         started = SharingStarted.WhileSubscribed(),
-        initialValue = emptyList<UnifiedTransaction>()
+                initialValue = emptyList()
     )
 
-    val mpesaBalance = recentTransactionsRepo.getMpesaBalance()
+    val mpesaBalance = state.map { it.insightCategory }
+        .flatMapLatest {
+            recentTransactionsRepo.getMpesaBalance(it)
+        }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
