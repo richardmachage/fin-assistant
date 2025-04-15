@@ -71,6 +71,7 @@ fun AllTransactionsScreen(
     var showDialog by remember { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val filterResults = viewModel.filterResults.collectAsLazyPagingItems()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -232,12 +233,15 @@ fun AllTransactionsScreen(
 
             VerticalSpacer(8)
 
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium),
             ) {
-                items(filterResults.itemCount) { index ->
+
+
+            items(filterResults.itemCount) { index ->
                     val item = filterResults[index]
                     if (item != null) {
                         TransactionUiListItem(
@@ -296,11 +300,6 @@ private fun FilterItem(name: String, onClick: () -> Unit = {}) {
                 fontSize = 16.sp,
                 textColor = Color.Black
             )
-            /*IconButton(
-                onClick = onClick
-            ) {
-                Icon(imageVector = Icons.Default.Clear, contentDescription = "clear")
-            }*/
 
         }
     }
