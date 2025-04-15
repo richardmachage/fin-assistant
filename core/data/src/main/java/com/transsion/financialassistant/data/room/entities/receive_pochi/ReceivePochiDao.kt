@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.data.room.entities.receive_pochi
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -26,6 +27,11 @@ interface ReceivePochiDao {
     @Query("SELECT * FROM ReceivePochiEntity")
     fun getAll(): Flow<List<ReceivePochiEntity>>
 
+
+    @Query("SELECT * FROM ReceivePochiEntity ORDER BY date DESC, time DESC")
+    fun getAllPaged(): PagingSource<Int, ReceivePochiEntity>
+
+
     @Query("SELECT * FROM ReceivePochiEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     suspend fun getReceivePochiTransactionsByDate(startDate: String, endDate: String): List<ReceivePochiEntity>
 
@@ -37,5 +43,16 @@ interface ReceivePochiDao {
         """
     )
     fun getRecentTransactions(): Flow<List<ReceivePochiEntity>>
+
+
+    /**Get Mpesa balance*/
+    @Query(
+        """
+        SELECT businessBalance FROM ReceivePochiEntity 
+        ORDER BY date DESC, time DESC  
+        LIMIT 1
+            """
+    )
+    fun getMpesaBalance(): Flow<Double>
 
 }
