@@ -36,4 +36,8 @@ class RecentTransactionRepoImpl @Inject constructor(
     override  fun getRecentTransactions(): Flow<List<UnifiedTransaction>> {
         return dao.getRecentTransactions()
     }
+
+    override fun getMpesaBalance(): Flow<Double> {
+        return dao.getMpesaBalance()
+    }
 }
