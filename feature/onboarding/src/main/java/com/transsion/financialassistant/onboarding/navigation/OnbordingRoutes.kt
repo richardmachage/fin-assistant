@@ -35,9 +35,6 @@ sealed interface OnboardingRoutes {
     @Serializable
     object SurveyBusinessScreens: OnboardingRoutes
 
-    @Serializable
-    object HomeScreen: OnboardingRoutes
-
 
 
 }
