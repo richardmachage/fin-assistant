@@ -32,7 +32,13 @@ import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiD
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
-import com.transsion.financialassistant.data.room.views.unified_transactions.UnifiedTransactionsDao
+import com.transsion.financialassistant.data.room.views.business.UnifiedIncomingTransactionsBusiness
+import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionBusiness
+import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
+import com.transsion.financialassistant.data.room.views.personal.UnifiedIncomingTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedOutGoingTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionsPersonalDao
 
 @Database(
     entities = [
@@ -51,7 +57,14 @@ import com.transsion.financialassistant.data.room.views.unified_transactions.Uni
         ReceivePochiEntity::class,
         MoveToPochiEntity::class
     ],
-    views = [UnifiedIncomingTransaction::class, UnifiedOutGoingTransaction::class, UnifiedTransaction::class],
+    views = [
+        UnifiedIncomingTransaction::class,
+        UnifiedOutGoingTransaction::class,
+        UnifiedTransactionPersonal::class,
+        UnifiedTransactionBusiness::class,
+        UnifiedIncomingTransactionsBusiness::class
+    ],
+
     version = 1,
     exportSchema = true
 
@@ -72,8 +85,9 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun bundlesPurchaseDao(): BundlesPurchaseDao
     abstract fun financialAssistantDao(): FinancialAssistantDao
     abstract fun receivePochiDao(): ReceivePochiDao
-    abstract fun unifiedTransactionsDao(): UnifiedTransactionsDao
+    abstract fun unifiedTransactionsDao(): UnifiedTransactionsPersonalDao
     abstract fun moveToPochiDao(): MoveToPochiDao
+    abstract fun unifiedBusinessDao(): UnifiedTransactionsBusinessDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null

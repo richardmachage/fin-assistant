@@ -6,6 +6,9 @@ import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
 import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
 import com.transsion.financialassistant.data.models.DailyTransactionsTime
+import com.transsion.financialassistant.data.room.views.personal.UnifiedIncomingTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedOutGoingTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import kotlinx.coroutines.flow.Flow
 
 
@@ -58,10 +61,10 @@ interface FinancialAssistantDao {
     WHERE  date BETWEEN :startDate AND :endDate
     """
     )
-    suspend fun getTotalMoneyInAmount(
+    fun getTotalMoneyInAmount(
         startDate: String,
         endDate: String
-    ): Double?
+    ): Flow<Double>
 
     @Query(
         """
@@ -69,10 +72,10 @@ interface FinancialAssistantDao {
     WHERE  date BETWEEN :startDate AND :endDate
     """
     )
-    suspend fun getTotalMoneyOutAmount(
+    fun getTotalMoneyOutAmount(
         startDate: String,
         endDate: String
-    ): Double?
+    ): Flow<Double>
 
 
     @Query(
@@ -224,11 +227,11 @@ ORDER BY totalAmount DESC;
      */
     @Query(
         """
-        SELECT * FROM UnifiedTransaction
+        SELECT * FROM UnifiedTransactionPersonal
         ORDER BY date DESC, time DESC
     """
     )
-    fun getAllTransactions(): PagingSource<Int, UnifiedTransaction>
+    fun getAllTransactions(): PagingSource<Int, UnifiedTransactionPersonal>
 
 
     /** This query returns recent 10 transactions from db ordered by date, it combines both incoming and outgoing transactions
@@ -236,18 +239,18 @@ ORDER BY totalAmount DESC;
 
     @Query(
         """
-        SELECT * FROM UnifiedTransaction
+        SELECT * FROM UnifiedTransactionPersonal
         ORDER BY date DESC, time DESC
         LIMIT 10
         """
     )
-    fun getRecentTransactions(): Flow<List<UnifiedTransaction>>
+    fun getRecentTransactions(): Flow<List<UnifiedTransactionPersonal>>
 
 
     /**Get Mpesa balance*/
     @Query(
         """
-        SELECT mpesaBalance FROM UnifiedTransaction 
+        SELECT mpesaBalance FROM UnifiedTransactionPersonal 
         ORDER BY date DESC, time DESC  
         LIMIT 1
             """
@@ -257,7 +260,7 @@ ORDER BY totalAmount DESC;
 
     @Query(
         """
-            SELECT COUNT(transactionCode) FROM UnifiedTransaction
+            SELECT COUNT(transactionCode) FROM UnifiedTransactionPersonal
         """
     )
     fun getNumOfAllTransactions(): Flow<Int>
