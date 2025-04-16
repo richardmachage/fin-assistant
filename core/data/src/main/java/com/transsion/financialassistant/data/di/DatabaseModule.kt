@@ -111,4 +111,9 @@ object DatabaseModule {
     @Singleton
     fun providesUnifiedTransactionsDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.unifiedTransactionsDao()
+
+    @Provides
+    @Singleton
+    fun providesMoveToPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.moveToPochiDao()
 }

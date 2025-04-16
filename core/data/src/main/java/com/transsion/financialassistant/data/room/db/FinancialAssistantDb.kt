@@ -12,6 +12,7 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiDao
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
@@ -72,6 +73,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun financialAssistantDao(): FinancialAssistantDao
     abstract fun receivePochiDao(): ReceivePochiDao
     abstract fun unifiedTransactionsDao(): UnifiedTransactionsDao
+    abstract fun moveToPochiDao(): MoveToPochiDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
