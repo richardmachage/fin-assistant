@@ -2,7 +2,7 @@ package com.transsion.financialassistant.home.model
 
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 
 data class RecentsUI(
     val name: String,
@@ -14,7 +14,7 @@ data class RecentsUI(
 )
 
 
-fun UnifiedTransaction.toRecentsUI(): RecentsUI {
+fun UnifiedTransactionPersonal.toRecentsUI(): RecentsUI {
     return RecentsUI(
         name = this.name ?: "Unknown",
         amount = this.amount,
