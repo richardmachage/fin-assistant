@@ -215,6 +215,21 @@ fun saveStrategies(
                 Log.e("BundlesPurchaseRepo", it)
             })
     },
+
+    TransactionType.MOVE_TO_POCHI to { message ->
+        repos.moveToPochiRepo.insertMoveToPochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("MoveToPochiRepo", it)
+            }
+        )
+
+
+    },
+
     TransactionType.UNKNOWN to { _: MpesaMessage ->
         // No-op or maybe log it
         Log.w("InsertWorker", "Skipping UNKNOWN transaction")
