@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.math.abs
@@ -66,7 +67,7 @@ class InsightRepoImpl @Inject constructor(
                 Result.success(fromCache)
             } ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyIn = dao.getTotalMoneyInAmount(startDate, endDate) ?: 0.0
+                val totalMoneyIn = dao.getTotalMoneyInAmount(startDate, endDate).first()
                 AppCache.put(key = cacheKey, value = totalMoneyIn)
                 Result.success(totalMoneyIn)
             }
@@ -106,7 +107,7 @@ class InsightRepoImpl @Inject constructor(
                 Result.success(fromCache)
             } ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyOut = dao.getTotalMoneyOutAmount(startDate, endDate) ?: 0.0
+                val totalMoneyOut = dao.getTotalMoneyOutAmount(startDate, endDate).first()
                 AppCache.put(key = cacheKey, value = totalMoneyOut)
                 Result.success(totalMoneyOut)
             }
@@ -370,7 +371,10 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.MOVE_TO_POCHI -> {
                     moveToPochiDao.getRecordsByDate(startDate, endDate).map {
                         TransactionUi(
-                            title = it.transactionType.description,
+                            title = when (transactionCategory) {
+                                TransactionCategory.IN -> it.transactionType.description
+                                TransactionCategory.OUT -> "Transfer from MPESA" //FIXME take from string resource
+                            },
                             type = it.transactionType,
                             inOrOut = transactionCategory,
                             amount = it.amount.toString(),
