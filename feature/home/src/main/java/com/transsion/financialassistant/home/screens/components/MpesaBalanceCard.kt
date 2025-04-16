@@ -12,10 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -23,7 +19,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.transsion.financialassistant.data.models.InsightCategory
@@ -34,7 +29,6 @@ import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
-import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
@@ -52,8 +46,11 @@ fun MpesaBalanceCard(
     balance: String = "236,900.60",
     moneyIn: String = "236,900.60",
     moneyOut: String = "177,500.90",
-    insightCategory: InsightCategory = InsightCategory.PERSONAL
+    insightCategory: InsightCategory = InsightCategory.PERSONAL,
+    hide: Boolean,
+    onHideBalance: () -> Unit
 ) {
+
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(10),
@@ -89,7 +86,6 @@ fun MpesaBalanceCard(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                var hide by remember { mutableStateOf(false) }
 
                 KesAmount(
                     modifier = if (hide) Modifier.blur(10.dp) else Modifier,
@@ -99,7 +95,7 @@ fun MpesaBalanceCard(
 
                 IconButton(
                     onClick = {
-                        hide = !hide
+                        onHideBalance()
                     }
                 ) {
                     Icon(
@@ -202,14 +198,6 @@ fun InOutCardCategory(
         }
     }
 
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun InOutCardPrev() {
-    FinancialAssistantTheme {
-        MpesaBalanceCard()
-    }
 }
 
 
