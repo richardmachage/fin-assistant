@@ -14,6 +14,8 @@ import com.transsion.financialassistant.data.repository.transaction.buy_goods.Bu
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
@@ -113,5 +115,11 @@ abstract class RepositoryModule {
     internal abstract fun bindSendPochiRepo(
         sendPochiRepo: SendPochiRepoImpl
     ): SendPochiRepo
+
+    @Binds
+    internal abstract fun bindMoveToPochiRepo(
+        moveToPochiRepo: MoveToPochiRepoImpl
+    ): MoveToPochiRepo
+
 
 }
