@@ -5,6 +5,7 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
@@ -28,4 +29,5 @@ interface TransactionRepo {
     fun parseSendMshwariMessage(message: String, phone: String): SendMshwariEntity?
     fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity?
     fun parseWithdrawMoneyMessage(message: String, phone: String): WithdrawMoneyEntity?
+    fun parseMoveToPochiMessage(message: String, phone: String): MoveToPochiEntity?
 }

@@ -26,4 +26,7 @@ interface MoveToPochiDao {
     @Delete
     suspend fun deleteRecord(moveToPochiEntity: MoveToPochiEntity)
 
+    @Query("SELECT * FROM MoveToPochiEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getRecordsByDate(startDate: String, endDate: String): List<MoveToPochiEntity>
+
 }
