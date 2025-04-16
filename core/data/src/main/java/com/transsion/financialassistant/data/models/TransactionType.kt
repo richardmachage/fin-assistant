@@ -13,6 +13,7 @@ enum class TransactionType(val description: String) {
     RECEIVE_MSHWARI("Receive money from Mshwari"),
     AIRTIME_PURCHASE("Purchase Airtime"),
     BUNDLES_PURCHASE("Purchase Data & Bundles"),
+    MOVE_TO_POCHI("Moved to Pochi Wallet"),
     UNKNOWN("Unknown"),
     ;
 
@@ -61,6 +62,10 @@ enum class TransactionType(val description: String) {
             )//"(\\b[A-Z0-9]+\\b) confirmed\\.You bought Ksh([\\d,]+\\.?\\d{0,2}) of airtime on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(RegexOption.IGNORE_CASE)
             BUNDLES_PURCHASE -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Z ]+) for account ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex(RegexOption.IGNORE_CASE)
+
+            MOVE_TO_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed, Ksh([\\d,]+\\.?\\d{0,2}) has been moved from your M-PESA account to your business account on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.?\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.".toRegex(
+                RegexOption.IGNORE_CASE
+            )
 
             UNKNOWN -> "".toRegex()
         }
