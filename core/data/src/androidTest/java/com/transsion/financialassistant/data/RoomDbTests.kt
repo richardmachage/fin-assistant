@@ -12,6 +12,8 @@ import com.transsion.financialassistant.data.repository.transaction.buy_goods.Bu
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
@@ -54,6 +56,7 @@ class RoomDbTests {
     private lateinit var sendPochiRepo: SendPochiRepo
     private lateinit var receivePochiRepo: ReceivePochiRepo
     private lateinit var depositRepo: DepositRepo
+    private lateinit var moveToPochiRepo: MoveToPochiRepo
 
     @Before
     fun setUp() {
@@ -80,6 +83,7 @@ class RoomDbTests {
         sendPochiRepo = SendPochiRepoImpl(sendPochiDao = db.sendPochiDao())
         receivePochiRepo = ReceivePochiRepoImpl(receivePochiDao = db.receivePochiDao())
         depositRepo = DepositRepoImpl(depositMoneyDao = db.depositMoneyDao())
+        moveToPochiRepo = MoveToPochiRepoImpl(moveToPochiDao = db.moveToPochiDao())
 
     }
 
@@ -352,5 +356,28 @@ class RoomDbTests {
             }
         )
         assertTrue(successCalled)
+    }
+
+    @Test
+    fun testMoveToPochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."
+        var successCalled = false
+
+        moveToPochiRepo.insertMoveToPochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted Successfully")
+                successCalled = true
+            },
+
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
     }
 }
