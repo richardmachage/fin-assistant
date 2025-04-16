@@ -12,6 +12,7 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
@@ -46,7 +47,8 @@ import com.transsion.financialassistant.data.room.views.unified_transactions.Uni
         ReceiveMshwariEntity::class,
         SendGlobalEntity::class,
         BundlesPurchaseEntity::class,
-        ReceivePochiEntity::class
+        ReceivePochiEntity::class,
+        MoveToPochiEntity::class
     ],
     views = [UnifiedIncomingTransaction::class, UnifiedOutGoingTransaction::class, UnifiedTransaction::class],
     version = 1,
