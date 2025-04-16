@@ -11,6 +11,7 @@ data class MoveToPochiEntity(
     val amount: Double,
     val date: String,
     val time: String,
+    val phone: String,
     val businessBalance: Double,
     val mpesaBalance: Double,
     val transactionCost: Double,
