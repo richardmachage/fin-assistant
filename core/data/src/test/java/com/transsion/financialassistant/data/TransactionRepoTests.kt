@@ -232,4 +232,17 @@ class TransactionRepoTests {
         assertTrue(entity?.time == "6:44 PM")
     }
 
+    @Test
+    fun testSuccessfulParseOfMoveToPochiMessage() {
+        val moveToPochi =
+            "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."
+
+        val entity = transactionRepo.parseMoveToPochiMessage(
+            message = moveToPochi,
+            phone = "0718353505"
+        )
+
+        assertTrue(entity != null)
+    }
+
 }

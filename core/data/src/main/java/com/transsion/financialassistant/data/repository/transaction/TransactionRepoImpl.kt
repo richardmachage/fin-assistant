@@ -5,6 +5,7 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
@@ -303,6 +304,28 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             time = groups[3].toDbTime(),
             agent = groups[5],
             transactionCost = groups[7].toDouble()
+        )
+    }
+
+    override fun parseMoveToPochiMessage(message: String, phone: String): MoveToPochiEntity? {
+        val match = TransactionType.MOVE_TO_POCHI.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+
+        //FIXME should be removed in production
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        return MoveToPochiEntity(
+            transactionCode = groups[1],
+            amount = groups[2].replace(",", "").toDouble(),
+            phone = phone,
+            mpesaBalance = groups[6].replace(",", "").toDouble(),
+            date = groups[3].toDbDate(),
+            time = groups[4].toDbTime(),
+            businessBalance = groups[5].replace(",", "").toDouble(),
+            transactionCost = groups[7].replace(",", "").toDouble()
         )
     }
 
