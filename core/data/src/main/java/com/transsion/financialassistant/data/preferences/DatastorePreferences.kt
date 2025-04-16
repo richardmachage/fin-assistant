@@ -16,6 +16,7 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "fi
 class DatastorePreferences(private val context: Context) {
 
     companion object {
+        val HIDE_BALANCE_KEY = booleanPreferencesKey("hide_balance_key")
         val MPESA_NUMBER_KEY = stringPreferencesKey("mpesa_number_key")
         val LANGUAGE_KEY = stringPreferencesKey("language_key")
     }
