@@ -7,10 +7,10 @@ import androidx.paging.PagingData
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
-import com.transsion.financialassistant.data.room.views.unified_transactions.UnifiedTransactionsDao
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionsPersonalDao
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.data.utils.getLastMonthRange
 import com.transsion.financialassistant.data.utils.getLastWeekRange
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class AllTransactionsRepoImpl @Inject constructor(
     val dao: FinancialAssistantDao,
-    private val unifiedTransactionsDao: UnifiedTransactionsDao,
+    private val unifiedTransactionsDao: UnifiedTransactionsPersonalDao,
     private val receivePochiDao: ReceivePochiDao
 ) : AllTransactionsRepo {
 
@@ -110,7 +110,7 @@ class AllTransactionsRepoImpl @Inject constructor(
         }
     }
 
-    override fun getAllTransactions(filterState: FilterState): Flow<PagingData<UnifiedTransaction>> {
+    override fun getAllTransactions(filterState: FilterState): Flow<PagingData<UnifiedTransactionPersonal>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
