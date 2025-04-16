@@ -70,6 +70,7 @@ fun AllTransactionsScreen(
     var showDialog by remember { mutableStateOf(false) }
     val state by viewModel.state.collectAsStateWithLifecycle()
     val filterResults = viewModel.filterResults.collectAsLazyPagingItems()
+    var screenView by remember { mutableStateOf(ScreenView.DEFAULT) }
 
     Scaffold(
         topBar = {
@@ -102,7 +103,7 @@ fun AllTransactionsScreen(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
-                            // TODO Handle Search
+                            screenView = ScreenView.SEARCH
                         }
                     )
                 }
@@ -110,155 +111,173 @@ fun AllTransactionsScreen(
         }
     ) { paddingValues ->
 
-        // Filter Dialog
-        if (showDialog) {
-            TransactionFilterDialog(
-                filter = viewModel.filters.collectAsState().value,
-                onDismiss = { showDialog = false },
-                onApply = { filterState ->
-                    // Use the applied filter state
-                    Log.d("AllTransactionsScreen", "filter : $filterState")
-                    viewModel.onChangeFilters(filterState)
-                }
-            )
-        }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    top = paddingValues.calculateTopPadding(),
-                    bottom = paddingValues.calculateBottomPadding(),
-                    start = paddingMedium,
-                    end = paddingMedium
-                )
-        ) {
-
-            // Money In/Out Transaction Card
-            AnimatedVisibility(visible = viewModel.filters.collectAsState().value.isFilterEmpty()) {
-                Column(
-                ) {
-                    InOutCard(
-                        moneyIn = state.moneyIn ?: "0.0",
-                        moneyOut = state.moneyOut ?: "0.0",
-                        transactionsIn = state.transactionsIn ?: "0",
-                        transactionsOut = state.transactionsOut ?: "0"
-                    )
-
-                    VerticalSpacer(8)
-                    HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    VerticalSpacer(8)
-                }
-            }
-
-
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-
-
-                AnimatedContent(targetState = viewModel.filters.collectAsState()) { filters ->
-                    when (filters.value.isFilterEmpty()) {
-                        true -> {
-                            // var selectedCategory by remember { mutableStateOf(InsightCategory.PERSONAL) }
-
-                            InsightCateToggleSegmentedButton(
-                                modifier = Modifier.fillMaxWidth(0.8f),
-                                selectedOption = state.insightCategory,
-                                onOptionSelected = {
-                                    viewModel.onInsightCategoryChange(it)
-                                }
+        AnimatedContent(screenView) { view ->
+            when (view) {
+                ScreenView.DEFAULT -> {
+                    // Filter Dialog
+                    if (showDialog) {
+                        TransactionFilterDialog(
+                            filter = viewModel.filters.collectAsState().value,
+                            onDismiss = { showDialog = false },
+                            onApply = { filterState ->
+                                // Use the applied filter state
+                                Log.d("AllTransactionsScreen", "filter : $filterState")
+                                viewModel.onChangeFilters(filterState)
+                            }
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                top = paddingValues.calculateTopPadding(),
+                                bottom = paddingValues.calculateBottomPadding(),
+                                start = paddingMedium,
+                                end = paddingMedium
                             )
+                    ) {
+
+                        // Money In/Out Transaction Card
+                        AnimatedVisibility(visible = viewModel.filters.collectAsState().value.isFilterEmpty()) {
+                            Column(
+                            ) {
+                                InOutCard(
+                                    moneyIn = state.moneyIn ?: "0.0",
+                                    moneyOut = state.moneyOut ?: "0.0",
+                                    transactionsIn = state.transactionsIn ?: "0",
+                                    transactionsOut = state.transactionsOut ?: "0"
+                                )
+
+                                VerticalSpacer(8)
+                                HorizontalDivider(
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                VerticalSpacer(8)
+                            }
                         }
 
-                        false -> {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+
+
+                            AnimatedContent(targetState = viewModel.filters.collectAsState()) { filters ->
+                                when (filters.value.isFilterEmpty()) {
+                                    true -> {
+                                        // var selectedCategory by remember { mutableStateOf(InsightCategory.PERSONAL) }
+
+                                        InsightCateToggleSegmentedButton(
+                                            modifier = Modifier.fillMaxWidth(0.8f),
+                                            selectedOption = state.insightCategory,
+                                            onOptionSelected = {
+                                                viewModel.onInsightCategoryChange(it)
+                                            }
+                                        )
+                                    }
+
+                                    false -> {
+                                        Row {
+
+                                            filters.value.source?.let {
+                                                //UI
+                                                FilterItem(name = it.description)
+                                            }
+
+                                            filters.value.period?.let {
+                                                FilterItem(name = it.label)
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+
                             Row {
-
-                                filters.value.source?.let {
-                                    //UI
-                                    FilterItem(name = it.description)
+                                if (viewModel.filters.collectAsState().value.isFilterEmpty()
+                                        .not()
+                                ) {
+                                    IconButtonFa(
+                                        icon = Icons.Default.Clear,
+                                        colors = IconButtonColors(
+                                            containerColor = FAColors.lightGreen,
+                                            contentColor = Color.Black,
+                                            disabledContainerColor = Color.Transparent,
+                                            disabledContentColor = Color.Transparent
+                                        ),
+                                        onClick = {
+                                            viewModel.onChangeFilters(filterState = FilterState())
+                                        }
+                                    )
                                 }
 
-                                filters.value.period?.let {
-                                    FilterItem(name = it.label)
-                                }
-
+                                IconButtonFa(
+                                    icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.vector__1_),
+                                    colors = IconButtonColors(
+                                        containerColor = FAColors.lightGreen,
+                                        contentColor = Color.Black,
+                                        disabledContainerColor = Color.Transparent,
+                                        disabledContentColor = Color.Transparent
+                                    ),
+                                    onClick = {
+                                        showDialog = true
+                                    }
+                                )
                             }
-
                         }
-                    }
+                        VerticalSpacer(16)
+                        VerticalSpacer(8)
 
-                }
-
-
-                Row {
-                    if (viewModel.filters.collectAsState().value.isFilterEmpty().not()) {
-                        IconButtonFa(
-                            icon = Icons.Default.Clear,
-                            colors = IconButtonColors(
-                                containerColor = FAColors.lightGreen,
-                                contentColor = Color.Black,
-                                disabledContainerColor = Color.Transparent,
-                                disabledContentColor = Color.Transparent
-                            ),
-                            onClick = {
-                                viewModel.onChangeFilters(filterState = FilterState())
-                            }
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingMedium),
                         )
-                    }
+                        {
 
-                    IconButtonFa(
-                        icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.vector__1_),
-                        colors = IconButtonColors(
-                            containerColor = FAColors.lightGreen,
-                            contentColor = Color.Black,
-                            disabledContainerColor = Color.Transparent,
-                            disabledContentColor = Color.Transparent
-                        ),
-                        onClick = {
-                            showDialog = true
+                            items(filterResults.itemCount) { index ->
+                                val item = filterResults[index]
+                                if (item != null) {
+                                    TransactionUiListItem(
+                                        transactionUi = TransactionUi(
+                                            title = item.name ?: item.transactionCode,
+                                            type = item.transactionType,
+                                            amount = item.amount.toString(),
+                                            inOrOut = item.transactionCategory,
+                                            dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
+                                        )
+                                    )
+                                    VerticalSpacer(5)
+                                    HorizontalDivider(modifier = Modifier.padding(bottom = paddingSmall))
+                                }
+
+                            }
+
+
                         }
-                    )
+                    }
                 }
-            }
-            VerticalSpacer(16)
 
-
-            VerticalSpacer(8)
-
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingMedium),
-            ) {
-
-
-            items(filterResults.itemCount) { index ->
-                    val item = filterResults[index]
-                    if (item != null) {
-                        TransactionUiListItem(
-                            transactionUi = TransactionUi(
-                                title = item.name ?: item.transactionCode,
-                                type = item.transactionType,
-                                amount = item.amount.toString(),
-                                inOrOut = item.transactionCategory,
-                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
+                ScreenView.SEARCH -> {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(
+                                top = paddingValues.calculateTopPadding(),
+                                bottom = paddingValues.calculateBottomPadding(),
+                                start = paddingMedium,
+                                end = paddingMedium
                             )
-                        )
-                        VerticalSpacer(5)
-                        HorizontalDivider(modifier = Modifier.padding(bottom = paddingSmall))
+                    ) {
+
                     }
-
                 }
-
-
             }
         }
     }
@@ -299,8 +318,12 @@ private fun FilterItem(name: String, onClick: () -> Unit = {}) {
                 fontSize = 16.sp,
                 textColor = Color.Black
             )
-
         }
     }
+}
 
+
+private enum class ScreenView {
+    SEARCH,
+    DEFAULT
 }

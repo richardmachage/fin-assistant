@@ -191,3 +191,7 @@ val reversal =
     "SJP5C9HAIJ confirmed. Reversal of transaction SJH5DP029L has been successfully reversed  on 25/10/24  at 2:04 PM and Ksh1.00 is credited to your M-PESA account. New M-PESA account balance is Ksh1,778.12."
 val dataBundlesEmptyAccoountNumer =
     "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
+
+
+val sendFromPochi =
+    "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
