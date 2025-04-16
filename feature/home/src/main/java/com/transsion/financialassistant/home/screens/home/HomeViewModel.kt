@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.InsightCategory
+import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
@@ -24,7 +25,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val recentTransactionsRepo: RecentTransactionRepo,
+    private val preferences: DatastorePreferences
 ) : ViewModel() {
+    val hideBalance = preferences.getValue(DatastorePreferences.HIDE_BALANCE_KEY, false)
     private var _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
 
@@ -104,5 +107,13 @@ class HomeViewModel @Inject constructor(
             in 17..20 -> context.getString(R.string.good_evening)
             else -> context.getString(R.string.good_night)
         }
+    }
+
+
+    fun onHideBalance(value: Boolean) {
+        viewModelScope.launch {
+            preferences.saveValue(DatastorePreferences.HIDE_BALANCE_KEY, value)
+        }
+
     }
 }

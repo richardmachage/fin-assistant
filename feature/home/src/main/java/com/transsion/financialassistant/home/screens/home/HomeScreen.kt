@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.data.utils.formatAsCurrency
+import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.navigation.HomeRoutes
@@ -66,6 +67,7 @@ fun HomeScreen(
     )
     val mpesaBalance by viewModel.mpesaBalance.collectAsState()
     val numOfAllTransactions by viewModel.numOfAllTransactions.collectAsState()
+    val hideBalance = viewModel.hideBalance.collectAsState(false)
 
     Scaffold(
         topBar = {
@@ -147,7 +149,13 @@ fun HomeScreen(
                 balance = mpesaBalance.toString().formatAsCurrency(),
                 moneyIn = state.moneyIn,
                 moneyOut = state.moneyOut,
-                insightCategory = state.insightCategory
+                insightCategory = state.insightCategory,
+                onHideBalance = {
+                    viewModel.onHideBalance(
+                        hideBalance.value.not()
+                    )
+                },
+                hide = hideBalance.value
             )
 
             Box(
@@ -203,7 +211,7 @@ fun HomeScreen(
                                 type = item.transactionType,//if (it % 2 != 0) TransactionType.SEND_POCHI else TransactionType.BUY_GOODS,
                                 amount = item.amount.toString(),//"50.00",
                                 inOrOut = item.transactionCategory,//if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                                dateAndTime = item.date//"Jan 12, 9:47 AM"
+                                dateAndTime = item.date.toMonthDayDate()//"Jan 12, 9:47 AM"
                             )
                         )
                     }
