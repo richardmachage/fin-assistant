@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.preferences.DatastorePreferences
-import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +30,6 @@ class HomeViewModel @Inject constructor(
     private var _state = MutableStateFlow(HomeScreenState())
     val state = _state.asStateFlow()
 
-    init {
-        getTotalMoneyInAndOutToday()
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val recentTransactions =
@@ -68,28 +64,26 @@ class HomeViewModel @Inject constructor(
             initialValue = 0.0
         )
 
-    private fun getTotalMoneyInAndOutToday() {
-        viewModelScope.launch {
-
-            recentTransactionsRepo.getTotalMoneyIn().apply {
-                onSuccess { result ->
-                    _state.update {
-                        it.copy(moneyIn = result.toString().formatAsCurrency())
-                    }
-                }
-            }
-
-            recentTransactionsRepo.getTotalMoneyOut().apply {
-                onSuccess { result ->
-                    _state.update {
-                        it.copy(moneyOut = result.toString().formatAsCurrency())
-                    }
-                }
-            }
-
-
+    val moneyInToday = state.map { it.insightCategory }
+        .flatMapLatest {
+            recentTransactionsRepo.getTotalMoneyIn(it)
         }
-    }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = 0.0
+        )
+
+    val moneyOutToday = state.map { it.insightCategory }
+        .flatMapLatest {
+            recentTransactionsRepo.getTotalMoneyOut(it)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = 0.0
+        )
+
 
     fun onInsightCategoryChange(insightCategory: InsightCategory) {
         _state.update {

@@ -37,6 +37,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.data.utils.formatAsCurrency
+import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
@@ -147,8 +148,10 @@ fun HomeScreen(
 
             MpesaBalanceCard(
                 balance = mpesaBalance.toString().formatAsCurrency(),
-                moneyIn = state.moneyIn,
-                moneyOut = state.moneyOut,
+                moneyIn = viewModel.moneyInToday.collectAsState().value.toString()
+                    .formatAsCurrency(),
+                moneyOut = viewModel.moneyOutToday.collectAsState().value.toString()
+                    .formatAsCurrency(),
                 insightCategory = state.insightCategory,
                 onHideBalance = {
                     viewModel.onHideBalance(
@@ -211,7 +214,7 @@ fun HomeScreen(
                                 type = item.transactionType,//if (it % 2 != 0) TransactionType.SEND_POCHI else TransactionType.BUY_GOODS,
                                 amount = item.amount.toString(),//"50.00",
                                 inOrOut = item.transactionCategory,//if (it % 2 != 0) TransactionCategory.OUT else TransactionCategory.IN,
-                                dateAndTime = item.date.toMonthDayDate()//"Jan 12, 9:47 AM"
+                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"//item.date.toMonthDayDate()//"Jan 12, 9:47 AM"
                             )
                         )
                     }
