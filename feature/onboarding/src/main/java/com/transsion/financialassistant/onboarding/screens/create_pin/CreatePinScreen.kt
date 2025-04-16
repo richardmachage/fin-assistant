@@ -57,6 +57,7 @@ import com.transsion.financialassistant.presentation.theme.FinancialAssistantThe
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 
 @Composable
@@ -118,9 +119,9 @@ fun CreatePinScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(paddingLarge),
+                        .padding(paddingSmall),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.Start
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -139,7 +140,7 @@ fun CreatePinScreen(
                             )
                         }
                         //  }
-                        HorizontalSpacer(16)
+                        HorizontalSpacer(8)
                         BigTittleText(text = stringResource(R.string.create_pin))
                     }
 
@@ -156,7 +157,7 @@ fun CreatePinScreen(
                         text = stringResource(R.string.pin),
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(start = 60.dp)
+                            .padding(start = 30.dp)
                             .align(Alignment.Start)
                     )
                     VerticalSpacer(8)
@@ -167,7 +168,8 @@ fun CreatePinScreen(
                             pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
                         },
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
+                           // .align(Alignment.Start)
+                            .padding(start = 40.dp),
                         placeholder = stringResource(R.string.pin),
                         isShowError = pinError,
                         visualTransformation = asteriskVisualTransformation
@@ -185,7 +187,7 @@ fun CreatePinScreen(
                         text = stringResource(R.string.confirm_pin),
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(start = 60.dp)
+                            .padding(start = 30.dp)
                             .align(Alignment.Start)
                     )
                     VerticalSpacer(8)
@@ -199,7 +201,8 @@ fun CreatePinScreen(
                             }
                         },
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
+                            //.align(Alignment.Start)
+                            .padding(start = 40.dp),
                         placeholder = stringResource(R.string.confirm_pin),
                         isShowError = confirmPinError,
                         visualTransformation = asteriskVisualTransformation
