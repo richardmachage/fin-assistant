@@ -106,12 +106,11 @@ fun MpesaBalanceCard(
             }
         }
 
-        if (insightCategory == InsightCategory.PERSONAL) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 //money In
@@ -135,7 +134,7 @@ fun MpesaBalanceCard(
                 )
             }
             VerticalSpacer(10)
-        }
+
     }
 }
 
