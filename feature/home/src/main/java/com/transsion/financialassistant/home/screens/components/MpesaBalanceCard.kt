@@ -96,7 +96,6 @@ fun MpesaBalanceCard(
                     amount = balance,
                     textSize = 22.sp
                 )
-
                 IconButton(
                     onClick = {
                         hide = !hide

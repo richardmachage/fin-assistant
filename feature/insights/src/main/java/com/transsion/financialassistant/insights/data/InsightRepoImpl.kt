@@ -153,6 +153,45 @@ class InsightRepoImpl @Inject constructor(
         }
     }
 
+    // business repo implementations - pochi la biashara
+
+    override suspend fun getTotalPochiMoneyIn(startDate: String, endDate: String): Result<Double> {
+        val cacheKey = "total_pochi_money_in$startDate$endDate"
+
+        return try {
+            // First check if exists in cache
+            val cache = AppCache.get<Double>(cacheKey)
+            cache?.let { fromCache ->
+                Result.success(fromCache)
+            } ?: run {
+                //not in cache, fetch from DB and insert in cache
+                val totalPochiMoneyIn = dao.getTotalPochiMoneyInAmount(startDate, endDate) ?: 0.0
+                AppCache.put(key = cacheKey, value = totalPochiMoneyIn)
+                Result.success(totalPochiMoneyIn)
+            }
+        } catch (e: Exception){
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getTotalPochiMoneyOut(startDate: String, endDate: String): Result<Double> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getNumOfPochiTransactionsIn(
+        startDate: String,
+        endDate: String
+    ): Result<Int> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getNumOfPochiTransactionsOut(
+        startDate: String,
+        endDate: String
+    ): Result<Int> {
+        TODO("Not yet implemented")
+    }
+
     override fun getTotalTransactions(startDate: String, endDate: String) {
         TODO("Not yet implemented")
     }
