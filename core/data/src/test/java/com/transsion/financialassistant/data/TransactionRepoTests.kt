@@ -242,7 +242,32 @@ class TransactionRepoTests {
             phone = "0718353505"
         )
 
-        assertTrue(entity != null)
+        assertNotNull(entity)
     }
+
+    @Test
+    fun testSuccessfulParseOfMoveFromPochiMessage() {
+        val moveFromPochi =
+            "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
+        val entity = transactionRepo.parseMoveFromPochiMessage(
+            message = moveFromPochi,
+            phone = "0718353505"
+        )
+        assertNotNull(entity)
+    }
+
+    @Test
+    fun testSuccessfulParseOfSendMoneyFromPochiMessage() {
+        val sendMoneyFromPochi =
+            "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+
+        val entity = transactionRepo.parseSendFromPochiMessage(
+            message = sendMoneyFromPochi,
+            phone = "0718353505"
+        )
+        assertNotNull(entity)
+
+    }
+
 
 }
