@@ -20,51 +20,61 @@ import javax.inject.Inject
 
 open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
     override fun getTransactionType(message: String): TransactionType =
-        when {
-            TransactionType.RECEIVE_MONEY.getRegex()
-                .matches(message) -> TransactionType.RECEIVE_MONEY
+        TransactionType.entries.firstOrNull {
+            it.getRegex().matches(message)
+        } ?: TransactionType.UNKNOWN
 
-            TransactionType.BUNDLES_PURCHASE.getRegex()
-                .matches(message) -> TransactionType.BUNDLES_PURCHASE
+    /*when {
+        TransactionType.RECEIVE_MONEY.getRegex()
+            .matches(message) -> TransactionType.RECEIVE_MONEY
 
-            TransactionType.AIRTIME_PURCHASE.getRegex()
-                .matches(message) -> TransactionType.AIRTIME_PURCHASE
+        TransactionType.BUNDLES_PURCHASE.getRegex()
+            .matches(message) -> TransactionType.BUNDLES_PURCHASE
 
-            TransactionType.DEPOSIT.getRegex()
-                .matches(message) -> TransactionType.DEPOSIT
+        TransactionType.AIRTIME_PURCHASE.getRegex()
+            .matches(message) -> TransactionType.AIRTIME_PURCHASE
 
-            TransactionType.WITHDRAWAL.getRegex()
-                .matches(message) -> TransactionType.WITHDRAWAL
+        TransactionType.DEPOSIT.getRegex()
+            .matches(message) -> TransactionType.DEPOSIT
 
-            TransactionType.PAY_BILL.getRegex()
-                .matches(message) -> TransactionType.PAY_BILL
+        TransactionType.WITHDRAWAL.getRegex()
+            .matches(message) -> TransactionType.WITHDRAWAL
 
-            TransactionType.SEND_MONEY.getRegex()
-                .matches(message) -> TransactionType.SEND_MONEY
+        TransactionType.PAY_BILL.getRegex()
+            .matches(message) -> TransactionType.PAY_BILL
 
-            TransactionType.RECEIVE_MONEY.getRegex()
-                .matches(message) -> TransactionType.RECEIVE_MONEY
+        TransactionType.SEND_MONEY.getRegex()
+            .matches(message) -> TransactionType.SEND_MONEY
 
-            TransactionType.BUY_GOODS.getRegex()
-                .matches(message) -> TransactionType.BUY_GOODS
+        TransactionType.RECEIVE_MONEY.getRegex()
+            .matches(message) -> TransactionType.RECEIVE_MONEY
 
-            TransactionType.SEND_MSHWARI.getRegex()
-                .matches(message) -> TransactionType.SEND_MSHWARI
+        TransactionType.BUY_GOODS.getRegex()
+            .matches(message) -> TransactionType.BUY_GOODS
 
-            TransactionType.RECEIVE_POCHI.getRegex()
-                .matches(message) -> TransactionType.RECEIVE_POCHI
+        TransactionType.SEND_MSHWARI.getRegex()
+            .matches(message) -> TransactionType.SEND_MSHWARI
 
-            TransactionType.RECEIVE_MSHWARI.getRegex()
-                .matches(message) -> TransactionType.RECEIVE_MSHWARI
+        TransactionType.RECEIVE_POCHI.getRegex()
+            .matches(message) -> TransactionType.RECEIVE_POCHI
 
-            TransactionType.SEND_POCHI.getRegex()
-                .matches(message) -> TransactionType.SEND_POCHI
+        TransactionType.RECEIVE_MSHWARI.getRegex()
+            .matches(message) -> TransactionType.RECEIVE_MSHWARI
 
-            TransactionType.MOVE_TO_POCHI.getRegex()
-                .matches(message) -> TransactionType.MOVE_TO_POCHI
+        TransactionType.SEND_POCHI.getRegex()
+            .matches(message) -> TransactionType.SEND_POCHI
 
-            else -> TransactionType.UNKNOWN
-        }
+        TransactionType.MOVE_TO_POCHI.getRegex()
+            .matches(message) -> TransactionType.MOVE_TO_POCHI
+
+        TransactionType.MOVE_FROM_POCHI.getRegex().matches(message) -> TransactionType.MOVE_FROM_POCHI
+
+        TransactionType.SEND_POCHI_TO_POCHI.getRegex().matches(message) -> TransactionType.SEND_POCHI_TO_POCHI
+
+        TransactionType.SEND_MONEY_FROM_POCHI.getRegex().matches(message) -> TransactionType.SEND_POCHI_TO_POCHI
+
+        else -> TransactionType.UNKNOWN
+    }*/
 
     override fun parseSendMoneyMessage(message: String, phone: String): SendMoneyEntity? {
 
