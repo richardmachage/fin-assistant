@@ -12,6 +12,8 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiDao
+import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiDao
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
@@ -22,6 +24,8 @@ import com.transsion.financialassistant.data.room.entities.receive_mshwari.Recei
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiDao
+import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
@@ -33,6 +37,7 @@ import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiE
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import com.transsion.financialassistant.data.room.views.business.UnifiedIncomingTransactionsBusiness
+import com.transsion.financialassistant.data.room.views.business.UnifiedOutGoingTransactionsBusiness
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionBusiness
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
 import com.transsion.financialassistant.data.room.views.personal.UnifiedIncomingTransaction
@@ -55,14 +60,17 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         SendGlobalEntity::class,
         BundlesPurchaseEntity::class,
         ReceivePochiEntity::class,
-        MoveToPochiEntity::class
+        MoveToPochiEntity::class,
+        MoveFromPochiEntity::class,
+        SendFromPochiEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
         UnifiedOutGoingTransaction::class,
         UnifiedTransactionPersonal::class,
         UnifiedTransactionBusiness::class,
-        UnifiedIncomingTransactionsBusiness::class
+        UnifiedIncomingTransactionsBusiness::class,
+        UnifiedOutGoingTransactionsBusiness::class
     ],
 
     version = 1,
@@ -88,6 +96,8 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun unifiedTransactionsDao(): UnifiedTransactionsPersonalDao
     abstract fun moveToPochiDao(): MoveToPochiDao
     abstract fun unifiedBusinessDao(): UnifiedTransactionsBusinessDao
+    abstract fun moveFromPochiDao(): MoveFromPochiDao
+    abstract fun sendFromPochiDao(): SendFromPochiDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
