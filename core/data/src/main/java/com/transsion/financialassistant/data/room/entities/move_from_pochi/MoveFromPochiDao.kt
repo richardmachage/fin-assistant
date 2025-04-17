@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MoveFromPochiDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(moveToPochiEntity: MoveFromPochiEntity)
+    suspend fun insert(moveFromPochiEntity: MoveFromPochiEntity)
 
     @Query("SELECT * FROM MoveFromPochiEntity")
     fun getAll(): Flow<List<MoveFromPochiEntity>>
@@ -21,10 +21,10 @@ interface MoveFromPochiDao {
     fun getByTransactionCode(transactionCode: String): MoveFromPochiEntity?
 
     @Update
-    suspend fun updateRecord(moveToPochiEntity: MoveFromPochiEntity)
+    suspend fun updateRecord(moveFromPochiEntity: MoveFromPochiEntity)
 
     @Delete
-    suspend fun deleteRecord(moveToPochiEntity: MoveFromPochiEntity)
+    suspend fun deleteRecord(moveFromPochiEntity: MoveFromPochiEntity)
 
     @Query("SELECT * FROM MoveFromPochiEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     suspend fun getRecordsByDate(startDate: String, endDate: String): List<MoveFromPochiEntity>
