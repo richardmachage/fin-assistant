@@ -1,7 +1,6 @@
 package com.transsion.financialassistant.home.screens.home
 
 import android.content.Context
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.InsightCategory
@@ -41,11 +40,21 @@ class HomeViewModel @Inject constructor(
             }
 
             .stateIn(
-        viewModelScope,
-        started = SharingStarted.WhileSubscribed(),
+                viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
                 initialValue = emptyList()
-    )
+            )
 
+    val numOfAllTransactions =
+        state.map { it.insightCategory }
+            .flatMapLatest {
+                recentTransactionsRepo.getNumOfAllTransactions(it)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = 0
+            )
     val mpesaBalance = state.map { it.insightCategory }
         .flatMapLatest {
             recentTransactionsRepo.getMpesaBalance(it)
@@ -90,8 +99,8 @@ class HomeViewModel @Inject constructor(
     fun getGreetingBasedOnTime(context: Context): String {
         val currentHour = LocalTime.now().hour
         return when (currentHour) {
-            in 5..11 ->context.getString(R.string.good_morning)
-            in 12..16 ->context.getString(R.string.good_afternoon)
+            in 5..11 -> context.getString(R.string.good_morning)
+            in 12..16 -> context.getString(R.string.good_afternoon)
             in 17..20 -> context.getString(R.string.good_evening)
             else -> context.getString(R.string.good_night)
         }

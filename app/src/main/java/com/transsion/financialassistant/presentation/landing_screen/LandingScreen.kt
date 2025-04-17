@@ -9,8 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,7 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -34,15 +40,16 @@ import com.transsion.financialassistant.insights.navigation.InsightsRoutes
 import com.transsion.financialassistant.insights.screens.insights.InsightsScreen
 import com.transsion.financialassistant.presentation.components.bottom_nav_bar.BottomBarItem
 import com.transsion.financialassistant.presentation.components.bottom_nav_bar.BottomNavBar
-import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.dialogs.InfoDialog
 import com.transsion.financialassistant.presentation.components.isPermissionGranted
 import com.transsion.financialassistant.presentation.components.requestMultiplePermissions
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
+import com.transsion.financialassistant.presentation.components.texts.TitleText
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
-import com.transsion.financialassistant.presentation.utils.paddingSmall
+import com.transsion.financialassistant.presentation.utils.paddingMedium
 
 @Composable
 fun LandingScreen(
@@ -51,7 +58,11 @@ fun LandingScreen(
 ) {
 
     val context = LocalContext.current
-    var isMessagesRead by remember { mutableStateOf(viewModel.isMessagesRead()) }
+    var isMessagesRead by remember {
+        mutableStateOf(
+            viewModel.isMessagesRead()
+        )
+    }
 
 
     var isGranted by remember {
@@ -62,33 +73,33 @@ fun LandingScreen(
 
     when (isGranted) {
         true -> {
-            val navController = rememberNavController()
+            if (isMessagesRead) {
+                //go on with usual app flow
+                val navController = rememberNavController()
+                Scaffold(
+                    bottomBar = {
+                        BottomNavBar(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(max = 110.dp),
+                            navController = navController,
+                            listOfBottomBarItems = listOf(
+                                BottomBarItem(
+                                    route = HomeRoutes.Home,
+                                    title = R.string.home,
+                                    icon = com.transsion.financialassistant.presentation.R.drawable.home_11
+                                ),
+                                BottomBarItem(
+                                    route = InsightsRoutes.Insights,
+                                    title = com.transsion.financialassistant.insights.R.string.insights,
+                                    icon = com.transsion.financialassistant.presentation.R.drawable.chartpieslice
+                                ),
 
-            Scaffold(
-                bottomBar = {
-                    BottomNavBar(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(max = 110.dp),
-                        navController = navController,
-                        listOfBottomBarItems = listOf(
-                            BottomBarItem(
-                                route = HomeRoutes.Home,
-                                title = R.string.home,
-                                icon = com.transsion.financialassistant.presentation.R.drawable.home_11
-                            ),
-                            BottomBarItem(
-                                route = InsightsRoutes.Insights,
-                                title = com.transsion.financialassistant.insights.R.string.insights,
-                                icon = com.transsion.financialassistant.presentation.R.drawable.chartpieslice
-                            ),
+                                )
+                        )
+                    }
+                ) { innerPadding ->
 
-                            )
-                    )
-                }
-            ) { innerPadding ->
-
-                if (isMessagesRead) {
                     NavHost(
                         modifier = Modifier.padding(bottom = innerPadding.calculateBottomPadding()),
                         navController = navController,
@@ -111,13 +122,30 @@ fun LandingScreen(
                         }
 
                     }
-                } else {
-                    //show UI for Loading the messages
-                    val workInfo =
-                        viewModel.workInfo?.collectAsState()//viewModel.workInfo?.collectAsState(null)
-                    val progress by viewModel.progress.collectAsState()// workInfo?.value?.progress?.getFloat("progress", 0F) ?: 0F
-                    val currentType by viewModel.currentType.collectAsState()// workInfo?.value?.progress?.getString("currentType") ?: "Starting..."
+                }
+            } else {
+                //show UI for Loading the messages first
+                viewModel.readMessagesAndSave(
+                    onFinish = {
+                        if (it == "Success") {
+                            isMessagesRead = true
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Failed to load transactions please try again",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                )
+                Surface(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+
+                    val progress by viewModel.progress.collectAsState()
+                    val currentType by viewModel.currentType.collectAsState()
                     val processState by viewModel.workerState.collectAsState()
+
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -125,40 +153,74 @@ fun LandingScreen(
                         Column(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            var started by remember { mutableStateOf(false) }
-                            FilledButtonFa(
-                                enabled = !started,
-                                onClick = {
-                                    started = true
-                                    viewModel.readMessagesAndSave(
-                                        onFinish = {
-                                            if (it == "Success") {
-                                                Toast.makeText(
-                                                    context,
-                                                    "Transactions loaded successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                isMessagesRead = true
+                            // var started by remember { mutableStateOf(false) }
 
-                                            } else {
-                                                started = false
-                                                Toast.makeText(
-                                                    context,
-                                                    "Failed to load transactions please try again",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                    )
-                                },
-                                text = "Click to start"
-                            )
-
-                            NormalText(text = processState)
-
-
-                            AnimatedVisibility(processState == "Process is running") {
+                            ElevatedCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(15)
+                            ) {
                                 Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                )
+                                {
+                                    //circular progress bar
+                                    //-> to be shown when process state is loading
+                                    VerticalSpacer(10)
+                                    AnimatedVisibility(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        visible = progress == 0F
+                                    ) {
+                                        Box(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            CircularProgressIndicator(
+                                                color = FAColors.green,
+                                                strokeWidth = 2.dp
+                                            )
+                                        }
+
+                                    }
+                                    AnimatedVisibility(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        visible = progress != 0F
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(paddingMedium),
+                                        ) {
+                                            LinearProgressIndicator(
+                                                modifier = Modifier
+                                                    .padding(paddingMedium)
+                                                    .fillMaxWidth(),
+                                                progress = { progress },
+                                                color = FAColors.green,
+                                                trackColor = FAColors.lightGreen,
+                                                drawStopIndicator = {},
+                                            )
+                                            NormalText(
+                                                fontWeight = FontWeight.Bold,
+                                                text = "${(progress * 100).toInt()}%",
+                                                fontSize = 16.sp
+                                            )
+
+                                        }
+                                    }
+                                    VerticalSpacer(5)
+                                    //Loading transactions... text
+                                    TitleText(
+                                        text = stringResource(
+                                            if (progress < 0.1f)
+                                                R.string.querying_data
+                                            else R.string.loading_transactions
+                                        )
+                                    )
+                                    VerticalSpacer(10)
+                                }
+
+                                /*Column(
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     NormalText(text = "Processing : $currentType")
@@ -171,12 +233,13 @@ fun LandingScreen(
                                     )
                                     VerticalSpacer(8)
                                     NormalText(text = "${progress * 100}% completed")
-                                }
+                                }*/
                             }
                         }
                     }
                 }
             }
+
         }
 
         false -> {

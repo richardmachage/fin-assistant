@@ -65,4 +65,12 @@ class RecentTransactionRepoImpl @Inject constructor(
             InsightCategory.BUSINESS -> receivePochiDao.getMpesaBalance()
         }
     }
+
+    override fun getNumOfAllTransactions(insightCategory: InsightCategory): Flow<Int> {
+        return when (insightCategory) {
+            InsightCategory.PERSONAL -> dao.getNumOfAllTransactions()
+            InsightCategory.BUSINESS -> receivePochiDao.getNumOfAllTransactions()
+
+        }
+    }
 }

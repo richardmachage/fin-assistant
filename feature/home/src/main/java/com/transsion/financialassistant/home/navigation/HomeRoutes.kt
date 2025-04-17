@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.home.navigation
 
+import com.transsion.financialassistant.data.models.InsightCategory
 import kotlinx.serialization.Serializable
 
 
@@ -12,6 +13,6 @@ sealed interface HomeRoutes {
     data object Search : HomeRoutes
 
     @Serializable
-    data object AllTransactions : HomeRoutes
+    data class AllTransactions(val insightCategory: InsightCategory) : HomeRoutes
 
 }

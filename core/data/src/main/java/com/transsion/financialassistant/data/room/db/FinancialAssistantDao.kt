@@ -268,4 +268,10 @@ ORDER BY totalAmount DESC;
     fun getMpesaBalance(): Flow<Double>
 
 
+    @Query(
+        """
+            SELECT COUNT(transactionCode) FROM UnifiedTransaction
+        """
+    )
+    fun getNumOfAllTransactions(): Flow<Int>
 }

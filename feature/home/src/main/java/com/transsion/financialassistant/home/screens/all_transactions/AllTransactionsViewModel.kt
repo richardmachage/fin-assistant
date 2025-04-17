@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.home.screens.all_transactions
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -22,9 +23,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AllTransactionsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val allTransactionsRepo: AllTransactionsRepo
 ) : ViewModel() {
-    private var _state = MutableStateFlow(AllTransactionsScreenState())
+    private val passedInsightCategory =
+        savedStateHandle.get<InsightCategory>("insightCategory") ?: InsightCategory.PERSONAL
+    private var _state =
+        MutableStateFlow(AllTransactionsScreenState(insightCategory = passedInsightCategory))
     val state = _state.asStateFlow()
 
     private var _filters = MutableStateFlow(FilterState())

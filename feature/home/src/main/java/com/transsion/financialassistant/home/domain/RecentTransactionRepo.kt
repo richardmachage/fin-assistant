@@ -14,4 +14,6 @@ interface RecentTransactionRepo {
     fun getRecentTransactions(insightCategory: InsightCategory): Flow<List<UnifiedTransaction>>
 
     fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double>
+
+    fun getNumOfAllTransactions(insightCategory: InsightCategory): Flow<Int>
 }
