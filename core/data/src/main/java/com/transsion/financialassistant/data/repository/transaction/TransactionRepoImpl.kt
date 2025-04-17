@@ -59,6 +59,10 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
 
             TransactionType.SEND_POCHI.getRegex()
                 .matches(message) -> TransactionType.SEND_POCHI
+
+            TransactionType.MOVE_TO_POCHI.getRegex()
+                .matches(message) -> TransactionType.MOVE_TO_POCHI
+
             else -> TransactionType.UNKNOWN
         }
 
