@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.home.screens.components
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,13 +42,24 @@ fun TransactionUiListItem(
         amount = "50.00",
         inOrOut = TransactionCategory.OUT,
         dateAndTime = "Jan 12, 9:47 AM"
-    )
+    ),
+    onClick: () -> Unit = {}
 ) {
+
+    val descr = if (transactionUi.type == TransactionType.MOVE_TO_POCHI) {
+        when (transactionUi.inOrOut) {
+            TransactionCategory.IN -> "Transfer From MPESA"
+            TransactionCategory.OUT -> "Transfer To POCHI"
+        }
+    } else transactionUi.type.description
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(paddingSmall),
+            .padding(paddingSmall)
+            .clickable {
+                onClick()
+            },
         horizontalArrangement = Arrangement.SpaceBetween
 
     ) {
@@ -86,7 +98,7 @@ fun TransactionUiListItem(
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(0.5f),
-                    text = transactionUi.type.description,
+                    text = descr,//transactionUi.type.description,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onBackground
                 )
@@ -121,6 +133,6 @@ fun TransactionUiListItem(
 @Composable
 fun TransactionUiListItemPrev() {
     FinancialAssistantTheme {
-        TransactionUiListItem()
+        //TransactionUiListItem()
     }
 }
