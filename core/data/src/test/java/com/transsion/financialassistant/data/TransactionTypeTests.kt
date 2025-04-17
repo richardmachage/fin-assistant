@@ -169,6 +169,15 @@ class TransactionTypeTests {
         assertTrue(result == TransactionType.RECEIVE_POCHI)
     }
 
+    @Test
+    fun `should detect move to pochi transaction`() {
+        val message =
+            "TDG8YKBIO6 Confirmed, Ksh10.00 has been moved from your M-PESA account to your business account on 16/4/25 at 1:02 PM.. New business balance is Ksh45.00. New M-PESA balance is Ksh7,234.21. Transaction cost, Ksh0.00."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.MOVE_TO_POCHI)
+
+    }
 
     @Test
     fun `should handle null input safely`() {
