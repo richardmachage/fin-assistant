@@ -6,7 +6,7 @@ import com.transsion.financialassistant.data.models.TransactionType
 
 @DatabaseView(
     value = """
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName FROM SendFromPochiEntity
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName , transactionCost FROM SendFromPochiEntity
         UNION ALL
         SELECT transactionCode, phone, amount, date,time,transactionType, businessBalance, 'OUT' as transactionCategory,'MY MPESA' as sentToName, transactionCost FROM MoveFromPochiEntity
     """
