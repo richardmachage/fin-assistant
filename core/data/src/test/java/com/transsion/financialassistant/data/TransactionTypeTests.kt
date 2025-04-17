@@ -180,10 +180,32 @@ class TransactionTypeTests {
     }
 
     @Test
+    fun `should detect move from pochi transaction`() {
+        val message =
+            "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.MOVE_FROM_POCHI)
+    }
+
+    @Test
+    fun `should detect send money from pochi transaction`() {
+        val message =
+            "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.SEND_MONEY_FROM_POCHI)
+    }
+
+
+
+    @Test
     fun `should handle null input safely`() {
         val message: String? = null
         val result = transactionRepo.getTransactionType(message ?: "")
         println("Transaction type: ${result.description}")
+
 
         assertTrue(result == TransactionType.UNKNOWN)
     }
@@ -202,8 +224,6 @@ val dataBundlesEmptyAccoountNumer =
     "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
 
 
-val moveFromPochi =
-    "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
 
 val sendMoneyFromPochi =
     "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
