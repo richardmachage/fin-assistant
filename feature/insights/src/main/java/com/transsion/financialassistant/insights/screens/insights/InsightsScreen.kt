@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.R
 import com.transsion.financialassistant.insights.model.InsightCategoryCardItem
@@ -109,11 +112,14 @@ fun InsightsScreen(
                         onDismissRequest = { showMenu = false }
                     ) {
                         InsightCategory.entries.forEach {
+                            val context = LocalContext.current
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(it.description)) },
                                 onClick = {
+
                                     if (state.insightCategory != it) {
                                         viewModel.switchInsightCategory(it)
+                                        // Toast.makeText(context, it.name, Toast.LENGTH_SHORT).show()
                                     }
                                     showMenu = false
                                 }
@@ -178,31 +184,27 @@ fun InsightsScreen(
             }
 
             VerticalSpacer(5)
-           /* when personal finance collapse money in and out cards and the toggle buttons*/
-            when(state.insightCategory){
-                InsightCategory.PERSONAL -> {
-                    //Money in and Out summary Card
-                    InOutCard(
-                        modifier = Modifier.padding(paddingSmall),
-                        moneyIn = state.moneyIn ?: "0.0",
-                        moneyOut = state.moneyOut ?: "0.0",
-                        transactionsIn = state.transactionsIn ?: "0",
-                        transactionsOut = state.transactionsOut ?: "0"
-                    )
-                    VerticalSpacer(5)
 
-                    //Money In/Out toggle buttons
-                    MoneyToggle(
-                        selectedOption = state.transactionCategory,
-                        onOptionSelected = {
-                            viewModel.switchTransactionCategory(it)
-                        }
-                    )
+
+            //Money in and Out summary Card
+            InOutCard(
+                modifier = Modifier.padding(paddingSmall),
+                moneyIn = viewModel.moneyInFlow.collectAsStateWithLifecycle().value.toString()
+                    .formatAsCurrency(),
+                moneyOut = viewModel.moneyOutFlow.collectAsStateWithLifecycle().value.toString()
+                    .formatAsCurrency(),
+                transactionsIn = viewModel.numOfTransactionsInFlow.collectAsState().value.toString(),
+                transactionsOut = viewModel.numOfTransactionsOutFlow.collectAsState().value.toString()
+            )
+            VerticalSpacer(5)
+
+            //Money In/Out toggle buttons
+            MoneyToggle(
+                selectedOption = state.transactionCategory,
+                onOptionSelected = {
+                    viewModel.switchTransactionCategory(it)
                 }
-                InsightCategory.BUSINESS -> {
-                    //Money in and Out summary Card
-                }
-            }
+            )
 
 
             //Graph

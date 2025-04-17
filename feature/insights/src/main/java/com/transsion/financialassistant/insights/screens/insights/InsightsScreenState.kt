@@ -10,17 +10,7 @@ data class InsightsScreenState(
     val transactionCategory: TransactionCategory = TransactionCategory.IN,
     val insightCategory: InsightCategory = InsightCategory.PERSONAL,
     val insightTimeline: InsightTimeline = InsightTimeline.TODAY,
-
-    val moneyIn: String? = null,
-    val moneyOut: String? = null,
-    val transactionsIn: String? = null,
-    val transactionsOut: String? = null,
     val totalTransactionCost: String? = null,
 
-    // business states
-    val pochiMoneyIn: String? = null,
-    val pochiMoneyyOut: String? = null,
-    val pochiTransactionsIn: String? = null,
-    val pochiTransactionsOut: String? = null,
-    val pochiTotalTransactionCost: String? = null
-)
+
+    )
