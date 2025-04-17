@@ -20,6 +20,7 @@ import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyD
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
+import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightTimeline
@@ -31,13 +32,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.math.abs
 
 class InsightRepoImpl @Inject constructor(
-    private val dao: FinancialAssistantDao,
+    private val personalDao: FinancialAssistantDao,
     private val sendMoneyDao: SendMoneyDao,
     private val withdrawalDao: WithdrawMoneyDao,
     private val payBillDao: PayBillDao,
@@ -52,7 +53,9 @@ class InsightRepoImpl @Inject constructor(
     private val receiveMshwariDao: ReceiveMshwariDao,
     private val moveToPochiDao: MoveToPochiDao,
     private val moveFromPochiDao: MoveFromPochiDao,
-    private val sendFromPochiDao: SendPochiDao
+    private val sendFromPochiDao: SendPochiDao,
+    private val businessDao: UnifiedTransactionsBusinessDao
+
 ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
@@ -61,22 +64,34 @@ class InsightRepoImpl @Inject constructor(
         get() = _categoryDistributionFlow
 
 
-    override suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double> {
-        val cacheKey = "total_money_in$startDate$endDate"
+    override suspend fun getTotalMoneyIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double> {
+        val cacheKey = "total_money_in$startDate$endDate$insightCategory"
         return try {
             // First check if exists in cache
-            val cache = AppCache.get<Double>(cacheKey)
-            cache?.let { fromCache ->
-                Result.success(fromCache)
-            } ?: run {
+            val cache = AppCache.get<Flow<Double>>(cacheKey)
+            cache ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyIn = dao.getTotalMoneyInAmount(startDate, endDate).first()
-                AppCache.put(key = cacheKey, value = totalMoneyIn)
-                Result.success(totalMoneyIn)
-            }
+                val totalMoneyIn = when (insightCategory) {
+                    InsightCategory.PERSONAL -> personalDao.getTotalMoneyInAmount(
+                        startDate,
+                        endDate
+                    )
 
+                    InsightCategory.BUSINESS -> businessDao.getTotalMoneyInAmount(
+                        startDate,
+                        endDate
+                    )
+                }
+                AppCache.put(key = cacheKey, value = totalMoneyIn)
+                totalMoneyIn
+            }
         } catch (e: Exception) {
-            Result.failure(e)
+            e.printStackTrace()
+            flow {}
         }
     }
 
@@ -92,7 +107,8 @@ class InsightRepoImpl @Inject constructor(
                 Result.success(it)
             } ?: run {
                 val totalTransactionCost =
-                    dao.getTotalTransactionCost(startDate = startDate, endDate = endDate) ?: 0.0
+                    personalDao.getTotalTransactionCost(startDate = startDate, endDate = endDate)
+                        ?: 0.0
                 AppCache.put(key = cacheKey, value = totalTransactionCost)
                 Result.success(totalTransactionCost)
             }
@@ -101,135 +117,111 @@ class InsightRepoImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTotalMoneyOut(startDate: String, endDate: String): Result<Double> {
-        val cacheKey = "total_money_out$startDate$endDate"
+    override suspend fun getTotalMoneyOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double> {
+        val cacheKey = "total_money_out$startDate$endDate$insightCategory"
         return try {
             // First check if exists in cache
-            val cache = AppCache.get<Double>(cacheKey)
-            cache?.let { fromCache ->
-                Result.success(fromCache)
-            } ?: run {
+            val cache = AppCache.get<Flow<Double>>(cacheKey)
+
+
+            cache ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyOut = dao.getTotalMoneyOutAmount(startDate, endDate).first()
+                val totalMoneyOut =
+                    when (insightCategory) {
+                        InsightCategory.PERSONAL -> personalDao.getTotalMoneyOutAmount(
+                            startDate,
+                            endDate
+                        )
+
+                        InsightCategory.BUSINESS -> businessDao.getTotalMoneyOutAmount(
+                            startDate,
+                            endDate
+                        )
+                    }
                 AppCache.put(key = cacheKey, value = totalMoneyOut)
-                Result.success(totalMoneyOut)
+                totalMoneyOut
             }
 
         } catch (e: Exception) {
-            Result.failure(e)
+            flow { }
         }
     }
 
-    override suspend fun getNumOfTransactionsIn(startDate: String, endDate: String): Result<Int> {
-        val cacheKey = "number_of_transactions_in$startDate$endDate"
+    override suspend fun getNumOfTransactionsIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int> {
+        val cacheKey = "number_of_transactions_in$startDate$endDate$insightCategory"
 
         return try {
             // First check if exists in cache
-            val cache = AppCache.get<Int>(cacheKey)
-            cache?.let { fromCache ->
-                Result.success(fromCache)
-            } ?: run {
+            val cache = AppCache.get<Flow<Int>>(cacheKey)
+            cache ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val numOfTransactions = dao.getNumberOfTransactionsIn(startDate, endDate) ?: 0
+                val numOfTransactions = when (insightCategory) {
+                    InsightCategory.PERSONAL -> personalDao.getNumberOfTransactionsIn(
+                        startDate,
+                        endDate
+                    )
+
+                    InsightCategory.BUSINESS -> businessDao.getNumberOfTransactionsIn(
+                        startDate,
+                        endDate
+                    )
+                }.filterNotNull()
 
                 AppCache.put(key = cacheKey, value = numOfTransactions)
-                Result.success(numOfTransactions)
+                numOfTransactions
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            flow { }
         }
     }
 
-    override suspend fun getNumOfTransactionsOut(startDate: String, endDate: String): Result<Int> {
-        val cacheKey = "number_of_transactions_out$startDate$endDate"
+    override suspend fun getNumOfTransactionsOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int> {
+        val cacheKey = "number_of_transactions_out$startDate$endDate$insightCategory"
 
         return try {
             // First check if exists in cache
-            val cache = AppCache.get<Int>(cacheKey)
-            cache?.let { fromCache ->
-                Result.success(fromCache)
-            } ?: run {
+            val cache = AppCache.get<Flow<Int>>(cacheKey)
+            cache ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val numOfTransactions = dao.getNumberOfTransactionsOut(startDate, endDate) ?: 0
+                val numOfTransactions = when (insightCategory) {
+                    InsightCategory.PERSONAL -> personalDao.getNumberOfTransactionsOut(
+                        startDate,
+                        endDate
+                    )
+
+                    InsightCategory.BUSINESS -> businessDao.getNumberOfTransactionsOut(
+                        startDate,
+                        endDate
+                    )
+                }.filterNotNull()
 
                 AppCache.put(key = cacheKey, value = numOfTransactions)
-                Result.success(numOfTransactions)
+                numOfTransactions
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            flow { }
         }
     }
 
     // business repo implementations - pochi la biashara
 
-    override suspend fun getTotalPochiMoneyIn(startDate: String, endDate: String): Result<Double> {
-        val cacheKey = "total_pochi_money_in$startDate$endDate"
-
-        return try {
-            // First check if exists in cache
-            val cache = AppCache.get<Double>(cacheKey)
-            cache?.let { fromCache ->
-                Result.success(fromCache)
-            } ?: run {
-                //not in cache, fetch from DB and insert in cache
-                val totalPochiMoneyIn = dao.getTotalPochiMoneyInAmount(startDate, endDate) ?: 0.0
-                AppCache.put(key = cacheKey, value = totalPochiMoneyIn)
-                Result.success(totalPochiMoneyIn)
-            }
-        } catch (e: Exception){
-            Result.failure(e)
-        }
-    }
-
-    override suspend fun getTotalPochiMoneyOut(startDate: String, endDate: String): Result<Double> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getNumOfPochiTransactionsIn(
-        startDate: String,
-        endDate: String
-    ): Result<Int> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getNumOfPochiTransactionsOut(
-        startDate: String,
-        endDate: String
-    ): Result<Int> {
-        TODO("Not yet implemented")
-    }
 
     override fun getTotalTransactions(startDate: String, endDate: String) {
         TODO("Not yet implemented")
     }
 
-
-    /*data class CategoryDataPoint(
-        val category: String,
-        val amount: Double
-    )*/
-
-    /*  private fun getCategoryDistribution(
-          data: List<CategoryDataPoint>
-      ): List<CategoryDistribution> {
-          val total = data.sumOf { it.amount }
-          if (total == 0.0) return emptyList()
-          return data
-              .groupBy {
-                  it.category
-              }
-              .mapValues { (_, items) -> items.sumOf { it.amount } }
-              .map { (category, sum) ->
-                  CategoryDistribution(
-                      name = category,
-                      percentage = (sum / total).toFloat(),
-                      color = generateColorFromCategory(category),
-                      amount = sum.toFloat()
-                  )
-              }
-              .sortedByDescending { it.percentage } //{ it.percentage }
-
-      }*/
 
     override fun getDataForCategory(
         startDate: String,
@@ -659,25 +651,50 @@ class InsightRepoImpl @Inject constructor(
                 TransactionCategory.IN -> {
                     val data = when (insightTimeline) {
                         InsightTimeline.TODAY -> {
-                            dao.getTransactionsInForDate(startDate).map {
+                            when (insightCategory) {
+                                InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
+                                    startDate
+                                )
+
+                                InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
+                                    startDate
+                                )
+                            }.map {
                                 DataPoint(x = it.time, y = it.amount.toFloat())
                             }
+
                         }
 
                         InsightTimeline.WEEK -> {
-                            dao.getTotalTransactionsInPerDay(
-                                startDate = startDate,
-                                endDate = endDate
-                            ).map {
+                            when (insightCategory) {
+                                InsightCategory.PERSONAL -> personalDao.getTotalTransactionsInPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                )
+
+                                InsightCategory.BUSINESS -> businessDao.getTotalTransactionsInPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                )
+                            }
+                                .map {
                                 DataPoint(x = it.date, y = it.totalAmount.toFloat())
                             }
                         }
 
                         InsightTimeline.MONTH -> {
-                            dao.getTotalTransactionsInPerDay(
-                                startDate = startDate,
-                                endDate = endDate
-                            ).map {
+                            when (insightCategory) {
+                                InsightCategory.PERSONAL -> personalDao.getTotalTransactionsInPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                )
+
+                                InsightCategory.BUSINESS -> businessDao.getTotalTransactionsInPerDay(
+                                    startDate = startDate,
+                                    endDate = endDate
+                                )
+                            }
+                                .map {
                                 DataPoint(x = it.date, y = it.totalAmount.toFloat())
                             }
                         }
@@ -685,7 +702,10 @@ class InsightRepoImpl @Inject constructor(
 
 
                     val distributionData =
-                        dao.getTotalTransactionsInPerType(startDate = startDate, endDate = endDate)
+                        personalDao.getTotalTransactionsInPerType(
+                            startDate = startDate,
+                            endDate = endDate
+                        )
                     val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
                     val distribution = distributionData.map {
                         CategoryDistribution(
@@ -726,33 +746,54 @@ class InsightRepoImpl @Inject constructor(
                     val data =
                         when (insightTimeline) {
                             InsightTimeline.TODAY -> {
-                                dao.getTransactionsOutForDate(startDate).map {
+                                when (insightCategory) {
+                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+
+                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+                                }.map {
                                     DataPoint(x = it.time, y = it.amount.toFloat())
                                 }
                             }
 
                             InsightTimeline.WEEK -> {
-                                dao.getTotalTransactionsOutPerDay(
-                                    startDate = startDate,
-                                    endDate = endDate
-                                ).map {
-                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                when (insightCategory) {
+                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+
+                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+                                }.map {
+                                    DataPoint(x = it.time, y = it.amount.toFloat())
                                 }
                             }
 
                             InsightTimeline.MONTH -> {
-                                dao.getTotalTransactionsOutPerDay(
-                                    startDate = startDate,
-                                    endDate = endDate
-                                ).map {
-                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                when (insightCategory) {
+                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+
+                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
+                                        startDate
+                                    )
+                                }.map {
+                                    DataPoint(x = it.time, y = it.amount.toFloat())
                                 }
                             }
                         }
 
                     //update the categories
                     val distributionData =
-                        dao.getTotalTransactionsOutPerType(startDate = startDate, endDate = endDate)
+                        personalDao.getTotalTransactionsOutPerType(
+                            startDate = startDate,
+                            endDate = endDate
+                        )
 
                     val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
                     val distribution = distributionData.map {

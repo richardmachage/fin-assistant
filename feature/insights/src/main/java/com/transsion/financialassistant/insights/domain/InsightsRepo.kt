@@ -14,19 +14,30 @@ interface InsightsRepo {
     val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
 
 
-    suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalMoneyIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double>
 
-    suspend fun getTotalMoneyOut(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalMoneyOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double>
 
-    suspend fun getNumOfTransactionsIn(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfTransactionsIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int>
 
-    suspend fun getNumOfTransactionsOut(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfTransactionsOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int>
 
-    // business repos - pochi la biashara
-    suspend fun getTotalPochiMoneyIn(startDate: String, endDate: String): Result<Double>
-    suspend fun getTotalPochiMoneyOut(startDate: String, endDate: String): Result<Double>
-    suspend fun getNumOfPochiTransactionsIn(startDate: String, endDate: String): Result<Int>
-    suspend fun getNumOfPochiTransactionsOut(startDate: String, endDate: String): Result<Int>
 
     fun getTotalTransactions(startDate: String, endDate: String)
 
