@@ -1,17 +1,17 @@
 package com.transsion.financialassistant.home.domain
 
 import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import kotlinx.coroutines.flow.Flow
 
 interface RecentTransactionRepo {
 
 
-    suspend fun getTotalMoneyIn(): Result<Double>
+    suspend fun getTotalMoneyIn(insightCategory: InsightCategory): Flow<Double>
 
-    suspend fun getTotalMoneyOut(): Result<Double>
+    suspend fun getTotalMoneyOut(insightCategory: InsightCategory): Flow<Double>
 
-    fun getRecentTransactions(insightCategory: InsightCategory): Flow<List<UnifiedTransaction>>
+    fun getRecentTransactions(insightCategory: InsightCategory): Flow<List<UnifiedTransactionPersonal>>
 
     fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double>
 
