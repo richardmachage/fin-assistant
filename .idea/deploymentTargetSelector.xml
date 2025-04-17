@@ -4,14 +4,20 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-04-09T14:27:37.160252Z">
+        <DropdownSelection timestamp="2025-04-16T13:34:48.981364Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="Default" identifier="serial=10.8.124.44:43231;connection=239ac969" />
+              <DeviceId pluginId="Default" identifier="serial=10.8.120.190:35477;connection=92be070e" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="testMoveFromPochiTransaction_withPhone_shouldSucceed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="testSendFromPochiTransaction_withPhone_shouldSucceed()">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>
