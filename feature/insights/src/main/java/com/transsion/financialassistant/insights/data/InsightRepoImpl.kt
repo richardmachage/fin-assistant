@@ -10,6 +10,8 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeDao
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
+import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiDao
+import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiDao
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
@@ -22,12 +24,14 @@ import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.model.TransactionUi
+import com.transsion.financialassistant.presentation.R
 import com.transsion.financialassistant.presentation.components.graphs.model.CategoryDistribution
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import kotlin.math.abs
@@ -46,6 +50,9 @@ class InsightRepoImpl @Inject constructor(
     private val bundlesPurchaseDao: BundlesPurchaseDao,
     private val sendMshwariDao: SendMshwariDao,
     private val receiveMshwariDao: ReceiveMshwariDao,
+    private val moveToPochiDao: MoveToPochiDao,
+    private val moveFromPochiDao: MoveFromPochiDao,
+    private val sendFromPochiDao: SendPochiDao
 ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
@@ -63,7 +70,7 @@ class InsightRepoImpl @Inject constructor(
                 Result.success(fromCache)
             } ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyIn = dao.getTotalMoneyInAmount(startDate, endDate) ?: 0.0
+                val totalMoneyIn = dao.getTotalMoneyInAmount(startDate, endDate).first()
                 AppCache.put(key = cacheKey, value = totalMoneyIn)
                 Result.success(totalMoneyIn)
             }
@@ -103,7 +110,7 @@ class InsightRepoImpl @Inject constructor(
                 Result.success(fromCache)
             } ?: run {
                 //not in cache, fetch from DB and insert in cache
-                val totalMoneyOut = dao.getTotalMoneyOutAmount(startDate, endDate) ?: 0.0
+                val totalMoneyOut = dao.getTotalMoneyOutAmount(startDate, endDate).first()
                 AppCache.put(key = cacheKey, value = totalMoneyOut)
                 Result.success(totalMoneyOut)
             }
@@ -227,7 +234,8 @@ class InsightRepoImpl @Inject constructor(
     override fun getDataForCategory(
         startDate: String,
         endDate: String,
-        transactionType: TransactionType
+        transactionType: TransactionType,
+        transactionCategory: TransactionCategory
     ): Flow<List<TransactionUi>> = flow<List<TransactionUi>> {
         val cacheKey = "data_for_category$startDate$endDate${transactionType.description}"
 
@@ -401,6 +409,48 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.UNKNOWN -> {
                     emptyList()
                 }
+
+                TransactionType.MOVE_TO_POCHI -> {
+                    moveToPochiDao.getRecordsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = when (transactionCategory) {
+                                TransactionCategory.IN -> it.transactionType.description
+                                TransactionCategory.OUT -> "Transfer from MPESA" //FIXME take from string resource
+                            },
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
+
+                TransactionType.MOVE_FROM_POCHI -> {
+                    moveFromPochiDao.getRecordsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = when (transactionCategory) {
+                                TransactionCategory.IN -> it.transactionType.description
+                                TransactionCategory.OUT -> "Transfer to MPESA"
+                            },
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
+
+                TransactionType.SEND_MONEY_FROM_POCHI -> {
+                    sendFromPochiDao.getSendPochiTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = it.sentToName,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                        )
+                    }
+                }
             }
             AppCache.put(key = cacheKey, value = data)
             emit(data)
@@ -545,7 +595,36 @@ class InsightRepoImpl @Inject constructor(
                         }
                 }
 
-                TransactionType.UNKNOWN -> emptyList()
+                TransactionType.MOVE_TO_POCHI -> {
+                    moveToPochiDao.getRecordsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.UNKNOWN -> {
+                    emptyList<DataPoint>()
+                }
+
+                TransactionType.MOVE_FROM_POCHI -> {
+                    moveFromPochiDao.getRecordsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
+                TransactionType.SEND_MONEY_FROM_POCHI -> {
+                    sendFromPochiDao.getSendPochiTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
             }
 
             AppCache.put(key = cacheKey, value = dataPoints)
@@ -615,19 +694,22 @@ class InsightRepoImpl @Inject constructor(
                             color = generateColorFromCategory(it.transactionType.description),
                             amount = it.totalAmount.toFloat(),
                             icon = when (it.transactionType) {
-                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
-                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
-                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
-                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
-                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
-                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
-                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
-                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
-                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
-                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
-                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
-                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.DEPOSIT -> R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> R.drawable.transaction
+                                TransactionType.PAY_BILL -> R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> R.drawable.smart_phone_01
+                                TransactionType.MOVE_TO_POCHI -> R.drawable.transaction
                                 TransactionType.UNKNOWN -> null
+                                TransactionType.MOVE_FROM_POCHI -> R.drawable.account
+                                TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
                             }
                         )
                     }
@@ -680,18 +762,21 @@ class InsightRepoImpl @Inject constructor(
                             color = generateColorFromCategory(it.transactionType.description),
                             amount = it.totalAmount.toFloat(),
                             icon = when (it.transactionType) {
-                                TransactionType.DEPOSIT -> com.transsion.financialassistant.presentation.R.drawable.pay_cash
-                                TransactionType.WITHDRAWAL -> com.transsion.financialassistant.presentation.R.drawable.payment_01
-                                TransactionType.SEND_MONEY -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
-                                TransactionType.RECEIVE_MONEY -> com.transsion.financialassistant.presentation.R.drawable.coins_01
-                                TransactionType.RECEIVE_POCHI -> com.transsion.financialassistant.presentation.R.drawable.ph_coins_bold
-                                TransactionType.SEND_POCHI -> com.transsion.financialassistant.presentation.R.drawable.transaction
-                                TransactionType.PAY_BILL -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
-                                TransactionType.BUY_GOODS -> com.transsion.financialassistant.presentation.R.drawable.briefcase_dollar
-                                TransactionType.SEND_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.savings
-                                TransactionType.RECEIVE_MSHWARI -> com.transsion.financialassistant.presentation.R.drawable.account
-                                TransactionType.AIRTIME_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
-                                TransactionType.BUNDLES_PURCHASE -> com.transsion.financialassistant.presentation.R.drawable.smart_phone_01
+                                TransactionType.DEPOSIT -> R.drawable.pay_cash
+                                TransactionType.WITHDRAWAL -> R.drawable.payment_01
+                                TransactionType.SEND_MONEY -> R.drawable.ph_coins_bold
+                                TransactionType.RECEIVE_MONEY -> R.drawable.coins_01
+                                TransactionType.RECEIVE_POCHI -> R.drawable.ph_coins_bold
+                                TransactionType.SEND_POCHI -> R.drawable.transaction
+                                TransactionType.PAY_BILL -> R.drawable.briefcase_dollar
+                                TransactionType.BUY_GOODS -> R.drawable.briefcase_dollar
+                                TransactionType.SEND_MSHWARI -> R.drawable.savings
+                                TransactionType.RECEIVE_MSHWARI -> R.drawable.account
+                                TransactionType.AIRTIME_PURCHASE -> R.drawable.smart_phone_01
+                                TransactionType.BUNDLES_PURCHASE -> R.drawable.smart_phone_01
+                                TransactionType.MOVE_TO_POCHI -> R.drawable.transaction
+                                TransactionType.MOVE_FROM_POCHI -> R.drawable.account
+                                TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
                                 TransactionType.UNKNOWN -> null
                             }
                         )
@@ -753,4 +838,6 @@ class InsightRepoImpl @Inject constructor(
             alpha = 1f
         )
     }
+
+
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,9 @@ class CategoryInsightsViewModel @Inject constructor(
     val startDate = params.get<String>("startDate") ?: throw Exception("No start date provided")
     val endDate = params.get<String>("endDate") ?: throw Exception("No end date provided")
     val timeLine = params.get<String>("timeLine") ?: throw Exception("No time line provided")
+    val transactionCategory = params.get<TransactionCategory>("transactionCategory")
+        ?: throw Exception("No transaction category provided")
+
 
 
     private var _state = MutableStateFlow(CategoryInsightsScreenState())
@@ -42,7 +46,8 @@ class CategoryInsightsViewModel @Inject constructor(
     val listOfTransactions = insightsRepo.getDataForCategory(
         startDate = startDate,
         endDate = endDate,
-        transactionType = getCategoryEnum()
+        transactionType = getCategoryEnum(),
+        transactionCategory = transactionCategory
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -59,4 +64,5 @@ class CategoryInsightsViewModel @Inject constructor(
         }
         throw Exception("Category  not found")
     }
+
 }

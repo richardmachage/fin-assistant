@@ -94,6 +94,7 @@ fun saveStrategies(
     repos: Repos,
     context: Context
 ): Map<TransactionType, suspend (MpesaMessage) -> Unit> = mapOf(
+
     TransactionType.DEPOSIT to { message ->
         repos.depositRepo.insertDepositTransaction(
             message = message.body,
@@ -215,6 +216,43 @@ fun saveStrategies(
                 Log.e("BundlesPurchaseRepo", it)
             })
     },
+    TransactionType.MOVE_TO_POCHI to { message ->
+        repos.moveToPochiRepo.insertMoveToPochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("MoveToPochiRepo", it)
+            }
+        )
+
+
+    },
+    TransactionType.MOVE_FROM_POCHI to { message ->
+        repos.moveFromPochiRepo.insertMoveFromPochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("MoveFromPochiRepo", it)
+            }
+        )
+    },
+    TransactionType.SEND_MONEY_FROM_POCHI to { message ->
+        repos.sendFromPochiRepo.insertSendPochiTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("SendFromPochiRepo", it)
+            }
+        )
+    },
+
+
     TransactionType.UNKNOWN to { _: MpesaMessage ->
         // No-op or maybe log it
         Log.w("InsertWorker", "Skipping UNKNOWN transaction")

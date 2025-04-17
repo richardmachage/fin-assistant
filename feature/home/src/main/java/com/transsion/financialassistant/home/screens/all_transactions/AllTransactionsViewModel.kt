@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.room.db.UnifiedTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.domain.AllTransactionsRepo
 import com.transsion.financialassistant.home.screens.all_transactions.filter.FilterState
@@ -51,7 +51,7 @@ class AllTransactionsViewModel @Inject constructor(
                     InsightCategory.BUSINESS -> allTransactionsRepo.getAllBusinessTransactions()
                         .map {
                             it.map { re ->
-                                UnifiedTransaction(
+                                UnifiedTransactionPersonal(
                                     transactionCode = re.transactionCode,
                                     phone = re.phone,
                                     amount = re.amount,

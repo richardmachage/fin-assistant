@@ -8,7 +8,6 @@ import android.util.Log
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
-import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import kotlin.time.Duration
 import kotlin.time.measureTime
 
@@ -82,5 +81,46 @@ fun getMpesaMessagesByTransactionType(
         //TODO handle errors if any
         getExecutionTime(Duration.ZERO)
         emptyList()
+    }
+}
+
+
+fun getMessageForTransaction(context: Context, transactionCode: String): Result<String> {
+
+    return try {
+        val selection = "${Telephony.Sms.ADDRESS} = ? AND ${Telephony.Sms.BODY} LIKE ?"
+        val selectionArgs = arrayOf("MPESA", "%$transactionCode%")
+
+        val projection = arrayOf(
+            Telephony.Sms.BODY,
+        )
+
+        val cursor: Cursor? = context.contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor.use { cu ->
+
+            val present = cu?.moveToFirst() ?: false
+
+            return if (present) {
+                val bodyColumn = cu?.getColumnIndexOrThrow(Telephony.Sms.BODY)
+
+                val message = bodyColumn?.let { column ->
+                    cu.getString(column)
+                } ?: "Not found"
+                Result.success(message)
+            } else {
+                Result.failure(Exception("Empty Cursor"))
+            }
+        }
+
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Result.failure(e)
     }
 }

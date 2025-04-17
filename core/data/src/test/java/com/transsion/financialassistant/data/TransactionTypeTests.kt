@@ -169,12 +169,43 @@ class TransactionTypeTests {
         assertTrue(result == TransactionType.RECEIVE_POCHI)
     }
 
+    @Test
+    fun `should detect move to pochi transaction`() {
+        val message =
+            "TDG8YKBIO6 Confirmed, Ksh10.00 has been moved from your M-PESA account to your business account on 16/4/25 at 1:02 PM.. New business balance is Ksh45.00. New M-PESA balance is Ksh7,234.21. Transaction cost, Ksh0.00."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.MOVE_TO_POCHI)
+
+    }
+
+    @Test
+    fun `should detect move from pochi transaction`() {
+        val message =
+            "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.MOVE_FROM_POCHI)
+    }
+
+    @Test
+    fun `should detect send money from pochi transaction`() {
+        val message =
+            "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.SEND_MONEY_FROM_POCHI)
+    }
+
+
 
     @Test
     fun `should handle null input safely`() {
         val message: String? = null
         val result = transactionRepo.getTransactionType(message ?: "")
         println("Transaction type: ${result.description}")
+
 
         assertTrue(result == TransactionType.UNKNOWN)
     }
@@ -193,5 +224,12 @@ val dataBundlesEmptyAccoountNumer =
     "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
 
 
-val sendFromPochi =
-    "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
+
+val sendMoneyFromPochi =
+    "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+
+val sendMoneyFromPochiToPochi =
+    "TDG2XSQF8W Confirmed. Ksh10.00 sent to richard  machage on 16/4/25 at 9:56 AM. New business balance is Ksh3.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,210.00."
+
+val moveToPochi =
+    "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."

@@ -6,18 +6,24 @@ enum class TransactionType(val description: String) {
     SEND_MONEY("Send Money"),
     RECEIVE_MONEY("Receive Money"),
     RECEIVE_POCHI("Receive in Pochi la Biashara"),
-    SEND_POCHI("Pay with Pochi"),
+    SEND_POCHI("Pay to Pochi"),
     PAY_BILL("Pay Bill"),
     BUY_GOODS("Buy Goods Till"),
     SEND_MSHWARI("Send money to Mshwari"),
     RECEIVE_MSHWARI("Receive money from Mshwari"),
     AIRTIME_PURCHASE("Purchase Airtime"),
     BUNDLES_PURCHASE("Purchase Data & Bundles"),
+    MOVE_TO_POCHI("Moved to Pochi Wallet"),
+    MOVE_FROM_POCHI("Moved from Pochi to M-PESA"),
+    SEND_MONEY_FROM_POCHI("Send Money from Pochi Wallet"),
     UNKNOWN("Unknown"),
     ;
 
+
     fun getRegex(): Regex {
         return when (this) {
+
+
             DEPOSIT -> "(\\b[A-Z0-9]+\\b) Confirmed\\. On (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) Give Ksh([\\d,]+\\.?\\d{0,2}) cash to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
                 RegexOption.IGNORE_CASE
             )
@@ -38,8 +44,8 @@ enum class TransactionType(val description: String) {
                 .toRegex(RegexOption.IGNORE_CASE)
 
             SEND_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?"
-                .toRegex()
-            //RECEIVE_MONEY_BANK -> """([A-Z0-9]+) Confirmed\.\s*You have received Ksh([\d,]+\.?\d{0,2}) from\s*([\d]+ - [\w\s]+)\s*on (\d{1,2}/\d{1,2}/\d{2,4}) at (\d{1,2}:\d{2} [APM]{2})\s*New M-PESA balance is Ksh([\d,]+\.?\d{0,2})""".toRegex()
+                .toRegex(RegexOption.IGNORE_CASE)
+
             PAY_BILL -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) for account ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
                 RegexOption.IGNORE_CASE
             )
@@ -62,7 +68,30 @@ enum class TransactionType(val description: String) {
             BUNDLES_PURCHASE -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Z ]+) for account ([A-Z ]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex(RegexOption.IGNORE_CASE)
 
+            MOVE_TO_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed, Ksh([\\d,]+\\.?\\d{0,2}) has been moved from your M-PESA account to your business account on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.?\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(?:\\.(.*))?".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+
+            MOVE_FROM_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed, Ksh([\\d,]+\\.?\\d{0,2}) has been moved from your business account to your M-PESA account on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.?\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(?:\\.(.*))?".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+
+            SEND_MONEY_FROM_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(?:\\.(.*))?".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+
             UNKNOWN -> "".toRegex()
         }
     }
 }
+
+val sendMoneyFromPochiToPochi =
+    "TDG2XSQF8W Confirmed. Ksh10.00 sent to richard  machage on 16/4/25 at 9:56 AM. New business balance is Ksh3.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,210.00."
+
+
+val sendMoneyFromPochi =
+    "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+
+
+val moveFromPochi =
+    "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."

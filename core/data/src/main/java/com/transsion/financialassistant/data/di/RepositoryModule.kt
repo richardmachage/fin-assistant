@@ -14,6 +14,10 @@ import com.transsion.financialassistant.data.repository.transaction.buy_goods.Bu
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_from_pochi.MoveFromPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_from_pochi.MoveFromPochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
@@ -22,6 +26,8 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mshw
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
@@ -114,4 +120,18 @@ abstract class RepositoryModule {
         sendPochiRepo: SendPochiRepoImpl
     ): SendPochiRepo
 
+    @Binds
+    internal abstract fun bindMoveToPochiRepo(
+        moveToPochiRepo: MoveToPochiRepoImpl
+    ): MoveToPochiRepo
+
+    @Binds
+    internal abstract fun bindMoveFromPochi(
+        moveFromPochiRepo: MoveFromPochiRepoImpl
+    ): MoveFromPochiRepo
+
+    @Binds
+    internal abstract fun bindsSendMoneyFromPochi(
+        sendFromPochiRepo: SendFromPochiRepoImpl
+    ): SendFromPochiRepo
 }

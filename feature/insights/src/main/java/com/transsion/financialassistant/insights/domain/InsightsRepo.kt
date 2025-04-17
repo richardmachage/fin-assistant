@@ -47,6 +47,7 @@ interface InsightsRepo {
     fun getDataForCategory(
         startDate: String,
         endDate: String,
-        transactionType: TransactionType
+        transactionType: TransactionType,
+        transactionCategory: TransactionCategory
     ): Flow<List<TransactionUi>>
 }
