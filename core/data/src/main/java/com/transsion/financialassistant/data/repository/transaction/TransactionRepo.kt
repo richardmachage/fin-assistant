@@ -5,11 +5,13 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
@@ -30,4 +32,6 @@ interface TransactionRepo {
     fun parsePurchaseAirtimeMessage(message: String, phone: String): BuyAirtimeEntity?
     fun parseWithdrawMoneyMessage(message: String, phone: String): WithdrawMoneyEntity?
     fun parseMoveToPochiMessage(message: String, phone: String): MoveToPochiEntity?
+    fun parseMoveFromPochiMessage(message: String, phone: String): MoveFromPochiEntity?
+    fun parseSendFromPochiMessage(message: String, phone: String): SendFromPochiEntity?
 }
