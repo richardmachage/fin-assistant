@@ -96,10 +96,10 @@ interface FinancialAssistantDao {
     WHERE  date BETWEEN :startDate AND :endDate
     """
     )
-    suspend fun getNumberOfTransactionsIn(
+    fun getNumberOfTransactionsIn(
         startDate: String,
         endDate: String
-    ): Int?
+    ): Flow<Int?>
 
     @Query(
         """
@@ -107,10 +107,10 @@ interface FinancialAssistantDao {
   WHERE  date BETWEEN :startDate AND :endDate
  """
     )
-    suspend fun getNumberOfTransactionsOut(
+    fun getNumberOfTransactionsOut(
         startDate: String,
         endDate: String
-    ): Int?
+    ): Flow<Int?>
 
 
     @Query(

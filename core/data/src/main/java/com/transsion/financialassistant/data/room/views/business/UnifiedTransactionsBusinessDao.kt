@@ -3,6 +3,8 @@ package com.transsion.financialassistant.data.room.views.business
 import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
+import com.transsion.financialassistant.data.models.DailyTransactionTotal
+import com.transsion.financialassistant.data.models.DailyTransactionsTime
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,6 +18,18 @@ interface UnifiedTransactionsBusinessDao {
 
     @Query("SELECT * FROM UnifiedTransactionBusiness WHERE transactionCategory = 'IN' ORDER BY date DESC, time DESC")
     fun getAllTransactionsIn(): PagingSource<Int, UnifiedTransactionBusiness>
+
+    @Query(
+        """
+        SELECT time, amount
+        FROM UnifiedIncomingTransactionsBusiness
+        WHERE date = :date
+        ORDER BY time ASC
+    """
+    )
+    suspend fun getTransactionsInForDate(
+        date: String,
+    ): List<DailyTransactionsTime>
 
     @Query("SELECT * FROM UnifiedTransactionBusiness WHERE transactionCategory = 'IN' AND date BETWEEN :startDate AND :endDate ORDER BY date DESC, time DESC")
     fun getAllTransactionsInForDate(
@@ -94,4 +108,43 @@ interface UnifiedTransactionsBusinessDao {
         startDate: String,
         endDate: String
     ): Flow<Double>
+
+
+    @Query(
+        """
+    SELECT COUNT (*) FROM UnifiedIncomingTransactionsBusiness
+    WHERE  date BETWEEN :startDate AND :endDate
+    """
+    )
+    fun getNumberOfTransactionsIn(
+        startDate: String,
+        endDate: String
+    ): Flow<Int?>
+
+    @Query(
+        """
+  SELECT COUNT (*) FROM UnifiedOutgoingTransactionsBusiness
+  WHERE  date BETWEEN :startDate AND :endDate
+ """
+    )
+    fun getNumberOfTransactionsOut(
+        startDate: String,
+        endDate: String
+    ): Flow<Int?>
+
+
+    @Query(
+        """
+        SELECT date,time, SUM(amount) as totalAmount
+        FROM UnifiedIncomingTransactionsBusiness
+        WHERE date BETWEEN :startDate AND :endDate
+        GROUP BY date
+        ORDER BY date ASC
+    """
+    )
+    suspend fun getTotalTransactionsInPerDay(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTotal>
+
 }
