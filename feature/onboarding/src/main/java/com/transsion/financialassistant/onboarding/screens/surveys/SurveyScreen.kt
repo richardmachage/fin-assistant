@@ -69,7 +69,7 @@ fun SurveyScreen(
 
         if (viewModel.onboardingCompleted.value == true){
             LaunchedEffect(Unit) {
-                navController.navigate(OnboardingRoutes.HomeScreen)
+                //navController.navigate(OnboardingRoutes.HomeScreen)
             }
         } else {
         Box(

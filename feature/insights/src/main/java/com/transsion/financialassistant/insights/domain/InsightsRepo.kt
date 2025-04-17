@@ -22,6 +22,12 @@ interface InsightsRepo {
 
     suspend fun getNumOfTransactionsOut(startDate: String, endDate: String): Result<Int>
 
+    // business repos - pochi la biashara
+    suspend fun getTotalPochiMoneyIn(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalPochiMoneyOut(startDate: String, endDate: String): Result<Double>
+    suspend fun getNumOfPochiTransactionsIn(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfPochiTransactionsOut(startDate: String, endDate: String): Result<Int>
+
     fun getTotalTransactions(startDate: String, endDate: String)
 
     fun getDataPoints(

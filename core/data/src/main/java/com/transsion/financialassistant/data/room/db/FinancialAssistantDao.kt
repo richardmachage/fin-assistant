@@ -63,12 +63,25 @@ interface FinancialAssistantDao {
         endDate: String
     ): Double?
 
+    // pochi money in
+    @Query(
+        """
+            SELECT SUM(businessBalance) FROM ReceivePochiEntity
+            WHERE date BETWEEN :startDate AND :endDate
+        """
+    )
+    suspend fun getTotalPochiMoneyInAmount(
+        startDate: String,
+        endDate: String
+    ): Double?
+
     @Query(
         """
     SELECT SUM(amount) FROM unifiedoutgoingtransaction
     WHERE  date BETWEEN :startDate AND :endDate
     """
     )
+
     suspend fun getTotalMoneyOutAmount(
         startDate: String,
         endDate: String

@@ -78,6 +78,24 @@ class InsightsViewModel @Inject constructor(
         }
     }
 
+    // Pochi La Biashara Total Money In
+    private fun getPochiTotalMoneyIn(){
+        viewModelScope.launch {
+            insightsRepo.getTotalPochiMoneyIn(
+                startDate = state.value.insightTimeline.getTimeline().startDate,
+                endDate = state.value.insightTimeline.getTimeline().endDate
+            ).apply {
+                onSuccess { totalPochiMoneyIn ->
+                    _state.update { it.copy(pochiMoneyIn = totalPochiMoneyIn.toString()) }
+                }
+                onFailure {
+                    //TODO
+
+                }
+            }
+        }
+    }
+
 
     private fun getTransactionCost() {
         viewModelScope.launch {
@@ -175,6 +193,9 @@ class InsightsViewModel @Inject constructor(
         getNumberOfTransactionsIn()
         getNumberOfTransactionsOut()
         getTransactionCost()
+
+        //pochi
+        getPochiTotalMoneyIn()
     }
 
 }

@@ -100,7 +100,6 @@ fun InsightsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 var showMenu by remember { mutableStateOf(false) }
                 //personal finances/business switch
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -179,23 +178,32 @@ fun InsightsScreen(
             }
 
             VerticalSpacer(5)
-            //Money in and Out summary Card
-            InOutCard(
-                modifier = Modifier.padding(paddingSmall),
-                moneyIn = state.moneyIn ?: "0.0",
-                moneyOut = state.moneyOut ?: "0.0",
-                transactionsIn = state.transactionsIn ?: "0",
-                transactionsOut = state.transactionsOut ?: "0"
-            )
-            VerticalSpacer(5)
+           /* when personal finance collapse money in and out cards and the toggle buttons*/
+            when(state.insightCategory){
+                InsightCategory.PERSONAL -> {
+                    //Money in and Out summary Card
+                    InOutCard(
+                        modifier = Modifier.padding(paddingSmall),
+                        moneyIn = state.moneyIn ?: "0.0",
+                        moneyOut = state.moneyOut ?: "0.0",
+                        transactionsIn = state.transactionsIn ?: "0",
+                        transactionsOut = state.transactionsOut ?: "0"
+                    )
+                    VerticalSpacer(5)
 
-            //Money In/Out toggle buttons
-            MoneyToggle(
-                selectedOption = state.transactionCategory,
-                onOptionSelected = {
-                    viewModel.switchTransactionCategory(it)
+                    //Money In/Out toggle buttons
+                    MoneyToggle(
+                        selectedOption = state.transactionCategory,
+                        onOptionSelected = {
+                            viewModel.switchTransactionCategory(it)
+                        }
+                    )
                 }
-            )
+                InsightCategory.BUSINESS -> {
+                    //Money in and Out summary Card
+                }
+            }
+
 
             //Graph
             VerticalSpacer(5)

@@ -92,7 +92,6 @@ fun MpesaBalanceCard(
                     amount = balance,
                     textSize = 22.sp
                 )
-
                 IconButton(
                     onClick = {
                         onHideBalance()

@@ -15,5 +15,12 @@ data class InsightsScreenState(
     val moneyOut: String? = null,
     val transactionsIn: String? = null,
     val transactionsOut: String? = null,
-    val totalTransactionCost: String? = null
+    val totalTransactionCost: String? = null,
+
+    // business states
+    val pochiMoneyIn: String? = null,
+    val pochiMoneyyOut: String? = null,
+    val pochiTransactionsIn: String? = null,
+    val pochiTransactionsOut: String? = null,
+    val pochiTotalTransactionCost: String? = null
 )
