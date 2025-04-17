@@ -10,6 +10,8 @@ import com.transsion.financialassistant.data.models.TransactionType
     //FIXME make a UNION of all the Business views here
     value = """
         SELECT transactionCode, phone, amount,date,time, receiveFromName as name, "IN" AS transactionCategory, transactionType, businessBalance AS mpesaBalance,  transactionCost FROM UnifiedIncomingTransactionsBusiness
+        UNION ALL
+        SELECt transactionCode, phone, amount,date,time, sentToName as name, "OUT" AS transactionCategory, transactionType, businessBalance AS mpesaBalance, transactionCost FROM UnifiedOutGoingTransactionsBusiness
     """
 )
 data class UnifiedTransactionBusiness(
