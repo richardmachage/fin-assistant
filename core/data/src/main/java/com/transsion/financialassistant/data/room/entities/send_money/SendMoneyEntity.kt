@@ -16,8 +16,6 @@ data class SendMoneyEntity(
     val mpesaBalance: Double,
     val transactionCost: Double,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT,
     val transactionType: TransactionType = TransactionType.SEND_MONEY

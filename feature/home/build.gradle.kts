@@ -14,8 +14,14 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.rules)
 
+    //paging
+    implementation(libs.androidx.paging.common.android)
+    implementation(libs.androidx.paging.compose)
+
+
     debugImplementation(libs.ui.tooling)
 
     //data store
     implementation(libs.datastore.preferences)
+
 }

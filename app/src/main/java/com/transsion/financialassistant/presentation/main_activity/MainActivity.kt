@@ -28,6 +28,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -52,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 val financialAssistantController = rememberNavController()
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
-                    startDestination = FinancialAssistantRoutes.Landing //InsightsRoutes.Insights //viewmodel.getStartDestination()//OnboardingRoutes.Welcome
+                    startDestination = viewmodel.getStartDestination()/*FinancialAssistantRoutes.Landing*/ //InsightsRoutes.Insights //viewmodel.getStartDestination()//OnboardingRoutes.Welcome
                 )
             }
         }

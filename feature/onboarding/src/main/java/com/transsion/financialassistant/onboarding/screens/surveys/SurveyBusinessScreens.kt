@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.onboarding.screens.surveys
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.slideInHorizontally
@@ -22,8 +23,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -60,11 +61,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyState
+import com.transsion.financialassistant.presentation.R.drawable
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -74,13 +77,14 @@ import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
-import com.transsion.financialassistant.presentation.R.drawable
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
+
 fun SurveyBusinessScreens(
     navController: NavController,
     surveyViewModel: SurveyViewModel = hiltViewModel(),
+    goToLanding: (route: Any) -> Unit
 ) {
     val state by surveyViewModel.surveyState.observeAsState(SurveyState())
 
@@ -95,10 +99,15 @@ fun SurveyBusinessScreens(
         stringResource(R.string.stock) to drawable.store_02,
     )
 
-    val optionsPay = listOf(
-        stringResource(R.string.cash) to drawable.cash,
-        stringResource(R.string.pochi_la_biashara) to drawable.mobile_security,
-    )
+    // Handle back navigation with device back button
+    BackHandler(enabled = true) {
+        if (state.currentQuestionIndex > 0) {
+            surveyViewModel.loadPreviousQuestion()
+        } else {
+            // If already at the first question, exit or pop the stack
+            navController.popBackStack()
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -135,25 +144,12 @@ fun SurveyBusinessScreens(
                             horizontalArrangement = Arrangement.Start,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            IconButton(
-                                onClick = {
-                                    surveyViewModel.loadPreviousQuestion()
-                                    //navController.popBackStack()
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    tint = MaterialTheme.colorScheme.onBackground,
-                                    contentDescription = "Back",
-                                    modifier = Modifier
-                                )
-                            }
-                            HorizontalSpacer(8)
                             SurveyProgressBar(surveyViewModel)
                         }
                     }
 
                     VerticalSpacer(16)
+
 
                     AnimatedContent(
                         targetState = state.currentQuestion,
@@ -186,6 +182,11 @@ fun SurveyBusinessScreens(
 
                                 when (it.answerType) {
                                     AnswerType.SINGLE_CHOICE -> {
+                                        var selectedOption by remember {
+                                            mutableStateOf(state.answers[it.id]?.toString() ?: "")
+                                        }
+                                        var other by remember { mutableStateOf("") }
+
                                         it.options?.forEach { option ->
                                             Row(
                                                 modifier = Modifier.fillMaxWidth(),
@@ -197,20 +198,24 @@ fun SurveyBusinessScreens(
                                                     elevation = CardDefaults.cardElevation(8.dp),
                                                     colors = CardDefaults.cardColors(
                                                         containerColor =
-                                                            if (isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.cardBackgroundLight
+                                                            if (isSystemInDarkTheme()) FAColors.cardBackgroundDark
+                                                            else FAColors.cardBackgroundLight
                                                     )
                                                 ) {
                                                     Row(
-                                                        modifier = Modifier.fillMaxWidth(),
+                                                        modifier = Modifier
+                                                            .fillMaxWidth()
+                                                            .clickable {
+                                                                selectedOption = option
+                                                                surveyViewModel.answerQuestion(it.id, option)
+                                                            },
                                                         verticalAlignment = Alignment.CenterVertically
                                                     ) {
                                                         RadioButton(
-                                                            selected = state.answers[it.id] == option,
+                                                            selected = selectedOption == option,
                                                             onClick = {
-                                                                surveyViewModel.answerQuestion(
-                                                                    it.id,
-                                                                    option
-                                                                )
+                                                                selectedOption = option
+                                                                surveyViewModel.answerQuestion(it.id, option)
                                                             }
                                                         )
                                                         VerticalSpacer(8)
@@ -219,6 +224,23 @@ fun SurveyBusinessScreens(
                                                 }
                                             }
                                             VerticalSpacer(16)
+                                        }
+                                        // Other Option
+                                        if (selectedOption == "Other") {
+                                            var text by remember {
+                                                mutableStateOf(
+                                                    state.answers[it.id]?.toString() ?: ""
+                                                )
+                                            }
+                                            OutlinedTextField(
+                                                value = text,
+                                                onValueChange = { newValue ->
+                                                    text = newValue
+                                                    surveyViewModel.answerQuestion(it.id, newValue)
+                                                },
+                                                label = { NormalText(text = "Custom Business Type") },
+                                                modifier = Modifier.fillMaxWidth()
+                                            )
                                         }
                                     }
 
@@ -260,7 +282,8 @@ fun SurveyBusinessScreens(
                                                                 Text(option)
                                                             }
                                                         },
-                                                        modifier = Modifier.padding(4.dp)
+                                                        modifier = Modifier.padding(4.dp),
+                                                        shape = RoundedCornerShape(40.dp)
                                                     )
                                                 }
                                             }
@@ -269,7 +292,8 @@ fun SurveyBusinessScreens(
 
                                     AnswerType.MULTI_CHOICE_PAY -> {
                                         it.options?.let { optionsPay ->
-                                            val selectedItems = remember { mutableStateListOf<String>() }
+                                            val selectedItems =
+                                                remember { mutableStateListOf<String>() }
 
                                             LazyVerticalGrid(
                                                 columns = GridCells.Fixed(2),
@@ -297,11 +321,16 @@ fun SurveyBusinessScreens(
                                                                 shape = RoundedCornerShape(12.dp)
                                                             )
                                                             .clickable {
-                                                                if (isSelected) selectedItems.remove(option)
+                                                                if (isSelected) selectedItems.remove(
+                                                                    option
+                                                                )
                                                                 else selectedItems.add(option)
 
                                                                 // Update ViewModel
-                                                                surveyViewModel.answerQuestion(4, selectedItems.toList())
+                                                                surveyViewModel.answerQuestion(
+                                                                    it.id,
+                                                                    selectedItems.toList()
+                                                                )
                                                             }
                                                     ) {
                                                         Box(
@@ -324,7 +353,9 @@ fun SurveyBusinessScreens(
                                                                     imageVector = Icons.Filled.CheckCircle,
                                                                     contentDescription = "Selected",
                                                                     tint = FAColors.lightGreen,
-                                                                    modifier = Modifier.align(Alignment.TopEnd)
+                                                                    modifier = Modifier.align(
+                                                                        Alignment.TopEnd
+                                                                    )
                                                                 )
                                                             }
 
@@ -350,24 +381,6 @@ fun SurveyBusinessScreens(
                                         }
                                     }
 
-
-                                    AnswerType.TEXT_INPUT -> {
-                                        var text by remember {
-                                            mutableStateOf(
-                                                state.answers[it.id]?.toString() ?: ""
-                                            )
-                                        }
-                                        OutlinedTextField(
-                                            value = text,
-                                            onValueChange = { newValue ->
-                                                text = newValue
-                                                surveyViewModel.answerQuestion(it.id, newValue)
-                                            },
-                                            label = { NormalText(text = "Your Answer") },
-                                            modifier = Modifier.fillMaxWidth()
-                                        )
-                                    }
-
                                     else -> Text("Unsupported answer type")
                                 }
                             }
@@ -387,12 +400,8 @@ fun SurveyBusinessScreens(
                     }
 
                     if (state.isSurveyComplete) {
-                        navController.navigate(OnboardingRoutes.HomeScreen){
-                            popUpTo(OnboardingRoutes.HomeScreen) {
-                                inclusive = true
-                            }
 
-                        }
+                        goToLanding(OnboardingRoutes.SurveyBusinessScreens)
                     }
 
                     state.error?.let {
@@ -412,11 +421,30 @@ fun SurveyBusinessScreens(
                 FilledButtonFa(
                     text = stringResource(R.string.next),
                     onClick = {
-                        surveyViewModel.loadNextQuestion()
+                        if (state.currentQuestion == null) return@FilledButtonFa
+
+                        // store answers
+                        surveyViewModel.validateAndMoveToNextQuestion() // Proceed to the next question
+
+                        // check if survey is completed
+                        if (state.isSurveyComplete) {
+                            // save data when survey is completed
+                            surveyViewModel.completeOnboarding()
+                        }
                     },
-                    enabled = state.currentQuestion != null,
+                    enabled = state.currentQuestion?.let { question ->
+                        val answer = state.answers[question.id]
+                        when (question.answerType) {
+                            AnswerType.SINGLE_CHOICE -> answer is String && answer.isNotBlank()
+                            AnswerType.MULTI_CHOICE,
+                            AnswerType.MULTI_CHOICE_PAY -> answer is List<*> && answer.isNotEmpty()
+
+                            AnswerType.TEXT_INPUT -> answer is String && answer.isNotBlank()
+                        }
+                    } ?: false,
 
                     )
+
             }
         }
     }

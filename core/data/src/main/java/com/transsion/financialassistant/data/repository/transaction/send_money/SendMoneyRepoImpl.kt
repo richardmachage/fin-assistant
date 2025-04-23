@@ -25,7 +25,6 @@ class SendMoneyRepoImpl @Inject constructor(
     ) {
         var thisPhone = phone
         try {
-
             //get the receiving address
             if (thisPhone == null) {
                 thisPhone = getReceivingAddress(context, subId)

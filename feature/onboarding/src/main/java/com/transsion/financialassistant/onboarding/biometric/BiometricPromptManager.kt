@@ -26,22 +26,29 @@ class BiometricPromptManager (
     ){
         // Defining the Biometric Prompt
         val manager = BiometricManager.from(context)
-        val authenticators = if (Build.VERSION.SDK_INT >= 30) {
+
+        /* use only Biometric */
+        val authenticators = //BiometricManager.Authenticators.BIOMETRIC_STRONG
+         /*  if (Build.VERSION.SDK_INT >= 30) {
             BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                    BiometricManager.Authenticators.DEVICE_CREDENTIAL
-        } else
+                   BiometricManager.Authenticators.BIOMETRIC_WEAK
+        } else*/
             BiometricManager.Authenticators.BIOMETRIC_STRONG
 
-        val promptInfo = PromptInfo.Builder()
+        val promptInfoBuilder = PromptInfo.Builder()
             .setTitle(title)
             .setSubtitle(description)
             .setAllowedAuthenticators(authenticators)
             .setConfirmationRequired(false)
 
         // check if the device meets biometric hardware requirements - From Android 11 and above
-        if (Build.VERSION.SDK_INT < 30){
-            promptInfo.setNegativeButtonText("Cancel")
-        }
+
+        promptInfoBuilder.setNegativeButtonText("Cancel")
+      /*  if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            promptInfoBuilder.setNegativeButtonText("Cancel")
+        }*/
+
+        val promptInfo = promptInfoBuilder.build()
 
         when(manager.canAuthenticate(authenticators)) {
             BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE -> {
@@ -83,7 +90,7 @@ class BiometricPromptManager (
         )
 
         // Call the biometric prompt
-        prompt.authenticate(promptInfo.build())
+        prompt.authenticate(promptInfo)
     }
 }
 

@@ -8,15 +8,12 @@ import com.transsion.financialassistant.data.models.TransactionType
 @Entity
 data class BuyGoodsEntity(
     @PrimaryKey
-    val id: Int = 0,
     val transactionCode: String,
     val phone: String,
     val paidTo: String,
     val amount: Double,
     val transactionCategory: TransactionCategory = TransactionCategory.OUT,
     val date: String,
-    val startDate: String? = null,
-    val endDate: String? = null,
     val time: String,
     val mpesaBalance: Double,
     val transactionCost: Double,

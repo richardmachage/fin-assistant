@@ -114,4 +114,5 @@
     <string name="no_transactions_found">No Transactions Found</string>
     <string name="received_money">Received Money</string>
     <string name="unknown_transaction_type">Unknown Transaction</string>
+    <string name="please_answer_the_question">Please select an option</string>
 </resources>

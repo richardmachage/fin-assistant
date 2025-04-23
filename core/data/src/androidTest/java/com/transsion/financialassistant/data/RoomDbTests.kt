@@ -12,6 +12,10 @@ import com.transsion.financialassistant.data.repository.transaction.buy_goods.Bu
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_from_pochi.MoveFromPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_from_pochi.MoveFromPochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
@@ -20,6 +24,8 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mshw
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
@@ -54,6 +60,10 @@ class RoomDbTests {
     private lateinit var sendPochiRepo: SendPochiRepo
     private lateinit var receivePochiRepo: ReceivePochiRepo
     private lateinit var depositRepo: DepositRepo
+    private lateinit var moveToPochiRepo: MoveToPochiRepo
+    private lateinit var moveFromPochiRepo: MoveFromPochiRepo
+    private lateinit var sendFromPochiRepo: SendFromPochiRepo
+
 
     @Before
     fun setUp() {
@@ -80,6 +90,9 @@ class RoomDbTests {
         sendPochiRepo = SendPochiRepoImpl(sendPochiDao = db.sendPochiDao())
         receivePochiRepo = ReceivePochiRepoImpl(receivePochiDao = db.receivePochiDao())
         depositRepo = DepositRepoImpl(depositMoneyDao = db.depositMoneyDao())
+        moveToPochiRepo = MoveToPochiRepoImpl(moveToPochiDao = db.moveToPochiDao())
+        moveFromPochiRepo = MoveFromPochiRepoImpl(moveFromPochiDao = db.moveFromPochiDao())
+        sendFromPochiRepo = SendFromPochiRepoImpl(sendFromPochiDao = db.sendFromPochiDao())
 
     }
 
@@ -351,6 +364,80 @@ class RoomDbTests {
                 fail(it)
             }
         )
+        assertTrue(successCalled)
+    }
+
+    @Test
+    fun testMoveToPochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."
+        var successCalled = false
+
+        moveToPochiRepo.insertMoveToPochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted Successfully")
+                successCalled = true
+            },
+
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+        assertTrue(successCalled)
+
+    }
+
+
+    @Test
+    fun testMoveFromPochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
+        var successCalled = false
+
+        moveFromPochiRepo.insertMoveFromPochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted Successfully")
+                successCalled = true
+            },
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+        assertTrue(successCalled)
+
+    }
+
+    @Test
+    fun testSendFromPochiTransaction_withPhone_shouldSucceed() = runTest {
+        val message =
+            "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+        var successCalled = false
+
+        sendFromPochiRepo.insertSendFromPochiTransaction(
+            message = message,
+            context = appContext,
+            subId = 1,
+            phone = "098769",
+            onSuccess = {
+                println("Transaction inserted Successfully")
+                successCalled = true
+            },
+            onFailure = {
+                println("Transaction insertion failed!")
+                fail(it)
+            }
+        )
+
         assertTrue(successCalled)
     }
 }

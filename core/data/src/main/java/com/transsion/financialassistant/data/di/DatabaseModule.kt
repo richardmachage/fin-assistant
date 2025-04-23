@@ -106,4 +106,29 @@ object DatabaseModule {
     @Singleton
     fun providesReceiveMshwariDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.receiveMshwariDao()
+
+    @Provides
+    @Singleton
+    fun providesUnifiedTransactionsDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unifiedTransactionsDao()
+
+    @Provides
+    @Singleton
+    fun providesMoveToPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.moveToPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesUnifiedBusinessDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unifiedBusinessDao()
+
+    @Provides
+    @Singleton
+    fun providesMoveFromPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.moveFromPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesSendFromPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.sendFromPochiDao()
 }

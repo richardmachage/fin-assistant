@@ -21,6 +21,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,6 +65,12 @@ fun SurveyScreen(
 
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
+
+        if (viewModel.onboardingCompleted.value == true){
+            LaunchedEffect(Unit) {
+                navController.navigate(OnboardingRoutes.SurveyScreen)
+            }
+        } else {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -152,22 +159,25 @@ fun SurveyScreen(
                 FilledButtonFa(
                     text = stringResource(R.string.next_btn),
                     onClick = {
-                        if (selectedOption == stringOptions[0]) navController.navigate(OnboardingRoutes.PersonalTrackerSurvey){
-                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
-                        } else if (selectedOption == stringOptions[1]) navController.navigate(OnboardingRoutes.SurveyBusinessScreens){
-                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
-                        } else if (selectedOption == stringOptions[2]) navController.navigate(OnboardingRoutes.SurveyBusinessScreens){
-                            popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}
-                        }
-                              },
+                        if (selectedOption == stringOptions[0]) navController.navigate(
+                            OnboardingRoutes.PersonalTrackerSurvey
+                        )
+                        else if (selectedOption == stringOptions[1]) navController.navigate(
+                            OnboardingRoutes.SurveyBusinessScreens
+                        )
+                        else if (selectedOption == stringOptions[2]) navController.navigate(
+                            OnboardingRoutes.SurveyBusinessScreens
+                        )
+                    },
+
                     enabled = if (selectedOption.isNotEmpty()) true else false,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .fillMaxWidth(0.8f)
+                        .fillMaxWidth(0.8f),
                 )
-
             }
         }
+            }
     }
 }
 

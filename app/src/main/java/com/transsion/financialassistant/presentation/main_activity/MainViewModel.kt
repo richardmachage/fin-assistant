@@ -10,6 +10,7 @@ import com.transsion.financialassistant.data.repository.pin.PinRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
+import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -59,7 +60,7 @@ class MainViewModel @Inject constructor(
                 return OnboardingRoutes.Login
             } else {
                 //pin not set, go to home
-                return OnboardingRoutes.Login// FIXME change to insights
+                return FinancialAssistantRoutes.Landing
             }
         } else {
             //Onboarding has not completed

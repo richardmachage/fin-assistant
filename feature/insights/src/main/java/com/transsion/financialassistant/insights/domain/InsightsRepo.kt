@@ -14,13 +14,30 @@ interface InsightsRepo {
     val categoryDistributionFlow: StateFlow<List<CategoryDistribution>>
 
 
-    suspend fun getTotalMoneyIn(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalMoneyIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double>
 
-    suspend fun getTotalMoneyOut(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalMoneyOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Double>
 
-    suspend fun getNumOfTransactionsIn(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfTransactionsIn(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int>
 
-    suspend fun getNumOfTransactionsOut(startDate: String, endDate: String): Result<Int>
+    suspend fun getNumOfTransactionsOut(
+        startDate: String,
+        endDate: String,
+        insightCategory: InsightCategory
+    ): Flow<Int>
+
 
     fun getTotalTransactions(startDate: String, endDate: String)
 
@@ -41,6 +58,7 @@ interface InsightsRepo {
     fun getDataForCategory(
         startDate: String,
         endDate: String,
-        transactionType: TransactionType
+        transactionType: TransactionType,
+        transactionCategory: TransactionCategory
     ): Flow<List<TransactionUi>>
 }

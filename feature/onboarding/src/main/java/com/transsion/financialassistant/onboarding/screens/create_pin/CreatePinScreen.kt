@@ -6,10 +6,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -17,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -51,6 +57,7 @@ import com.transsion.financialassistant.presentation.theme.FinancialAssistantThe
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingSmall
 
 
 @Composable
@@ -76,44 +83,45 @@ fun CreatePinScreen(
             .joinToString(""))
         TransformedText(transformedText, OffsetMapping.Identity)
     }
+
+    val hasPinSetupCompleted = viewModel.hasCompletedOnboarding()
+
     // After succefully creating the pin, it should clear the CreatePinScreen Route from the backstack
     LaunchedEffect(pinState.success) {
         if (pinState.success) {
             viewModel.clearPin()
-            navController.navigate(OnboardingRoutes.Login) {
-                popUpTo<OnboardingRoutes.CreatePin> {
-                    inclusive = true
-                }
-            }
         }
     }
 
     when (showPrompt) {
         true -> SetPasswordPromptScreen(
             onSkip = {
+                viewModel.skipPinSetup()
                 navController.navigate(OnboardingRoutes.SurveyScreen) {
                     popUpTo<OnboardingRoutes.CreatePin> {
                         inclusive = true
                     }
+                    launchSingleTop = true
                 }
             }, onContinue = {
                 viewModel.setShowPrompt(false)
             }
         )
 
-        false -> Scaffold(
-        ) { paddingValues ->
+        false -> Surface {
+            val paddingValues = WindowInsets.statusBars.asPaddingValues()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .verticalScroll(rememberScrollState()),
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingLarge),
+                        .fillMaxSize()
+                        .padding(paddingSmall),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.Start
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -132,7 +140,7 @@ fun CreatePinScreen(
                             )
                         }
                         //  }
-                        HorizontalSpacer(16)
+                        HorizontalSpacer(8)
                         BigTittleText(text = stringResource(R.string.create_pin))
                     }
 
@@ -149,7 +157,7 @@ fun CreatePinScreen(
                         text = stringResource(R.string.pin),
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(start = 60.dp)
+                            .padding(start = 30.dp)
                             .align(Alignment.Start)
                     )
                     VerticalSpacer(8)
@@ -160,7 +168,8 @@ fun CreatePinScreen(
                             pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
                         },
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
+                           // .align(Alignment.Start)
+                            .padding(start = 40.dp),
                         placeholder = stringResource(R.string.pin),
                         isShowError = pinError,
                         visualTransformation = asteriskVisualTransformation
@@ -178,7 +187,7 @@ fun CreatePinScreen(
                         text = stringResource(R.string.confirm_pin),
                         textAlign = TextAlign.Start,
                         modifier = Modifier
-                            .padding(start = 60.dp)
+                            .padding(start = 30.dp)
                             .align(Alignment.Start)
                     )
                     VerticalSpacer(8)
@@ -192,7 +201,8 @@ fun CreatePinScreen(
                             }
                         },
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally),
+                            //.align(Alignment.Start)
+                            .padding(start = 40.dp),
                         placeholder = stringResource(R.string.confirm_pin),
                         isShowError = confirmPinError,
                         visualTransformation = asteriskVisualTransformation
@@ -212,7 +222,7 @@ fun CreatePinScreen(
 
             FilledButtonFa(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.8f)
                     .padding(paddingLarge)
                     .imePadding()
                     .align(Alignment.BottomCenter),

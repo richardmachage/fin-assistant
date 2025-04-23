@@ -14,9 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,17 +27,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
+import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.R.drawable
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -53,7 +53,9 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun PersonalTrackerSurvey(
-    navController: NavController
+    navController: NavController,
+    viewModel: SurveyViewModel = hiltViewModel(),
+    goToLanding: (route: Any) -> Unit
 ){
     val categories = listOf(
         stringResource(R.string.baby_clothes) to drawable.baby_02,
@@ -126,6 +128,7 @@ fun PersonalTrackerSurvey(
                         categories.forEach { (category, iconRes) ->
                             val isSelected = selectedItems.contains(category)
                             FilterChip(
+
                                 selected = isSelected,
                                 onClick = {
                                     if (isSelected) selectedItems.remove(category)
@@ -142,20 +145,20 @@ fun PersonalTrackerSurvey(
                                     }
 
                                 },
-//                              leadingIcon = if (isSelected){
-//                                  { Icon(
-//                                      imageVector = Icons.Filled.Check,
-//                                      contentDescription = "Selected")
-//                                  }
-//                              } else null,
-                                modifier = Modifier.padding(paddingSmall)
+                                modifier = Modifier
+                                    .padding(paddingSmall),
+                                shape = RoundedCornerShape(40.dp)
                             )
                         }
                     }
                 }
                     FilledButtonFa(
                         text = stringResource(R.string.next_btn),
-                        onClick = {},
+                        onClick = {
+                            goToLanding(OnboardingRoutes.SurveyScreen)
+
+                            viewModel.completeOnboarding()
+                        },
                         enabled = if (selectedItems.isNotEmpty()) true else false,
                         modifier = Modifier
                             .fillMaxWidth(0.8f)

@@ -11,6 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -20,18 +21,34 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class InsightsViewModel @Inject constructor(
     private val insightsRepo: InsightsRepo
 ) : ViewModel() {
     private var _state = MutableStateFlow(InsightsScreenState())
     val state = _state.asStateFlow()
 
-    val graphDataFlow = getGraphData()
+    val graphDataFlow = //getGraphData()
+        combine(
+            state.map { it.insightCategory },
+            state.map { it.insightTimeline },
+            state.map { it.transactionCategory }
+        ) { insightCategory, insightTimeline, transactionCategory ->
+            Triple(insightCategory, insightTimeline, transactionCategory)
+        }.distinctUntilChanged()
+            .flatMapLatest {
+                insightsRepo.getDataPoints(
+                    insightCategory = it.first,
+                    transactionCategory = it.third,
+                    insightTimeline = it.second
+                )
+            }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(),
             initialValue = emptyList()
         )
+
     val categoryDistributionFlow = insightsRepo.categoryDistributionFlow
         .stateIn(
             scope = viewModelScope,
@@ -39,16 +56,12 @@ class InsightsViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    init {
-        refreshMoneyInOutCardInfo()
-    }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     fun getGraphData() = state
         .map { it.selector() }
         .distinctUntilChanged()
         .flatMapLatest { selection ->
-            refreshMoneyInOutCardInfo()
 
             insightsRepo.getDataPoints(
                 insightCategory = selection.insightCategory,
@@ -59,24 +72,46 @@ class InsightsViewModel @Inject constructor(
         }
 
 
-    private fun getMoneyIn(
-    ) {
-        viewModelScope.launch {
-            //so this one should fetch the data from the repo and update the state
-            insightsRepo.getTotalMoneyIn(
-                startDate = state.value.insightTimeline.getTimeline().startDate,
-                endDate = state.value.insightTimeline.getTimeline().endDate
-            ).apply {
-                onSuccess { totalMoneyIn ->
-                    _state.update { it.copy(moneyIn = totalMoneyIn.toString()) }
-                }
-
-                onFailure {
-                    //TODO
-                }
-            }
-        }
+    val moneyInFlow = combine(
+        state.map { it.insightCategory },
+        state.map { it.insightTimeline }) { insightCategory, insightTimeline ->
+        insightCategory to insightTimeline
     }
+        .distinctUntilChanged()
+        .flatMapLatest {
+
+            insightsRepo.getTotalMoneyIn(
+                startDate = it.second.getTimeline().startDate,
+                endDate = it.second.getTimeline().endDate,
+                insightCategory = it.first
+
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = 0.0
+        )
+
+    val moneyOutFlow = combine(
+        state.map { it.insightCategory },
+        state.map { it.insightTimeline }) { insightCategory, insightTimeline ->
+        insightCategory to insightTimeline
+    }
+        .distinctUntilChanged()
+        .flatMapLatest {
+
+            insightsRepo.getTotalMoneyOut(
+                startDate = it.second.getTimeline().startDate,
+                endDate = it.second.getTimeline().endDate,
+                insightCategory = it.first
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = 0.0
+        )
 
 
     private fun getTransactionCost() {
@@ -95,56 +130,43 @@ class InsightsViewModel @Inject constructor(
         }
     }
 
-
-    private fun getNumberOfTransactionsIn() {
-        viewModelScope.launch {
+    val numOfTransactionsInFlow = combine(
+        state.map { it.insightCategory },
+        state.map { it.insightTimeline }) { insightCategory, insightTimeline ->
+        insightCategory to insightTimeline
+    }.distinctUntilChanged()
+        .flatMapLatest {
             insightsRepo.getNumOfTransactionsIn(
-                startDate = state.value.insightTimeline.getTimeline().startDate,
-                endDate = state.value.insightTimeline.getTimeline().endDate
-            ).apply {
-                onSuccess { numberOfTransactions ->
-                    _state.update { it.copy(transactionsIn = numberOfTransactions.toString()) }
-                }
-                onFailure {
-                    //TODO
-                }
-            }
+                startDate = it.second.getTimeline().startDate,
+                endDate = it.second.getTimeline().endDate,
+                insightCategory = it.first
+            )
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = 0
+        )
 
+
+    val numOfTransactionsOutFlow = combine(
+        state.map { it.insightCategory },
+        state.map { it.insightTimeline }) { insightCategory, insightTimeline ->
+        insightCategory to insightTimeline
     }
-
-    private fun getMoneyOut() {
-        viewModelScope.launch {
-            insightsRepo.getTotalMoneyOut(
-                startDate = state.value.insightTimeline.getTimeline().startDate,
-                endDate = state.value.insightTimeline.getTimeline().endDate
-            ).apply {
-                onSuccess { totalMoneyOut ->
-                    _state.update { it.copy(moneyOut = totalMoneyOut.toString()) }
-                }
-                onFailure {
-                    //TODO
-                }
-            }
-        }
-    }
-
-    private fun getNumberOfTransactionsOut(
-    ) {
-        viewModelScope.launch {
+        .distinctUntilChanged()
+        .flatMapLatest {
             insightsRepo.getNumOfTransactionsOut(
-                startDate = state.value.insightTimeline.getTimeline().startDate,
-                endDate = state.value.insightTimeline.getTimeline().endDate
-            ).apply {
-                onSuccess { numberOfTransactions ->
-                    _state.update { it.copy(transactionsOut = numberOfTransactions.toString()) }
-                }
-                onFailure {
-                    //TODO
-                }
-            }
-        }
-    }
+                startDate = it.second.getTimeline().startDate,
+                endDate = it.second.getTimeline().endDate,
+                insightCategory = it.first
+            )
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = 0
+        )
+
 
     fun switchTransactionCategory(transactionCategory: TransactionCategory) {
         _state.update { it.copy(transactionCategory = transactionCategory) }
@@ -168,14 +190,6 @@ class InsightsViewModel @Inject constructor(
     private fun InsightsScreenState.selector(): GraphSelection =
         GraphSelection(transactionCategory, insightCategory, insightTimeline)
 
-
-    private fun refreshMoneyInOutCardInfo() {
-        getMoneyIn()
-        getMoneyOut()
-        getNumberOfTransactionsIn()
-        getNumberOfTransactionsOut()
-        getTransactionCost()
-    }
 
 }
 

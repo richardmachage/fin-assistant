@@ -12,10 +12,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -23,9 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.presentation.components.KesAmount
@@ -33,7 +29,6 @@ import com.transsion.financialassistant.presentation.components.texts.FaintText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
-import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
@@ -51,13 +46,14 @@ fun MpesaBalanceCard(
     balance: String = "236,900.60",
     moneyIn: String = "236,900.60",
     moneyOut: String = "177,500.90",
-    transactionsIn: String = "14",
-    transactionsOut: String = "256",
+    insightCategory: InsightCategory = InsightCategory.PERSONAL,
+    hide: Boolean,
+    onHideBalance: () -> Unit
 ) {
+
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(10),
-
         ) {
         VerticalSpacer(10)
 
@@ -68,32 +64,37 @@ fun MpesaBalanceCard(
             text = "$today, ${getAmOrPm()}"
         )
 
-
         //balance
 
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TitleText(
-                text = stringResource(R.string.mpesa_balance), fontSize = 13.sp
-            )
+            when (insightCategory) {
+                InsightCategory.PERSONAL -> TitleText(
+                    text = stringResource(R.string.mpesa_balance),
+                    fontSize = 13.sp
+                )
+
+                InsightCategory.BUSINESS -> TitleText(
+                    text = stringResource(R.string.pochi_balance),
+                    fontSize = 13.sp
+                )
+            }
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                var hide by remember { mutableStateOf(false) }
 
                 KesAmount(
                     modifier = if (hide) Modifier.blur(10.dp) else Modifier,
                     amount = balance,
                     textSize = 22.sp
                 )
-
                 IconButton(
                     onClick = {
-                        hide = !hide
+                        onHideBalance()
                     }
                 ) {
                     Icon(
@@ -103,34 +104,35 @@ fun MpesaBalanceCard(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingMedium),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            //money In
-            InOutCardCategory(
-                category = TransactionCategory.IN,
-                amount = moneyIn,
-                transactions = transactionsIn
-            )
-            //divider
-            VerticalDivider(
-                Modifier
-                    .height(50.dp)
-                    .align(Alignment.CenterVertically)
-            )
 
-            //money out
-            InOutCardCategory(
-                category = TransactionCategory.OUT,
-                amount = moneyOut,
-                transactions = transactionsOut
-            )
-        }
-        VerticalSpacer(10)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(paddingMedium),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                //money In
+                InOutCardCategory(
+                    category = TransactionCategory.IN,
+                    amount = moneyIn,
+                    // transactions = transactionsIn
+                )
+                //divider
+                VerticalDivider(
+                    Modifier
+                        .height(50.dp)
+                        .align(Alignment.CenterVertically)
+                )
+
+                //money out
+                InOutCardCategory(
+                    category = TransactionCategory.OUT,
+                    amount = moneyOut,
+                    // transactions = transactionsOut
+                )
+            }
+            VerticalSpacer(10)
 
     }
 }
@@ -140,7 +142,7 @@ fun InOutCardCategory(
     modifier: Modifier = Modifier,
     category: TransactionCategory = TransactionCategory.IN,
     amount: String = "236,900.60",
-    transactions: String = "14"
+    transactions: String? = null
 ) {
     Column(modifier = modifier) {
         Row(
@@ -185,21 +187,15 @@ fun InOutCardCategory(
 
         }
         VerticalSpacer(5)
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            val transaction =
-                stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
-            NormalText(text = "$transactions $transaction")
+        transactions?.let {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                val transaction =
+                    stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
+                NormalText(text = "$transactions $transaction")
+            }
         }
     }
 
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun InOutCardPrev() {
-    FinancialAssistantTheme {
-        MpesaBalanceCard()
-    }
 }
 
 

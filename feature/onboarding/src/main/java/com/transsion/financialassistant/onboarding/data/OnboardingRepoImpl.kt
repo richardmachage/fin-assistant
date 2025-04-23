@@ -20,11 +20,9 @@ import javax.inject.Inject
 class OnboardingRepoImpl @Inject constructor(
     private val datastorePreferences: DatastorePreferences,
     private val sharedPreferences: SharedPreferences,
-    private val securityRepo: SecurityRepo
+    private val securityRepo: SecurityRepo,
 ) : OnboardingRepo,
     PinRepoImpl(sharedPreferences = sharedPreferences, securityRepo = securityRepo) {
-
-
     override fun hasCompletedOnboarding(): Boolean {
         val status = sharedPreferences.loadData(SharedPreferences.ONBOARDING_COMPLETED_KEY)
         return status?.let { true } ?: false
@@ -96,6 +94,14 @@ class OnboardingRepoImpl @Inject constructor(
         }
     }
 
+    override fun setPinSetupCompleted(completed: Boolean) {
+        sharedPreferences.savePinSetupStatus(completed)
+    }
+
+    override fun setPinSetupComplete(completed: Boolean) {
+        sharedPreferences.isPinSetupCompleted()
+    }
+
     override suspend fun setMpesaNumber(
         mpesaNumber: String,
         onSuccess: () -> Unit,
@@ -121,6 +127,18 @@ class OnboardingRepoImpl @Inject constructor(
         onSuccess: () -> Unit,
         onFailure: (errorMessage: String) -> Unit
     ) {
+//        try {
+//            val hashedPin = securityRepo.doHash(pin)
+//            val encryptedPin = securityRepo.encryptData(hashedPin)
+//            sharedPreferences.saveData(SharedPreferences.PIN_KEY, encryptedPin.toString())
+//
+//            // Mark the Pin Setup is completed
+//            sharedPreferences.savePinSetupStatus(true)
+//
+//            onSuccess()
+//        } catch (e: Exception) {
+//            onFailure("Failed to set PIN. ${e.message}")
+//        }
         super.setPin(pin, onSuccess, onFailure)
     }
 
