@@ -31,6 +31,18 @@ interface UnifiedTransactionsBusinessDao {
         date: String,
     ): List<DailyTransactionsTime>
 
+    @Query(
+        """
+        SELECT time, amount
+        FROM UnifiedOutgoingTransactionsBusiness
+        WHERE date = :date
+        ORDER BY time ASC
+        """
+    )
+    suspend fun getTransactionsOutForDate(
+        date: String,
+    ): List<DailyTransactionsTime>
+
     @Query("SELECT * FROM UnifiedTransactionBusiness WHERE transactionCategory = 'IN' AND date BETWEEN :startDate AND :endDate ORDER BY date DESC, time DESC")
     fun getAllTransactionsInForDate(
         startDate: String,
@@ -143,6 +155,20 @@ interface UnifiedTransactionsBusinessDao {
     """
     )
     suspend fun getTotalTransactionsInPerDay(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTotal>
+
+    @Query(
+        """
+        SELECT date,time, SUM(amount) as totalAmount
+        FROM UnifiedOutgoingTransactionsBusiness
+        WHERE date BETWEEN :startDate AND :endDate
+        GROUP BY date
+        ORDER BY date ASC
+    """
+    )
+    suspend fun getTotalTransactionsOutPerDay(
         startDate: String,
         endDate: String
     ): List<DailyTransactionTotal>
