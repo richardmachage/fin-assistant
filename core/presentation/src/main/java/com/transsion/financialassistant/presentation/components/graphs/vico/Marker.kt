@@ -20,6 +20,8 @@ import com.patrykandpatrick.vico.core.common.component.ShapeComponent
 import com.patrykandpatrick.vico.core.common.component.TextComponent
 import com.patrykandpatrick.vico.core.common.shape.CorneredShape
 import com.transsion.financialassistant.presentation.components.graphs.model.DataPoint
+import java.text.NumberFormat
+import java.util.Locale
 
 fun getValueFormatter(
     dataPoints: List<DataPoint>,
@@ -32,7 +34,11 @@ fun getValueFormatter(
         val dataPoint = dataPoints.getOrNull(xIndex)
 
         if (dataPoint != null) {
-            builder.append("${xFormater(dataPoint.x)}, KES ${dataPoint.y}")
+            builder.append(
+                "${xFormater(dataPoint.x)}, KES ${
+                    dataPoint.y.toString().formatAsCurrency()
+                }"
+            )
             if (index != targets.lastIndex) {
                 builder.append("\n")
             }
@@ -93,4 +99,19 @@ internal fun rememberMarker(
         indicatorSize = 36.dp,
         guideline = guideline,
     )
+}
+
+
+fun String.formatAsCurrency(locale: Locale = Locale.US, maxFractionDigits: Int = 2): String {
+    return try {
+        val number = this.replace(",", "").replace("\\", "").toDouble()
+        val formatter = NumberFormat.getNumberInstance(locale).apply {
+            isGroupingUsed = true
+            maximumFractionDigits = maxFractionDigits
+            minimumFractionDigits = 0
+        }
+        formatter.format(number)
+    } catch (e: Exception) {
+        this
+    }
 }
