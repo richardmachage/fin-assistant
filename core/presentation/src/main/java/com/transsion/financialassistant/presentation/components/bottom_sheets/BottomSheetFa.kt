@@ -5,7 +5,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import com.transsion.financialassistant.presentation.theme.FAColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,7 +19,6 @@ fun BottomSheetFa(
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
             sheetState = sheetState,
-            containerColor = FAColors.GrayBackground
         ) {
             content()
         }

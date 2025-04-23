@@ -23,6 +23,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,13 +34,16 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.getMessageForTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
@@ -48,11 +54,15 @@ import com.transsion.financialassistant.home.screens.components.InsightCateToggl
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
+import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
+import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
+import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
+import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
@@ -71,6 +81,10 @@ fun HomeScreen(
     val mpesaBalance by viewModel.mpesaBalance.collectAsState()
     val numOfAllTransactions by viewModel.numOfAllTransactions.collectAsState()
     val hideBalance = viewModel.hideBalance.collectAsState(false)
+    var showMessageBottomSheet by remember { mutableStateOf(false) }
+    var selectedMessage by remember { mutableStateOf("") }
+    // var selectedMessageTransactionType by remember { mutableStateOf("") }
+    var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
 
     Scaffold(
         topBar = {
@@ -202,54 +216,107 @@ fun HomeScreen(
                 )
             }
 
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium)
                 ///.heightIn(max = (screenHeight / 4).dp),
-                ) {
+            ) {
                 items(recents.size) { it ->
                     val item = recents[it]
-                        TransactionUiListItem(
+                    TransactionUiListItem(
 
-                            transactionUi = TransactionUi(
-                                title = item.name ?: item.transactionCode,
-                                type = item.transactionType,
-                                amount = item.amount.toString(),
-                                inOrOut = item.transactionCategory,
-                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
-                            ),
-                            onClick = {
-                                getMessageForTransaction(
-                                    context = context,
-                                    transactionCode = item.transactionCode
-                                )
-                                    .apply {
-                                        onSuccess { message ->
-                                            Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                                .show()
-                                        }
+                        transactionUi = TransactionUi(
+                            title = item.name ?: item.transactionCode,
+                            type = item.transactionType,
+                            amount = item.amount.toString(),
+                            inOrOut = item.transactionCategory,
+                            dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
+                        ),
+                        onClick = {
+                            getMessageForTransaction(
+                                context = context,
+                                transactionCode = item.transactionCode
+                            )
+                                .apply {
+                                    onSuccess { message ->
+                                        selectedTransaction = item
+                                        selectedMessage = message
+                                        /*selectedMessageTransactionType =
+                                            item.transactionType.description*/
+                                        showMessageBottomSheet = true
 
-                                        onFailure { error ->
-                                            Toast.makeText(
-                                                context,
-                                                error.message,
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
+                                        /*Toast.makeText(context, message, Toast.LENGTH_SHORT)
+                                            .show()*/
                                     }
 
-                            }
+                                    onFailure { error ->
+                                        Toast.makeText(
+                                            context,
+                                            error.message,
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                        }
+                    )
+                }
+            }
+        }
+
+
+        BottomSheetFa(
+            isSheetOpen = showMessageBottomSheet,
+            onDismiss = {
+                showMessageBottomSheet = false
+                selectedMessage = ""
+            }
+        ) {
+            if (selectedMessage.isNotBlank()) {
+                Column(
+                    modifier = Modifier
+                        .padding(start = paddingLarge, end = paddingLarge)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+
+                    selectedTransaction?.let { transaction ->
+
+                        //tittle -> Transaction type
+                        TitleText(
+                            text = transaction.transactionType.description,
                         )
+                        VerticalSpacer(20)
+
+
+                        //Message
+                        NormalText(
+                            text = selectedMessage,
+                            textAlign = TextAlign.Left
+                        )
+                        VerticalSpacer(10)
+                        if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                            OutlineButtonFa(
+                                text = "Reverse Transaction",
+                                onClick = {
+                                    //TODO
+                                    Toast.makeText(context, "Coming soon...", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+                        }
                     }
                 }
             }
+        }
 
+        if (false) {
+            HorizontalDivider()
 
-            if (false) {
-                HorizontalDivider()
-
-                LazyRow(
+            LazyRow(
                 modifier = Modifier
                     .padding(paddingMedium)
             ) {
@@ -258,9 +325,9 @@ fun HomeScreen(
                     MyBudgetsCard()
                 }
             }
-            }
         }
     }
+}
 
 
 @Composable
