@@ -48,6 +48,7 @@ class InsightsViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = emptyList()
         )
+
     val categoryDistributionFlow = insightsRepo.categoryDistributionFlow
         .stateIn(
             scope = viewModelScope,
