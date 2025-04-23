@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
+import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
 import com.transsion.financialassistant.data.models.DailyTransactionsTime
 import kotlinx.coroutines.flow.Flow
 
@@ -172,5 +173,36 @@ interface UnifiedTransactionsBusinessDao {
         startDate: String,
         endDate: String
     ): List<DailyTransactionTotal>
+
+
+    @Query(
+        """
+   SELECT transactionType, SUM(amount) AS totalAmount
+FROM UnifiedIncomingTransactionsBusiness
+WHERE date BETWEEN :startDate AND :endDate
+GROUP BY transactionType
+ORDER BY totalAmount DESC;
+
+  """
+    )
+    suspend fun getTotalTransactionsInPerType(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTypeTotal>
+
+    @Query(
+        """
+   SELECT transactionType, SUM(amount) AS totalAmount
+FROM UnifiedOutGoingTransactionsBusiness
+WHERE date BETWEEN :startDate AND :endDate
+GROUP BY transactionType
+ORDER BY totalAmount DESC;
+
+  """
+    )
+    suspend fun getTotalTransactionsOutPerType(
+        startDate: String,
+        endDate: String
+    ): List<DailyTransactionTypeTotal>
 
 }
