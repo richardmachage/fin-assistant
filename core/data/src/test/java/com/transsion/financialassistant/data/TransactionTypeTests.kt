@@ -36,16 +36,21 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect RECEIVE_MONEY transaction`() {
+
+
         val ncbaMessage =
             "Congratulations! TD66N8PLHM confirmed.You have received Ksh15,950.00 from LOOP B2C. on 6/4/25 at 2:35 PM.New M-PESA balance is Ksh16,785.29. Separate personal and business funds through Pochi la Biashara on *334#."
+
+        val receivedGlobal =
+            "TDG1XU4T4L Confirmed.You have received Ksh103.50 from M-PESA GlobalPay 903470 on 17/4/25 at 9:53 PM New M-PESA balance is Ksh259.72. Separate personal and business funds through pochi la Biashara on *334#."
 
         val kcbMessage =
             "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
-        val result = transactionRepo.getTransactionType(ncbaMessage)
+        val result = transactionRepo.getTransactionType(receivedGlobal)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(ncbaMessage)?.groupValues
+        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(receivedGlobal)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
@@ -67,9 +72,11 @@ class TransactionTypeTests {
         val message =
             "TCM0P6D1HI Confirmed. Ksh300.00 sent to Lipa na KCB for account 9000839 on 22/3/25 at 6:22 PM New M-PESA balance is Ksh843.13. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,550.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
+        val sendGlobal =
+            "TDG1XU4T4L Confirmed. Ksh103.50 sent to M-PESA CARD for account GLOVO PRIME BARCELONA ES on 17/4/25 at 9:50 PM New M-PESA balance is Ksh156.22. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,256.50. Save frequent paybills for quick payment on M-PESA app "
         //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        val result = transactionRepo.getTransactionType(coop)
-        val groups = TransactionType.PAY_BILL.getRegex().find(coop)?.groupValues
+        val result = transactionRepo.getTransactionType(sendGlobal)
+        val groups = TransactionType.PAY_BILL.getRegex().find(sendGlobal)?.groupValues
 
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
@@ -233,3 +240,8 @@ val sendMoneyFromPochiToPochi =
 
 val moveToPochi =
     "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."
+
+val receivedGlobal =
+    "TDG1XU4T4L Confirmed.You have received Ksh103.50 from M-PESA GlobalPay 903470 on 17/4/25 at 9:53 PM New M-PESA balance is Ksh259.72. Separate personal and business funds through pochi la Biashara on *334#."
+val sendGlobal =
+    "TDG1XU4T4L Confirmed. Ksh103.50 sent to M-PESA CARD for account GLOVO PRIME BARCELONA ES on 17/4/25 at 9:50 PM New M-PESA balance is Ksh156.22. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,256.50. Save frequent paybills for quick payment on M-PESA app "

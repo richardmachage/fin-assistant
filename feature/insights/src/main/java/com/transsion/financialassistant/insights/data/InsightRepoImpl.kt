@@ -678,8 +678,8 @@ class InsightRepoImpl @Inject constructor(
                                 )
                             }
                                 .map {
-                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                            }
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
                         }
 
                         InsightTimeline.MONTH -> {
@@ -695,17 +695,24 @@ class InsightRepoImpl @Inject constructor(
                                 )
                             }
                                 .map {
-                                DataPoint(x = it.date, y = it.totalAmount.toFloat())
-                            }
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
+                                }
                         }
                     }
 
 
-                    val distributionData =
-                        personalDao.getTotalTransactionsInPerType(
+                    val distributionData = when (insightCategory) {
+                        InsightCategory.PERSONAL -> personalDao.getTotalTransactionsInPerType(
                             startDate = startDate,
                             endDate = endDate
                         )
+
+                        InsightCategory.BUSINESS -> businessDao.getTotalTransactionsInPerType(
+                            startDate = startDate,
+                            endDate = endDate
+                        )
+                    }
+
                     val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
                     val distribution = distributionData.map {
                         CategoryDistribution(
@@ -739,7 +746,6 @@ class InsightRepoImpl @Inject constructor(
 
                     //return the rest of the data
                     data
-
                 }
 
                 TransactionCategory.OUT -> {
@@ -747,11 +753,11 @@ class InsightRepoImpl @Inject constructor(
                         when (insightTimeline) {
                             InsightTimeline.TODAY -> {
                                 when (insightCategory) {
-                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
+                                    InsightCategory.PERSONAL -> personalDao.getTransactionsOutForDate(
                                         startDate
                                     )
 
-                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
+                                    InsightCategory.BUSINESS -> businessDao.getTransactionsOutForDate(
                                         startDate
                                     )
                                 }.map {
@@ -761,39 +767,51 @@ class InsightRepoImpl @Inject constructor(
 
                             InsightTimeline.WEEK -> {
                                 when (insightCategory) {
-                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
-                                        startDate
+                                    InsightCategory.PERSONAL -> personalDao.getTotalTransactionsOutPerDay(
+                                        startDate,
+                                        endDate
                                     )
 
-                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
-                                        startDate
+                                    InsightCategory.BUSINESS -> businessDao.getTotalTransactionsOutPerDay(
+                                        startDate,
+                                        endDate
                                     )
+
                                 }.map {
-                                    DataPoint(x = it.time, y = it.amount.toFloat())
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
                                 }
                             }
 
                             InsightTimeline.MONTH -> {
                                 when (insightCategory) {
-                                    InsightCategory.PERSONAL -> personalDao.getTransactionsInForDate(
-                                        startDate
+                                    InsightCategory.PERSONAL -> personalDao.getTotalTransactionsOutPerDay(
+                                        startDate,
+                                        endDate
                                     )
 
-                                    InsightCategory.BUSINESS -> businessDao.getTransactionsInForDate(
-                                        startDate
+                                    InsightCategory.BUSINESS -> businessDao.getTotalTransactionsOutPerDay(
+                                        startDate,
+                                        endDate
                                     )
                                 }.map {
-                                    DataPoint(x = it.time, y = it.amount.toFloat())
+                                    DataPoint(x = it.date, y = it.totalAmount.toFloat())
                                 }
                             }
                         }
 
                     //update the categories
-                    val distributionData =
-                        personalDao.getTotalTransactionsOutPerType(
+                    val distributionData = when (insightCategory) {
+                        InsightCategory.PERSONAL -> personalDao.getTotalTransactionsOutPerType(
                             startDate = startDate,
                             endDate = endDate
                         )
+
+                        InsightCategory.BUSINESS -> businessDao.getTotalTransactionsOutPerType(
+                            startDate = startDate,
+                            endDate = endDate
+                        )
+                    }
+
 
                     val totalAmount = distributionData.sumOf { it.totalAmount }.toFloat()
                     val distribution = distributionData.map {
