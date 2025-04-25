@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
@@ -109,7 +110,7 @@ fun CreatePinScreen(
         )
 
         false -> Surface {
-            val paddingValues = WindowInsets.statusBars.asPaddingValues()
+            val paddingValues = WindowInsets.navigationBars.asPaddingValues()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -216,14 +217,14 @@ fun CreatePinScreen(
                         )
                     }
 
-                    VerticalSpacer(80)
+                    //VerticalSpacer(80)
 
                 }
 
             FilledButtonFa(
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .padding(paddingLarge)
+                    .padding(paddingValues)
                     .imePadding()
                     .align(Alignment.BottomCenter),
                 text = stringResource(R.string.create),
