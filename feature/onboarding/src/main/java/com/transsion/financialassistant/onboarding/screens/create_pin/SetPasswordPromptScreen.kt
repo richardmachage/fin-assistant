@@ -192,7 +192,7 @@ fun SetPasswordPromptScreen(
 
             Column(
                 modifier = Modifier
-                    .padding(paddingValues)
+                    .padding(paddingValues.calculateBottomPadding())
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
