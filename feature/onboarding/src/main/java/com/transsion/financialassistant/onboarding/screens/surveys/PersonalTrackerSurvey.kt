@@ -155,7 +155,8 @@ fun PersonalTrackerSurvey(
                     FilledButtonFa(
                         text = stringResource(R.string.next_btn),
                         onClick = {
-                            goToLanding(OnboardingRoutes.SurveyScreen)
+                            //goToLanding()
+                            goToLanding(OnboardingRoutes.PersonalTrackerSurvey)
 
                             viewModel.completeOnboarding()
                         },

@@ -29,7 +29,7 @@ fun FinancialAssistantNavHost(
                         inclusive = true
                     }
                 }
-            }
+            },
         )
 
         insightsNavGraph(navController = navController)

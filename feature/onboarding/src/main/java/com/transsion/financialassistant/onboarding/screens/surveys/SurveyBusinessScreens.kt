@@ -400,8 +400,7 @@ fun SurveyBusinessScreens(
                     }
 
                     if (state.isSurveyComplete) {
-
-                        goToLanding(OnboardingRoutes.SurveyBusinessScreens)
+                       goToLanding(OnboardingRoutes.SurveyBusinessScreens)
                     }
 
                     state.error?.let {
