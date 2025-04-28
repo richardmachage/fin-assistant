@@ -230,32 +230,42 @@ fun AllTransactionsScreen(
             VerticalSpacer(16)
             VerticalSpacer(8)
 
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingMedium),
-            )
-            {
-
-                items(filterResults.itemCount) { index ->
-                    val item = filterResults[index]
-                    if (item != null) {
-                        TransactionUiListItem(
-                            transactionUi = TransactionUi(
-                                title = item.name ?: item.transactionCode,
-                                type = item.transactionType,
-                                amount = item.amount.toString(),
-                                inOrOut = item.transactionCategory,
-                                dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
-                            )
-                        )
-                        VerticalSpacer(5)
-                        HorizontalDivider(modifier = Modifier.padding(bottom = paddingSmall))
-                    }
-
+            if (
+                filterResults.itemCount == 0
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    NormalText(text = stringResource(R.string.no_data_available))
                 }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingMedium),
+                )
+                {
 
+                    items(filterResults.itemCount) { index ->
+                        val item = filterResults[index]
+                        if (item != null) {
+                            TransactionUiListItem(
+                                transactionUi = TransactionUi(
+                                    title = item.name ?: item.transactionCode,
+                                    type = item.transactionType,
+                                    amount = item.amount.toString(),
+                                    inOrOut = item.transactionCategory,
+                                    dateAndTime = "${item.date.toMonthDayDate()}, ${item.time.toAppTime()}"
+                                )
+                            )
+                            VerticalSpacer(5)
+                            HorizontalDivider(modifier = Modifier.padding(bottom = paddingSmall))
+                        }
 
+                    }
+                }
             }
         }
     }
