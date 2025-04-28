@@ -109,12 +109,12 @@ fun CreatePinScreen(
             }
         )
 
-        false -> Surface {
+        false -> Scaffold { innerPadding ->
             val paddingValues = WindowInsets.navigationBars.asPaddingValues()
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
+                    .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
             ) {
                 Column(
