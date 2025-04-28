@@ -38,8 +38,7 @@ open class PinRepoImpl @Inject constructor(
     }
 
     override fun isPinSet(): Boolean {
-        return sharedPreferences.loadData(SharedPreferences.PIN_KEY)?.let {
-            true
-        } ?: false
+        return sharedPreferences.loadData(SharedPreferences.PIN_KEY)?.isNotBlank() ?: false
     }
+
 }
