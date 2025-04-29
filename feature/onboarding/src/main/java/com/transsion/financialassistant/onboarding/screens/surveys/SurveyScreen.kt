@@ -159,15 +159,19 @@ fun SurveyScreen(
                 FilledButtonFa(
                     text = stringResource(R.string.next_btn),
                     onClick = {
-                        if (selectedOption == stringOptions[0]) navController.navigate(
-                            OnboardingRoutes.PersonalTrackerSurvey
-                        ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
-                        else if (selectedOption == stringOptions[1]) navController.navigate(
-                            OnboardingRoutes.SurveyBusinessScreens
-                        ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
-                        else if (selectedOption == stringOptions[2]) navController.navigate(
-                            OnboardingRoutes.SurveyBusinessScreens
-                        ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
+                        when (selectedOption) {
+                            stringOptions[0] -> navController.navigate(
+                                OnboardingRoutes.PersonalTrackerSurvey
+                            ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
+
+                            stringOptions[1] -> navController.navigate(
+                                OnboardingRoutes.SurveyBusinessScreens
+                            ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
+
+                            stringOptions[2] -> navController.navigate(
+                                OnboardingRoutes.SurveyBusinessScreens
+                            ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
+                        }
                     },
 
                     enabled = if (selectedOption.isNotEmpty()) true else false,

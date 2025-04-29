@@ -28,6 +28,7 @@ fun FinancialAssistantNavHost(
                     popUpTo(route = route) {
                         inclusive = true
                     }
+                    launchSingleTop = true
                 }
             },
         )

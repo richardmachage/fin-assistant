@@ -96,7 +96,7 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(state.isValidationSuccess || biometricResult != null) {
+    LaunchedEffect(state.isValidationSuccess) {
         if (state.isValidationSuccess) {
             viewModel.clearPin()
             if (isOnboardingCompleted) {
