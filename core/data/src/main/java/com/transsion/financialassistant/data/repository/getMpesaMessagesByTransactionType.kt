@@ -112,10 +112,10 @@ fun getMessageForTransaction(context: Context, transactionCode: String): Result<
 
                 val message = bodyColumn?.let { column ->
                     cu.getString(column)
-                } ?: "Not found"
+                } ?: "Message for this transaction not found"
                 Result.success(message)
             } else {
-                Result.failure(Exception("Empty Cursor"))
+                Result.failure(Exception("Message for this transaction not found"))
             }
         }
 

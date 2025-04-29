@@ -6,18 +6,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -29,9 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.transsion.financialassistant.onboarding.R
-import com.transsion.financialassistant.presentation.components.buttons.CancelButton
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.InfoIconButton
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -46,6 +41,8 @@ fun SetPasswordPromptScreen(
     onContinue: () -> Unit
 ) {
 
+    Scaffold { innerPadding ->
+
     Scaffold  { innerPadding ->
         val paddingValues = WindowInsets.navigationBars.asPaddingValues()
         Box(
@@ -55,11 +52,12 @@ fun SetPasswordPromptScreen(
                 .verticalScroll(rememberScrollState()),
             contentAlignment = Alignment.Center
         ) {
-            Row(
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth(0.9F)
                     .align(Alignment.TopCenter)
-                    .padding(top = paddingValues.calculateTopPadding()),
+                // .padding(top = innerPadding.calculateTopPadding())
+                ,
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -73,7 +71,7 @@ fun SetPasswordPromptScreen(
 
                     }
                 )
-            }
+            }*/
 
 
             Column(
@@ -173,6 +171,7 @@ fun SetPasswordPromptScreen(
                                 contentDescription = "schedule_icon",
                                 tint = FAColors.green
                             )
+
                             // HorizontalSpacer(6)
                             NormalText(
                                 modifier = Modifier.fillMaxWidth(0.8f),
@@ -186,14 +185,11 @@ fun SetPasswordPromptScreen(
                     }
                 }
 
-               // VerticalSpacer(16)
-
-
             }
 
             Column(
                 modifier = Modifier
-                    .padding(paddingValues.calculateBottomPadding())
+                    .padding(paddingMedium)
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -221,4 +217,5 @@ fun SetPasswordPromptScreen(
             }
         }
     }
+
 }

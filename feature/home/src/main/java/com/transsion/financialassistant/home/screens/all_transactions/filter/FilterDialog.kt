@@ -70,13 +70,19 @@ fun TransactionFilterDialog(
                     modifier = Modifier.fillMaxSize(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    RadioButtonWithLabel(
+                        text = stringResource(R.string.all),
+                        selected = filterState.source == null,
+                        onClick = {
+                            filterState = filterState.copy(source = null)
+                        }
+                    )
                     TransactionCategory.entries.forEach { source ->
                         RadioButtonWithLabel(
                             text = source.description,
                             selected = filterState.source == source,
                             onClick = {
                                 filterState = filterState.copy(source = source)
-                                //viewModel.onSourceChanged(source)
                             }
                         )
                     }
