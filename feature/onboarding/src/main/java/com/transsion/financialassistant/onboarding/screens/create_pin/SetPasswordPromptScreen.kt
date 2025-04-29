@@ -43,8 +43,8 @@ fun SetPasswordPromptScreen(
 
     Scaffold { innerPadding ->
 
-    Scaffold  { innerPadding ->
-        val paddingValues = WindowInsets.navigationBars.asPaddingValues()
+    /*Scaffold  { innerPadding ->
+        val paddingValues = WindowInsets.navigationBars.asPaddingValues()*/
         Box(
             modifier = Modifier
                 .fillMaxSize()
