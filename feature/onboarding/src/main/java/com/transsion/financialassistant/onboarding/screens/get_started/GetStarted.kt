@@ -75,17 +75,6 @@ fun GetStarted(
     var showPermissionRationaleDialog by remember { mutableStateOf(false) }
 
 
-    /*val launcher = requestPermission(
-        onPermissionGranted = {
-            isGranted = true
-            showPermissionDialog = false
-            showPermissionRationaleDialog = false
-        },
-        onPermissionDenied = {
-            showPermissionRationaleDialog = true
-        }
-    )*/
-
     val permissions = arrayOf(
         Manifest.permission.READ_PHONE_STATE,
         Manifest.permission.READ_PHONE_NUMBERS
@@ -182,10 +171,18 @@ fun GetStarted(
                     width = LocalConfiguration.current.screenWidthDp.dp,
                     onSwipeComplete = {
                         if (isGranted) {
-                            navController.navigate(OnboardingRoutes.ConfirmNumberDual)
-                            {
-                                popUpTo(OnboardingRoutes.Welcome) { inclusive = true }
+                            /* navController.navigate(OnboardingRoutes.ConfirmNumberDual)
+                             {
+                                 popUpTo(OnboardingRoutes.Welcome) { inclusive = true }
+                             }*/
+
+                            navController.navigate(OnboardingRoutes.CreatePin) {
+                                popUpTo<OnboardingRoutes.Welcome> {
+                                    inclusive = true
+                                }
                             }
+
+
                         } else {
                             scope.launch { swipeableState.snapTo(0) }
                             showPermissionDialog = true

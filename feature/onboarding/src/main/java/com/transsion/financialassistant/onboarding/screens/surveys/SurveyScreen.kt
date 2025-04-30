@@ -172,6 +172,8 @@ fun SurveyScreen(
                                 OnboardingRoutes.SurveyBusinessScreens
                             ){popUpTo(OnboardingRoutes.SurveyScreen){inclusive = true}}
                         }
+
+                        viewModel.setCompleteOnboarding()
                     },
 
                     enabled = if (selectedOption.isNotEmpty()) true else false,
