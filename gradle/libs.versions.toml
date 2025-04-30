@@ -36,6 +36,8 @@ biometricKtx = "1.1.0"
 securityCryptoKtx = "1.0.0"
 runtimeLivedata = "1.7.8"
 pagingCommonAndroid = "3.3.6"
+googleFirebaseAppdistribution = "5.1.1"
+googleGmsGoogleServices = "4.4.2"
 
 [libraries]
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
@@ -122,6 +124,8 @@ financialassistant-feature-module = { id = "financialassistant.feature.module" }
 financialassistant-core-module = { id = "financialassistant.core.module" }
 
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "googleFirebaseAppdistribution" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 [bundles]
 default-dependencies = [
