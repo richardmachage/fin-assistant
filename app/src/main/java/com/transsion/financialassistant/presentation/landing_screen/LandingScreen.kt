@@ -34,6 +34,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.R
+import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
 import com.transsion.financialassistant.home.navigation.HomeRoutes
 import com.transsion.financialassistant.home.screens.home.HomeScreen
 import com.transsion.financialassistant.insights.navigation.InsightsRoutes
@@ -117,7 +118,10 @@ fun LandingScreen(
 
                         ) {
                             HomeScreen(
-                                navController = mainNavController
+                                navController = mainNavController,
+                                goToFeedBack = {
+                                    mainNavController.navigate(FeedbackRoutes.Feedback)
+                                }
                             )
                         }
 
