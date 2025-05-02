@@ -19,7 +19,6 @@ that are not mapped to a single specific entity i.e queries with JIONs for sever
 @Dao
 interface FinancialAssistantDao {
 
-
     @Query(
         """
         SELECT * FROM UnifiedIncomingTransaction
@@ -50,10 +49,10 @@ interface FinancialAssistantDao {
  SELECT SUM(transactionCost) FROM unifiedoutgoingtransaction WHERE date BETWEEN :startDate AND :endDate
  """
     )
-    suspend fun getTotalTransactionCost(
+    fun getTotalTransactionCost(
         startDate: String,
         endDate: String
-    ): Double?
+    ): Flow<Double>
 
     @Query(
         """

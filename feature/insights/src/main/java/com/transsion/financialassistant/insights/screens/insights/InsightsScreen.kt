@@ -292,18 +292,13 @@ fun InsightsScreen(
                                         modifier = Modifier.padding(paddingMedium),
                                         item = InsightCategoryCardItem(
                                             tittle = stringResource(R.string.transaction_costs),
-                                            amount = state.totalTransactionCost ?: "0.0",
+                                            amount = viewModel.transactionCostsFlow.collectAsState(
+                                                initial = 0.0
+                                            ).value.toString()
+                                                .formatAsCurrency(),//state.totalTransactionCost ?: "0.0",
                                             categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
                                         ),
                                         onClick = {
-                                            /*navController.navigate(
-                                        InsightsRoutes.CategoryInsights(
-                                            category = "transaction_costs",
-                                            startDate = state.insightTimeline.getTimeline().startDate,
-                                            endDate = state.insightTimeline.getTimeline().endDate,
-                                            timeLine = state.insightTimeline.getTimeline().displayInfo
-                                        )
-                                    )*/
                                         }
                                     )
 
