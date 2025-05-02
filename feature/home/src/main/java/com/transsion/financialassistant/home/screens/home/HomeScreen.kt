@@ -55,6 +55,7 @@ import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
+import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
@@ -70,7 +71,8 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    goToFeedBack: () -> Unit
 ) {
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -120,6 +122,15 @@ fun HomeScreen(
                     }
                 },
                 actions = {
+                    //feedback
+                    IconButtonFa(
+                        icon = painterResource(com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular),
+                        colors = colors(),
+                        onClick = {
+                            goToFeedBack()
+                        }
+                    )
+
                     //search
                     /*IconButtonFa(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
@@ -341,5 +352,5 @@ private fun colors() = IconButtonColors(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(rememberNavController())
+    HomeScreen(rememberNavController(), goToFeedBack = {})
 }
