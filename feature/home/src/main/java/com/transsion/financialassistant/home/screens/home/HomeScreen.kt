@@ -253,12 +253,8 @@ fun HomeScreen(
                                     onSuccess { message ->
                                         selectedTransaction = item
                                         selectedMessage = message
-                                        /*selectedMessageTransactionType =
-                                            item.transactionType.description*/
                                         showMessageBottomSheet = true
 
-                                        /*Toast.makeText(context, message, Toast.LENGTH_SHORT)
-                                            .show()*/
                                     }
 
                                     onFailure { error ->

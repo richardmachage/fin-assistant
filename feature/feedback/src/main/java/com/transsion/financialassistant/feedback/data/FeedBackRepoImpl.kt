@@ -25,13 +25,6 @@ class FeedBackRepoImpl @Inject constructor(
                 onError(it.message.toString())
             }
             .await()
-
-
-        /*if (feedback.title.lowercase() == "error") {
-            onError("Failed to send feedback")
-        } else {
-            onSuccess()
-        }*/
     }
 
 }

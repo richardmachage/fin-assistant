@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.home.screens.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +40,7 @@ fun TransactionUiListItem(
     modifier: Modifier = Modifier,
     transactionUi: TransactionUi = TransactionUi(
         title = "NAIVAS",
-        type = TransactionType.BUY_GOODS,
+        type = TransactionType.SEND_POCHI,
         amount = "50.00",
         inOrOut = TransactionCategory.OUT,
         dateAndTime = "Jan 12, 9:47 AM"
@@ -86,22 +88,30 @@ fun TransactionUiListItem(
                     fontSize = 30.sp
                 )
             }
-            HorizontalSpacer(5)
+            HorizontalSpacer(4)
 
-            Column {
+            Column() {
                 //tittle
                 Text(
-                    modifier = Modifier.fillMaxWidth(0.5f),
                     text = transactionUi.title.uppercase(),
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold
                 )
-                Text(
-                    modifier = Modifier.fillMaxWidth(0.5f),
-                    text = descr,//transactionUi.type.description,
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(6.dp),
+                        text = descr,
                     overflow = TextOverflow.Ellipsis,
                     color = MaterialTheme.colorScheme.onBackground
-                )
+                    )
+                }
+
             }
 
 
@@ -111,8 +121,8 @@ fun TransactionUiListItem(
             Column {
                 NormalText(
                     text = when (transactionUi.inOrOut) {
-                        TransactionCategory.IN -> "+ KES ${transactionUi.amount}"
-                        TransactionCategory.OUT -> "- KES ${transactionUi.amount}"
+                        TransactionCategory.IN -> "+KES ${transactionUi.amount}"
+                        TransactionCategory.OUT -> "-KES ${transactionUi.amount}"
                     },
                     textColor = when (transactionUi.inOrOut) {
                         TransactionCategory.IN -> FAColors.green
@@ -133,6 +143,6 @@ fun TransactionUiListItem(
 @Composable
 fun TransactionUiListItemPrev() {
     FinancialAssistantTheme {
-        //TransactionUiListItem()
+        TransactionUiListItem()
     }
 }
