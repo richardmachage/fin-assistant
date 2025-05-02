@@ -10,6 +10,7 @@ dependencies {
     implementation(projects.feature.onboarding)
     implementation(projects.feature.insights)
     implementation(projects.feature.home)
+    implementation(projects.feature.feedback)
     implementation(projects.core.presentation)
     implementation(projects.core.background)
     implementation(projects.core.data)
