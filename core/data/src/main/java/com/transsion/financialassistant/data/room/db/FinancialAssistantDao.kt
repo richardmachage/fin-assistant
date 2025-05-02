@@ -80,7 +80,7 @@ interface FinancialAssistantDao {
 
     @Query(
         """
-    SELECT SUM(amount) FROM unifiedoutgoingtransaction
+    SELECT SUM(amount + transactionCost) FROM unifiedoutgoingtransaction
     WHERE  date BETWEEN :startDate AND :endDate
     """
     )
