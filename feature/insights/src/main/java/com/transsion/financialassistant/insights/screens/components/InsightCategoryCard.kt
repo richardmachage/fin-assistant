@@ -52,13 +52,14 @@ fun InsightCategoryCard(
     showTopIcon: Boolean = true
 ) {
     ElevatedCard(
+        shape = RoundedCornerShape(10),
+
         modifier = modifier
             .aspectRatio(1f) // Keep it square-ish but flexible
             .clickable(
                 enabled = showTopIcon,
                 onClick = { onClick() }
             ),
-        shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
