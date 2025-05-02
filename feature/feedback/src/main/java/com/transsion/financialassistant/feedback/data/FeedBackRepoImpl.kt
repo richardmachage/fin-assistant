@@ -1,15 +1,23 @@
 package com.transsion.financialassistant.feedback.data
 
 import com.transsion.financialassistant.feedback.domain.FeedBackRepo
-import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
+import com.transsion.financialassistant.feedback.model.FeedBack
+import kotlinx.coroutines.delay
+import javax.inject.Inject
 
-class FeedBackRepoImpl() : FeedBackRepo {
+class FeedBackRepoImpl @Inject constructor() : FeedBackRepo {
     override suspend fun sendFeedback(
-        feedback: FeedbackRoutes.Feedback,
+        feedback: FeedBack,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        onSuccess()
+        delay(2200)
+
+        if (feedback.title.lowercase() == "error") {
+            onError("Failed to send feedback")
+        } else {
+            onSuccess()
+        }
     }
 
 }

@@ -1,10 +1,10 @@
 package com.transsion.financialassistant.feedback.domain
 
-import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
+import com.transsion.financialassistant.feedback.model.FeedBack
 
 interface FeedBackRepo {
     suspend fun sendFeedback(
-        feedback: FeedbackRoutes.Feedback,
+        feedback: FeedBack,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     )
