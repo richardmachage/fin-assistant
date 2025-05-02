@@ -296,10 +296,11 @@ fun InsightsScreen(
                                                 initial = 0.0
                                             ).value.toString()
                                                 .formatAsCurrency(),//state.totalTransactionCost ?: "0.0",
-                                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+                                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.payment_01
                                         ),
                                         onClick = {
-                                        }
+                                        },
+                                        showTopIcon = false
                                     )
 
                                 }

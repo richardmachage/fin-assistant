@@ -49,11 +49,15 @@ fun InsightCategoryCard(
         categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
     ),
     onClick: () -> Unit = {},
+    showTopIcon: Boolean = true
 ) {
     ElevatedCard(
         modifier = modifier
             .aspectRatio(1f) // Keep it square-ish but flexible
-            .clickable { onClick() },
+            .clickable(
+                enabled = showTopIcon,
+                onClick = { onClick() }
+            ),
         shape = RoundedCornerShape(10),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -77,17 +81,19 @@ fun InsightCategoryCard(
                     textAlign = TextAlign.Left
                 )
 
-                Box(
-                    modifier = Modifier
-                        .width(35.dp)
-                        .clip(RoundedCornerShape(40))
-                        .background(FAColors.faintText.copy(alpha = 0.3f)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined), //Icons.Default.KeyboardArrowRight,
-                        contentDescription = "Go",
-                    )
+                if (showTopIcon) {
+                    Box(
+                        modifier = Modifier
+                            .width(35.dp)
+                            .clip(RoundedCornerShape(40))
+                            .background(FAColors.faintText.copy(alpha = 0.3f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = ImageVector.vectorResource(com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined), //Icons.Default.KeyboardArrowRight,
+                            contentDescription = "Go",
+                        )
+                    }
                 }
             }
 
