@@ -143,8 +143,6 @@ fun LandingScreen(
                 ) {
 
                     val progress by viewModel.progress.collectAsState()
-                    val currentType by viewModel.currentType.collectAsState()
-                    val processState by viewModel.workerState.collectAsState()
 
                     Box(
                         modifier = Modifier.fillMaxSize(),
@@ -153,7 +151,6 @@ fun LandingScreen(
                         Column(
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            // var started by remember { mutableStateOf(false) }
 
                             ElevatedCard(
                                 modifier = Modifier.fillMaxWidth(),
@@ -211,29 +208,10 @@ fun LandingScreen(
                                     VerticalSpacer(5)
                                     //Loading transactions... text
                                     TitleText(
-                                        text = stringResource(
-                                            if (progress < 0.1f)
-                                                R.string.querying_data
-                                            else R.string.loading_transactions
-                                        )
+                                        text = stringResource(R.string.loading_transactions)
                                     )
                                     VerticalSpacer(10)
                                 }
-
-                                /*Column(
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    NormalText(text = "Processing : $currentType")
-                                    VerticalSpacer(8)
-                                    LinearProgressIndicator(
-                                        modifier = Modifier
-                                            .padding(paddingSmall)
-                                            .fillMaxWidth(),
-                                        progress = { progress },
-                                    )
-                                    VerticalSpacer(8)
-                                    NormalText(text = "${progress * 100}% completed")
-                                }*/
                             }
                         }
                     }

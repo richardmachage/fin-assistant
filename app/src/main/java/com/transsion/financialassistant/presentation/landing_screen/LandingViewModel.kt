@@ -26,9 +26,9 @@ class LandingViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
-    var workerId: UUID? = null
-    var workManager: WorkManager? = null
-    var workInfo: StateFlow<WorkInfo?>? = null
+    private var workerId: UUID? = null
+    private var workManager: WorkManager? = null
+    private var workInfo: StateFlow<WorkInfo?>? = null
 
     private var _progress = MutableStateFlow(0f)
     val progress = _progress.asStateFlow()
