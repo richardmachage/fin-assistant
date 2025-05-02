@@ -212,7 +212,7 @@ ORDER BY totalAmount DESC;
 
     @Query(
         """
-        SELECT SUM(amount) FROM unifiedoutgoingtransaction
+        SELECT SUM(amount + transactionCost) FROM unifiedoutgoingtransaction
     """
     )
 
