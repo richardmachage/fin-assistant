@@ -37,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -57,7 +58,6 @@ import com.transsion.financialassistant.home.screens.components.TransactionUiLis
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
-import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -114,18 +114,17 @@ fun HomeScreen(
                     }
                 },
                 title = {
-                    Column {
-                        BigTittleText(
-                            text = viewModel.getGreetingBasedOnTime(context)
+                    TitleText(
+                        text = viewModel.getGreetingBasedOnTime(context),
+                        fontSize = 22.sp
                         )
 
-                    }
                 },
                 actions = {
                     //feedback
                     IconButtonFa(
                         icon = painterResource(com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular),
-                        colors = colors(),
+                        //colors = colors(),
                         onClick = {
                             goToFeedBack()
                         }
