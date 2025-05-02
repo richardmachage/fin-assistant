@@ -59,6 +59,7 @@ fun TransactionUiListItem(
         modifier = modifier
             .fillMaxWidth()
             .padding(paddingSmall)
+            .clip(RoundedCornerShape(20))
             .clickable {
                 onClick()
             },
@@ -90,7 +91,9 @@ fun TransactionUiListItem(
             }
             HorizontalSpacer(4)
 
-            Column() {
+            Column(
+                modifier = Modifier.fillMaxWidth(0.6f)
+            ) {
                 //tittle
                 Text(
                     text = transactionUi.title.uppercase(),
