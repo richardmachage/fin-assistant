@@ -19,4 +19,6 @@
     <string name="good_afternoon">Good Afternoon</string>
     <string name="good_evening">Good Evening</string>
     <string name="good_night">Good Night</string>
+    <string name="no_data_available">No transactions available</string>
+    <string name="all">All</string>
 </resources>

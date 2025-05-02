@@ -90,8 +90,6 @@ fun LoginScreen(
         }
     }
 
-
-
     LaunchedEffect(state.pin) {
         if (state.pin.length == 4) {
             viewModel.validatePin(state.pin)
@@ -103,14 +101,19 @@ fun LoginScreen(
             viewModel.clearPin()
             if (isOnboardingCompleted) {
                 goToLanding(OnboardingRoutes.Login)
+               // viewModel.resetValidationSuccess()
 
             } else {
-                navController.navigate(OnboardingRoutes.SurveyScreen)/* {
-                    popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                }*/
+                //goToLanding(goToLanding)
+                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                    popUpTo(OnboardingRoutes.Login) {
+                        inclusive = true
+                    }
+                }
+                //viewModel.resetValidationSuccess()
+                }
             }
         }
-    }
 
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
@@ -282,7 +285,7 @@ fun LoginScreen(
                                             }*/
                                 } else {
                                     navController.navigate(OnboardingRoutes.SurveyScreen) {
-                                        // popUpTo(OnboardingRoutes.Login) { inclusive = true }
+                                        popUpTo(OnboardingRoutes.Login) { inclusive = true }
                                     }
                                 }
                             }

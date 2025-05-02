@@ -51,6 +51,12 @@ class LoginViewModel @Inject constructor(
         _pin.value = ""
     }
 
+    // reset validation success
+    fun resetValidationSuccess() {
+        _state.update { it.copy(isValidationSuccess = false) }
+    }
+
+
     // reset error message
     fun resetErrorMessage() {
         _errorMessage.value = null

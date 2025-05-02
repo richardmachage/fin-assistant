@@ -47,7 +47,7 @@ interface InsightsRepo {
         insightTimeline: InsightTimeline
     ): Flow<List<DataPoint>>
 
-    suspend fun getTotalTransactionCost(startDate: String, endDate: String): Result<Double>
+    suspend fun getTotalTransactionCost(startDate: String, endDate: String): Flow<Double>
 
     fun getDataPointsForCategory(
         startDate: String,

@@ -7,11 +7,14 @@ import com.transsion.financialassistant.home.screens.all_transactions.AllTransac
 import com.transsion.financialassistant.home.screens.home.HomeScreen
 
 fun NavGraphBuilder.homeNavGraph(
-    navController: NavController
+    navController: NavController,
+    goToFeedBack: () -> Unit
+
 ) {
     composable<HomeRoutes.Home> {
         HomeScreen(
-            navController = navController
+            navController = navController,
+            goToFeedBack = goToFeedBack
         )
     }
 

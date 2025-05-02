@@ -19,6 +19,7 @@ fun TitleText(
     textColor: Color = MaterialTheme.colorScheme.onBackground
 ) {
     Text(
+        modifier = modifier,
         text = text,
         fontWeight = FontWeight(600),
         fontSize = fontSize,

@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -113,22 +112,26 @@ class InsightsViewModel @Inject constructor(
             initialValue = 0.0
         )
 
-
-    private fun getTransactionCost() {
-        viewModelScope.launch {
-            insightsRepo.getTotalTransactionCost(
-                startDate = state.value.insightTimeline.getTimeline().startDate,
-                endDate = state.value.insightTimeline.getTimeline().endDate
-            ).apply {
-                onSuccess { totalTransactionCost ->
-                    _state.update { it.copy(totalTransactionCost = totalTransactionCost.toString()) }
-                }
-                onFailure {
-                    //TODO
-                }
-            }
-        }
+    val transactionCostsFlow = combine(
+        state.map { it.insightCategory },
+        state.map { it.insightTimeline }) { insightCategory, insightTimeline ->
+        insightCategory to insightTimeline
     }
+        .distinctUntilChanged()
+        .flatMapLatest {
+            insightsRepo.getTotalTransactionCost(
+                startDate = it.second.getTimeline().startDate,
+                endDate = it.second.getTimeline().endDate,
+            )
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = 0.0
+        )
+
+
+
 
     val numOfTransactionsInFlow = combine(
         state.map { it.insightCategory },

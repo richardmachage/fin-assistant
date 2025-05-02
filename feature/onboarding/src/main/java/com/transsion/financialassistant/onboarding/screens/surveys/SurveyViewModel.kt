@@ -12,6 +12,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.data.OnboardingRepositoryImpl
+import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.OnboardingState
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyQuestion
@@ -19,15 +20,14 @@ import com.transsion.financialassistant.onboarding.screens.surveys.utils.SurveyS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SurveyViewModel @Inject constructor(
    @ApplicationContext private val context: Context,
-    private val repository: OnboardingRepositoryImpl
+   private val repository: OnboardingRepositoryImpl,
+   private val onboardingRepo: OnboardingRepo
 ) : ViewModel() {
     private val _surveyState = MutableLiveData(SurveyState())
     val surveyState: LiveData<SurveyState> = _surveyState
@@ -205,6 +205,10 @@ class SurveyViewModel @Inject constructor(
             _surveyState.value = _surveyState.value?.copy(isLoading = false, isSurveyComplete = true)
             // Optionally reset the survey state
         }
+    }
+
+    fun setCompleteOnboarding() {
+        onboardingRepo.setCompletedOnboarding()
     }
 
     // calculate progress for the progress bar

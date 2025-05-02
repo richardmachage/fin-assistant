@@ -1,10 +1,13 @@
 package com.transsion.financialassistant.insights.screens.insights
 
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -77,7 +80,7 @@ fun InsightsScreen(
     Scaffold { innerPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 // .height(screeHeight.dp)
                 .padding(
                     top = innerPadding.calculateTopPadding(),
@@ -209,84 +212,100 @@ fun InsightsScreen(
 
             //Graph
             VerticalSpacer(5)
-            Graph(
-                title = state.transactionCategory.description,
-                subtitle = state.insightTimeline.getTimeline().displayInfo,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingMedium)
-                    .align(Alignment.CenterHorizontally),
-                lineColor = when (state.transactionCategory) {
-                    TransactionCategory.IN -> FAColors.green
-                    TransactionCategory.OUT -> Color.Red
-                },
-                dataPoints = graphData,
-                bottomValueFormatter = { value ->
-                    value.toMonthDayDate()
-                }
-            )
 
-            //stackedBarchart
-            VerticalSpacer(5)
-
-            StackedBarChart(
-                categories = categoryDistribution
-            )
-
-            //categories
-            LazyVerticalGrid(
-                columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
-                modifier = Modifier
-                    .height((screeHeight / 2).dp)
-                    .padding(paddingMedium),
-                horizontalArrangement = Arrangement.SpaceBetween.apply {
-                    spacedBy(6.dp)
-                }
-            ) {
-
-                items(categoryDistribution) { item ->
-                    InsightCategoryCard(
-                        modifier = Modifier.padding(paddingMedium),
-                        item = InsightCategoryCardItem(
-                            tittle = item.name,
-                            amount = item.amount.toString(),
-                            categoryIcon = item.icon
-                                ?: com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
-                        ),
-                        onClick = {
-                            navController.navigate(
-                                InsightsRoutes.CategoryInsights(
-                                    category = item.name,
-                                    startDate = state.insightTimeline.getTimeline().startDate,
-                                    endDate = state.insightTimeline.getTimeline().endDate,
-                                    timeLine = state.insightTimeline.getTimeline().displayInfo,
-                                    transactionCategory = state.transactionCategory
-                                )
-                            )
+            AnimatedContent(graphData) { targetState ->
+                when (targetState.isEmpty()) {
+                    true -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height((screeHeight / 2).dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            NormalText(text = stringResource(R.string.no_data_available))
                         }
-                    )
-                }
+                    }
 
-                if (state.transactionCategory == TransactionCategory.OUT) {
-                    items(1) {
-                        InsightCategoryCard(
-                            modifier = Modifier.padding(paddingMedium),
-                            item = InsightCategoryCardItem(
-                                tittle = stringResource(R.string.transaction_costs),
-                                amount = state.totalTransactionCost ?: "0.0",
-                                categoryIcon = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
-                            ),
-                            onClick = {
-                                /*navController.navigate(
-                                InsightsRoutes.CategoryInsights(
-                                    category = "transaction_costs",
-                                    startDate = state.insightTimeline.getTimeline().startDate,
-                                    endDate = state.insightTimeline.getTimeline().endDate,
-                                    timeLine = state.insightTimeline.getTimeline().displayInfo
-                                )
-                            )*/
+                    false -> Column {
+
+                        Graph(
+                            title = state.transactionCategory.description,
+                            subtitle = state.insightTimeline.getTimeline().displayInfo,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingMedium)
+                                .align(Alignment.CenterHorizontally),
+                            lineColor = when (state.transactionCategory) {
+                                TransactionCategory.IN -> FAColors.green
+                                TransactionCategory.OUT -> Color.Red
+                            },
+                            dataPoints = graphData,
+                            bottomValueFormatter = { value ->
+                                value.toMonthDayDate()
                             }
                         )
+
+                        //stackedBarchart
+                        VerticalSpacer(5)
+
+                        StackedBarChart(
+                            categories = categoryDistribution
+                        )
+
+                        //categories
+                        LazyVerticalGrid(
+                            columns = androidx.compose.foundation.lazy.grid.GridCells.Fixed(2),
+                            modifier = Modifier
+                                .height((screeHeight / 2).dp)
+                                .padding(paddingMedium),
+                            horizontalArrangement = Arrangement.SpaceBetween.apply {
+                                spacedBy(6.dp)
+                            }
+                        ) {
+
+                            items(categoryDistribution) { item ->
+                                InsightCategoryCard(
+                                    modifier = Modifier.padding(paddingMedium),
+                                    item = InsightCategoryCardItem(
+                                        tittle = item.name,
+                                        amount = item.amount.toString(),
+                                        categoryIcon = item.icon
+                                            ?: com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined
+                                    ),
+                                    onClick = {
+                                        navController.navigate(
+                                            InsightsRoutes.CategoryInsights(
+                                                category = item.name,
+                                                startDate = state.insightTimeline.getTimeline().startDate,
+                                                endDate = state.insightTimeline.getTimeline().endDate,
+                                                timeLine = state.insightTimeline.getTimeline().displayInfo,
+                                                transactionCategory = state.transactionCategory
+                                            )
+                                        )
+                                    }
+                                )
+                            }
+
+                            if (state.transactionCategory == TransactionCategory.OUT) {
+                                items(1) {
+                                    InsightCategoryCard(
+                                        modifier = Modifier.padding(paddingMedium),
+                                        item = InsightCategoryCardItem(
+                                            tittle = stringResource(R.string.transaction_costs),
+                                            amount = viewModel.transactionCostsFlow.collectAsState(
+                                                initial = 0.0
+                                            ).value.toString()
+                                                .formatAsCurrency(),//state.totalTransactionCost ?: "0.0",
+                                            categoryIcon = com.transsion.financialassistant.presentation.R.drawable.payment_01
+                                        ),
+                                        onClick = {
+                                        },
+                                        showTopIcon = false
+                                    )
+
+                                }
+                            }
+                        }
 
                     }
                 }

@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.financialassistant.android.application)
-    //alias(libs.plugins.ksp) //for hilt
-    //alias(libs.plugins.hilt.android)
+    alias(libs.plugins.google.firebase.appdistribution)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 
@@ -10,6 +10,7 @@ dependencies {
     implementation(projects.feature.onboarding)
     implementation(projects.feature.insights)
     implementation(projects.feature.home)
+    implementation(projects.feature.feedback)
     implementation(projects.core.presentation)
     implementation(projects.core.background)
     implementation(projects.core.data)

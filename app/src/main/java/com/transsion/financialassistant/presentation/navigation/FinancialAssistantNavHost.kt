@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
+import com.transsion.financialassistant.feedback.navigation.feedbackNavGraph
 import com.transsion.financialassistant.home.navigation.homeNavGraph
 import com.transsion.financialassistant.insights.navigation.insightsNavGraph
 import com.transsion.financialassistant.onboarding.navigation.onboardingNavGraph
@@ -28,13 +30,23 @@ fun FinancialAssistantNavHost(
                     popUpTo(route = route) {
                         inclusive = true
                     }
+                    launchSingleTop = true
                 }
-            }
+            },
         )
 
         insightsNavGraph(navController = navController)
 
-        homeNavGraph(navController = navController)
+        homeNavGraph(
+            navController = navController,
+            goToFeedBack = {
+                navController.navigate(FeedbackRoutes.Feedback)
+            }
+        )
+
+        feedbackNavGraph(
+            navController = navController
+        )
 
         composable<FinancialAssistantRoutes.Landing> {
             LandingScreen(

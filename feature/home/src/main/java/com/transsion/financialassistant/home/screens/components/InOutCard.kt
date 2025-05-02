@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,7 +42,10 @@ fun InOutCard(
     moneyOut: String = "177,500.90",
     transactionsIn: String = "14",
     transactionsOut: String = "256",
-) {
+    onHideBalance: () -> Unit,
+    hide: Boolean,
+
+    ) {
     ElevatedCard(
         modifier = modifier,
         shape = RoundedCornerShape(15),
@@ -58,19 +63,42 @@ fun InOutCard(
             InOutCardCategoryCard(
                 category = TransactionCategory.IN,
                 amount = moneyIn,
-                transactions = transactionsIn
+                transactions = transactionsIn,
+                hide = hide
+
             )
-            //divider
-            VerticalDivider(Modifier
-                .height(50.dp)
-                .align(Alignment.CenterVertically))
+
+            Column(
+                modifier = Modifier.align(Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //divider
+                VerticalDivider(
+                    Modifier
+                        .height(50.dp)
+                )
+
+                IconButton(
+                    onClick = {
+                        onHideBalance()
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.solar_eye_outline),
+                        contentDescription = "eye",
+                    )
+                }
+
+            }
 
             //money out
-            InOutCardCategory(
+            InOutCardCategoryCard(
                 category = TransactionCategory.OUT,
                 amount = moneyOut,
-                transactions = transactionsOut
+                transactions = transactionsOut,
+                hide = hide
             )
+
         }
         VerticalSpacer(10)
 
@@ -82,7 +110,8 @@ fun InOutCardCategoryCard(
     modifier: Modifier = Modifier,
     category: TransactionCategory = TransactionCategory.IN,
     amount: String = "236,900.60",
-    transactions: String = "14"
+    transactions: String = "14",
+    hide: Boolean,
 ) {
     Column(modifier = modifier) {
         Row(
@@ -97,7 +126,9 @@ fun InOutCardCategoryCard(
                         tint = FAColors.green
                     )
                     // HorizontalSpacer(5)
-                    FaintText(text = stringResource(com.transsion.financialassistant.presentation.R.string.money_in))
+                    FaintText(
+                        text = stringResource(com.transsion.financialassistant.presentation.R.string.money_in)
+                    )
 
 
                 }
@@ -124,8 +155,12 @@ fun InOutCardCategoryCard(
                 fontWeight = FontWeight.ExtraBold
             )
             HorizontalSpacer(3)
+
             //Amount
-            TitleText(text = amount)
+            TitleText(
+                modifier = if (hide) Modifier.blur(10.dp) else Modifier,
+                text = amount
+            )
 
         }
         VerticalSpacer(5)
@@ -142,7 +177,7 @@ fun InOutCardCategoryCard(
 @Composable
 fun InOutCardPreview() {
     FinancialAssistantTheme {
-        InOutCard()
+        InOutCard(onHideBalance = {}, hide = true)
 
     }
 }

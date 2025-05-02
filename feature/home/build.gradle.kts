@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.financialassistant.feature.module)
+
 }
 
 android {

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.transsion.financialassistant.data.models.InsightCategory
+import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.home.domain.AllTransactionsRepo
@@ -24,8 +25,11 @@ import javax.inject.Inject
 @HiltViewModel
 class AllTransactionsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val allTransactionsRepo: AllTransactionsRepo
+    private val allTransactionsRepo: AllTransactionsRepo,
+    private val preferences: DatastorePreferences
 ) : ViewModel() {
+    val hideBalance = preferences.getValue(DatastorePreferences.HIDE_BALANCE_KEY, false)
+
     private val passedInsightCategory =
         savedStateHandle.get<InsightCategory>("insightCategory") ?: InsightCategory.PERSONAL
     private var _state =
@@ -136,5 +140,12 @@ class AllTransactionsViewModel @Inject constructor(
         getMoneyOut()
         getNumberOfTransactionsIn()
         getNumberOfTransactionsOut()
+    }
+
+    fun onHideBalance(value: Boolean) {
+        viewModelScope.launch {
+            preferences.saveValue(DatastorePreferences.HIDE_BALANCE_KEY, value)
+        }
+
     }
 }

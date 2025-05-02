@@ -5,6 +5,10 @@ import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
+
+/**
+for use in tests to instanciate the worker
+ */
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface HiltWorkerFactoryEntryPoint {

@@ -1,6 +1,8 @@
 package com.transsion.financialassistant.background.workers
 
 import android.content.Context
+import android.database.Cursor
+import android.provider.Telephony
 import android.util.Log
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -14,8 +16,6 @@ import com.transsion.financialassistant.data.repository.transaction.TransactionR
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 
@@ -26,56 +26,133 @@ class InsertTransactionsWorker @AssistedInject constructor(
     private val repos: Repos,
     private val transactionRepo: TransactionRepo
 ) : CoroutineWorker(context, workerParams) {
+    /*
+        override suspend fun doWork(): Result {
 
-    override suspend fun doWork(): Result {
-        return withContext(Dispatchers.IO) {
-            val transactionResults = TransactionType.entries.map { type ->
+            return withContext(Dispatchers.IO) {
 
-                async {
-                    type to fetchByType(type)
+                val transactionResults = TransactionType.entries.map { type ->
+                    async {
+                        type to fetchByType(type)
+                    }
+                }.awaitAll().toMap()
+
+                val totalTransactionsRetrieved = transactionResults.entries.sumOf { it.value.size }
+                var processedCount = 0
+
+                // now save transactions  to DB,
+                transactionResults.entries.forEach { (type, messages) ->
+                    val saveAction = saveStrategies(repos = repos, context = context)[type]
+
+                    if (saveAction != null) {
+                        messages.forEach { message ->
+
+                            try {
+                                saveAction(message)
+                                Log.d(
+                                    "InsertWorker",
+                                    "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
+                                )
+                            } catch (e: Exception) {
+                                Log.e("Error saving transaction", e.message.toString())
+                            }
+
+                            processedCount += 1
+
+                            val progress =
+                                (processedCount.toFloat() / totalTransactionsRetrieved.toFloat()) //* 100
+
+                            setProgressAsync(
+                                workDataOf(
+                                    "progress" to progress,
+                                    "currentType" to type.name
+                                )
+                            )
+                        }
+                    } else {
+                        // Optionally log unsupported types
+                        Log.w("InsertWorker", "No save strategy for type: $type")
+                    }
                 }
-            }.awaitAll().toMap()
 
-            val totalTransactionsRetrieved = transactionResults.entries.sumOf { it.value.size }
+                return@withContext Result.success()
+            }
+        }
+
+        */
+     */
+
+
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+
+        val saveStrategyMap = saveStrategies(repos, context)
+
+        val projection = arrayOf(
+            Telephony.Sms.BODY,
+            Telephony.Sms.SUBSCRIPTION_ID
+        )
+
+        val selection = "${Telephony.Sms.ADDRESS} = ?"
+
+        val selectionArgs = arrayOf("MPESA")
+
+        val sortOrder = "${Telephony.Sms.DATE} DESC"
+
+        val cursor: Cursor? = context.contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            sortOrder
+
+        )
+
+        cursor?.use { thisCursor ->
+            val bodyColumn = thisCursor.getColumnIndexOrThrow(Telephony.Sms.BODY)
+            val subscriptionIdColumn =
+                thisCursor.getColumnIndexOrThrow(Telephony.Sms.SUBSCRIPTION_ID)
+
+            val totalMessages =
+                thisCursor.count.takeIf { it > 0 } ?: return@withContext Result.success()
             var processedCount = 0
 
-            // now save transactions  to DB,
-            transactionResults.entries.forEach { (type, messages) ->
-                val saveAction = saveStrategies(repos = repos, context = context)[type]
+            thisCursor.moveToPosition(-1)
 
-                if (saveAction != null) {
-                    messages.forEach { message ->
+            while (thisCursor.moveToNext()) {
+                val body = thisCursor.getString(bodyColumn)
+                val subscriptionId = thisCursor.getString(subscriptionIdColumn)
+                val transactionType = transactionRepo.getTransactionType(body)
+                val saveAction = saveStrategyMap[transactionType]
 
-                        try {
-                            saveAction(message)
-                            Log.d(
-                                "InsertWorker",
-                                "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
-                            )
-                        } catch (e: Exception) {
-                            Log.e("Error saving transaction", e.message.toString())
-                        }
-
-                        processedCount += 1
-
-                        val progress =
-                            (processedCount.toFloat() / totalTransactionsRetrieved.toFloat()) //* 100
-
-                        setProgressAsync(
-                            workDataOf(
-                                "progress" to progress,
-                                "currentType" to type.name
-                            )
+                saveAction?.let {
+                    val message = MpesaMessage(body = body, subscriptionId = subscriptionId)
+                    try {
+                        saveAction(message)
+                        Log.d(
+                            "InsertWorker",
+                            "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
                         )
+                    } catch (e: Exception) {
+                        Log.e("InsertWorker", "Error saving: ${e.message}")
                     }
-                } else {
-                    // Optionally log unsupported types
-                    Log.w("InsertWorker", "No save strategy for type: $type")
-                }
-            }
 
-            return@withContext Result.success()
+                } ?: run {
+                    Log.w("InsertWorker", "No save strategy for type: $transactionType")
+                }
+                processedCount += 1
+
+                val progress = processedCount.toFloat() / totalMessages.toFloat()
+
+                setProgressAsync(
+                    workDataOf(
+                        "progress" to progress,
+                        "currentType" to transactionType.name
+                    )
+                )
+            }
         }
+
+        Result.success()
     }
 
     private fun fetchByType(type: TransactionType): List<MpesaMessage> {

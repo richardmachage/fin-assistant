@@ -36,6 +36,9 @@ biometricKtx = "1.1.0"
 securityCryptoKtx = "1.0.0"
 runtimeLivedata = "1.7.8"
 pagingCommonAndroid = "3.3.6"
+googleFirebaseAppdistribution = "5.1.1"
+googleGmsGoogleServices = "4.4.2"
+firebaseFirestore = "25.1.4"
 
 [libraries]
 androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "biometric" }
@@ -107,6 +110,7 @@ androidx-biometric-ktx = { group = "androidx.biometric", name = "biometric-ktx",
 androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
 androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
+firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -122,6 +126,8 @@ financialassistant-feature-module = { id = "financialassistant.feature.module" }
 financialassistant-core-module = { id = "financialassistant.core.module" }
 
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-firebase-appdistribution = { id = "com.google.firebase.appdistribution", version.ref = "googleFirebaseAppdistribution" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
 [bundles]
 default-dependencies = [
