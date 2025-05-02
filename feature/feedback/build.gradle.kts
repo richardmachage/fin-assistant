@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.financialassistant.feature.module)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -15,6 +16,7 @@ dependencies {
 
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.rules)
+    implementation(libs.firebase.firestore)
 
     /*implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
