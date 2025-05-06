@@ -85,6 +85,47 @@ fun getMpesaMessagesByTransactionType(
 }
 
 
+fun getDateMessageReceived(
+    context: Context,
+    transactionCode: String,
+): Result<Long> {
+
+    return try {
+        val selection = "${Telephony.Sms.ADDRESS} = ? AND ${Telephony.Sms.BODY} LIKE ?"
+        val selectionArgs = arrayOf("MPESA", "%$transactionCode%")
+
+        val projection = arrayOf(
+            Telephony.Sms.DATE,
+        )
+
+        val cursor: Cursor? = context.contentResolver.query(
+            Telephony.Sms.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor.use { cu ->
+            val present = cu?.moveToFirst() ?: false
+
+            return if (present) {
+                val dateColumn = cu?.getColumnIndexOrThrow(Telephony.Sms.DATE)
+
+                dateColumn?.let { column ->
+                    Result.success(cu.getLong(column))
+                } ?: Result.failure(Exception("Message for this transaction not found"))
+            } else {
+                Result.failure(Exception("Message for this transaction not found"))
+            }
+        }
+    } catch (e: Exception) {
+        Result.failure(Exception("Message for this transaction not found"))
+
+    }
+}
+
+
 fun getMessageForTransaction(context: Context, transactionCode: String): Result<String> {
 
     return try {
