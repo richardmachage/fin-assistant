@@ -2,9 +2,11 @@ package com.transsion.financialassistant.data.utils
 
 import java.text.NumberFormat
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -44,6 +46,37 @@ fun String.toAppTime(): String {
     }
 }
 
+fun Long.toAppTime(): String {
+    return this.let {
+        try {
+            val parsedDate = Instant.ofEpochMilli(this)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()//LocalDate.from(Date(it).toInstant())
+            println("dbTime" + parsedDate.format(dbTimeFormatter))
+            parsedDate.format(appTimeFormatter)
+        } catch (e: Exception) {
+            println("dbTime " + e.message.toString())
+            this.toString()
+        }
+    }
+}
+
+
+fun Long.toDbDate(): String {
+    return this.let {
+        try {
+            //val date = Date(it)
+            val parsedDate = Instant.ofEpochMilli(this)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()//LocalDate.from(Date(it).toInstant())
+            println("dbDate" + parsedDate.format(dbFormatter))
+            parsedDate.format(dbFormatter)
+        } catch (e: Exception) {
+            println("dbDate" + e.message.toString())
+            this.toString()
+        }
+    }
+}
 fun String.toDbDate(): String {
     return this.let {
         try {
