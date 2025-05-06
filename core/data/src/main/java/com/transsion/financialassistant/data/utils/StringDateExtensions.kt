@@ -12,6 +12,8 @@ private val monthDayFormatter = DateTimeFormatter.ofPattern("MMM d")
 
 val appFormatter =
     DateTimeFormatter.ofPattern("d/M/yy") // e.g. 1/3/25
+val appFormatter2 = DateTimeFormatter.ofPattern("d/M/yyyy") //e.g 1/3/2025
+
 val dbFormatter =
     DateTimeFormatter.ofPattern("yyyy/MM/dd")//DateTimeFormatter.ISO_LOCAL_DATE // e.g. 2025-03-01
 private val dbTimeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
@@ -48,7 +50,13 @@ fun String.toDbDate(): String {
             val parsedDate = LocalDate.parse(it, appFormatter)
             parsedDate.format(dbFormatter)
         } catch (e: Exception) {
-            this
+            try {
+                val parsedDate = LocalDate.parse(it, appFormatter2)
+                parsedDate.format(dbFormatter)
+            } catch (e: Exception) {
+                println("error, ${e.message}")
+                this
+            }
         }
     }
 }
