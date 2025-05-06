@@ -2,9 +2,11 @@ package com.transsion.financialassistant.data.utils
 
 import java.text.NumberFormat
 import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -12,6 +14,8 @@ private val monthDayFormatter = DateTimeFormatter.ofPattern("MMM d")
 
 val appFormatter =
     DateTimeFormatter.ofPattern("d/M/yy") // e.g. 1/3/25
+val appFormatter2 = DateTimeFormatter.ofPattern("d/M/yyyy") //e.g 1/3/2025
+
 val dbFormatter =
     DateTimeFormatter.ofPattern("yyyy/MM/dd")//DateTimeFormatter.ISO_LOCAL_DATE // e.g. 2025-03-01
 private val dbTimeFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
@@ -42,13 +46,50 @@ fun String.toAppTime(): String {
     }
 }
 
+fun Long.toAppTime(): String {
+    return this.let {
+        try {
+            val parsedDate = Instant.ofEpochMilli(this)
+                .atZone(ZoneId.systemDefault())
+                .toLocalTime()//LocalDate.from(Date(it).toInstant())
+            println("dbTime" + parsedDate.format(dbTimeFormatter))
+            parsedDate.format(appTimeFormatter)
+        } catch (e: Exception) {
+            println("dbTime " + e.message.toString())
+            this.toString()
+        }
+    }
+}
+
+
+fun Long.toDbDate(): String {
+    return this.let {
+        try {
+            //val date = Date(it)
+            val parsedDate = Instant.ofEpochMilli(this)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()//LocalDate.from(Date(it).toInstant())
+            println("dbDate" + parsedDate.format(dbFormatter))
+            parsedDate.format(dbFormatter)
+        } catch (e: Exception) {
+            println("dbDate" + e.message.toString())
+            this.toString()
+        }
+    }
+}
 fun String.toDbDate(): String {
     return this.let {
         try {
             val parsedDate = LocalDate.parse(it, appFormatter)
             parsedDate.format(dbFormatter)
         } catch (e: Exception) {
-            this
+            try {
+                val parsedDate = LocalDate.parse(it, appFormatter2)
+                parsedDate.format(dbFormatter)
+            } catch (e: Exception) {
+                println("error, ${e.message}")
+                this
+            }
         }
     }
 }

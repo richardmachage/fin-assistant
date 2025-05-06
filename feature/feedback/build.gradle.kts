@@ -30,4 +30,9 @@ dependencies {
 
     //data store
     implementation(libs.datastore.preferences)
+
+    //cloudinary
+    implementation(libs.cloudinary.android)
+    implementation(libs.coil.compose)
+
 }

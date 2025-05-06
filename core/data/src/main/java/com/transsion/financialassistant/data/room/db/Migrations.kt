@@ -1,12 +1,38 @@
-package com.transsion.financialassistant.data.room.views.personal
+package com.transsion.financialassistant.data.room.db
 
-import androidx.room.DatabaseView
-import com.transsion.financialassistant.data.models.TransactionCategory
-import com.transsion.financialassistant.data.models.TransactionType
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
-@DatabaseView(
-    value = """
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, NULL AS name FROM BundlesPurchaseEntity
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        //Create FulizaPay table
+        db.execSQL(
+            """
+                CREATE TABLE IF NOT EXISTS FulizaPayEntity(
+                    transactionCode TEXT NOT NULL PRIMARY KEY,
+                    amount REAL NOT NULL,
+                    availableFulizaLimit REAL NOT NULL,
+                    phone TEXT NOT NULL,
+                    mpesaBalance REAL NOT NULL,
+                    transactionCategory TEXT NOT NULL,
+                    date TEXT NOT NULL,
+                    time TEXT NOT NULL,
+                    transactionType TEXT NOT NULL
+                ) 
+            """.trimIndent()
+        )
+
+
+        // add the fuliza to outgoing transactions view
+
+        //first drop old view
+        //then create new view
+        // Recreate the view with the FulizaPayEntity added
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedOutGoingTransaction`")
+
+        db.execSQL(
+            """
+                CREATE VIEW `UnifiedOutGoingTransaction` AS SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, NULL AS name FROM BundlesPurchaseEntity
                 UNION ALL
                 SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,transactionCost, mpesaBalance,NULL AS name FROM BuyAirtimeEntity
                 UNION ALL
@@ -23,18 +49,8 @@ import com.transsion.financialassistant.data.models.TransactionType
                 SELECT transactionCode, phone, amount, date, time, transactionType, "OUT" AS transactionCategory, transactionCost, mpesaBalance, "MY POCHI" as name FROM MoveToPochiEntity 
                 UNION ALL
                 SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, 0.0 AS transactionCost, mpesaBalance,"Paid Fuliza" as name FROM FulizaPayEntity
+        """
+        )
+    }
 
-    """
-)
-data class UnifiedOutGoingTransaction(
-    val transactionCode: String,
-    val phone: String,
-    val amount: Double,
-    val date: String,
-    val time: String,
-    val name: String?,
-    val transactionCost: Double,
-    val mpesaBalance: Double,
-    val transactionCategory: TransactionCategory,
-    val transactionType: TransactionType
-)
+}

@@ -13,6 +13,7 @@ class TransactionRepoTests {
 
     @Before
     fun setUp() {
+
         transactionRepo = TransactionRepoImpl()
     }
 
@@ -21,14 +22,19 @@ class TransactionRepoTests {
         val message =
             "TCO5V187SF Confirmed. Ksh100.00 sent to FRANCIS  NGIGI 0113184031 on 24/3/25 at 7:02 AM. New M-PESA balance is Ksh2,128.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,900.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
 
+        val sendBridge =
+            "TE357Q76ZT Confirmed. You have sent Ksh3,019.72 to BRIDGE on 03/05/2025  at 10:51 AM. New MPESA balance is Ksh1,047.06."
+
         val entity = transactionRepo.parseSendMoneyMessage(
-            message = message,
+            message = sendBridge,
             phone = "0718353505"
         )
 
         assertTrue(entity != null)
-        assertTrue(entity?.transactionCode == "TCO5V187SF")
-        assertTrue(entity?.sentToName == "FRANCIS  NGIGI")
+        assertTrue(entity?.transactionCode == "TE357Q76ZT")
+        assertTrue(entity?.sentToName == "BRIDGE")
+
+        println(entity)
     }
 
     @Test
@@ -267,6 +273,21 @@ class TransactionRepoTests {
         )
         assertNotNull(entity)
 
+    }
+
+    @Test
+    fun testSuccessfulParseOfFulizaPayMessage() {
+        val message =
+            "SKT7KAQMRH Confirmed. Ksh 241.19 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh 700.00. M-PESA balance is Ksh558.81."
+
+        val entity = transactionRepo.parseFulizaPayMessage(
+            message = message,
+            phone = "0746606059",
+            isTest = true
+        )
+
+        assertNotNull(entity)
+        println(entity)
     }
 
 

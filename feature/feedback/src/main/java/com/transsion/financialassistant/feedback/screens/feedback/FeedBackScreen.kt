@@ -65,7 +65,7 @@ fun FeedBackScreen(
         uri?.let {
             val stream = context.contentResolver.openInputStream(it)
             val bitmap = BitmapFactory.decodeStream(stream)
-            viewModel.onAttachmentChange(bitmap.asImageBitmap())
+            viewModel.onAttachmentChange(attachment = bitmap.asImageBitmap(), imageUri = it)
         }
     }
 
@@ -147,10 +147,32 @@ fun FeedBackScreen(
                     enabled = state.title.isNotBlank() && state.description.isNotBlank(),
                     text = stringResource(R.string.submit),
                     onClick = {
-                        viewModel.onSubmitFeedback(
-                            onSuccess = {},
-                            onError = {}
-                        )
+
+                        state.imageUri?.let {
+                            //upload image first
+                            viewModel.uploadImage(
+                                context = context,
+                                imageUri = it,
+                                onSuccess = { imageUrl ->
+                                    //now submit feedback to firebase
+                                    viewModel.onSubmitFeedback(
+                                        imageUrl = imageUrl,
+                                        onSuccess = {},
+                                        onError = {}
+                                    )
+                                },
+                                onError = { errorMessage ->
+                                    viewModel.showToast(errorMessage)
+                                }
+                            )
+                        } ?: run {
+                            //submit without image
+                            viewModel.onSubmitFeedback(
+                                onSuccess = {},
+                                onError = {}
+                            )
+                        }
+
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
