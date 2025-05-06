@@ -12,6 +12,8 @@ import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGood
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.fuliza_pay.FulizaPayDao
+import com.transsion.financialassistant.data.room.entities.fuliza_pay.FulizaPayEntity
 import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiDao
 import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiDao
@@ -62,7 +64,8 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         ReceivePochiEntity::class,
         MoveToPochiEntity::class,
         MoveFromPochiEntity::class,
-        SendFromPochiEntity::class
+        SendFromPochiEntity::class,
+        FulizaPayEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
@@ -73,7 +76,7 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnifiedOutGoingTransactionsBusiness::class
     ],
 
-    version = 1,
+    version = 2,
     exportSchema = true
 
 )
@@ -98,6 +101,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun unifiedBusinessDao(): UnifiedTransactionsBusinessDao
     abstract fun moveFromPochiDao(): MoveFromPochiDao
     abstract fun sendFromPochiDao(): SendFromPochiDao
+    abstract fun fulizaPayDao(): FulizaPayDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
@@ -110,7 +114,9 @@ abstract class FinancialAssistantDb : RoomDatabase() {
                         context.applicationContext,
                         FinancialAssistantDb::class.java,
                         "financial_assistant_db"
-                    ).fallbackToDestructiveMigration().build()
+                    )
+                        .addMigrations(MIGRATION_1_2)
+                        .build()
                     INSTANCE = instance
                 }
                 return instance
