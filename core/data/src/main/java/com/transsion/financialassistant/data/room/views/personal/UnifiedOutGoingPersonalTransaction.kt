@@ -21,6 +21,8 @@ import com.transsion.financialassistant.data.models.TransactionType
                 SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,NULL as name FROM SendMshwariEntity
                 UNION ALL
                 SELECT transactionCode, phone, amount, date, time, transactionType, "OUT" AS transactionCategory, transactionCost, mpesaBalance, "MY POCHI" as name FROM MoveToPochiEntity 
+                UNION ALL
+                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, 0.0 AS transactionCost, mpesaBalance,"Paid Fuliza" as name FROM FulizaPayEntity
 
     """
 )
