@@ -5,6 +5,7 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.fuliza_pay.FulizaPayEntity
 import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
@@ -34,4 +35,5 @@ interface TransactionRepo {
     fun parseMoveToPochiMessage(message: String, phone: String): MoveToPochiEntity?
     fun parseMoveFromPochiMessage(message: String, phone: String): MoveFromPochiEntity?
     fun parseSendFromPochiMessage(message: String, phone: String): SendFromPochiEntity?
+    fun parseFulizaPayMessage(message: String, phone: String, isTest: Boolean): FulizaPayEntity?
 }

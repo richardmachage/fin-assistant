@@ -1,10 +1,13 @@
 package com.transsion.financialassistant.data.repository.transaction
 
+import android.content.Context
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.repository.getDateMessageReceived
 import com.transsion.financialassistant.data.room.entities.bundles_purchase.BundlesPurchaseEntity
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeEntity
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsEntity
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyEntity
+import com.transsion.financialassistant.data.room.entities.fuliza_pay.FulizaPayEntity
 import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiEntity
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillEntity
@@ -16,67 +19,23 @@ import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyE
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
+import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toDbDate
 import com.transsion.financialassistant.data.utils.toDbTime
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
+open class TransactionRepoImpl @Inject constructor(
+) : TransactionRepo {
+
+    @Inject
+    @ApplicationContext
+    lateinit var context: Context
+
     override fun getTransactionType(message: String): TransactionType =
         TransactionType.entries.firstOrNull {
             it.getRegex().matches(message)
         } ?: TransactionType.UNKNOWN
-
-    /*when {
-        TransactionType.RECEIVE_MONEY.getRegex()
-            .matches(message) -> TransactionType.RECEIVE_MONEY
-
-        TransactionType.BUNDLES_PURCHASE.getRegex()
-            .matches(message) -> TransactionType.BUNDLES_PURCHASE
-
-        TransactionType.AIRTIME_PURCHASE.getRegex()
-            .matches(message) -> TransactionType.AIRTIME_PURCHASE
-
-        TransactionType.DEPOSIT.getRegex()
-            .matches(message) -> TransactionType.DEPOSIT
-
-        TransactionType.WITHDRAWAL.getRegex()
-            .matches(message) -> TransactionType.WITHDRAWAL
-
-        TransactionType.PAY_BILL.getRegex()
-            .matches(message) -> TransactionType.PAY_BILL
-
-        TransactionType.SEND_MONEY.getRegex()
-            .matches(message) -> TransactionType.SEND_MONEY
-
-        TransactionType.RECEIVE_MONEY.getRegex()
-            .matches(message) -> TransactionType.RECEIVE_MONEY
-
-        TransactionType.BUY_GOODS.getRegex()
-            .matches(message) -> TransactionType.BUY_GOODS
-
-        TransactionType.SEND_MSHWARI.getRegex()
-            .matches(message) -> TransactionType.SEND_MSHWARI
-
-        TransactionType.RECEIVE_POCHI.getRegex()
-            .matches(message) -> TransactionType.RECEIVE_POCHI
-
-        TransactionType.RECEIVE_MSHWARI.getRegex()
-            .matches(message) -> TransactionType.RECEIVE_MSHWARI
-
-        TransactionType.SEND_POCHI.getRegex()
-            .matches(message) -> TransactionType.SEND_POCHI
-
-        TransactionType.MOVE_TO_POCHI.getRegex()
-            .matches(message) -> TransactionType.MOVE_TO_POCHI
-
-        TransactionType.MOVE_FROM_POCHI.getRegex().matches(message) -> TransactionType.MOVE_FROM_POCHI
-
-        TransactionType.SEND_POCHI_TO_POCHI.getRegex().matches(message) -> TransactionType.SEND_POCHI_TO_POCHI
-
-        TransactionType.SEND_MONEY_FROM_POCHI.getRegex().matches(message) -> TransactionType.SEND_POCHI_TO_POCHI
-
-        else -> TransactionType.UNKNOWN
-    }*/
 
     override fun parseSendMoneyMessage(message: String, phone: String): SendMoneyEntity? {
 
@@ -387,6 +346,40 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             phone = phone,
 
             )
+
+    }
+
+    override fun parseFulizaPayMessage(
+        message: String,
+        phone: String,
+        isTest: Boolean
+    ): FulizaPayEntity? {
+        val match = TransactionType.FULIZA_PAY.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        val transactionCode = groups[1]
+        val timeMills = if (isTest) System.currentTimeMillis() else {
+            getDateMessageReceived(context, transactionCode = transactionCode).getOrNull()
+        }
+
+
+
+        return timeMills?.let {
+            FulizaPayEntity(
+                transactionCode = groups[1],
+                phone = phone,
+                amount = groups[2].replace(",", "").toDouble(),
+                mpesaBalance = groups[4].replace(",", "").toDouble(),
+                date = it.toDbDate(),
+                time = it.toAppTime(),
+                availableFulizaLimit = groups[3].replace(",", "").toDouble()
+
+            )
+        }
 
     }
 
