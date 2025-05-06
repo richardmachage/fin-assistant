@@ -5,6 +5,7 @@ import com.transsion.financialassistant.data.repository.transaction.bundles_purc
 import com.transsion.financialassistant.data.repository.transaction.buy_airtime.BuyAirtimeRepo
 import com.transsion.financialassistant.data.repository.transaction.buy_goods.BuyGoodsRepo
 import com.transsion.financialassistant.data.repository.transaction.deposit.DepositRepo
+import com.transsion.financialassistant.data.repository.transaction.fuliza_pay.FulizaPayRepo
 import com.transsion.financialassistant.data.repository.transaction.move_from_pochi.MoveFromPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.move_to_pochi.MoveToPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.paybill.PayBillRepo
@@ -34,4 +35,5 @@ class Repos @Inject constructor(
     val moveToPochiRepo: MoveToPochiRepo,
     val moveFromPochiRepo: MoveFromPochiRepo,
     val sendFromPochiRepo: SendPochiRepo,
+    val fulizaRepo: FulizaPayRepo
 )
