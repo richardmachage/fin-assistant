@@ -227,6 +227,16 @@ class TransactionTypeTests {
 
         assertTrue(result == TransactionType.UNKNOWN)
     }
+
+    @Test
+    fun `should detect fuliza cut transaction`() {
+        val message =
+            "SKT7KAQMRH Confirmed. Ksh 241.19 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh 700.00. M-PESA balance is Ksh558.81."
+        val result = transactionRepo.getTransactionType(message)
+        println("TransactionType : ${result.description}")
+
+        assertTrue(result == TransactionType.FULIZA_PAY)
+    }
 }
 
 

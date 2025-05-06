@@ -13,6 +13,7 @@ class TransactionRepoTests {
 
     @Before
     fun setUp() {
+
         transactionRepo = TransactionRepoImpl()
     }
 
@@ -272,6 +273,21 @@ class TransactionRepoTests {
         )
         assertNotNull(entity)
 
+    }
+
+    @Test
+    fun testSuccessfulParseOfFulizaPayMessage() {
+        val message =
+            "SKT7KAQMRH Confirmed. Ksh 241.19 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh 700.00. M-PESA balance is Ksh558.81."
+
+        val entity = transactionRepo.parseFulizaPayMessage(
+            message = message,
+            phone = "0746606059",
+            isTest = true
+        )
+
+        assertNotNull(entity)
+        println(entity)
     }
 
 
