@@ -16,6 +16,7 @@ enum class TransactionType(val description: String) {
     MOVE_TO_POCHI("Moved to Pochi Wallet"),
     MOVE_FROM_POCHI("Moved from Pochi to M-PESA"),
     SEND_MONEY_FROM_POCHI("Send Money from Pochi Wallet"),
+    FULIZA_PAY("Paid Fuliza"),
     UNKNOWN("Unknown"),
     ;
 
@@ -81,26 +82,12 @@ enum class TransactionType(val description: String) {
                 RegexOption.IGNORE_CASE
             )
 
+            FULIZA_PAY -> FULIZA_CUT_REGEX
+
             UNKNOWN -> "".toRegex()
         }
     }
 }
-
-val sendMoneyFromPochiToPochi =
-    "TDG2XSQF8W Confirmed. Ksh10.00 sent to richard  machage on 16/4/25 at 9:56 AM. New business balance is Ksh3.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,210.00."
-
-
-val sendMoneyFromPochi =
-    "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
-
-
-val moveFromPochi =
-    "TBI5I8EXAH Confirmed, Ksh1,000.00 has been moved from your business account to your M-PESA account on 18/2/25 at 12:12 PM.. New business balance is Ksh0.00. New M-PESA balance is Ksh1,168.18. Transaction cost, Ksh0.00."
-
-
-val allSendReg =
-    """(\b[A-Z0-9]+\b)\s+Confirmed\. (?:You have sent|Ksh)(?:\s+)?([\\d,]+\\.?\\d{0,2}) (?:sent )?to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+?)(?: (\\d{10}))? on (\\d{1,2}/\\d{1,2}/\\d{2,4})\s+at\s+(\\d{1,2}:\\d{2} (?:AM|PM))\.?\s*New M-?PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(?:\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2}))?(?:\\.  Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2}))?(.*)?"""
-        .toRegex(RegexOption.IGNORE_CASE)
 
 
 val SEND_MONEY_REGEX = (
@@ -114,4 +101,10 @@ val SEND_MONEY_REGEX = (
                 "(?:\\.\\s*Transaction cost, Ksh([\\d,]+\\.?\\d{0,2}))?" +
                 "(?:\\.\\s*Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2}))?" +
                 "(.*)?"
+        ).toRegex(RegexOption.IGNORE_CASE)
+
+
+val FULIZA_CUT_REGEX = (
+        "(\\b[A-Z0-9]+\\b)\\s+Confirmed\\.\\s*Ksh\\s*([\\d,]+\\.?\\d{0,2}) from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA\\.\\s*" +
+                "Available Fuliza M-PESA limit is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\.\\s*M-PESA balance is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\."
         ).toRegex(RegexOption.IGNORE_CASE)
