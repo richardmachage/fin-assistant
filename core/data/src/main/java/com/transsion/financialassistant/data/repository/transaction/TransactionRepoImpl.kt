@@ -94,7 +94,7 @@ open class TransactionRepoImpl @Inject constructor() : TransactionRepo {
             sentToPhone = groups[4],
             amount = groups[2].replace(",", "").toDouble(),
             mpesaBalance = groups[7].replace(",", "").toDouble(),
-            transactionCost = groups[8].replace(",", "").toDouble(),
+            transactionCost = groups[8].replace(",", "").toDoubleOrNull() ?: 0.0,
             date = groups[5].toDbDate(),
             time = groups[6].toDbTime()
         )
