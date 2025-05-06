@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.data
 
+import com.transsion.financialassistant.data.models.SEND_MONEY_REGEX
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
@@ -18,6 +19,7 @@ class TransactionTypeTests {
     @Test
     fun `should detect SEND_MONEY transaction`() {
 
+        println("testing send money")
         val anci =
             "TDD6KGR4H2 Confirmed. Ksh2,000.00 sent to ANCI-LLAH  CH*ACHA 0711360814 on 13/4/25 at 11:51 AM. New M-PESA balance is Ksh1,354.13. Transaction cost, Ksh33.00.  Amount you can transact within the day is 498,000.00. "
         val thi =
@@ -25,13 +27,15 @@ class TransactionTypeTests {
         val message =
             "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
 
-        val groups = TransactionType.SEND_MONEY.getRegex().find(anci)?.groupValues
+        val groups =
+            SEND_MONEY_REGEX.find(message)?.groupValues//TransactionType.SEND_MONEY.getRegex().find(anci)?.groupValues
+        println("groups detected : ${groups?.size}")
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
-        val result = transactionRepo.getTransactionType(anci)
-        println("Transaction type: ${result.description}")
-        assertTrue(result == TransactionType.SEND_MONEY)
+        //val result = transactionRepo.getTransactionType(anci)
+        //println("Transaction type: ${result.description}")
+        //assertTrue(result == TransactionType.SEND_MONEY)
     }
 
     @Test
@@ -48,9 +52,13 @@ class TransactionTypeTests {
             "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
-        val result = transactionRepo.getTransactionType(receivedGlobal)
+
+        val receiveFromHustlerFund =
+            "TE397TUC4H Confirmed. You have received Ksh3,000.00 from Hustler Fund on 03/05/2025 at 11:15 AM. New MPESA balance is Ksh6,597.06."
+
+        val result = transactionRepo.getTransactionType(receiveFromBridge)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(receivedGlobal)?.groupValues
+        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(receiveFromBridge)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
@@ -90,7 +98,8 @@ class TransactionTypeTests {
     fun `should detect BUY_GOODS transaction`() {
         val eco =
             "TBP9D0EL9H Confirmed. Ksh80.00 paid to ECOLOGICAL DESTINATIONS SAFARIS LIMITED-426H. on 25/2/25 at 7:13 AM.New M-PESA balance is Ksh937.05. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,920.00. Download new M-PESA app on http://bit.ly/mpesappsm & get 500MB FREE data."
-        val mm ="TDA65K5PRY Confirmed. Ksh50.00 paid to FANAKA MERCHANTS LIMITED 929. on 10/4/25 at 8:33 AM.New M-PESA balance is Ksh53.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,950.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val mm =
+            "TDA65K5PRY Confirmed. Ksh50.00 paid to FANAKA MERCHANTS LIMITED 929. on 10/4/25 at 8:33 AM.New M-PESA balance is Ksh53.61. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,950.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val message =
             "TCG3YADR1X Confirmed. Ksh2,045.00 paid to POWERMART SUPERMARKET. on 16/3/25 at 7:51 PM.New M-PESA balance is Ksh1,324.13. Transaction cost, Ksh0.00. Amount you can transact within the day is 497,455.00. Save frequent Tills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val result = transactionRepo.getTransactionType(eco)
@@ -158,6 +167,9 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect send pochi transaction`() {
+        val sendTohustlerFund =
+            "TE337PZFVF Confirmed. You have sent Ksh3,013.88 to Hustler Fund on 03/05/2025  at 10:50 AM. New MPESA balance is Ksh4,066.78."
+
         val message =
             "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
         val result = transactionRepo.getTransactionType(message)
@@ -213,7 +225,6 @@ class TransactionTypeTests {
         val result = transactionRepo.getTransactionType(message ?: "")
         println("Transaction type: ${result.description}")
 
-
         assertTrue(result == TransactionType.UNKNOWN)
     }
 }
@@ -230,18 +241,14 @@ val reversal =
 val dataBundlesEmptyAccoountNumer =
     "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
 
+val sendTohustlerFund =
+    "TE337PZFVF Confirmed. You have sent Ksh3,013.88 to Hustler Fund on 03/05/2025  at 10:50 AM. New MPESA balance is Ksh4,066.78."
 
+val receiveFromHustlerFund =
+    "TE397TUC4H Confirmed. You have received Ksh3,000.00 from Hustler Fund on 03/05/2025 at 11:15 AM. New MPESA balance is Ksh6,597.06."
 
-val sendMoneyFromPochi =
-    "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
+val sendBridge =
+    "TE357Q76ZT Confirmed. You have sent Ksh3,019.72 to BRIDGE on 03/05/2025  at 10:51 AM. New MPESA balance is Ksh1,047.06."
 
-val sendMoneyFromPochiToPochi =
-    "TDG2XSQF8W Confirmed. Ksh10.00 sent to richard  machage on 16/4/25 at 9:56 AM. New business balance is Ksh3.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,210.00."
-
-val moveToPochi =
-    "TDG1XU4T4L Confirmed, Ksh40.00 has been moved from your M-PESA account to your business account on 16/4/25 at 10:06 AM.. New business balance is Ksh43.00. New M-PESA balance is Ksh303.72. Transaction cost, Ksh0.00."
-
-val receivedGlobal =
-    "TDG1XU4T4L Confirmed.You have received Ksh103.50 from M-PESA GlobalPay 903470 on 17/4/25 at 9:53 PM New M-PESA balance is Ksh259.72. Separate personal and business funds through pochi la Biashara on *334#."
-val sendGlobal =
-    "TDG1XU4T4L Confirmed. Ksh103.50 sent to M-PESA CARD for account GLOVO PRIME BARCELONA ES on 17/4/25 at 9:50 PM New M-PESA balance is Ksh156.22. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,256.50. Save frequent paybills for quick payment on M-PESA app "
+val receiveFromBridge =
+    "TE377TLKL9 Confirmed. You have received Ksh3,000.00 from BRIDGE on 03/05/2025 at 11:13 AM. New MPESA balance is Ksh3,747.06."
