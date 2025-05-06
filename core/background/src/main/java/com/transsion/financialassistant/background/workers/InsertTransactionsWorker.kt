@@ -11,7 +11,6 @@ import androidx.work.workDataOf
 import com.transsion.financialassistant.background.Repos
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
-import com.transsion.financialassistant.data.repository.getMpesaMessagesByTransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -26,62 +25,6 @@ class InsertTransactionsWorker @AssistedInject constructor(
     private val repos: Repos,
     private val transactionRepo: TransactionRepo
 ) : CoroutineWorker(context, workerParams) {
-    /*
-        override suspend fun doWork(): Result {
-
-            return withContext(Dispatchers.IO) {
-
-                val transactionResults = TransactionType.entries.map { type ->
-                    async {
-                        type to fetchByType(type)
-                    }
-                }.awaitAll().toMap()
-
-                val totalTransactionsRetrieved = transactionResults.entries.sumOf { it.value.size }
-                var processedCount = 0
-
-                // now save transactions  to DB,
-                transactionResults.entries.forEach { (type, messages) ->
-                    val saveAction = saveStrategies(repos = repos, context = context)[type]
-
-                    if (saveAction != null) {
-                        messages.forEach { message ->
-
-                            try {
-                                saveAction(message)
-                                Log.d(
-                                    "InsertWorker",
-                                    "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
-                                )
-                            } catch (e: Exception) {
-                                Log.e("Error saving transaction", e.message.toString())
-                            }
-
-                            processedCount += 1
-
-                            val progress =
-                                (processedCount.toFloat() / totalTransactionsRetrieved.toFloat()) //* 100
-
-                            setProgressAsync(
-                                workDataOf(
-                                    "progress" to progress,
-                                    "currentType" to type.name
-                                )
-                            )
-                        }
-                    } else {
-                        // Optionally log unsupported types
-                        Log.w("InsertWorker", "No save strategy for type: $type")
-                    }
-                }
-
-                return@withContext Result.success()
-            }
-        }
-
-        */
-     */
-
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
 
@@ -155,15 +98,6 @@ class InsertTransactionsWorker @AssistedInject constructor(
         Result.success()
     }
 
-    private fun fetchByType(type: TransactionType): List<MpesaMessage> {
-        return getMpesaMessagesByTransactionType(
-            transactionRepo = transactionRepo,
-            context = context,
-            getExecutionTime = {},
-            filterValue = type
-        )
-    }
-
 }
 
 
@@ -171,6 +105,18 @@ fun saveStrategies(
     repos: Repos,
     context: Context
 ): Map<TransactionType, suspend (MpesaMessage) -> Unit> = mapOf(
+
+    TransactionType.FULIZA_PAY to { message ->
+        repos.fulizaRepo.insertFulizaPayTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("FulizaPayRepo", it)
+            }
+        )
+    },
 
     TransactionType.DEPOSIT to { message ->
         repos.depositRepo.insertDepositTransaction(
