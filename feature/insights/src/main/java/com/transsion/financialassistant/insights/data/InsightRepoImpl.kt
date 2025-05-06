@@ -10,6 +10,7 @@ import com.transsion.financialassistant.data.room.entities.bundles_purchase.Bund
 import com.transsion.financialassistant.data.room.entities.buy_airtime.BuyAirtimeDao
 import com.transsion.financialassistant.data.room.entities.buygoods_till.BuyGoodsDao
 import com.transsion.financialassistant.data.room.entities.deposit.DepositMoneyDao
+import com.transsion.financialassistant.data.room.entities.fuliza_pay.FulizaPayDao
 import com.transsion.financialassistant.data.room.entities.move_from_pochi.MoveFromPochiDao
 import com.transsion.financialassistant.data.room.entities.move_to_pochi.MoveToPochiDao
 import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillDao
@@ -54,7 +55,8 @@ class InsightRepoImpl @Inject constructor(
     private val moveToPochiDao: MoveToPochiDao,
     private val moveFromPochiDao: MoveFromPochiDao,
     private val sendFromPochiDao: SendPochiDao,
-    private val businessDao: UnifiedTransactionsBusinessDao
+    private val businessDao: UnifiedTransactionsBusinessDao,
+    private val fulizaPayDao: FulizaPayDao
 
 ) : InsightsRepo {
 
@@ -233,6 +235,20 @@ class InsightRepoImpl @Inject constructor(
             emit(cachedData)
         } else {
             val data = when (transactionType) {
+
+                TransactionType.FULIZA_PAY -> {
+                    fulizaPayDao.getPayFulizaTransactionsByDate(startDate, endDate)
+                        .map {
+                            TransactionUi(
+                                title = "FULIZA",
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.amount.toString(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            )
+                        }
+                }
+
                 TransactionType.DEPOSIT -> {
                     depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
                         .map {
@@ -460,6 +476,15 @@ class InsightRepoImpl @Inject constructor(
             emit(cachedData)
         } else {
             val dataPoints = when (transactionType) {
+                TransactionType.FULIZA_PAY -> {
+                    fulizaPayDao.getPayFulizaTransactionsByDate(startDate, endDate).map {
+                        DataPoint(
+                            x = it.date,
+                            y = it.amount.toFloat()
+                        )
+                    }
+                }
+
                 TransactionType.DEPOSIT -> {
                     depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
                         .map {
@@ -718,6 +743,7 @@ class InsightRepoImpl @Inject constructor(
                             color = generateColorFromCategory(it.transactionType.description),
                             amount = it.totalAmount.toFloat(),
                             icon = when (it.transactionType) {
+                                TransactionType.FULIZA_PAY -> R.drawable.pay_cash
                                 TransactionType.DEPOSIT -> R.drawable.pay_cash
                                 TransactionType.WITHDRAWAL -> R.drawable.payment_01
                                 TransactionType.SEND_MONEY -> R.drawable.ph_coins_bold
@@ -818,6 +844,7 @@ class InsightRepoImpl @Inject constructor(
                             color = generateColorFromCategory(it.transactionType.description),
                             amount = it.totalAmount.toFloat(),
                             icon = when (it.transactionType) {
+                                TransactionType.FULIZA_PAY -> R.drawable.pay_cash
                                 TransactionType.DEPOSIT -> R.drawable.pay_cash
                                 TransactionType.WITHDRAWAL -> R.drawable.payment_01
                                 TransactionType.SEND_MONEY -> R.drawable.ph_coins_bold
