@@ -131,4 +131,9 @@ object DatabaseModule {
     @Singleton
     fun providesSendFromPochiDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.sendFromPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesFulizaPayDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.fulizaPayDao()
 }
