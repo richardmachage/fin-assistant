@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.insights.navigation
 
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,7 +15,7 @@ sealed interface InsightsRoutes {
         val category: String? = null,
         val startDate: String? = null,
         val endDate: String? = null,
-        val timeLine: String? = null,
+        val timeLine: InsightTimeline? = null,
         val transactionCategory: TransactionCategory? = null
     ) : InsightsRoutes
 
