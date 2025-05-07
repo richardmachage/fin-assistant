@@ -7,6 +7,7 @@ import android.provider.Telephony.Sms
 import android.util.Log
 import com.transsion.financialassistant.background.Repos
 import com.transsion.financialassistant.background.workers.saveStrategies
+import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +60,9 @@ class MpesaSmsReceiver : BroadcastReceiver() {
 
         if (originatingAddress == "MPESA") {
             CoroutineScope(Dispatchers.IO).launch {
+                //clear the cache
+                AppCache.clear()
+
                 //insert message to DB
                 val transactionType = transactionRepo.getTransactionType(mpesaMessage.body)
 
