@@ -44,6 +44,13 @@ fun TransactionUiListItem(
     )
 ) {
 
+    val descr = if (transactionUi.type == TransactionType.MOVE_TO_POCHI) {
+        when (transactionUi.inOrOut) {
+            TransactionCategory.IN -> "Transfer From MPESA"
+            TransactionCategory.OUT -> "Transfer To POCHI"
+        }
+    } else transactionUi.type.description
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -77,10 +84,9 @@ fun TransactionUiListItem(
             HorizontalSpacer(5)
 
             //tittle
-
             Text(
                 modifier = Modifier.fillMaxWidth(0.5f),
-                text = transactionUi.title,
+                text = transactionUi.title.uppercase(),
                 overflow = TextOverflow.Clip,
                 color = MaterialTheme.colorScheme.onBackground,
             )

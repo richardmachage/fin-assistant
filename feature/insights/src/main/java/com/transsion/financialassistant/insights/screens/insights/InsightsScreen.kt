@@ -278,7 +278,7 @@ fun InsightsScreen(
                                                 category = item.name,
                                                 startDate = state.insightTimeline.getTimeline().startDate,
                                                 endDate = state.insightTimeline.getTimeline().endDate,
-                                                timeLine = state.insightTimeline.getTimeline().displayInfo,
+                                                timeLine = state.insightTimeline,
                                                 transactionCategory = state.transactionCategory
                                             )
                                         )

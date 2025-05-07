@@ -22,6 +22,7 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
+import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
 import com.transsion.financialassistant.insights.model.InsightTimeline
@@ -244,7 +245,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -257,7 +258,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -273,7 +274,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -286,7 +287,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -299,7 +300,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -312,7 +313,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -325,7 +326,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -338,7 +339,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -350,7 +351,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
 
@@ -366,7 +367,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -381,7 +382,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -393,7 +394,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -406,7 +407,7 @@ class InsightRepoImpl @Inject constructor(
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
                                 amount = it.amount.toString(),
-                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                             )
                         }
                 }
@@ -425,7 +426,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -440,7 +441,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -452,7 +453,7 @@ class InsightRepoImpl @Inject constructor(
                             type = it.transactionType,
                             inOrOut = transactionCategory,
                             amount = it.amount.toString(),
-                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time}"
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
                         )
                     }
                 }
@@ -465,10 +466,15 @@ class InsightRepoImpl @Inject constructor(
     }
 
     override fun getDataPointsForCategory(
-        startDate: String,
-        endDate: String,
-        transactionType: TransactionType
+        /*startDate: String,
+        endDate: String,*/
+        transactionType: TransactionType,
+        insightTimeline: InsightTimeline
     ): Flow<List<DataPoint>> = flow {
+
+        val startDate = insightTimeline.getTimeline().startDate
+        val endDate = insightTimeline.getTimeline().endDate
+
         val cacheKey = "data_points_for_category$startDate$endDate${transactionType.description}"
 
         val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
@@ -478,48 +484,84 @@ class InsightRepoImpl @Inject constructor(
             val dataPoints = when (transactionType) {
                 TransactionType.FULIZA_PAY -> {
                     fulizaPayDao.getPayFulizaTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+
                     }
                 }
 
                 TransactionType.DEPOSIT -> {
                     depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
                         .map {
-                            DataPoint(
-                                x = it.date,
-                                y = it.amount.toFloat()
-                            )
+                            when (insightTimeline) {
+                                InsightTimeline.TODAY -> DataPoint(
+                                    x = it.time,
+                                    y = it.amount.toFloat()
+                                )
+
+                                else -> DataPoint(
+                                    x = it.date,
+                                    y = it.amount.toFloat()
+                                )
+                            }
                         }
 
                 }
 
                 TransactionType.WITHDRAWAL -> {
                     withdrawalDao.getWithdrawMoneyTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
                 TransactionType.SEND_MONEY -> {
                     sendMoneyDao.getSendMoneyTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
                 TransactionType.RECEIVE_MONEY -> {
                     receiveMoneyDao.getReceiveMoneyTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -528,10 +570,17 @@ class InsightRepoImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     ).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -540,10 +589,17 @@ class InsightRepoImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     ).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -552,10 +608,17 @@ class InsightRepoImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     ).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -564,10 +627,17 @@ class InsightRepoImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     ).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -576,10 +646,17 @@ class InsightRepoImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate
                     ).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -587,34 +664,67 @@ class InsightRepoImpl @Inject constructor(
                     receiveMshwariDao.getReceiveMshwariTransactionsByDate(
                         startDate = startDate,
                         endDate = endDate
-                    ).map { DataPoint(x = it.date, y = it.amount.toFloat()) }
+                    ).map {
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                    }
                 }
 
                 TransactionType.AIRTIME_PURCHASE -> {
                     buyAirtimeDao.getBuyAirtimeTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
                 TransactionType.BUNDLES_PURCHASE -> {
                     bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
                         .map {
-                            DataPoint(
-                                x = it.date,
-                                y = it.amount.toFloat()
-                            )
+                            when (insightTimeline) {
+                                InsightTimeline.TODAY -> DataPoint(
+                                    x = it.time,
+                                    y = it.amount.toFloat()
+                                )
+
+                                else -> DataPoint(
+                                    x = it.date,
+                                    y = it.amount.toFloat()
+                                )
+                            }
                         }
                 }
 
                 TransactionType.MOVE_TO_POCHI -> {
                     moveToPochiDao.getRecordsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
@@ -624,19 +734,33 @@ class InsightRepoImpl @Inject constructor(
 
                 TransactionType.MOVE_FROM_POCHI -> {
                     moveFromPochiDao.getRecordsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
 
                 TransactionType.SEND_MONEY_FROM_POCHI -> {
                     sendFromPochiDao.getSendPochiTransactionsByDate(startDate, endDate).map {
-                        DataPoint(
-                            x = it.date,
-                            y = it.amount.toFloat()
-                        )
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
                     }
                 }
             }

@@ -27,7 +27,7 @@ class InsightsViewModel @Inject constructor(
     private var _state = MutableStateFlow(InsightsScreenState())
     val state = _state.asStateFlow()
 
-    val graphDataFlow = //getGraphData()
+    val graphDataFlow =
         combine(
             state.map { it.insightCategory },
             state.map { it.insightTimeline },

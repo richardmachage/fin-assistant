@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.insights.domain.InsightsRepo
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +24,9 @@ class CategoryInsightsViewModel @Inject constructor(
     val category = params.get<String>("category") ?: throw Exception("No category provided")
     val startDate = params.get<String>("startDate") ?: throw Exception("No start date provided")
     val endDate = params.get<String>("endDate") ?: throw Exception("No end date provided")
-    val timeLine = params.get<String>("timeLine") ?: throw Exception("No time line provided")
+    val insightTimeline =
+        params.get<InsightTimeline>("timeLine") ?: throw Exception("No time line provided")
+    val timeLine = insightTimeline.getTimeline().displayInfo
     val transactionCategory = params.get<TransactionCategory>("transactionCategory")
         ?: throw Exception("No transaction category provided")
 
@@ -34,9 +37,10 @@ class CategoryInsightsViewModel @Inject constructor(
 
 
     val categoryGraphData = insightsRepo.getDataPointsForCategory(
-        startDate = startDate,
-        endDate = endDate,
-        transactionType = getCategoryEnum()
+        /*startDate = startDate,
+        endDate = endDate,*/
+        transactionType = getCategoryEnum(),
+        insightTimeline = insightTimeline
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
