@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
+import com.transsion.financialassistant.insights.model.InsightTimeline
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.TransactionUiListItem
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -64,7 +66,10 @@ fun CategoryInsightsScreen(
                 subtitle = viewModel.timeLine,
                 dataPoints = categoryGraphData.reversed(),
                 bottomValueFormatter = { value ->
-                    value.toMonthDayDate()
+                    when (viewModel.insightTimeline) {
+                        InsightTimeline.TODAY -> value.toAppTime()
+                        else -> value.toMonthDayDate()
+                    }
                 }
             )
 
