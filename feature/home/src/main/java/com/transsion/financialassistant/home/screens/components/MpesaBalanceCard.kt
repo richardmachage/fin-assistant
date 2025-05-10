@@ -98,7 +98,9 @@ fun MpesaBalanceCard(
                     }
                 ) {
                     Icon(
-                        painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.solar_eye_outline),
+                        painter = painterResource(
+                            if (hide) com.transsion.financialassistant.presentation.R.drawable.solar_eye_outline else com.transsion.financialassistant.presentation.R.drawable.view_off_slash
+                        ),
                         contentDescription = "eye",
                     )
                 }

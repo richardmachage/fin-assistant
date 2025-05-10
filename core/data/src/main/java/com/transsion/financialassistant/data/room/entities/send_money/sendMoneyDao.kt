@@ -16,7 +16,7 @@ interface SendMoneyDao {
     suspend fun insert(sendMoneyEntity: SendMoneyEntity)
 
     //read
-    @Query("SELECT * FROM SendMoneyEntity")
+    @Query("SELECT * FROM SendMoneyEntity ORDER BY date DESC")
     fun getAll(): Flow<List<SendMoneyEntity>>
 
     //update
