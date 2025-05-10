@@ -31,12 +31,26 @@ class AndroidApplicationConventionPlugin : Plugin<Project>{
                 }
 
                 buildTypes {
+
                     release {
                         isMinifyEnabled = false
                         proguardFiles(
                             getDefaultProguardFile("proguard-android-optimize.txt"),
                             "proguard-rules.pro"
                         )
+                    }
+                }
+
+                flavorDimensions += "appType"
+                productFlavors {
+                    create("default") {
+                        dimension = "appType"
+                    }
+
+                    create("admin") {
+                        dimension = "appType"
+                        applicationIdSuffix = ".admin"
+                        versionNameSuffix = "-admin"
                     }
                 }
 

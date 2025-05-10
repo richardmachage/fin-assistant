@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-
 dependencies {
     //feature dependencies
     implementation(projects.feature.onboarding)
@@ -14,6 +13,7 @@ dependencies {
     implementation(projects.core.presentation)
     implementation(projects.core.background)
     implementation(projects.core.data)
+    adminImplementation(projects.feature.admin)
 
     implementation(libs.bundles.default.dependencies)
 
