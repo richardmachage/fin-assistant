@@ -81,7 +81,18 @@ fun LoginScreen(
     // if onboarding is completed, navigate to home screen
     val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
 
+    val hasLaunchedBiometric = remember { mutableStateOf(false) }
 
+
+    LaunchedEffect(Unit) {
+        if (!hasLaunchedBiometric.value){
+            promptManager.showBiometricPrompt(
+                title = context.getString(R.string.biometric_authentication),
+                description = context.getString(R.string.please_authenticate_to_continue)
+            )
+            hasLaunchedBiometric.value = true
+        }
+    }
     //Toast handler
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let {
