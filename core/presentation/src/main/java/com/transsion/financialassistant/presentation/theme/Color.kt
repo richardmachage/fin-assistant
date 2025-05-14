@@ -25,6 +25,17 @@ object FAColors {
     val splashScreenBackground = Color(0xFF413503)
 }
 
+enum class ListColors(val color: Color) {
+    LAVENDER(Color(0xFF790F7C)),
+    TEAL(Color(0xFF068196)),
+    ORANGE(Color(0XFFDF8E02)),
+    PURPLE(Color(0xFF8B2CF8)),
+    BLUE(Color(0xFF1B0BFF)),
+    PEACH(Color(0xFFFD675B)),
+    JUNGLE_GREEN(Color(0xFF767600))
+}
+
+
 @Composable
 fun ThemeColors(){
     val cardBackground =
