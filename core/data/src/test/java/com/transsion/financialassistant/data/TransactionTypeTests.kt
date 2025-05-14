@@ -1,6 +1,5 @@
 package com.transsion.financialassistant.data
 
-import com.transsion.financialassistant.data.models.SEND_MONEY_REGEX
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
@@ -26,16 +25,22 @@ class TransactionTypeTests {
             "TDE1NTEGQX Confirmed. Ksh100.00 sent to MICHAEL NJUKI 0724354182 on 14/4/25 at 7:06 AM. New M-PESA balance is Ksh144.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,900.00. "
         val message =
             "TCH11TSG11 Confirmed. Ksh100.00 sent to BOB  KWENDO 0726245067 on 17/3/25 at 1:36 PM. New M-PESA balance is Ksh1,004.13. Transaction cost, Ksh0.00.  Amount you can transact within the day is 499,680.00. Dial *544*18# & Enjoy 18 min talktime, 180MB & an M-PESA send money transaction all @20 bob."
+        val easyCoachPayBill =
+            "TD943EF52A Confirmed. Ksh2,850.00 sent to EASY COACH RAILWAYS-NRB(HQ) 6 for account 816492 on 9/4/25 at 6:14 PM New M-PESA balance is Ksh4,445.13. Transaction cost, Ksh25.00.Amount you can transact within the day is 496,620.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
-        val groups =
-            SEND_MONEY_REGEX.find(message)?.groupValues//TransactionType.SEND_MONEY.getRegex().find(anci)?.groupValues
+        val groups = TransactionType.SEND_MONEY.getRegex().find(anci)?.groupValues
+        val g = TransactionType.SEND_MONEY.getRegex().find(anci)?.groups
+
         println("groups detected : ${groups?.size}")
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
-        //val result = transactionRepo.getTransactionType(anci)
-        //println("Transaction type: ${result.description}")
-        //assertTrue(result == TransactionType.SEND_MONEY)
+        println("Transactioncode : ${g?.get("txnId1")?.value}")
+        println("Transactioncode2 : ${g?.get("txnId2")?.value}")
+
+        val result = transactionRepo.getTransactionType(anci)
+        println("Transaction type: ${result.description}")
+        assertTrue(result == TransactionType.SEND_MONEY)
     }
 
     @Test
@@ -169,6 +174,8 @@ class TransactionTypeTests {
     fun `should detect send pochi transaction`() {
         val sendTohustlerFund =
             "TE337PZFVF Confirmed. You have sent Ksh3,013.88 to Hustler Fund on 03/05/2025  at 10:50 AM. New MPESA balance is Ksh4,066.78."
+        val sendToZiidi =
+            "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
 
         val message =
             "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
