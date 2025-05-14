@@ -30,11 +30,10 @@ import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
-import com.transsion.financialassistant.presentation.theme.ListColors
+import com.transsion.financialassistant.presentation.theme.colorFor
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import kotlin.math.absoluteValue
 
 
 @Composable
@@ -163,7 +162,3 @@ fun TransactionUiListItemPrev() {
 }
 
 
-private fun colorFor(title: String): Color {
-    val colors = ListColors.entries
-    return ListColors.entries[title.hashCode().absoluteValue % ListColors.entries.size].color
-}

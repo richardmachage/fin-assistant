@@ -3,6 +3,7 @@ package com.transsion.financialassistant.presentation.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import kotlin.math.absoluteValue
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
@@ -35,6 +36,10 @@ enum class ListColors(val color: Color) {
     JUNGLE_GREEN(Color(0xFF767600))
 }
 
+fun colorFor(title: String): Color {
+    val colors = ListColors.entries
+    return ListColors.entries[title.hashCode().absoluteValue % ListColors.entries.size].color
+}
 
 @Composable
 fun ThemeColors(){
