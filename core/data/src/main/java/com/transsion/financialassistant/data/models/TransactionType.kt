@@ -33,10 +33,10 @@ enum class TransactionType(val description: String) {
                 RegexOption.IGNORE_CASE
             )
 
-            SEND_MONEY -> SEND_MONEY_REGEX
-            /*"(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) (\\d{10}) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.  Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
-            RegexOption.IGNORE_CASE
-        )*/
+            SEND_MONEY -> "(?<txnId1>\\b[A-Z0-9]+\\b) Confirmed\\. Ksh(?<amount1>[\\d,]+\\.?\\d{0,2}) sent to (?<recipient1>[A-Za-z0-9\\s\\p{P}\\p{S}_]+) (?<phone1>\\d{10}) on (?<date1>\\d{1,2}/\\d{1,2}/\\d{2}) at (?<time1>\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh(?<balance1>[\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh(?<cost1>[\\d,]+\\.?\\d{0,2})\\.\\s*Amount you can transact within the day is (?<limit1>[\\d,]+\\.?\\d{0,2})(?<trailing1>.*)?|(?<txnId2>\\b[A-Z0-9]+\\b) Confirmed\\. You have sent Ksh(?<amount2>[\\d,]+\\.?\\d{0,2}) to (?<recipient2>[A-Za-z\\s]+) on (?<date2>\\d{2}/\\d{2}/\\d{4})\\s+at (?<time2>\\d{1,2}:\\d{2} [AP]M)\\. New MPESA balance is Ksh(?<balance2>[\\d,]+\\.?\\d{0,2})\\.".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+            //"(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) (\\d{10}) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.  Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?|(\\b[A-Z0-9]+\\b) Confirmed\\. You have sent Ksh([\\d,]+\\.?\\d{0,2}) to ([A-Za-z\\s]+) on (\\d{2}/\\d{2}/\\d{4})\\s+at (\\d{1,2}:\\d{2} [AP]M)\\. New MPESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\.".toRegex(RegexOption.IGNORE_CASE)
 
             RECEIVE_MONEY -> "(?:Congratulations!\\s+)?(\\b[A-Z0-9]+\\b)\\s+confirmed\\.\\s*You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9\\s\\p{P}\\p{S}_]+?)(?: (\\d{10}))? on (\\d{1,2}/\\d{1,2}/\\d{2,4}) at (\\d{1,2}:\\d{2} (?:AM|PM))\\.?\\s*New M-?PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
                 RegexOption.IGNORE_CASE
@@ -45,7 +45,7 @@ enum class TransactionType(val description: String) {
             RECEIVE_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\.You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) {2}New business balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex(RegexOption.IGNORE_CASE)
 
-            SEND_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\. New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?"
+            SEND_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.\\s*Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?"
                 .toRegex(RegexOption.IGNORE_CASE)
 
             PAY_BILL -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) for account ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\.Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
@@ -90,21 +90,13 @@ enum class TransactionType(val description: String) {
 }
 
 
-val SEND_MONEY_REGEX = (
-        "(\\b[A-Z0-9]+\\b)\\s+Confirmed\\.?\\s*" +
-                "(?:You have sent Ksh|Ksh)\\s*([\\d,]+\\.?\\d{0,2})\\s*(?:sent )?to\\s+" +
-                "([A-Za-z0-9\\s\\p{P}\\p{S}_]+?)" +
-                "(?: (\\d{10}))? on " +
-                "(\\d{1,2}/\\d{1,2}/\\d{2,4})\\s+at\\s+" +
-                "(\\d{1,2}:\\d{2} (?:AM|PM))\\.?\\s*" +
-                "New M-?PESA balance is Ksh([\\d,]+\\.?\\d{0,2})" +
-                "(?:\\.\\s*Transaction cost, Ksh([\\d,]+\\.?\\d{0,2}))?" +
-                "(?:\\.\\s*Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2}))?" +
-                "(.*)?"
-        ).toRegex(RegexOption.IGNORE_CASE)
-
-
 val FULIZA_CUT_REGEX = (
         "(\\b[A-Z0-9]+\\b)\\s+Confirmed\\.\\s*Ksh\\s*([\\d,]+\\.?\\d{0,2}) from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA\\.\\s*" +
                 "Available Fuliza M-PESA limit is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\.\\s*M-PESA balance is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\."
         ).toRegex(RegexOption.IGNORE_CASE)
+
+
+val bridgeRegex =
+    "(\\b[A-Z0-9]+\\b) Confirmed\\. You have sent Ksh([\\d,]+\\.?\\d{0,2}) to ([A-Za-z\\s]+) on (\\d{2}/\\d{2}/\\d{4})\\s+at (\\d{1,2}:\\d{2} [AP]M)\\. New MPESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\.".toRegex()
+
+
