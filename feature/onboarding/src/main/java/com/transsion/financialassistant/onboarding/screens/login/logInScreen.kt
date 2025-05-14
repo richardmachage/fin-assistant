@@ -26,12 +26,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +45,9 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.wear.compose.material.Button
@@ -81,18 +86,33 @@ fun LoginScreen(
     // if onboarding is completed, navigate to home screen
     val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
 
-    val hasLaunchedBiometric = remember { mutableStateOf(false) }
+    val lifecycleOwner = LocalLifecycleOwner.current
 
 
-    LaunchedEffect(Unit) {
-        if (!hasLaunchedBiometric.value){
+    LaunchedEffect(viewModel.shouldTriggerBiometric.value) {
+        if (viewModel.shouldTriggerBiometric.value){
             promptManager.showBiometricPrompt(
                 title = context.getString(R.string.biometric_authentication),
                 description = context.getString(R.string.please_authenticate_to_continue)
             )
-            hasLaunchedBiometric.value = true
+            viewModel.resetBiometricTrigger()
         }
     }
+
+    /**Allow Biometric Trigger again - on Resume*/
+    DisposableEffect(Unit) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.allowBiometricTrigger()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     //Toast handler
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let {
