@@ -1,7 +1,6 @@
 package com.transsion.financialassistant.home.screens.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -31,15 +30,18 @@ import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
+import com.transsion.financialassistant.presentation.theme.ListColors
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
+import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingSmall
+import kotlin.math.absoluteValue
 
 
 @Composable
 fun TransactionUiListItem(
     modifier: Modifier = Modifier,
     transactionUi: TransactionUi = TransactionUi(
-        title = "NAIVAS",
+        title = "Naivas SuperMarket special",
         type = TransactionType.SEND_POCHI,
         amount = "50.00",
         inOrOut = TransactionCategory.OUT,
@@ -72,21 +74,23 @@ fun TransactionUiListItem(
                     //.padding(paddingSmall)
                     .size(50.dp)
                     .clip(CircleShape)
-                    .border(
-                        width = 1.dp,
-                        color = when (transactionUi.inOrOut) {
-                            TransactionCategory.IN -> FAColors.green
-                            TransactionCategory.OUT -> Color.Red
-                        },
-                        shape = CircleShape
+                    .background(color = colorFor(title = transactionUi.title))
+                /*.border(
+                    width = 1.dp,
+                    color = when (transactionUi.inOrOut) {
+                        TransactionCategory.IN -> FAColors.green
+                        TransactionCategory.OUT -> Color.Red
+                    },
+                    shape = CircleShape
 
-                    ),
+                )*/,
                 contentAlignment = Alignment.Center
             ) {
                 TitleText(
                     // modifier = Modifier.padding(paddingSmall),
                     text = transactionUi.title.first().toString().uppercase(),
-                    fontSize = 30.sp
+                    fontSize = 24.sp,
+                    textColor = Color.White
                 )
             }
             HorizontalSpacer(4)
@@ -97,47 +101,55 @@ fun TransactionUiListItem(
                 //tittle
                 Text(
                     text = transactionUi.title.uppercase(),
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold
+                    overflow = TextOverflow.Clip,
+                    color = MaterialTheme.colorScheme.onBackground,//.copy(alpha = 0.8f),
+                    maxLines = 1
+                    //fontWeight = FontWeight.Bold
                 )
-
+                VerticalSpacer(4)
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(50))
                         .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 ) {
                     Text(
-                        modifier = Modifier.padding(6.dp),
+                        modifier = Modifier.padding(
+                            start = 6.dp,
+                            end = 6.dp,
+                            top = 4.dp,
+                            bottom = 4.dp
+                        ),
                         text = descr,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onBackground
+                        overflow = TextOverflow.Ellipsis,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        fontSize = 11.sp,
+                        maxLines = 1
                     )
                 }
-
             }
-
-
         }
-
-        Row {
             Column {
+                VerticalSpacer(4)
+
                 NormalText(
                     text = when (transactionUi.inOrOut) {
                         TransactionCategory.IN -> "+KES ${transactionUi.amount}"
                         TransactionCategory.OUT -> "-KES ${transactionUi.amount}"
                     },
                     textColor = when (transactionUi.inOrOut) {
-                        TransactionCategory.IN -> FAColors.green
-                        TransactionCategory.OUT -> Color.Red
+                        TransactionCategory.IN -> FAColors.green.copy(alpha = 0.8F)
+                        TransactionCategory.OUT -> Color.Red.copy(alpha = 0.7f)
                     },
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.Bold
                 )
-
-                NormalText(text = transactionUi.dateAndTime)
+                VerticalSpacer(10)
+                NormalText(
+                    text = transactionUi.dateAndTime,
+                    fontSize = 11.sp
+                )
             }
-        }
+
     }
 
 }
@@ -148,4 +160,10 @@ fun TransactionUiListItemPrev() {
     FinancialAssistantTheme {
         TransactionUiListItem()
     }
+}
+
+
+private fun colorFor(title: String): Color {
+    val colors = ListColors.entries
+    return ListColors.entries[title.hashCode().absoluteValue % ListColors.entries.size].color
 }
