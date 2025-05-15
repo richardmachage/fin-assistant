@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.toObject
 import com.transsion.financialassistant.admin.model.FeedBack
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,10 +65,14 @@ class HomeViewModel @Inject constructor(
 
 
     private fun fbListener() {
+        isLoading(true)
+
         listenerRegistration = firestore.collection("Feedback")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     showToast(e.message.toString())
+                    isLoading(false)
                     return@addSnapshotListener
                 }
                 snapshots?.let { snapshot ->
@@ -77,8 +82,8 @@ class HomeViewModel @Inject constructor(
                         list.add(item)
                     }
                     _state.update { it.copy(feedbacks = list) }
+                    isLoading(false)
                 }
-
             }
     }
 
