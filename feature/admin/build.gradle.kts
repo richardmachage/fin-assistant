@@ -39,6 +39,7 @@ dependencies {
 
     debugImplementation(libs.ui.tooling)
 
+    implementation(libs.splash.screen)
 
     //data store
     implementation(libs.datastore.preferences)
