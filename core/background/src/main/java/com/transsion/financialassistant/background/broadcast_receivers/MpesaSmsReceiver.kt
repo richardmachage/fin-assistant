@@ -9,6 +9,7 @@ import com.transsion.financialassistant.background.Repos
 import com.transsion.financialassistant.background.workers.saveStrategies
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.MpesaMessage
+import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
@@ -64,19 +65,39 @@ class MpesaSmsReceiver : BroadcastReceiver() {
                 AppCache.clear()
 
                 //insert message to DB
-                val transactionType = transactionRepo.getTransactionType(mpesaMessage.body)
+                when (val transactionType = transactionRepo.getTransactionType(mpesaMessage.body)) {
+                    TransactionType.UNKNOWN -> {
 
-                val saveAction = saveStrategies(repos = repos, context = context)[transactionType]
+                        //check if it is an accepted unknown,
+                        val isAcceptedUnknown = acceptedUnknownKeywords
+                            .any { keyWord ->
+                                mpesaMessage.body.contains(keyWord, ignoreCase = true)
+                            }
 
-                saveAction?.let {
-                    try {
-                        saveAction(mpesaMessage)
-                        Log.d(
-                            "InsertWorker",
-                            "Saved processed message: ${mpesaMessage.body} subId: ${mpesaMessage.subscriptionId}"
-                        )
-                    } catch (e: Exception) {
-                        Log.e("Error saving transaction", e.message.toString())
+                        if (isAcceptedUnknown.not()) {
+                            //it is not an accepted unknown type
+                            //insert to entity of unknowns,
+
+                            repos.unknownRepo.insertUnknownTransaction(message = mpesaMessage.body)
+                        }
+
+                    }
+
+                    else -> {
+                        val saveAction =
+                            saveStrategies(repos = repos, context = context)[transactionType]
+
+                        saveAction?.let {
+                            try {
+                                saveAction(mpesaMessage)
+                                Log.d(
+                                    "InsertWorker",
+                                    "Saved processed message: ${mpesaMessage.body} subId: ${mpesaMessage.subscriptionId}"
+                                )
+                            } catch (e: Exception) {
+                                Log.e("Error saving transaction", e.message.toString())
+                            }
+                        }
                     }
                 }
 
@@ -91,4 +112,17 @@ data class ReceiverMessage(
     var body: String = "",
     var originatingAddress: String = "",
     var receivingAddress: String? = null
+)
+
+
+val acceptedUnknownKeywords = listOf(
+    "failed",
+    "insufficient",
+    "unable",
+    "changed to dormant",
+    "not joined",
+    "currently underway",
+    "cancelled",
+    "invalid input",
+    "Your account balance was"
 )
