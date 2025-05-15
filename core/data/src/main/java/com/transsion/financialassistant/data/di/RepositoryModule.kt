@@ -36,6 +36,8 @@ import com.transsion.financialassistant.data.repository.transaction.send_mshwari
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepo
+import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepoImpl
 import dagger.Binds
@@ -141,5 +143,10 @@ abstract class RepositoryModule {
     internal abstract fun bindsFulizaPayRepo(
         fulizaPayRepo: FulizaPayRepoImpl
     ): FulizaPayRepo
+
+    @Binds
+    internal abstract fun bindsUnknownRepo(
+        unknownRepo: UnknownRepoImpl
+    ): UnknownRepo
 
 }
