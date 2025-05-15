@@ -36,6 +36,7 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntity
 import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntityDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
@@ -66,7 +67,8 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         MoveToPochiEntity::class,
         MoveFromPochiEntity::class,
         SendFromPochiEntity::class,
-        FulizaPayEntity::class
+        FulizaPayEntity::class,
+        UnknownEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
