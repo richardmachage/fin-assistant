@@ -2,14 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:label="Admin FA"
+        android:label="Financial Assistant"
         android:icon="@drawable/logo"
         android:roundIcon="@drawable/logo">
         <activity
-            android:name=".admin.screens.AdminMainActivity"
-            android:theme="@style/Theme.FinancialAssistant"
+            android:name=".presentation.main_activity.MainActivity"
+            android:theme="@style/Theme.FinancialAssistant.Splash"
             android:exported="true"
-            android:label="Admin FA">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
