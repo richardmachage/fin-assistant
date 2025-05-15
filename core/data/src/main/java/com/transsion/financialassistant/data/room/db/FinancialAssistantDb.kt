@@ -36,6 +36,7 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntityDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import com.transsion.financialassistant.data.room.views.business.UnifiedIncomingTransactionsBusiness
@@ -76,7 +77,7 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnifiedOutGoingTransactionsBusiness::class
     ],
 
-    version = 2,
+    version = 3,
     exportSchema = true
 
 )
@@ -102,6 +103,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun moveFromPochiDao(): MoveFromPochiDao
     abstract fun sendFromPochiDao(): SendFromPochiDao
     abstract fun fulizaPayDao(): FulizaPayDao
+    abstract fun unknownDao(): UnknownEntityDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
@@ -115,13 +117,12 @@ abstract class FinancialAssistantDb : RoomDatabase() {
                         FinancialAssistantDb::class.java,
                         "financial_assistant_db"
                     )
-                        .addMigrations(MIGRATION_1_2)
+                        .addMigrations(MIGRATION_2_3)
                         .build()
                     INSTANCE = instance
                 }
                 return instance
             }
-
         }
     }
 
