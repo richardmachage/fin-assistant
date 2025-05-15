@@ -130,6 +130,17 @@ class TransactionTypeTests {
     }
 
     @Test
+    fun `should detect bundles purchase`() {
+        val message =
+            "SGG0W7RUP4 Confirmed. Ksh25.00 sent to SAFARICOM DATA BUNDLES for account on 16/7/24 at 9:30 PM. New M-PESA balance is Ksh1,761.98. Transaction cost, Ksh0.00."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("Transaction type: ${result.description}")
+
+        assertTrue(result == TransactionType.BUNDLES_PURCHASE)
+    }
+
+    @Test
     fun `should detect WITHDRAWAL transaction`() {
         val message =
             "SL14U1AA94 Confirmed.on 1/12/24 at 6:44 PMWithdraw Ksh2,100.00 from 606394 - Estina abshir shop 7street sec ave eastleigh New M-PESA balance is Ksh258.61. Transaction cost, Ksh29.00. Amount you can transact within the day is 496,850.00. To move money from bank to M-PESA, dial *334#>Withdraw>From Bank to MPESA"
