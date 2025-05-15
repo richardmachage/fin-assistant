@@ -4,7 +4,6 @@
     <application>
         <activity
             android:name=".screens.AdminMainActivity"
-            android:label="@string/title_activity_admin_main"
             android:theme="@style/Theme.FinancialAssistant" />
     </application>
 

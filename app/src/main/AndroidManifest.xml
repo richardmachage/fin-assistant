@@ -15,7 +15,6 @@
     <application
         android:name=".application.Application"
         android:theme="@style/Theme.FinancialAssistant.Splash"
-        android:label="@string/app_name"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -23,17 +22,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         tools:targetApi="31">
-        <activity
-            android:name=".presentation.main_activity.MainActivity"
-            android:theme = "@style/Theme.FinancialAssistant.Splash"
-            android:exported="true"
-            android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <receiver
+
+    <receiver
             android:name="com.transsion.financialassistant.background.broadcast_receivers.MpesaSmsReceiver"
             android:exported="true">
             <intent-filter>
