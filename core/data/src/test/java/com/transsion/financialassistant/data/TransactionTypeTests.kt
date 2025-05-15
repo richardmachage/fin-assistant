@@ -172,14 +172,12 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect send pochi transaction`() {
-        val sendTohustlerFund =
-            "TE337PZFVF Confirmed. You have sent Ksh3,013.88 to Hustler Fund on 03/05/2025  at 10:50 AM. New MPESA balance is Ksh4,066.78."
-        val sendToZiidi =
-            "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
+        val m =
+            "TEE5O55BWX Confirmed. Ksh200.00 sent to SBM Bank Kenya Limited for account 818283 on 14/5/25 at 11:39 AM New M-PESA balance is Ksh4,793.21. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,590.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
         val message =
             "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
-        val result = transactionRepo.getTransactionType(message)
+        val result = transactionRepo.getTransactionType(m)
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.SEND_POCHI)
