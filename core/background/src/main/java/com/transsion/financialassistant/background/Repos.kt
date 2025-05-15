@@ -15,6 +15,7 @@ import com.transsion.financialassistant.data.repository.transaction.receive_poch
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import javax.inject.Inject
 
@@ -35,5 +36,6 @@ class Repos @Inject constructor(
     val moveToPochiRepo: MoveToPochiRepo,
     val moveFromPochiRepo: MoveFromPochiRepo,
     val sendFromPochiRepo: SendPochiRepo,
-    val fulizaRepo: FulizaPayRepo
+    val fulizaRepo: FulizaPayRepo,
+    val unknownRepo: UnknownRepo
 )
