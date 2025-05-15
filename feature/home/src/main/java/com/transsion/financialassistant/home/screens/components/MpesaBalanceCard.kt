@@ -10,6 +10,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,7 +33,6 @@ import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
-import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 import java.time.LocalTime
@@ -52,17 +53,20 @@ fun MpesaBalanceCard(
 ) {
 
     ElevatedCard(
-        modifier = modifier,
+        modifier = modifier,//.height(215.dp),
         shape = RoundedCornerShape(10),
         ) {
         VerticalSpacer(10)
 
         val today = stringResource(R.string.today)
         //date
-        NormalText(
-            modifier = Modifier.padding(start = paddingLarge),
-            text = "$today, ${getAmOrPm()}"
-        )
+        /* NormalText(
+             modifier = Modifier.padding(start = paddingLarge),
+             text = "$today, ${getAmOrPm()}",
+             textColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+             fontSize = 11.sp
+         )
+         VerticalSpacer(20)*/
 
         //balance
 
@@ -71,10 +75,17 @@ fun MpesaBalanceCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when (insightCategory) {
-                InsightCategory.PERSONAL -> TitleText(
+                InsightCategory.PERSONAL -> Text(
                     text = stringResource(R.string.mpesa_balance),
-                    fontSize = 13.sp
-                )
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+
+                    )
+
+                /*  TitleText(
+                  text = stringResource(R.string.mpesa_balance),
+                  fontSize = 13.sp
+              )*/
 
                 InsightCategory.BUSINESS -> TitleText(
                     text = stringResource(R.string.pochi_balance),
@@ -106,7 +117,6 @@ fun MpesaBalanceCard(
                 }
             }
         }
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +134,8 @@ fun MpesaBalanceCard(
                 VerticalDivider(
                     Modifier
                         .height(50.dp)
-                        .align(Alignment.CenterVertically)
+                        .align(Alignment.CenterVertically),
+                    thickness = 0.5.dp
                 )
 
                 //money out

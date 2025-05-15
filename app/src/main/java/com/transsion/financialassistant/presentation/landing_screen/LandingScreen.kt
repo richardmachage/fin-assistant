@@ -107,7 +107,8 @@ fun LandingScreen(
                         startDestination = HomeRoutes.Home
                     ) {
 
-                        composable<InsightsRoutes.Insights>(
+
+                    composable<InsightsRoutes.Insights>(
                         ) {
                             InsightsScreen(
                                 navController = mainNavController

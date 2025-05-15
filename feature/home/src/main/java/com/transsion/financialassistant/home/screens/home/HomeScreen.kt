@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -59,7 +61,6 @@ import com.transsion.financialassistant.presentation.components.bottom_sheets.Bo
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
 import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
-import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -91,6 +92,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+                modifier = Modifier.padding(paddingMedium),
                 navigationIcon = {
 
                     Box(
@@ -115,8 +117,12 @@ fun HomeScreen(
                 },
                 title = {
                     TitleText(
-                        text = viewModel.getGreetingBasedOnTime(context),
-                        fontSize = 22.sp
+                        modifier = Modifier
+                            .padding(start = paddingSmall)
+                            .fillMaxWidth(),
+                        text = "Financial Assistant",//viewModel.getGreetingBasedOnTime(context),
+                        fontSize = 22.sp,
+                        textAlign = TextAlign.Center
                         )
 
                 },
@@ -168,7 +174,8 @@ fun HomeScreen(
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(top = innerPadding.calculateTopPadding()),
+                .padding(top = innerPadding.calculateTopPadding())
+                .padding(start = paddingMedium, end = paddingMedium),
 
             ) {
 
@@ -230,7 +237,7 @@ fun HomeScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingMedium)
+                    .padding()
                 ///.heightIn(max = (screenHeight / 4).dp),
             ) {
                 items(recents.size) { it ->
@@ -274,6 +281,7 @@ fun HomeScreen(
 
 
         BottomSheetFa(
+            modifier = Modifier,
             isSheetOpen = showMessageBottomSheet,
             onDismiss = {
                 showMessageBottomSheet = false
@@ -284,7 +292,10 @@ fun HomeScreen(
                 Column(
                     modifier = Modifier
                         .padding(start = paddingLarge, end = paddingLarge)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(5)),
+                    // .background(FAColors.green),
+
                     horizontalAlignment = Alignment.CenterHorizontally
 
                 ) {
@@ -294,15 +305,26 @@ fun HomeScreen(
                         //tittle -> Transaction type
                         TitleText(
                             text = transaction.transactionType.description,
+                            textColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+
                         )
                         VerticalSpacer(20)
 
 
                         //Message
-                        NormalText(
+                        Text(
+                            modifier = Modifier.padding(bottom = paddingLarge),
+                            text = selectedMessage,
+                            textAlign = TextAlign.Left,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                            lineHeight = 18.sp
+                        )
+                        //Message
+                        /*NormalText(
                             text = selectedMessage,
                             textAlign = TextAlign.Left
-                        )
+                        )*/
                         VerticalSpacer(10)
                         if (transaction.transactionType == TransactionType.SEND_MONEY) {
                             OutlineButtonFa(

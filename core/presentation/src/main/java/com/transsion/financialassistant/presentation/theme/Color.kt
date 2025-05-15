@@ -31,7 +31,7 @@ enum class ListColors(val color: Color) {
     TEAL(Color(0xFF068196)),
     ORANGE(Color(0XFFDF8E02)),
     PURPLE(Color(0xFF8B2CF8)),
-    BLUE(Color(0xFF1B0BFF)),
+    BLUE(Color(0xFF1B0BFF).copy(0.3f)),
     PEACH(Color(0xFFFD675B)),
     JUNGLE_GREEN(Color(0xFF767600))
 }
