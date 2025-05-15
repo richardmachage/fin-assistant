@@ -3,11 +3,12 @@ package com.transsion.financialassistant.data.room.entities.unknown
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface UnknownEntityDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(unknownEntity: UnknownEntity)
 
     @Query("SELECT * FROM UnknownEntity")
