@@ -287,4 +287,7 @@ fun LandingScreen(
             }
         }
     }
+
+
+    viewModel.enqueUnknownMessagesWorker()
 }

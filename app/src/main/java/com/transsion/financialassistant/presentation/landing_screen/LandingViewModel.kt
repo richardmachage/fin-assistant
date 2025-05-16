@@ -3,11 +3,17 @@ package com.transsion.financialassistant.presentation.landing_screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.transsion.financialassistant.background.workers.InsertTransactionsWorker
+import com.transsion.financialassistant.background.workers.UnknownUploadsWorker
+import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.preferences.SharedPreferences
+import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +29,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LandingViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
+    private val unknownRepo: UnknownRepo
 ) : ViewModel() {
 
     private var workerId: UUID? = null
@@ -38,6 +45,7 @@ class LandingViewModel @Inject constructor(
 
     private var _workerState = MutableStateFlow("Process not started")
     val workerState = _workerState.asStateFlow()
+
 
 
     fun readMessagesAndSave(onFinish: (String) -> Unit) {
@@ -131,6 +139,38 @@ class LandingViewModel @Inject constructor(
 
     fun markMessagesUnread() {
         sharedPreferences.saveData(SharedPreferences.IS_MESSAGES_READ, "false")
+    }
+
+
+    fun enqueUnknownMessagesWorker() {
+        viewModelScope.launch {
+
+
+            //first check if there is pending data
+            if (unknownRepo.getAll().isEmpty()) return@launch
+
+            AppCache.get<Boolean>("isWorkerEnqueued")?.let {
+                if (it) return@launch
+            }
+
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val workRequest = OneTimeWorkRequestBuilder<UnknownUploadsWorker>()
+                .setConstraints(constraints)
+                .build()
+
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork(
+                    "upload unknown messages",
+                    ExistingWorkPolicy.REPLACE,
+                    workRequest
+                )
+
+            AppCache.put(key = "isWorkerEnqueued", true)
+
+        }
     }
 
 }
