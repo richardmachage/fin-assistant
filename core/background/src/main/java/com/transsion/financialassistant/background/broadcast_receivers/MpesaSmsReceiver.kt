@@ -124,5 +124,7 @@ val acceptedUnknownKeywords = listOf(
     "currently underway",
     "cancelled",
     "invalid input",
-    "Your account balance was"
+    "Your account balance was",
+    "wrong pin",
+    "received airtime"
 )
