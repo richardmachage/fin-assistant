@@ -12,11 +12,15 @@ import com.transsion.financialassistant.background.Repos
 import com.transsion.financialassistant.background.broadcast_receivers.acceptedUnknownKeywords
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.preferences.DatastorePreferences
+import com.transsion.financialassistant.data.preferences.Metrics
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 @HiltWorker
@@ -24,7 +28,8 @@ class InsertTransactionsWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val workerParams: WorkerParameters,
     private val repos: Repos,
-    private val transactionRepo: TransactionRepo
+    private val transactionRepo: TransactionRepo,
+    private val dataStore: DatastorePreferences
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -128,6 +133,17 @@ class InsertTransactionsWorker @AssistedInject constructor(
                 "Total messages: $totalMessages, Processed: $processedCount, Unknown: $unknownMessages, Accepted Unknowns: $acceptedUnknowns"
             )
 
+            val metrics = Metrics(
+                totalMessages = totalMessages,
+                known = processedCount,
+                accepted_unknown = acceptedUnknowns,
+                rejected_unknown = unknownMessages
+            )
+            val jsonMetric = Json.encodeToString<Metrics>(metrics)
+            dataStore.saveValue(
+                key = DatastorePreferences.MESSAGE_PARSING_METRICS,
+                value = jsonMetric
+            )
         }
 
         Result.success()
