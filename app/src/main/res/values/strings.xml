@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Financial Assistant</string>
+    <string name="home">Home</string>
+    <string name="loading_transactions">Loading transactions ...</string>
+    <string name="querying_data">Querrying datasource...</string>
+    <string name="completed_loading">Loading completed!</string>
 </resources>

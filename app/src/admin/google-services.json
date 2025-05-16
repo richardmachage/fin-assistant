@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "205517469937",
+    "project_id": "financial-assistant-7f13d",
+    "storage_bucket": "financial-assistant-7f13d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205517469937:android:89d58c96162a67bae11150",
+        "android_client_info": {
+          "package_name": "com.transsion.financialassistant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB55n6fcWZIexlm3ok0GMPkX5zUVIIJXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205517469937:android:8a74922c3dc4cc4ce11150",
+        "android_client_info": {
+          "package_name": "com.transsion.financialassistant.admin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAB55n6fcWZIexlm3ok0GMPkX5zUVIIJXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

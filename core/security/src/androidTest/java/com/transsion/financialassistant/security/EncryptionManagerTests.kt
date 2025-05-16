@@ -76,4 +76,14 @@ class EncryptionManagerTests {
             EncryptionManager.decryptData(modifiedEncrypted)
         }
     }
+
+    @Test
+    fun testSaltToStringConversion() {
+        val salt = HashingManager.generateSalt()
+        val saltString = HashingManager.saltToString(salt)
+        val saltFromString = HashingManager.stringToSalt(saltString)
+
+        assertTrue(salt.contentEquals(saltFromString))
+
+    }
 }

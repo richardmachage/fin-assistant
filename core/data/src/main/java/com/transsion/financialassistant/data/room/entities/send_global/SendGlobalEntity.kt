@@ -6,8 +6,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 
 @Entity
 data class SendGlobalEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val sentTo: String,
@@ -16,5 +15,6 @@ data class SendGlobalEntity(
     val transactionCost: Double,
     val date: String,
     val time: String,
-    val transactionCategory: TransactionCategory = TransactionCategory.OUT
+    val transactionCategory: TransactionCategory = TransactionCategory.OUT,
+    // transactionType: TransactionType  //FIXME
 )

@@ -14,14 +14,17 @@ private val DarkColorScheme = darkColorScheme(
     primary = FAColors.green,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = FAColors.GrayBackground
+    background = FAColors.GrayBackground,
+    surface = FAColors.cardBackgroundDark.copy(alpha = 0.5F)
+
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = FAColors.green,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = FAColors.GrayBackground
+    background = FAColors.GrayBackground,
+    surface = FAColors.cardBackgroundLight
 
 
     /* Other default colors to override

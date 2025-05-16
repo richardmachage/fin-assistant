@@ -3,11 +3,11 @@ package com.transsion.financialassistant.data.room.entities.receive_money
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 
 @Entity
 data class ReceiveMoneyEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val receiveFromName: String,
@@ -16,6 +16,7 @@ data class ReceiveMoneyEntity(
     val mpesaBalance: Double,
     val date: String,
     val time: String,
-    val transactionCategory: TransactionCategory = TransactionCategory.IN
+    val transactionCategory: TransactionCategory = TransactionCategory.IN,
+    val transactionType: TransactionType = TransactionType.RECEIVE_MONEY
 
 )

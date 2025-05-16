@@ -3,11 +3,11 @@ package com.transsion.financialassistant.data.room.entities.paybill_till
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.transsion.financialassistant.data.models.TransactionCategory
+import com.transsion.financialassistant.data.models.TransactionType
 
 @Entity
 data class PayBillEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
     val transactionCode: String,
     val phone: String,
     val paidToName: String,
@@ -17,5 +17,6 @@ data class PayBillEntity(
     val date: String,
     val time: String,
     val mpesaBalance: Double,
-    val transactionCost: Double
+    val transactionCost: Double,
+    val transactionType: TransactionType = TransactionType.PAY_BILL
 )

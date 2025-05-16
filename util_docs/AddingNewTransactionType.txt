@@ -1,0 +1,13 @@
+**Steps to Follow When Updating Transaction Type**
+
+1. **Add the type** to `TransactionType` enum and register the regex.
+2. **Create entity** and corresponding DAO.
+3. **Update the DB** to include the created entity.
+4. **Add the DAO** to the DI tree in `DatabaseModule`.
+5. **Create parse function** for this type in the `TransactionRepo`.
+6. **Write test** in `TransactionRepo` and ensure it passes before moving on.
+7. **Create Repo & Repository** for that type and also write unit tests.
+8. **Update all the relevant queries** as per `InsightRepo`.
+9. **Update the `saveStrategies` function** in `BackgroundModule` to include your newly added type.
+10. **Edit the database views.**
+11. ;
