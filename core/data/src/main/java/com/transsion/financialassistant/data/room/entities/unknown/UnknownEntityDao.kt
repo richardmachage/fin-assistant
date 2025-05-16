@@ -15,7 +15,8 @@ interface UnknownEntityDao {
     suspend fun getAll(): List<UnknownEntity>
 
     @Delete
-    suspend fun delete(unknownEntity: UnknownEntity)
+    suspend fun delete(vararg unknownEntity: UnknownEntity)
+
 
     @Query("DELETE FROM UnknownEntity WHERE id = :id")
     suspend fun deleteById(id: Int)
