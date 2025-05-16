@@ -54,6 +54,11 @@ object DatabaseModule {
 
     @Provides
     @Singleton
+    fun providesReceivePochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.receivePochiDao()
+
+    @Provides
+    @Singleton
     fun providesWithdrawMoneyDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.withdrawMoneyDao()
 
@@ -77,5 +82,63 @@ object DatabaseModule {
     fun providesSendGlobalDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.sendGlobalDao()
 
+    @Provides
+    @Singleton
+    fun providesBuyAirtimeDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.buyAirtimeDao()
 
+    @Provides
+    @Singleton
+    fun providesPurchaseBundlesDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.bundlesPurchaseDao()
+    @Provides
+    @Singleton
+    fun providesFinancialAssistantDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.financialAssistantDao()
+
+
+    @Provides
+    @Singleton
+    fun providesSendMshwariDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.sendMshwariDao()
+
+    @Provides
+    @Singleton
+    fun providesReceiveMshwariDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.receiveMshwariDao()
+
+    @Provides
+    @Singleton
+    fun providesUnifiedTransactionsDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unifiedTransactionsDao()
+
+    @Provides
+    @Singleton
+    fun providesMoveToPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.moveToPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesUnifiedBusinessDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unifiedBusinessDao()
+
+    @Provides
+    @Singleton
+    fun providesMoveFromPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.moveFromPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesSendFromPochiDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.sendFromPochiDao()
+
+    @Provides
+    @Singleton
+    fun providesFulizaPayDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.fulizaPayDao()
+
+    @Provides
+    @Singleton
+    fun providesUnknownDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unknownDao()
 }

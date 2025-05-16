@@ -6,6 +6,7 @@ object AppCache {
     private const val MAX_CACHE_SIZE = 50
     private val cache: LruCache<String, Any> = LruCache<String, Any>(MAX_CACHE_SIZE)
 
+
     //add item to cache
     fun <T> put(key: String, value: T) {
         synchronized(cache) {
@@ -48,5 +49,6 @@ object AppCache {
             cache.evictAll()
         }
     }
+
 
 }

@@ -1,0 +1,42 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="25dp"
+    android:viewportWidth="24"
+    android:viewportHeight="25">
+  <path
+      android:pathData="M10.999,8.5C15.417,8.5 18.999,7.157 18.999,5.5C18.999,3.843 15.417,2.5 10.999,2.5C6.581,2.5 2.999,3.843 2.999,5.5C2.999,7.157 6.581,8.5 10.999,8.5Z"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"/>
+  <path
+      android:pathData="M5.999,11.342C6.601,11.523 7.273,11.672 7.999,11.782"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M10.999,15.5C6.581,15.5 2.999,14.157 2.999,12.5"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M5.999,18.342C6.601,18.523 7.273,18.672 7.999,18.782"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M10.999,22.5C6.581,22.5 2.999,21.157 2.999,19.5V5.5M18.999,5.5V11"
+      android:strokeLineJoin="round"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M15.742,16.877C15.742,16.817 15.75,16.052 15.752,15.618C15.753,15.221 15.718,14.838 15.908,14.488C16.618,13.075 18.658,13.219 19.162,14.658C19.249,14.895 19.254,15.271 19.252,15.618C19.249,16.061 19.258,16.877 19.258,16.877M15.742,16.877C14.662,16.877 14.218,17.657 14.098,18.136C13.978,18.616 13.978,20.355 14.05,21.075C14.29,21.975 14.89,22.347 15.478,22.467C16.018,22.515 18.297,22.497 18.957,22.497C19.917,22.515 20.637,22.155 20.937,21.075C20.997,20.715 21.057,18.736 20.907,18.136C20.589,17.177 19.858,16.877 19.258,16.877M15.742,16.877H19.258"
+      android:strokeWidth="1.5"
+      android:fillColor="#00000000"
+      android:strokeColor="#01802D"
+      android:strokeLineCap="round"/>
+</vector>

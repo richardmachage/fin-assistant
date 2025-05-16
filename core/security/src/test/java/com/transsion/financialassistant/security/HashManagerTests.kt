@@ -46,4 +46,5 @@ class HashManagerTests {
 
         assertFalse(hash1.contentEquals(hash2))
     }
+
 }

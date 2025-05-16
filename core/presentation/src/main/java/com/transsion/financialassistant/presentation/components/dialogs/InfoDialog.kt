@@ -26,8 +26,8 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun InfoDialog(
     showDialog: Boolean = false,
-    title: String = "Confirm Dialog",
-    message: String = "Are you sure you want to leave?",
+    title: String,
+    message: String,
     buttonText: String = stringResource(R.string.okay),
     onDismiss: () -> Unit,
 ) {
@@ -69,7 +69,7 @@ fun InfoDialog(
                 //Button
                 FilledButtonFa(
                     text = buttonText,
-                    onClick = { onDismiss() }
+                    onClick = { onDismiss() },
                 )
 
             }
