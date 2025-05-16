@@ -40,22 +40,22 @@ open class TransactionRepoImpl @Inject constructor(
     override fun parseSendMoneyMessage(message: String, phone: String): SendMoneyEntity? {
 
         val match = TransactionType.SEND_MONEY.getRegex().find(message) ?: return null
-        val groups = match.groupValues
-
-        groups.forEachIndexed { index, it ->
-            println("${index} : $it")
-        }
+        //val groups = match.groupValues
+        val group = match.groups
 
         return SendMoneyEntity(
-            transactionCode = groups[1],
+            transactionCode = group["txnId1"]?.value ?: group["txnId2"]?.value ?: "",//groups[1],
             phone = phone,
-            sentToName = groups[3],
-            sentToPhone = groups[4],
-            amount = groups[2].replace(",", "").toDouble(),
-            mpesaBalance = groups[7].replace(",", "").toDouble(),
-            transactionCost = groups[8].replace(",", "").toDoubleOrNull() ?: 0.0,
-            date = groups[5].toDbDate(),
-            time = groups[6].toDbTime()
+            sentToName = group["recipient1"]?.value ?: group["recipient2"]?.value ?: "",//groups[3],
+            sentToPhone = group["phone1"]?.value ?: "",
+            amount = group["amount1"]?.value?.replace(",", "")?.toDouble()
+                ?: group["amount2"]?.value?.replace(",", "")?.toDouble() ?: 0.0,
+            mpesaBalance = group["balance1"]?.value?.replace(",", "")?.toDouble()
+                ?: group["balance2"]?.value?.replace(",", "")?.toDouble() ?: 0.0,
+            transactionCost = group["cost1"]?.value?.replace(",", "")?.toDoubleOrNull()
+                ?: group["cost1"]?.value?.replace(",", "")?.toDoubleOrNull() ?: 0.0,
+            date = group["date1"]?.value?.toDbDate() ?: group["date2"]?.value?.toDbDate()!!,
+            time = group["time1"]?.value?.toDbTime() ?: group["time2"]?.value?.toDbTime()!!,
         )
     }
 

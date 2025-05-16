@@ -26,13 +26,13 @@ class TransactionRepoTests {
             "TE357Q76ZT Confirmed. You have sent Ksh3,019.72 to BRIDGE on 03/05/2025  at 10:51 AM. New MPESA balance is Ksh1,047.06."
 
         val entity = transactionRepo.parseSendMoneyMessage(
-            message = sendBridge,
+            message = message,
             phone = "0718353505"
         )
 
         assertTrue(entity != null)
-        assertTrue(entity?.transactionCode == "TE357Q76ZT")
-        assertTrue(entity?.sentToName == "BRIDGE")
+        assertTrue(entity?.transactionCode == "TCO5V187SF")
+        assertTrue(entity?.sentToName == "FRANCIS  NGIGI")
 
         println(entity)
     }

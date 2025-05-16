@@ -4,16 +4,25 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-
 dependencies {
-    //feature dependencies
-    implementation(projects.feature.onboarding)
+    adminImplementation(libs.androidx.appcompat)
+    adminImplementation(libs.androidx.work.runtime.ktx)
+    adminImplementation(libs.hilt.work)
+    //feature default app dependencies
     implementation(projects.feature.insights)
     implementation(projects.feature.home)
     implementation(projects.feature.feedback)
-    implementation(projects.core.presentation)
+    //defaultImplementation(projects.core.presentation)
     implementation(projects.core.background)
+
+    //both
     implementation(projects.core.data)
+    implementation(projects.feature.onboarding)
+    implementation(projects.core.presentation)
+
+
+    //admin app
+    adminImplementation(projects.feature.admin)
 
     implementation(libs.bundles.default.dependencies)
 
@@ -23,14 +32,14 @@ dependencies {
     //splash screen
     implementation(libs.splash.screen)
 
-
     //worker
-    implementation(libs.androidx.work.ktx)
-    implementation(libs.hilt.work)
-    implementation(libs.androidx.appcompat)
+    defaultImplementation(libs.androidx.work.ktx)
+    defaultImplementation(libs.hilt.work)
+    defaultImplementation(libs.androidx.appcompat)
+
     ksp(libs.hilt.ext.compiler)
-    testImplementation(libs.work.testing)
-    androidTestImplementation(libs.work.testing)
-    androidTestImplementation(libs.hilt.android.testing)
-    androidTestImplementation(libs.junit)
+    testDefaultImplementation(libs.work.testing)
+    androidTestDefaultImplementation(libs.work.testing)
+    androidTestDefaultImplementation(libs.hilt.android.testing)
+    androidTestDefaultImplementation(libs.junit)
 }

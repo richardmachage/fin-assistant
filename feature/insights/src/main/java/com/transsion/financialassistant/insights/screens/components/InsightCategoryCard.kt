@@ -87,7 +87,10 @@ fun InsightCategoryCard(
                         modifier = Modifier
                             .width(35.dp)
                             .clip(RoundedCornerShape(40))
-                            .background(FAColors.faintText.copy(alpha = 0.3f)),
+                            .background(FAColors.faintText.copy(alpha = 0.3f))
+                            .clickable {
+                                onClick()
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -123,7 +126,10 @@ fun InsightCategoryCard(
                 icon = painterResource(item.categoryIcon),
                 colors = IconButtonDefaults.iconButtonColors().copy(
                     containerColor = FAColors.faintText.copy(0.3F)
-                )
+                ),
+                onClick = {
+                    onClick()
+                }
             )
 
         }

@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.Serializable
 
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "financialassistant.DATASTORE")
@@ -19,6 +20,8 @@ class DatastorePreferences(private val context: Context) {
         val HIDE_BALANCE_KEY = booleanPreferencesKey("hide_balance_key")
         val MPESA_NUMBER_KEY = stringPreferencesKey("mpesa_number_key")
         val LANGUAGE_KEY = stringPreferencesKey("language_key")
+        val MESSAGE_PARSING_METRICS = stringPreferencesKey("message_parsing_metrics")
+
     }
 
     private object PreferencesKeys {
@@ -98,3 +101,11 @@ class DatastorePreferences(private val context: Context) {
         return getValue(PreferencesKeys.PAYMENT_METHOD, defaultValue)
     }
 }
+
+@Serializable
+data class Metrics(
+    val totalMessages: Int = 0,
+    val known: Int = 0,
+    val accepted_unknown: Int = 0,
+    val rejected_unknown: Int = 0,
+)

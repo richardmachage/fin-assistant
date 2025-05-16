@@ -275,6 +275,7 @@ fun AllTransactionsScreen(
                     items(filterResults.itemCount) { index ->
                         val item = filterResults[index]
                         if (item != null) {
+                            //VerticalSpacer(5)
                             TransactionUiListItem(
                                 transactionUi = TransactionUi(
                                     title = item.name ?: item.transactionCode,
@@ -306,8 +307,11 @@ fun AllTransactionsScreen(
                                         }
                                 }
                             )
-                            VerticalSpacer(5)
-                            HorizontalDivider(modifier = Modifier.padding(bottom = paddingSmall))
+                            //VerticalSpacer(5)
+                            /*HorizontalDivider(
+                                modifier = Modifier.padding(bottom = paddingSmall),
+                                thickness = (0.25).dp
+                            )*/
                         }
 
                     }
