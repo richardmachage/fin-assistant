@@ -1,6 +1,9 @@
 package com.transsion.financialassistant.onboarding.screens.login
 
 import android.content.Context
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.onboarding.R
@@ -33,6 +36,9 @@ class LoginViewModel @Inject constructor(
     private val _biometricAuthenticated = MutableStateFlow(false)
     val biometricAuthenticated: StateFlow<Boolean> = _biometricAuthenticated
 
+    private val _shouldTriggerBiometric = mutableStateOf(false)
+    val shouldTriggerBiometric: State<Boolean> = _shouldTriggerBiometric
+
 
 
     // Handle pin entry action
@@ -43,6 +49,15 @@ class LoginViewModel @Inject constructor(
                 validatePin(_pin.value)
             }
         }
+    }
+
+    /**Biometric Prompt Trigger*/
+    fun resetBiometricTrigger() {
+        _shouldTriggerBiometric.value = false
+    }
+
+    fun allowBiometricTrigger() {
+        _shouldTriggerBiometric.value = true
     }
 
 
