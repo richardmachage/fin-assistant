@@ -24,7 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val recentTransactionsRepo: RecentTransactionRepo,
-    private val preferences: DatastorePreferences
+    private val preferences: DatastorePreferences,
 ) : ViewModel() {
     val hideBalance = preferences.getValue(DatastorePreferences.HIDE_BALANCE_KEY, false)
     private var _state = MutableStateFlow(HomeScreenState())
@@ -110,4 +110,5 @@ class HomeViewModel @Inject constructor(
         }
 
     }
+
 }
