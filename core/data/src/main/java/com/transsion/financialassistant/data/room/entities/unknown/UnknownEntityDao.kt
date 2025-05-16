@@ -1,0 +1,28 @@
+package com.transsion.financialassistant.data.room.entities.unknown
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+
+@Dao
+interface UnknownEntityDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(unknownEntity: UnknownEntity)
+
+    @Query("SELECT * FROM UnknownEntity")
+    suspend fun getAll(): List<UnknownEntity>
+
+    @Delete
+    suspend fun delete(vararg unknownEntity: UnknownEntity)
+
+
+    @Query("DELETE FROM UnknownEntity WHERE id = :id")
+    suspend fun deleteById(id: Int)
+
+    @Query("SELECT * FROM UnknownEntity WHERE id = :id")
+    suspend fun getById(id: Int): UnknownEntity?
+
+
+}

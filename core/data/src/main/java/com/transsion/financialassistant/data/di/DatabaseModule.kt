@@ -136,4 +136,9 @@ object DatabaseModule {
     @Singleton
     fun providesFulizaPayDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.fulizaPayDao()
+
+    @Provides
+    @Singleton
+    fun providesUnknownDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.unknownDao()
 }

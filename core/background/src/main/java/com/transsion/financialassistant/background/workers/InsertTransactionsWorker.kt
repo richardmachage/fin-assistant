@@ -9,13 +9,18 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.transsion.financialassistant.background.Repos
+import com.transsion.financialassistant.background.broadcast_receivers.acceptedUnknownKeywords
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.preferences.DatastorePreferences
+import com.transsion.financialassistant.data.preferences.Metrics
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 @HiltWorker
@@ -23,7 +28,8 @@ class InsertTransactionsWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val workerParams: WorkerParameters,
     private val repos: Repos,
-    private val transactionRepo: TransactionRepo
+    private val transactionRepo: TransactionRepo,
+    private val dataStore: DatastorePreferences
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -57,42 +63,87 @@ class InsertTransactionsWorker @AssistedInject constructor(
 
             val totalMessages =
                 thisCursor.count.takeIf { it > 0 } ?: return@withContext Result.success()
+            var unknownMessages = 0
+            var acceptedUnknowns = 0
             var processedCount = 0
 
             thisCursor.moveToPosition(-1)
 
             while (thisCursor.moveToNext()) {
+
                 val body = thisCursor.getString(bodyColumn)
                 val subscriptionId = thisCursor.getString(subscriptionIdColumn)
-                val transactionType = transactionRepo.getTransactionType(body)
-                val saveAction = saveStrategyMap[transactionType]
 
-                saveAction?.let {
-                    val message = MpesaMessage(body = body, subscriptionId = subscriptionId)
-                    try {
-                        saveAction(message)
-                        Log.d(
-                            "InsertWorker",
-                            "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
-                        )
-                    } catch (e: Exception) {
-                        Log.e("InsertWorker", "Error saving: ${e.message}")
+
+                //branch here, only proceed for known types
+                when (val transactionType = transactionRepo.getTransactionType(body)) {
+                    TransactionType.UNKNOWN -> {
+                        //TODO()
+                        //check if it is an accepted unknown,
+                        val isAcceptedUnknown = acceptedUnknownKeywords
+                            .any { keyWord ->
+                                body.contains(keyWord, ignoreCase = true)
+                            }
+
+                        if (isAcceptedUnknown.not()) {
+                            //it is not an accepted unknown type
+                            //insert to entity of unknowns,
+                            unknownMessages += 1
+                            repos.unknownRepo.insertUnknownTransaction(message = body)
+                        } else {
+                            acceptedUnknowns += 1
+                        }
                     }
 
-                } ?: run {
-                    Log.w("InsertWorker", "No save strategy for type: $transactionType")
+                    else -> {
+
+                        val saveAction = saveStrategyMap[transactionType]
+
+                        saveAction?.let {
+                            val message = MpesaMessage(body = body, subscriptionId = subscriptionId)
+                            try {
+                                saveAction(message)
+                                Log.d(
+                                    "InsertWorker",
+                                    "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
+                                )
+                            } catch (e: Exception) {
+                                Log.e("InsertWorker", "Error saving: ${e.message}")
+                            }
+
+                        } ?: run {
+                            Log.w("InsertWorker", "No save strategy for type: $transactionType")
+                        }
+                        processedCount += 1
+
+                        val progress = processedCount.toFloat() / totalMessages.toFloat()
+
+                        setProgressAsync(
+                            workDataOf(
+                                "progress" to progress,
+                                "currentType" to transactionType.name
+                            )
+                        )
+                    }
                 }
-                processedCount += 1
-
-                val progress = processedCount.toFloat() / totalMessages.toFloat()
-
-                setProgressAsync(
-                    workDataOf(
-                        "progress" to progress,
-                        "currentType" to transactionType.name
-                    )
-                )
             }
+
+            Log.d(
+                "WorkerReport",
+                "Total messages: $totalMessages, Processed: $processedCount, Unknown: $unknownMessages, Accepted Unknowns: $acceptedUnknowns"
+            )
+
+            val metrics = Metrics(
+                totalMessages = totalMessages,
+                known = processedCount,
+                accepted_unknown = acceptedUnknowns,
+                rejected_unknown = unknownMessages
+            )
+            val jsonMetric = Json.encodeToString<Metrics>(metrics)
+            dataStore.saveValue(
+                key = DatastorePreferences.MESSAGE_PARSING_METRICS,
+                value = jsonMetric
+            )
         }
 
         Result.success()

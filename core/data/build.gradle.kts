@@ -21,6 +21,9 @@ dependencies {
 
     //data store
     implementation(libs.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
+
+
 
     //testing
     testImplementation(libs.junit)
