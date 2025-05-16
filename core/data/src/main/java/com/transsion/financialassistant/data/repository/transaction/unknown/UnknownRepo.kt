@@ -12,4 +12,6 @@ interface UnknownRepo {
 
     suspend fun getAll(): List<UnknownEntity>
 
+    suspend fun delete(batchList: List<UnknownEntity>)
+
 }

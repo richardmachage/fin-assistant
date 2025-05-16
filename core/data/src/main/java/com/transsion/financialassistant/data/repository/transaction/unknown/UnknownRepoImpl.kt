@@ -2,6 +2,8 @@ package com.transsion.financialassistant.data.repository.transaction.unknown
 
 import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntity
 import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntityDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UnknownRepoImpl @Inject constructor(
@@ -22,7 +24,9 @@ class UnknownRepoImpl @Inject constructor(
 
     override suspend fun deleteById(id: Int) {
         try {
-            dao.deleteById(id)
+            withContext(Dispatchers.IO) {
+                dao.deleteById(id)
+            }
         } catch (e: Exception) {
             //TODO Handle Exception if need be
         }
@@ -39,10 +43,22 @@ class UnknownRepoImpl @Inject constructor(
 
     override suspend fun getAll(): List<UnknownEntity> {
         return try {
-            dao.getAll()
+            withContext(Dispatchers.IO) {
+                dao.getAll()
+            }
         } catch (e: Exception) {
             //TODO Handle Exception if need be
             emptyList()
+        }
+    }
+
+    override suspend fun delete(batchList: List<UnknownEntity>) {
+        try {
+            withContext(Dispatchers.IO) {
+                dao.delete(*batchList.toTypedArray())
+            }
+        } catch (e: Exception) {
+            //TODO Handle Exception if need be
         }
     }
 }
