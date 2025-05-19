@@ -42,7 +42,7 @@ enum class TransactionType(val description: String) {
                 .toRegex(RegexOption.IGNORE_CASE)
 
 
-            RECEIVE_MONEY -> "(?:Congratulations!\\s+)?(\\b[A-Z0-9]+\\b)\\s+confirmed\\.\\s*You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9\\s\\p{P}\\p{S}_]+?)(?: (\\d{10}))? on (\\d{1,2}/\\d{1,2}/\\d{2,4}) at (\\d{1,2}:\\d{2} (?:AM|PM))\\.?\\s*New M-?PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
+            RECEIVE_MONEY -> "(?:Congratulations!\\s+)?(\\b[A-Z0-9]+\\b)\\s+confirmed\\.\\s*You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9\\s\\p{P}\\p{S}_]+?)(?: (\\d{10}))? on (\\d{1,2}/\\d{1,2}/\\d{2,4})(?:\\s*at\\s*|\\s*)(\\d{1,2}:\\d{2} (?:AM|PM))\\.?\\s*New M-?PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
                 RegexOption.IGNORE_CASE
             )
             // "(\\b[A-Z0-9]+\\b) Confirmed\\.\\s?You have received Ksh([\\d,]+\\.?\\d{0,2}) from ([A-Za-z0-9 ]+) (\\d+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} (?:AM|PM))\\s+New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex()
