@@ -30,8 +30,8 @@ class TransactionTypeTests {
 
         val sendMessage =
             "TEI27U8XCM Confirmed. Ksh1,300.00 sent to daniel  musyoki +254113694587 on 18/5/25 at 11:45 AM. New M-PESA balance is Ksh595.61. Transaction cost, Ksh23.00.  Amount you can transact within the day is 498,300.00. Earn interest daily on Ziidi MMF,Dial *334#"
-        val groups = TransactionType.SEND_MONEY.getRegex().find(message)?.groupValues
-        val g = TransactionType.SEND_MONEY.getRegex().find(message)?.groups
+        val groups = TransactionType.SEND_MONEY.getRegex().find(sendMessage)?.groupValues
+        val g = TransactionType.SEND_MONEY.getRegex().find(sendMessage)?.groups
 
         println("groups detected : ${groups?.size}")
         groups?.forEachIndexed { index, value ->
@@ -47,8 +47,6 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect RECEIVE_MONEY transaction`() {
-
-
         val ncbaMessage =
             "Congratulations! TD66N8PLHM confirmed.You have received Ksh15,950.00 from LOOP B2C. on 6/4/25 at 2:35 PM.New M-PESA balance is Ksh16,785.29. Separate personal and business funds through Pochi la Biashara on *334#."
 
@@ -74,7 +72,6 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect PAY_BILL transaction`() {
-
         val easyCoach =
             "TD943EF52A Confirmed. Ksh2,850.00 sent to EASY COACH RAILWAYS-NRB(HQ) 6 for account 816492 on 9/4/25 at 6:14 PM New M-PESA balance is Ksh4,445.13. Transaction cost, Ksh25.00.Amount you can transact within the day is 496,620.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val coop =
@@ -94,9 +91,14 @@ class TransactionTypeTests {
             "TEA36HT7MR Confirmed. Ksh1,600.00 sent to SAFARICOMHOME for account 31080111 on 10/5/25 at 2:14 PM. New M-PESA balance is Ksh327.61. Transaction cost, Ksh0.00."
         val paybillTest =
             "TEI27X4WEC Confirmed. Ksh100.00 sent to CITAM KAREN for account OFFERING on 18/5/25 at 12:07 PM New M-PESA balance is Ksh495.61. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,200.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        val result = transactionRepo.getTransactionType(safaricomHome)
-        val groups = TransactionType.PAY_BILL.getRegex().find(safaricomHome)?.groupValues
+
+        val airtelMoney =
+            "SLB432RET4 confirmed. Ksh100.00 sent to AIRTEL MONEY for account 254735877882 on 11/12/24 at 3:02 PM New M-PESA balance is Ksh190.48. Transaction cost, Ksh0.00."
+
+        val airtelMoney2 =
+            "TEJ0DQ1F50 confirmed. Ksh10.00 sent to AIRTEL MONEY  for account 254752537834 on 19/5/25 at 5:15 PM New M-PESA balance is Ksh133.61. Transaction cost, Ksh0.00."
+        val result = transactionRepo.getTransactionType(airtelMoney2)
+        val groups = TransactionType.PAY_BILL.getRegex().find(airtelMoney2)?.groupValues
 
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
