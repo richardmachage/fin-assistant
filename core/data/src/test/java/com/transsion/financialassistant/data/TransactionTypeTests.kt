@@ -56,13 +56,16 @@ class TransactionTypeTests {
             "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
+        val ziidi =
+            "TEF7UJ6449 Confirmed.You have received Ksh500.00 from ZIIDI on 15/5/25 6:13 PM. New M-PESA balance is Ksh501.48. Separate personal and business funds through Pochi la Biashara on *334#."
 
         val receiveFromHustlerFund =
             "TE397TUC4H Confirmed. You have received Ksh3,000.00 from Hustler Fund on 03/05/2025 at 11:15 AM. New MPESA balance is Ksh6,597.06."
 
-        val result = transactionRepo.getTransactionType(receiveFromBridge)
+        val result = transactionRepo.getTransactionType(receiveFromHustlerFund)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(receiveFromBridge)?.groupValues
+        val groups =
+            TransactionType.RECEIVE_MONEY.getRegex().find(receiveFromHustlerFund)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
