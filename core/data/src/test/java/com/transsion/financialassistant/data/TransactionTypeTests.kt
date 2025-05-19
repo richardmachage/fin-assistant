@@ -46,7 +46,6 @@ class TransactionTypeTests {
     @Test
     fun `should detect RECEIVE_MONEY transaction`() {
 
-
         val ncbaMessage =
             "Congratulations! TD66N8PLHM confirmed.You have received Ksh15,950.00 from LOOP B2C. on 6/4/25 at 2:35 PM.New M-PESA balance is Ksh16,785.29. Separate personal and business funds through Pochi la Biashara on *334#."
 
