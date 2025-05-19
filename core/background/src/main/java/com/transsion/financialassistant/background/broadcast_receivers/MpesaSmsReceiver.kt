@@ -118,6 +118,7 @@ data class ReceiverMessage(
 val acceptedUnknownKeywords = listOf(
     "failed",
     "insufficient",
+    "sufficient",
     "unable",
     "changed to dormant",
     "not joined",
@@ -129,5 +130,13 @@ val acceptedUnknownKeywords = listOf(
     "received airtime",
     "fuliza",
     "declined reversal",
-    "not able to process"
+    "not able to process",
+    "Your M-PESA PIN was changed",
+    "number is not able to receive funds",
+    "Your M-Shwari Deposit Account",
+    "operator",
+    "not registered to M-PESA",
+    "Your M-PESA PIN was changed",
+    "Language was changed ",
+
 )
