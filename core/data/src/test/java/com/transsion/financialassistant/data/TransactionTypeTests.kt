@@ -90,11 +90,13 @@ class TransactionTypeTests {
         val sendGlobal =
             "TDG1XU4T4L Confirmed. Ksh103.50 sent to M-PESA CARD for account GLOVO PRIME BARCELONA ES on 17/4/25 at 9:50 PM New M-PESA balance is Ksh156.22. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,256.50. Save frequent paybills for quick payment on M-PESA app "
 
+        val safaricomHome =
+            "TEA36HT7MR Confirmed. Ksh1,600.00 sent to SAFARICOMHOME for account 31080111 on 10/5/25 at 2:14 PM. New M-PESA balance is Ksh327.61. Transaction cost, Ksh0.00."
         val paybillTest =
             "TEI27X4WEC Confirmed. Ksh100.00 sent to CITAM KAREN for account OFFERING on 18/5/25 at 12:07 PM New M-PESA balance is Ksh495.61. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,200.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-        val result = transactionRepo.getTransactionType(sendGlobal)
-        val groups = TransactionType.PAY_BILL.getRegex().find(sendGlobal)?.groupValues
+        val result = transactionRepo.getTransactionType(safaricomHome)
+        val groups = TransactionType.PAY_BILL.getRegex().find(safaricomHome)?.groupValues
 
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
