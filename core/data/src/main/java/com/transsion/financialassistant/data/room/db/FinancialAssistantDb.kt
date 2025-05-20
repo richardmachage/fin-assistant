@@ -26,6 +26,10 @@ import com.transsion.financialassistant.data.room.entities.receive_mshwari.Recei
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditDao
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitEntity
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiDao
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
@@ -68,7 +72,9 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         MoveFromPochiEntity::class,
         SendFromPochiEntity::class,
         FulizaPayEntity::class,
-        UnknownEntity::class
+        UnknownEntity::class,
+        ReversalDebitEntity::class,
+        ReversalCreditEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
@@ -76,10 +82,10 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnifiedTransactionPersonal::class,
         UnifiedTransactionBusiness::class,
         UnifiedIncomingTransactionsBusiness::class,
-        UnifiedOutGoingTransactionsBusiness::class
+        UnifiedOutGoingTransactionsBusiness::class,
     ],
 
-    version = 3,
+    version = 4,
     exportSchema = true
 
 )
@@ -106,6 +112,8 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun sendFromPochiDao(): SendFromPochiDao
     abstract fun fulizaPayDao(): FulizaPayDao
     abstract fun unknownDao(): UnknownEntityDao
+    abstract fun reversalDebitDao(): ReversalDebitDao
+    abstract fun reversalCreditDao(): ReversalCreditDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
@@ -119,7 +127,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
                         FinancialAssistantDb::class.java,
                         "financial_assistant_db"
                     )
-                        .addMigrations(MIGRATION_2_3)
+                        .addMigrations(MIGRATION_3_4)
                         .build()
                     INSTANCE = instance
                 }
