@@ -1,6 +1,5 @@
 package com.transsion.financialassistant.data.room.entities.reversal_debit
 
-import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -19,6 +18,9 @@ interface ReversalDebitDao {
     @Query("SELECT * FROM ReversalDebitEntity")
     fun getAll(): Flow<List<ReversalDebitEntity>>
 
-    @Query("SELECT * FROM ReversalDebitEntity")
-    fun getAllPaged(): PagingSource<Int, ReversalDebitEntity>
+    @Query("SELECT * FROM ReversalDebitEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getReversalDebitTransactionsByDate(
+        startDate: String,
+        endDate: String
+    ): List<ReversalDebitEntity>
 }
