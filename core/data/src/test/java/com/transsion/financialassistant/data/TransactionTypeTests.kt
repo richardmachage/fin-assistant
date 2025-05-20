@@ -231,6 +231,7 @@ class TransactionTypeTests {
         val message =
             "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
         val result = transactionRepo.getTransactionType(message)
+
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY_FROM_POCHI)
     }
@@ -254,6 +255,26 @@ class TransactionTypeTests {
         println("TransactionType : ${result.description}")
 
         assertTrue(result == TransactionType.FULIZA_PAY)
+    }
+
+    @Test
+    fun `should detect reversal DEBIT transaction`() {
+        val message =
+            "TE62NRQ0YC  confirmed. Reversal of transaction TE67NQP0JJ has been successfully reversed  on 6/5/25  at 6:19 PM and Ksh400.00 is debited from your M-PESA account. New M-PESA account balance is Ksh813.21."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("TransactionType : ${result.description}")
+        assertTrue(result == TransactionType.REVERSAL_DEBIT)
+    }
+
+    @Test
+    fun `should detect reversal CREDIT transaction`() {
+        val message =
+            "SJP5C9HAIJ confirmed. Reversal of transaction SJH5DP029L has been successfully reversed on 25/10/24 at 2:04 PM and Ksh1.00 is credited to your M-PESA account. New M-PESA account balance is Ksh1,778.12."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("TransactionType : ${result.description}")
+        assertTrue(result == TransactionType.REVERSAL_CREDIT)
     }
 }
 

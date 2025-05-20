@@ -75,7 +75,9 @@ fun HomeScreen(
     goToFeedBack: () -> Unit
 ) {
     val context = LocalContext.current
+
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
         initialValue = emptyList()
     )
