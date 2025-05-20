@@ -17,6 +17,8 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillD
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditDao
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
@@ -57,9 +59,11 @@ class InsightRepoImpl @Inject constructor(
     private val moveFromPochiDao: MoveFromPochiDao,
     private val sendFromPochiDao: SendPochiDao,
     private val businessDao: UnifiedTransactionsBusinessDao,
-    private val fulizaPayDao: FulizaPayDao
+    private val fulizaPayDao: FulizaPayDao,
+    private val reversalCreditDao: ReversalCreditDao,
+    private val reversalDebitDao: ReversalDebitDao,
 
-) : InsightsRepo {
+    ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
         MutableStateFlow<List<CategoryDistribution>>(emptyList())
@@ -457,6 +461,30 @@ class InsightRepoImpl @Inject constructor(
                         )
                     }
                 }
+
+                TransactionType.REVERSAL_DEBIT -> {
+                    reversalDebitDao.getReversalDebitTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = it.transactionCode,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
+
+                TransactionType.REVERSAL_CREDIT -> {
+                    reversalCreditDao.getReversalCreditTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            title = it.transactionCode,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
             }
             AppCache.put(key = cacheKey, value = data)
             emit(data)
@@ -763,6 +791,9 @@ class InsightRepoImpl @Inject constructor(
                         }
                     }
                 }
+
+                TransactionType.REVERSAL_DEBIT -> TODO()
+                TransactionType.REVERSAL_CREDIT -> TODO()
             }
 
             AppCache.put(key = cacheKey, value = dataPoints)
@@ -884,6 +915,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.UNKNOWN -> null
                                 TransactionType.MOVE_FROM_POCHI -> R.drawable.account
                                 TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
+                                TransactionType.REVERSAL_DEBIT -> R.drawable.account
+                                TransactionType.REVERSAL_CREDIT -> R.drawable.account
                             }
                         )
                     }
@@ -985,6 +1018,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.MOVE_FROM_POCHI -> R.drawable.account
                                 TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
                                 TransactionType.UNKNOWN -> null
+                                TransactionType.REVERSAL_DEBIT -> R.drawable.account
+                                TransactionType.REVERSAL_CREDIT -> R.drawable.account
                             }
                         )
                     }

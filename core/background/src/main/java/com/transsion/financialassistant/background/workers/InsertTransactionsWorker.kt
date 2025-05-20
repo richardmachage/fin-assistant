@@ -157,6 +157,30 @@ fun saveStrategies(
     context: Context
 ): Map<TransactionType, suspend (MpesaMessage) -> Unit> = mapOf(
 
+    TransactionType.REVERSAL_CREDIT to { message ->
+        repos.reversalCreditRepo.insertReversalCreditTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("ReversalCreditRepo", it)
+            }
+        )
+    },
+
+    TransactionType.REVERSAL_DEBIT to { message ->
+        repos.reversalDebitRepo.insertReversalDebitTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {
+                Log.e("ReversalDebitRepo", it)
+            }
+        )
+    },
+
     TransactionType.FULIZA_PAY to { message ->
         repos.fulizaRepo.insertFulizaPayTransaction(
             message = message.body,
@@ -180,6 +204,7 @@ fun saveStrategies(
             },
         )
     },
+
     TransactionType.WITHDRAWAL to { message ->
         repos.withdrawMoneyRepo.insertWithdrawMoneyTransaction(
             message = message.body,
@@ -190,6 +215,7 @@ fun saveStrategies(
                 Log.e("WithdrawMoneyRepo", it)
             })
     },
+
     TransactionType.SEND_MONEY to { message ->
         repos.sendMoneyRepo.insertSendMoneyTransaction(
             message = message.body,
@@ -200,6 +226,7 @@ fun saveStrategies(
                 Log.e("SendMoneyRepo", it)
             })
     },
+
     TransactionType.RECEIVE_MONEY to { message ->
         repos.receiveMoneyRepo.insertReceiveMoneyTransaction(
             message = message.body,
@@ -210,6 +237,7 @@ fun saveStrategies(
                 Log.e("ReceiveMoneyRepo", it)
             })
     },
+
     TransactionType.RECEIVE_POCHI to { message ->
         repos.receivePochiRepo.insertReceivePochiTransaction(
             message = message.body,
@@ -220,6 +248,7 @@ fun saveStrategies(
                 Log.e("ReceivePochiRepo", it)
             })
     },
+
     TransactionType.SEND_POCHI to { message ->
         repos.sendPochiRepo.insertSendPochiTransaction(
             message = message.body,
@@ -230,6 +259,7 @@ fun saveStrategies(
                 Log.e("SendPochiRepo", it)
             })
     },
+
     TransactionType.PAY_BILL to { message ->
         repos.payBillRepo.insertPayBillTransaction(
             message = message.body,
@@ -240,6 +270,7 @@ fun saveStrategies(
                 Log.e("PayBillRepo", it)
             })
     },
+
     TransactionType.BUY_GOODS to { message ->
         repos.buyGoodsRepo.insertBuyGoodsTransaction(
             message = message.body,
@@ -250,6 +281,7 @@ fun saveStrategies(
                 Log.e("BuyGoodsRepo", it)
             })
     },
+
     TransactionType.SEND_MSHWARI to { message ->
         repos.sendMshwariRepo.insertSendMshwariTransaction(
             message = message.body,
@@ -260,6 +292,7 @@ fun saveStrategies(
                 Log.e("SendMshwariRepo", it)
             })
     },
+
     TransactionType.RECEIVE_MSHWARI to { message ->
         repos.receiveMshwariRepo.insertReceiveMshwariTransaction(
             message = message.body,
@@ -270,6 +303,7 @@ fun saveStrategies(
                 Log.e("ReceiveMshwariRepo", it)
             })
     },
+
     TransactionType.AIRTIME_PURCHASE to { message ->
         repos.buyAirtime.insertBuyAirtimeTransaction(
             message = message.body,
@@ -280,6 +314,7 @@ fun saveStrategies(
                 Log.e("BuyAirtimeRepo", it)
             })
     },
+
     TransactionType.BUNDLES_PURCHASE to { message ->
         repos.bundlesPurchaseRepo.insertBundlesPurchaseTransaction(
             message = message.body,
@@ -290,6 +325,7 @@ fun saveStrategies(
                 Log.e("BundlesPurchaseRepo", it)
             })
     },
+
     TransactionType.MOVE_TO_POCHI to { message ->
         repos.moveToPochiRepo.insertMoveToPochiTransaction(
             message = message.body,
@@ -303,6 +339,7 @@ fun saveStrategies(
 
 
     },
+
     TransactionType.MOVE_FROM_POCHI to { message ->
         repos.moveFromPochiRepo.insertMoveFromPochiTransaction(
             message = message.body,
@@ -314,8 +351,9 @@ fun saveStrategies(
             }
         )
     },
+
     TransactionType.SEND_MONEY_FROM_POCHI to { message ->
-        repos.sendFromPochiRepo.insertSendPochiTransaction(
+        repos.sendFromPochiRepo.insertSendFromPochiTransaction(
             message = message.body,
             context = context,
             subId = message.subscriptionId.toIntOrNull() ?: 0,
