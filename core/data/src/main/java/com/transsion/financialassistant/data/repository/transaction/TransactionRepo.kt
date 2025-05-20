@@ -12,6 +12,8 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillE
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitEntity
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
@@ -36,4 +38,6 @@ interface TransactionRepo {
     fun parseMoveFromPochiMessage(message: String, phone: String): MoveFromPochiEntity?
     fun parseSendFromPochiMessage(message: String, phone: String): SendFromPochiEntity?
     fun parseFulizaPayMessage(message: String, phone: String, isTest: Boolean): FulizaPayEntity?
+    fun parseReversalCreditMessage(message: String, phone: String): ReversalCreditEntity?
+    fun parseReversalDebitMessage(message: String, phone: String): ReversalDebitEntity?
 }
