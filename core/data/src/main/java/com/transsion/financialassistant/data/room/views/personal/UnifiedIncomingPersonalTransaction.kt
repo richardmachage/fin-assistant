@@ -5,15 +5,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 
 @DatabaseView(
-    value = """
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, receiveFromName as name FROM ReceiveMoneyEntity
-        UNION ALL
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, NULL AS name  FROM ReceiveMshwariEntity
-        UNION ALL
-        SELECT transactionCode, phone, amount, date, time, transactionType, 'IN' as transactionCategory,mpesaBalance, 'MY POCHI' as name FROM MoveFromPochiEntity
-        UNION ALL
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, agentDepositedTo as Name FROM DepositMoneyEntity
-    """
+    value = "SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, receiveFromName AS name FROM ReceiveMoneyEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,mpesaBalance, NULL AS name  FROM ReceiveMshwariEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, 'IN' AS transactionCategory,mpesaBalance, 'MY POCHI' AS name FROM MoveFromPochiEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, mpesaBalance, agentDepositedTo AS name FROM DepositMoneyEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, mpesaBalance, 'Reversal' AS name  FROM ReversalCreditEntity"
 )
 data class UnifiedIncomingTransaction(
     val transactionCode: String,
@@ -26,3 +18,4 @@ data class UnifiedIncomingTransaction(
     val transactionCategory: TransactionCategory,
     val transactionType: TransactionType
 )
+
