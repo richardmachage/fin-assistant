@@ -17,13 +17,14 @@ enum class TransactionType(val description: String) {
     MOVE_FROM_POCHI("Moved from Pochi to M-PESA"),
     SEND_MONEY_FROM_POCHI("Send Money from Pochi Wallet"),
     FULIZA_PAY("Paid Fuliza"),
+    REVERSAL_DEBIT("Reversal debited"),
+    REVERSAL_CREDIT("Reversal credited"),
     UNKNOWN("Unknown"),
     ;
 
 
     fun getRegex(): Regex {
         return when (this) {
-
 
             DEPOSIT -> "(\\b[A-Z0-9]+\\b) Confirmed\\. On (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2}) Give Ksh([\\d,]+\\.?\\d{0,2}) cash to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
                 RegexOption.IGNORE_CASE
@@ -79,14 +80,23 @@ enum class TransactionType(val description: String) {
                 RegexOption.IGNORE_CASE
             )
 
-            SEND_MONEY_FROM_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(?:\\.(.*))?".toRegex(
+            SEND_MONEY_FROM_POCHI -> "(\\b[A-Z0-9]+\\b) Confirmed. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2,4}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New business balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})\\. Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2})(?:\\.(.*))?".toRegex(
                 RegexOption.IGNORE_CASE
             )
 
             FULIZA_PAY -> FULIZA_CUT_REGEX
 
+            REVERSAL_DEBIT -> "([A-Z0-9]+)\\s+confirmed\\. Reversal of transaction\\s+([A-Z0-9]+)\\s+has been successfully reversed\\s+on\\s+(\\d{1,2}/\\d{1,2}/\\d{2,4})\\s+at\\s+(\\d{1,2}:\\d{2}\\s+[APM]{2})\\s+and Ksh([\\d,]+\\.?\\d{0,2}) is debited from your M-PESA account\\.?\\s*New M-PESA account balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+
+            REVERSAL_CREDIT -> "([A-Z0-9]+)\\s+confirmed\\. Reversal of transaction\\s+([A-Z0-9]+)\\s+has been successfully reversed\\s+on\\s+(\\d{1,2}/\\d{1,2}/\\d{2,4})\\s+at\\s+(\\d{1,2}:\\d{2}\\s+[APM]{2})\\s+and Ksh([\\d,]+\\.?\\d{0,2}) is credited to your M-PESA account\\.?\\s*New M-PESA account balance is Ksh([\\d,]+\\.?\\d{0,2})(.*)?".toRegex(
+                RegexOption.IGNORE_CASE
+            )
+
 
             UNKNOWN -> "".toRegex()
+
         }
     }
 }
@@ -97,8 +107,5 @@ val FULIZA_CUT_REGEX = (
                 "Available Fuliza M-PESA limit is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\.\\s*M-PESA balance is Ksh\\s*([\\d,]+\\.?\\d{0,2})\\."
         ).toRegex(RegexOption.IGNORE_CASE)
 
-
-val bridgeRegex =
-    "(\\b[A-Z0-9]+\\b) Confirmed\\. You have sent Ksh([\\d,]+\\.?\\d{0,2}) to ([A-Za-z\\s]+) on (\\d{2}/\\d{2}/\\d{4})\\s+at (\\d{1,2}:\\d{2} [AP]M)\\. New MPESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\.".toRegex()
 
 
