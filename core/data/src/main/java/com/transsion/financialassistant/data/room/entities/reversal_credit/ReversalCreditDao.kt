@@ -22,5 +22,11 @@ interface ReversalCreditDao {
     @Query("SELECT * FROM ReversalCreditEntity")
     fun getAllPaged(): PagingSource<Int, ReversalCreditEntity>
 
+    @Query("SELECT * FROM ReversalCreditEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
+    suspend fun getReversalCreditTransactionsByDate(
+        startDate: String,
+        endDate: String
+    ): List<ReversalCreditEntity>
+
 
 }
