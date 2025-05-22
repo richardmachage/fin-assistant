@@ -282,7 +282,7 @@ fun LandingScreen(
 
                 ClickableText(
                     onClick = { showPermissionDialog = true },
-                    text = "Please allow permission to read transactions"
+                    text = "Please Click HERE to allow permission to read transactions"
                 )
             }
         }
