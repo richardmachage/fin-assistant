@@ -34,14 +34,14 @@ fun CategoryInsightsScreen(
     viewModel: CategoryInsightsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val categoryGraphData by viewModel.categoryGraphData.collectAsStateWithLifecycle()
-    val listOfTransactions by viewModel.listOfTransactions.collectAsStateWithLifecycle()
+    val categoryGraphData by if (viewModel.category == "transactionCost") viewModel.transactionCostGraphData.collectAsStateWithLifecycle() else viewModel.categoryGraphData.collectAsStateWithLifecycle()
+    val listOfTransactions by if (viewModel.category == "transactionCost") viewModel.listOfTransactionCosts.collectAsStateWithLifecycle() else viewModel.listOfTransactions.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    TitleText(text = viewModel.category)
+                    TitleText(text = if (viewModel.category == "transactionCost") stringResource(com.transsion.financialassistant.presentation.R.string.transaction_costs) else viewModel.category)
                 },
                 navigationIcon = {
                     IconButton(
