@@ -24,6 +24,7 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
+import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
@@ -227,12 +228,42 @@ class InsightRepoImpl @Inject constructor(
     }
 
 
+    override fun getDataForTransactionCost(insightTimeline: InsightTimeline): Flow<List<TransactionUi>> =
+        flow {
+            val startDate = insightTimeline.getTimeline().startDate
+            val endDate = insightTimeline.getTimeline().endDate
+
+            val cacheKey = "data_for_transaction_cost$startDate$endDate"
+            val cachedData = AppCache.get<List<TransactionUi>>(cacheKey)
+
+            if (cachedData != null) {
+                emit(cachedData)
+            } else {
+                val data =
+                    personalDao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
+                        .map {
+                            TransactionUi(
+                                title = it.name ?: it.transactionCode,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.transactionCost.toString().formatAsCurrency(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                            )
+                        }
+                AppCache.put(key = cacheKey, value = data)
+                emit(data)
+            }
+        }.catch {
+            emit(emptyList())
+        }
+
     override fun getDataForCategory(
-        startDate: String,
-        endDate: String,
+        insightTimeline: InsightTimeline,
         transactionType: TransactionType,
         transactionCategory: TransactionCategory
     ): Flow<List<TransactionUi>> = flow<List<TransactionUi>> {
+        val startDate = insightTimeline.getTimeline().startDate
+        val endDate = insightTimeline.getTimeline().endDate
         val cacheKey = "data_for_category$startDate$endDate${transactionType.description}"
 
         val cachedData = AppCache.get<List<TransactionUi>>(cacheKey)
@@ -493,9 +524,39 @@ class InsightRepoImpl @Inject constructor(
         emit(emptyList())
     }
 
+
+    override fun getDataPointsForTransactionCost(insightTimeline: InsightTimeline): Flow<List<DataPoint>> =
+        flow {
+            val startDate = insightTimeline.getTimeline().startDate
+            val endDate = insightTimeline.getTimeline().endDate
+
+            val cacheKey = "data_points_for_transaction_cost$startDate$endDate"
+            val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
+
+            if (cachedData != null) {
+                emit(cachedData)
+            } else {
+                val dataPoints = personalDao.getAllMoneyOutTransactions(startDate, endDate).map {
+                    when (insightTimeline) {
+                        InsightTimeline.TODAY -> DataPoint(
+                            x = it.time,
+                            y = it.transactionCost.toFloat()
+                        )
+
+                        else -> DataPoint(
+                            x = it.date,
+                            y = it.transactionCost.toFloat()
+                        )
+                    }
+                }
+
+                AppCache.put(key = cacheKey, value = dataPoints)
+                emit(dataPoints)
+            }
+        }.catch {
+            emit(emptyList())
+        }
     override fun getDataPointsForCategory(
-        /*startDate: String,
-        endDate: String,*/
         transactionType: TransactionType,
         insightTimeline: InsightTimeline
     ): Flow<List<DataPoint>> = flow {
