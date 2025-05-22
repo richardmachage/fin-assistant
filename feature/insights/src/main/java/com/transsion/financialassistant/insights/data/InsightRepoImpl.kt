@@ -243,6 +243,7 @@ class InsightRepoImpl @Inject constructor(
                     personalDao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.name ?: it.transactionCode,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -276,6 +277,7 @@ class InsightRepoImpl @Inject constructor(
                     fulizaPayDao.getPayFulizaTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = "FULIZA",
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -289,6 +291,7 @@ class InsightRepoImpl @Inject constructor(
                     depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.agentDepositedTo,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -305,6 +308,7 @@ class InsightRepoImpl @Inject constructor(
                     )
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.agent,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -318,6 +322,7 @@ class InsightRepoImpl @Inject constructor(
                     sendMoneyDao.getSendMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.sentToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -331,6 +336,7 @@ class InsightRepoImpl @Inject constructor(
                     receiveMoneyDao.getReceiveMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.receiveFromName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -344,6 +350,7 @@ class InsightRepoImpl @Inject constructor(
                     receivePochiDao.getReceivePochiTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.receiveFromName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -357,6 +364,7 @@ class InsightRepoImpl @Inject constructor(
                     sendPochiDao.getSendPochiTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.sentToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -370,6 +378,7 @@ class InsightRepoImpl @Inject constructor(
                     payBillDao.getPayBillTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.paidToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -382,6 +391,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.BUY_GOODS -> {
                     buyGoodsDao.getBuyGoodsTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.paidTo,
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -398,6 +408,7 @@ class InsightRepoImpl @Inject constructor(
                         endDate = endDate
                     ).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "M-SHWARI",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -413,6 +424,7 @@ class InsightRepoImpl @Inject constructor(
                         endDate = endDate
                     ).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "M-SHWARI",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -425,6 +437,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.AIRTIME_PURCHASE -> {
                     buyAirtimeDao.getBuyAirtimeTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "AIRTIME",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -438,6 +451,7 @@ class InsightRepoImpl @Inject constructor(
                     bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = "DATA & BUNDLES",
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -454,6 +468,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.MOVE_TO_POCHI -> {
                     moveToPochiDao.getRecordsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = when (transactionCategory) {
                                 TransactionCategory.IN -> it.transactionType.description
                                 TransactionCategory.OUT -> "Transfer from MPESA" //FIXME take from string resource
@@ -469,6 +484,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.MOVE_FROM_POCHI -> {
                     moveFromPochiDao.getRecordsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = when (transactionCategory) {
                                 TransactionCategory.IN -> it.transactionType.description
                                 TransactionCategory.OUT -> "Transfer to MPESA"
@@ -484,6 +500,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.SEND_MONEY_FROM_POCHI -> {
                     sendFromPochiDao.getSendPochiTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.sentToName,
                             type = it.transactionType,
                             inOrOut = transactionCategory,
@@ -496,6 +513,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.REVERSAL_DEBIT -> {
                     reversalDebitDao.getReversalDebitTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.transactionCode,
                             type = it.transactionType,
                             inOrOut = transactionCategory,
@@ -508,6 +526,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.REVERSAL_CREDIT -> {
                     reversalCreditDao.getReversalCreditTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.transactionCode,
                             type = it.transactionType,
                             inOrOut = transactionCategory,

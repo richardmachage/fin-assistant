@@ -58,8 +58,6 @@ interface InsightsRepo {
     ): Flow<List<DataPoint>>
 
     fun getDataForCategory(
-        /*startDate: String,
-        endDate: String,*/
         insightTimeline: InsightTimeline,
         transactionType: TransactionType,
         transactionCategory: TransactionCategory
