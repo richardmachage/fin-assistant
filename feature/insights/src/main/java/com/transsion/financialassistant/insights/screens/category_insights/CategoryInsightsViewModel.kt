@@ -22,12 +22,13 @@ class CategoryInsightsViewModel @Inject constructor(
 ) : ViewModel() {
 
     val category = params.get<String>("category") ?: throw Exception("No category provided")
-    val startDate = params.get<String>("startDate") ?: throw Exception("No start date provided")
-    val endDate = params.get<String>("endDate") ?: throw Exception("No end date provided")
+
+    // val startDate = params.get<String>("startDate") ?: throw Exception("No start date provided")
+    //val endDate = params.get<String>("endDate") ?: throw Exception("No end date provided")
     val insightTimeline =
         params.get<InsightTimeline>("timeLine") ?: throw Exception("No time line provided")
     val timeLine = insightTimeline.getTimeline().displayInfo
-    val transactionCategory = params.get<TransactionCategory>("transactionCategory")
+    private val transactionCategory = params.get<TransactionCategory>("transactionCategory")
         ?: throw Exception("No transaction category provided")
 
 
@@ -36,9 +37,13 @@ class CategoryInsightsViewModel @Inject constructor(
     var state = _state.asStateFlow()
 
 
+    val transactionCostGraphData = insightsRepo.getDataPointsForTransactionCost(insightTimeline)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
     val categoryGraphData = insightsRepo.getDataPointsForCategory(
-        /*startDate = startDate,
-        endDate = endDate,*/
         transactionType = getCategoryEnum(),
         insightTimeline = insightTimeline
     ).stateIn(
@@ -47,9 +52,18 @@ class CategoryInsightsViewModel @Inject constructor(
         initialValue = emptyList()
     )
 
+
+    val listOfTransactionCosts = insightsRepo.getDataForTransactionCost(insightTimeline)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
+        )
+
     val listOfTransactions = insightsRepo.getDataForCategory(
-        startDate = startDate,
-        endDate = endDate,
+        /*startDate = startDate,
+        endDate = endDate,*/
+        insightTimeline = insightTimeline,
         transactionType = getCategoryEnum(),
         transactionCategory = transactionCategory
     ).stateIn(
@@ -60,6 +74,9 @@ class CategoryInsightsViewModel @Inject constructor(
 
 
     private fun getCategoryEnum(): TransactionType {
+
+        if (category == "transactionCost") return TransactionType.UNKNOWN
+
         TransactionType.entries.forEach {
             if (it.description == category) {
                 Log.d("TAG", "getCategoryEnum: $it")
