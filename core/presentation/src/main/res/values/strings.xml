@@ -8,4 +8,5 @@
     <string name="transactions">transactions</string>
     <string name="money_out">Money out</string>
     <string name="transactions_">Transactions</string>
+    <string name="transaction_costs">Transaction Costs</string>
 </resources>
