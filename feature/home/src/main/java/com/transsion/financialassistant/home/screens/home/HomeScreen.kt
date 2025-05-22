@@ -86,7 +86,6 @@ fun HomeScreen(
     val hideBalance = viewModel.hideBalance.collectAsState(false)
     var showMessageBottomSheet by remember { mutableStateOf(false) }
     var selectedMessage by remember { mutableStateOf("") }
-    // var selectedMessageTransactionType by remember { mutableStateOf("") }
     var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
 
     Scaffold(
@@ -156,22 +155,8 @@ fun HomeScreen(
                 }
             )
         },
-        floatingActionButton = {
-            /*FloatingActionButton(
-                modifier = Modifier.offset(y = (35).dp),
-                onClick = {
-                    //TODO
-                },
-                containerColor = FAColors.green,
-                contentColor = Color.White
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "add"
-                )
-            }*/
-        }
-    ) { innerPadding ->
+
+        ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())
