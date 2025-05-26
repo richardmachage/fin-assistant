@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.search.screens.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
@@ -17,7 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
@@ -30,9 +34,10 @@ fun CustomSearchBar(
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
-
     OutlinedTextField(
+        textStyle = TextStyle(lineHeight = 30.sp),
         modifier = modifier
+            .height(50.dp)
             .onFocusChanged { focusState ->
                 val nowFocused = focusState.isFocused
                 if (nowFocused != isFocused) {
@@ -42,7 +47,15 @@ fun CustomSearchBar(
             },
         value = query,
         onValueChange = onQueryChanged,
-        placeholder = { Text("Search by name, code, type") },
+        placeholder = {
+            Text(
+                modifier = Modifier.height(50.dp),
+                text = "Search by name, code, type",
+                fontSize = 12.sp
+
+            )
+        },
+
         leadingIcon = {
             if (query.isEmpty()) {
                 Icon(
@@ -68,7 +81,7 @@ fun CustomSearchBar(
         shape = RoundedCornerShape(50),
         colors = OutlinedTextFieldDefaults.colors().copy(
             focusedIndicatorColor = FAColors.green
-        )
+        ),
     )
 }
 
