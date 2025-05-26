@@ -3,10 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.transsion.financialassistant.home"
+    namespace = "com.transsion.financialassistant.search"
 }
 
 dependencies {
+
     //project dependencies
     implementation(projects.core.presentation)
     implementation(projects.core.data)
@@ -18,10 +19,8 @@ dependencies {
     implementation(libs.androidx.paging.common.android)
     implementation(libs.androidx.paging.compose)
 
-
     debugImplementation(libs.ui.tooling)
 
     //data store
     implementation(libs.datastore.preferences)
-
 }
