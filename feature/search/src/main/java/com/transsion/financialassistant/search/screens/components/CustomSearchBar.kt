@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
 @Composable
@@ -42,10 +44,12 @@ fun CustomSearchBar(
         onValueChange = onQueryChanged,
         placeholder = { Text("Search by name, code, type") },
         leadingIcon = {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search Icon"
-            )
+            if (query.isEmpty()) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon"
+                )
+            }
         },
         trailingIcon = {
             if (query.isNotEmpty()) {
@@ -61,7 +65,10 @@ fun CustomSearchBar(
             }
         },
         singleLine = true,
-        shape = RoundedCornerShape(50)
+        shape = RoundedCornerShape(50),
+        colors = OutlinedTextFieldDefaults.colors().copy(
+            focusedIndicatorColor = FAColors.green
+        )
     )
 }
 
