@@ -66,6 +66,7 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
+import com.transsion.financialassistant.search.navigation.SearchRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,15 +137,15 @@ fun HomeScreen(
                     )
 
                     //search
-                    /*IconButtonFa(
+                    IconButtonFa(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
-                            //TODO navigate to search screen
+                            navController.navigate(SearchRoutes.Search)
                         }
-                    )*/
+                    )
+                    
                     //more
-
                     /*IconButtonFa(
                         icon = Icons.Default.MoreVert,
                         colors = colors(),
