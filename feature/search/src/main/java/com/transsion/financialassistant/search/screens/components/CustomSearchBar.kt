@@ -3,6 +3,8 @@ package com.transsion.financialassistant.search.screens.components
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -19,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,6 +34,7 @@ fun CustomSearchBar(
     query: String,
     onQueryChanged: (String) -> Unit,
     onFocusChanged: (Boolean) -> Unit,
+    clearFocus: () -> Unit
 ) {
 
     var isFocused by remember { mutableStateOf(false) }
@@ -68,6 +72,7 @@ fun CustomSearchBar(
             if (query.isNotEmpty()) {
                 IconButton(
                     onClick = {
+                        onQueryChanged("")
                     }
                 ) {
                     Icon(
@@ -82,6 +87,11 @@ fun CustomSearchBar(
         colors = OutlinedTextFieldDefaults.colors().copy(
             focusedIndicatorColor = FAColors.green
         ),
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+        keyboardActions = KeyboardActions(onSearch = {
+            //TODO: Perform search
+            clearFocus()
+        })
     )
 }
 
@@ -95,6 +105,7 @@ fun CustomSearchBarPreview() {
             query = "",
             onQueryChanged = {},
             onFocusChanged = {},
+            clearFocus = {}
         )
     }
 }
