@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.search.screens.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +24,13 @@ import com.transsion.financialassistant.search.model.RecentSearchQuery
 fun RecentSearchUi(
     modifier: Modifier = Modifier,
     item: RecentSearchQuery = RecentSearchQuery(id = 1L, query = "Pamela Makhoka"),
-    onDelete: () -> Unit = {}
+    onDelete: () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
 
     Row(
         modifier = modifier
+            .clickable { onClick() }
             .fillMaxWidth()
             .padding(start = paddingMedium, end = paddingMedium),
         verticalAlignment = Alignment.CenterVertically,
@@ -36,7 +39,7 @@ fun RecentSearchUi(
         NormalText(text = item.query, textAlign = TextAlign.Left)
 
         IconButton(
-            onClick = onDelete
+            onClick = { onDelete() }
         ) {
             Icon(
                 imageVector = Icons.Default.Clear,

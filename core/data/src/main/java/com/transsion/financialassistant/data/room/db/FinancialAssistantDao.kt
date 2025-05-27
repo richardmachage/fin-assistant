@@ -6,6 +6,7 @@ import androidx.room.Query
 import com.transsion.financialassistant.data.models.DailyTransactionTotal
 import com.transsion.financialassistant.data.models.DailyTransactionTypeTotal
 import com.transsion.financialassistant.data.models.DailyTransactionsTime
+import com.transsion.financialassistant.data.models.Frequent
 import com.transsion.financialassistant.data.room.views.personal.UnifiedIncomingTransaction
 import com.transsion.financialassistant.data.room.views.personal.UnifiedOutGoingTransaction
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
@@ -243,6 +244,48 @@ ORDER BY totalAmount DESC;
     """
     )
     fun getAllTransactions(): PagingSource<Int, UnifiedTransactionPersonal>
+
+
+    /**
+    This query searches through all transaction from db ordered by date, it combines both incoming and outgoing transactions
+     */
+    @Query(
+        """
+        SELECT * FROM UnifiedTransactionPersonal
+        WHERE 
+        LOWER(transactionCode) LIKE '%' || :query || '%' OR
+        LOWER(name) LIKE '%' || :query || '%' OR
+        LOWER(transactionType) LIKE '%' || :query || '%' OR
+        CAST(amount AS TEXT) LIKE '%' || :query || '%'   
+        ORDER BY date DESC, time DESC
+    """
+    )
+    fun searchAllTransactions(query: String): PagingSource<Int, UnifiedTransactionPersonal>
+
+
+    @Query(
+        """
+        SELECT name, COUNT(*) as frequency FROM UnifiedTransactionPersonal
+        WHERE transactionCategory = 'OUT' AND name IS NOT NULL
+        GROUP BY name
+        ORDER BY frequency DESC
+        LIMIT 6
+    """
+    )
+    suspend fun getFrequentSenders(): List<Frequent>
+
+    @Query(
+        """
+        SELECT name, COUNT(*) as frequency FROM UnifiedTransactionPersonal
+        WHERE transactionCategory = 'IN' AND name IS NOT NULL
+        GROUP BY name
+        ORDER BY frequency DESC
+        LIMIT 6
+
+        
+    """
+    )
+    suspend fun getFrequentRecipients(): List<Frequent>
 
 
     /** This query returns recent 10 transactions from db ordered by date, it combines both incoming and outgoing transactions

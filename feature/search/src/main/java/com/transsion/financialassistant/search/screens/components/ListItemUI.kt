@@ -22,23 +22,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.Text
-import com.transsion.financialassistant.data.models.TransactionCategory
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.presentation.theme.colorFor
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import com.transsion.financialassistant.search.model.ListItem
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun ListItemUI(
     modifier: Modifier = Modifier,
-    transactionUi: ListItem = ListItem(
+    /*transactionUi: FrequentListItem = FrequentListItem(
         transactionCode = "GFARYHNGF",
         title = "Naivas SuperMarket special",
         transactionType = TransactionType.SEND_POCHI,
         transactionCategory = TransactionCategory.OUT,
-    ),
+    ),*/
+    name: String = "Jsks",
     onClick: () -> Unit = {}
 ) {
 
@@ -62,11 +60,11 @@ fun ListItemUI(
                     //.padding(paddingSmall)
                     .size(50.dp)
                     .clip(CircleShape)
-                    .background(color = colorFor(title = transactionUi.title)),
+                    .background(color = colorFor(title = name)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = transactionUi.title.first().toString().uppercase(),
+                    text = name.first().toString().uppercase(),
                     fontSize = 22.sp,
                     color = Color.White.copy(0.9f)
                 )
@@ -77,7 +75,7 @@ fun ListItemUI(
             //Name
             Text(
                 modifier = Modifier.width(90.dp),
-                text = transactionUi.title.uppercase(),
+                text = name.uppercase(),
                 overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onBackground,//.copy(alpha = 0.7f),
                 maxLines = 1,
