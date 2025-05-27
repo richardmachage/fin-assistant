@@ -1,22 +1,57 @@
 package com.transsion.financialassistant.search.screens.search
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
-import com.transsion.financialassistant.search.model.ListItem
-import com.transsion.financialassistant.search.model.RecentSearchQuery
+import com.transsion.financialassistant.search.domain.SearchRepo
 import com.transsion.financialassistant.search.model.SearchView
 import com.transsion.financialassistant.search.model.TransactionUi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-
+    private val searchRepo: SearchRepo
 ) : ViewModel() {
+    private var _state = MutableStateFlow(SearchScreenState())
+    val state = _state.asStateFlow()
+
+
+    init {
+        getFrequentSenders()
+        getFrequentRecipients()
+    }
+
+
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
+    val searchResults = _state.map { it.searchQuery }
+        .distinctUntilChanged()
+        .debounce(100)
+        .flatMapLatest {
+            if (it.isNotBlank())
+                searchRepo.onSearch(it)
+            else flow { }
+        }
+        .onStart {
+            //TODO show some loading of needed
+        }
+        .cachedIn(viewModelScope)
 
 
     val moneyIn = listOf(
@@ -75,94 +110,34 @@ class SearchViewModel @Inject constructor(
         ),
     )
 
+    private fun getFrequentRecipients() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    frequentRecipients = searchRepo.getFrequentRecipients()
+                )
+            }
+        }
+    }
 
-    val frequentRecipients = listOf(
 
-        ListItem(
-            transactionCode = "GFARYHNGF",
-            title = "Naivas SuperMarket special",
-            transactionType = TransactionType.BUY_GOODS,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Fred Ouko",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Equity Bank",
-            transactionType = TransactionType.PAY_BILL,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Kevin Kiarie",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "GFARYHNGF",
-            title = "Naivas SuperMarket special",
-            transactionType = TransactionType.BUY_GOODS,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Fred Ouko",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
+    private fun getFrequentSenders() {
+        viewModelScope.launch {
+            _state.update {
+                it.copy(
+                    frequentSenders = searchRepo.getFrequentSenders()
+                )
+            }
+        }
+    }
 
+
+    val recentSearchQueries = searchRepo.getRecentSearches()
+        .stateIn(
+            scope = viewModelScope,
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(),
+            initialValue = emptyList()
         )
-
-    val frequentSenders = listOf(
-        ListItem(
-            transactionCode = "GFARYHNGF",
-            title = "Naivas SuperMarket special",
-            transactionType = TransactionType.BUY_GOODS,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Fred Ouko",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Equity Bank",
-            transactionType = TransactionType.PAY_BILL,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Kevin Kiarie",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "GFARYHNGF",
-            title = "Naivas SuperMarket special",
-            transactionType = TransactionType.BUY_GOODS,
-            transactionCategory = TransactionCategory.OUT
-        ),
-        ListItem(
-            transactionCode = "EFARYHNGF",
-            title = "Fred Ouko",
-            transactionType = TransactionType.SEND_MONEY,
-            transactionCategory = TransactionCategory.OUT
-        ),
-    )
-
-    val recentSearchQueries = listOf(
-        RecentSearchQuery(id = 2L, query = "650"),
-        RecentSearchQuery(id = 1L, query = "Pamela Makhoka"),
-        RecentSearchQuery(id = 3L, query = "Equity Bank"),
-        RecentSearchQuery(id = 4L, query = "Jeff Mwango"),
-        RecentSearchQuery(id = 5L, query = "56,780"),
-    )
 
     fun onQueryChanged(query: String) {
         _state.update { it.copy(searchQuery = query) }
@@ -174,8 +149,17 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private var _state = MutableStateFlow(SearchScreenState())
-    val state = _state.asStateFlow()
+    fun saveRecent() {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchRepo.saveRecentSearch(state.value.searchQuery.trim())
+        }
+    }
+
+    fun onDeleteRecent(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            searchRepo.deleteRecentSearch(id)
+        }
+    }
 
 
 }
