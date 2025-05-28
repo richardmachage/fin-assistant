@@ -30,6 +30,8 @@ import com.transsion.financialassistant.data.room.entities.reversal_credit.Rever
 import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
 import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
 import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitEntity
+import com.transsion.financialassistant.data.room.entities.search_history.SearchHistoryDao
+import com.transsion.financialassistant.data.room.entities.search_history.SearchHistoryEntity
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiDao
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_global.SendGlobalDao
@@ -74,7 +76,8 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         FulizaPayEntity::class,
         UnknownEntity::class,
         ReversalDebitEntity::class,
-        ReversalCreditEntity::class
+        ReversalCreditEntity::class,
+        SearchHistoryEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
@@ -85,7 +88,7 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnifiedOutGoingTransactionsBusiness::class,
     ],
 
-    version = 4,
+    version = 5,
     exportSchema = true
 
 )
@@ -114,6 +117,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun unknownDao(): UnknownEntityDao
     abstract fun reversalDebitDao(): ReversalDebitDao
     abstract fun reversalCreditDao(): ReversalCreditDao
+    abstract fun searchHistoryDao(): SearchHistoryDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
@@ -127,7 +131,7 @@ abstract class FinancialAssistantDb : RoomDatabase() {
                         FinancialAssistantDb::class.java,
                         "financial_assistant_db"
                     )
-                        .addMigrations(MIGRATION_3_4)
+                        .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
                         .build()
                     INSTANCE = instance
                 }
