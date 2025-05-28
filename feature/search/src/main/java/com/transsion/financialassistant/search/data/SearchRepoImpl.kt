@@ -6,15 +6,18 @@ import androidx.paging.PagingData
 import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.Frequent
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
+import com.transsion.financialassistant.data.room.entities.search_history.SearchHistoryDao
+import com.transsion.financialassistant.data.room.entities.search_history.SearchHistoryEntity
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.search.domain.SearchRepo
 import com.transsion.financialassistant.search.model.RecentSearchQuery
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SearchRepoImpl @Inject constructor(
-    private val financialAssistantDao: FinancialAssistantDao
+    private val financialAssistantDao: FinancialAssistantDao,
+    private val searchHistoryDao: SearchHistoryDao
 ) : SearchRepo {
     override fun onSearch(query: String): Flow<PagingData<UnifiedTransactionPersonal>> {
         return Pager(
@@ -48,21 +51,50 @@ class SearchRepoImpl @Inject constructor(
     }
 
     override suspend fun saveRecentSearch(query: String) {
-        list.add(RecentSearchQuery((list.size + 1).toLong(), query))
+
+        //check count
+        val count = searchHistoryDao.getSearchHistoryCount()
+
+        if (count < 6) {
+            //check if it already exists to avoid duplicates
+            val exists = searchHistoryDao.getSearchHistoryByQuery(query.trim())
+            if (exists != null) return
+
+            //insert
+            searchHistoryDao.insertSearchHistory(
+                SearchHistoryEntity(searchQuery = query)
+            )
+        } else {
+            //check if it already exists to avoid duplicates
+            val exists = searchHistoryDao.getSearchHistoryByQuery(query.trim())
+            if (exists != null) return
+
+            //then delete the earliest one first
+            val earliest = searchHistoryDao.getEarliest()
+            earliest?.let {
+                searchHistoryDao.deleteSearchHistory(it.id)
+            }
+
+            //then insert
+            searchHistoryDao.insertSearchHistory(
+                SearchHistoryEntity(searchQuery = query)
+            )
+        }
     }
 
-    override fun getRecentSearches(): Flow<List<RecentSearchQuery>> = flowOf(list)
-
-    override fun deleteRecentSearch(id: Long) {
-        list.removeIf { it.id == id }
-        getRecentSearches()
-
+    override fun getRecentSearches(): Flow<List<RecentSearchQuery>> {
+        return searchHistoryDao.getAllHistory().map(::mapToRecentSearchQueries)
     }
 
+    private fun mapToRecentSearchQueries(
+        entities: List<SearchHistoryEntity>
+    ): List<RecentSearchQuery> {
+        return entities.map { RecentSearchQuery(it.id, it.searchQuery) }
+    }
 
-    private val list = mutableListOf(
-        RecentSearchQuery(0L, "food"),
-        RecentSearchQuery(1L, "Alex")
-    )
+    override suspend fun deleteRecentSearch(id: Long) {
+        searchHistoryDao.deleteSearchHistory(id)
+    }
+
 
 }
