@@ -152,4 +152,9 @@ object DatabaseModule {
     fun providesReversalCreditDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.reversalCreditDao()
 
+    @Provides
+    @Singleton
+    fun providesSearchHistoryDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.searchHistoryDao()
+
 }
