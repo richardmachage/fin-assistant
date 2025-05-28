@@ -15,6 +15,6 @@ interface SearchRepo {
     suspend fun saveRecentSearch(query: String)
     fun getRecentSearches(): Flow<List<RecentSearchQuery>>
 
-    fun deleteRecentSearch(id: Long)
+    suspend fun deleteRecentSearch(id: Long)
 
 }
