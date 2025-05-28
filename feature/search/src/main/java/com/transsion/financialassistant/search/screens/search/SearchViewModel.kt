@@ -3,11 +3,8 @@ package com.transsion.financialassistant.search.screens.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.transsion.financialassistant.data.models.TransactionCategory
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.search.domain.SearchRepo
 import com.transsion.financialassistant.search.model.SearchView
-import com.transsion.financialassistant.search.model.TransactionUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,61 +51,7 @@ class SearchViewModel @Inject constructor(
         .cachedIn(viewModelScope)
 
 
-    val moneyIn = listOf(
-        TransactionUi(
-            code = "GFARYHNGF",
-            title = "Baba Vos",
-            type = TransactionType.RECEIVE_MONEY,
-            inOrOut = TransactionCategory.IN,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
-        TransactionUi(
-            code = "FRYHNGF",
-            title = "Fred Ouko",
-            type = TransactionType.RECEIVE_MONEY,
-            inOrOut = TransactionCategory.IN,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
 
-        TransactionUi(
-            code = "EFGHTSFG",
-            title = "Naivas SuperMarket special",
-            type = TransactionType.RECEIVE_MONEY,
-            inOrOut = TransactionCategory.IN,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
-
-        )
-
-    val moneyOut = listOf(
-        TransactionUi(
-            code = "GFARYHNGF",
-            title = "ISUZU CAR",
-            type = TransactionType.PAY_BILL,
-            inOrOut = TransactionCategory.OUT,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
-        TransactionUi(
-            code = "GFARYHNGF",
-            title = "Naivas SuperMarket special",
-            type = TransactionType.BUY_GOODS,
-            inOrOut = TransactionCategory.OUT,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
-        TransactionUi(
-            code = "GFARYHNGF",
-            title = "Kwa Mathe",
-            type = TransactionType.SEND_POCHI,
-            inOrOut = TransactionCategory.OUT,
-            amount = "56,780",
-            dateAndTime = "Today, 9:47AM"
-        ),
-    )
 
     private fun getFrequentRecipients() {
         viewModelScope.launch {
@@ -132,7 +75,7 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    val recentSearchQueries = searchRepo.getRecentSearches()
+    val recentSearches = searchRepo.getRecentSearches()
         .stateIn(
             scope = viewModelScope,
             started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(),
@@ -151,6 +94,7 @@ class SearchViewModel @Inject constructor(
 
     fun saveRecent() {
         viewModelScope.launch(Dispatchers.IO) {
+            state.value.searchQuery.ifBlank { return@launch }
             searchRepo.saveRecentSearch(state.value.searchQuery.trim())
         }
     }
