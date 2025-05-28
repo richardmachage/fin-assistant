@@ -62,7 +62,7 @@ fun SearchScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     var showRecentSearches by remember { mutableStateOf(false) }
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
-    val recentSearches by viewModel.recentSearchQueries.collectAsState(initial = emptyList())
+    val recentSearches by viewModel.recentSearches.collectAsState(initial = emptyList())
 
     Scaffold { innerPadding ->
         val focusManager = LocalFocusManager.current
@@ -98,6 +98,7 @@ fun SearchScreen(
                         when (state.searchView) {
                             SearchView.INITIAL -> navController.navigateUp()
                             SearchView.ON_SEARCH -> {
+                                viewModel.saveRecent()
                                 viewModel.onQueryChanged("")
                                 viewModel.onSearchViewChanged(SearchView.INITIAL)
                             }
@@ -145,7 +146,7 @@ fun SearchScreen(
 
                         Column(modifier = Modifier.fillMaxSize()) {
                             //Recent Searches
-                            androidx.compose.animation.AnimatedVisibility(visible = showRecentSearches) {
+                            androidx.compose.animation.AnimatedVisibility(visible = showRecentSearches && recentSearches.isNotEmpty()) {
                                 Column(
                                     modifier = Modifier
                                         .fillMaxWidth()
