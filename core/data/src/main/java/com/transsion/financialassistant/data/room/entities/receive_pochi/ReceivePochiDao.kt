@@ -45,7 +45,7 @@ interface ReceivePochiDao {
     fun getRecentTransactions(): Flow<List<ReceivePochiEntity>>
 
 
-    /**Get Mpesa balance*/
+    /**Get Mpesa business balance*/
     @Query(
         """
         SELECT businessBalance FROM ReceivePochiEntity 

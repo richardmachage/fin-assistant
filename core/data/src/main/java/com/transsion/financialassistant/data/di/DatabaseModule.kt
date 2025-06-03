@@ -141,4 +141,20 @@ object DatabaseModule {
     @Singleton
     fun providesUnknownDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.unknownDao()
+
+    @Provides
+    @Singleton
+    fun providesReversalDebitDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.reversalDebitDao()
+
+    @Provides
+    @Singleton
+    fun providesReversalCreditDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.reversalCreditDao()
+
+    @Provides
+    @Singleton
+    fun providesSearchHistoryDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.searchHistoryDao()
+
 }

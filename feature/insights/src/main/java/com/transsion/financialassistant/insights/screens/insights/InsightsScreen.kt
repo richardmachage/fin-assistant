@@ -299,8 +299,15 @@ fun InsightsScreen(
                                             categoryIcon = com.transsion.financialassistant.presentation.R.drawable.payment_01
                                         ),
                                         onClick = {
+                                            navController.navigate(
+                                                InsightsRoutes.CategoryInsights(
+                                                    category = "transactionCost",
+                                                    timeLine = state.insightTimeline,
+                                                    transactionCategory = state.transactionCategory
+                                                )
+                                            )
                                         },
-                                        showTopIcon = false
+                                        showTopIcon = true
                                     )
 
                                 }

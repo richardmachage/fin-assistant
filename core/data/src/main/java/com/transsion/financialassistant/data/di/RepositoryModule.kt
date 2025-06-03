@@ -28,6 +28,10 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mshw
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepo
+import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.reversal_debit.ReversalDebitRepo
+import com.transsion.financialassistant.data.repository.transaction.reversal_debit.ReversalDebitRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
@@ -148,5 +152,15 @@ abstract class RepositoryModule {
     internal abstract fun bindsUnknownRepo(
         unknownRepo: UnknownRepoImpl
     ): UnknownRepo
+
+    @Binds
+    internal abstract fun bindsReversalDebitRepo(
+        reversalDebitRepo: ReversalDebitRepoImpl
+    ): ReversalDebitRepo
+
+    @Binds
+    internal abstract fun bindsReversalCreditRepo(
+        reversalCreditRepo: ReversalCreditRepoImpl
+    ): ReversalCreditRepo
 
 }

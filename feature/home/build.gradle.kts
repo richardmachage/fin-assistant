@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.financialassistant.feature.module)
-
 }
 
 android {
@@ -11,6 +10,8 @@ dependencies {
     //project dependencies
     implementation(projects.core.presentation)
     implementation(projects.core.data)
+    implementation(projects.feature.search)
+
 
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.rules)

@@ -14,6 +14,8 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillE
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitEntity
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
@@ -349,6 +351,47 @@ open class TransactionRepoImpl @Inject constructor(
 
     }
 
+    override fun parseReversalCreditMessage(message: String, phone: String): ReversalCreditEntity? {
+        val match = TransactionType.REVERSAL_CREDIT.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        //FIXME should be removed in production
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        return ReversalCreditEntity(
+            transactionCode = groups[1],
+            transactionReversedCode = groups[2],
+            date = groups[3].toDbDate(),
+            time = groups[4].toDbTime(),
+            amount = groups[5].replace(",", "").toDouble(),
+            mpesaBalance = groups[6].replace(",", "").toDouble(),
+            phone = phone,
+        )
+    }
+
+    override fun parseReversalDebitMessage(message: String, phone: String): ReversalDebitEntity? {
+        val match = TransactionType.REVERSAL_DEBIT.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        //FIXME should be removed in production
+        groups.forEachIndexed { index, it ->
+            println("${index}, $it")
+        }
+
+        return ReversalDebitEntity(
+            transactionCode = groups[1],
+            transactionReversedCode = groups[2],
+            date = groups[3].toDbDate(),
+            time = groups[4].toDbTime(),
+            amount = groups[5].replace(",", "").toDouble(),
+            mpesaBalance = groups[6].replace(",", "").toDouble(),
+            phone = phone,
+        )
+    }
+
+
     override fun parseFulizaPayMessage(
         message: String,
         phone: String,
@@ -365,8 +408,6 @@ open class TransactionRepoImpl @Inject constructor(
         val timeMills = if (isTest) System.currentTimeMillis() else {
             getDateMessageReceived(context, transactionCode = transactionCode).getOrNull()
         }
-
-
 
         return timeMills?.let {
             FulizaPayEntity(
