@@ -66,6 +66,7 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
+import com.transsion.financialassistant.search.navigation.SearchRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +76,9 @@ fun HomeScreen(
     goToFeedBack: () -> Unit
 ) {
     val context = LocalContext.current
+
     val state by viewModel.state.collectAsStateWithLifecycle()
+
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
         initialValue = emptyList()
     )
@@ -84,7 +87,6 @@ fun HomeScreen(
     val hideBalance = viewModel.hideBalance.collectAsState(false)
     var showMessageBottomSheet by remember { mutableStateOf(false) }
     var selectedMessage by remember { mutableStateOf("") }
-    // var selectedMessageTransactionType by remember { mutableStateOf("") }
     var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
 
     Scaffold(
@@ -135,15 +137,15 @@ fun HomeScreen(
                     )
 
                     //search
-                    /*IconButtonFa(
+                    IconButtonFa(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
                         colors = colors(),
                         onClick = {
-                            //TODO navigate to search screen
+                            navController.navigate(SearchRoutes.Search)
                         }
-                    )*/
+                    )
+                    
                     //more
-
                     /*IconButtonFa(
                         icon = Icons.Default.MoreVert,
                         colors = colors(),
@@ -154,22 +156,8 @@ fun HomeScreen(
                 }
             )
         },
-        floatingActionButton = {
-            /*FloatingActionButton(
-                modifier = Modifier.offset(y = (35).dp),
-                onClick = {
-                    //TODO
-                },
-                containerColor = FAColors.green,
-                contentColor = Color.White
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "add"
-                )
-            }*/
-        }
-    ) { innerPadding ->
+
+        ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())

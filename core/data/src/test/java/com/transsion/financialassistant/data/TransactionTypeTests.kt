@@ -30,8 +30,8 @@ class TransactionTypeTests {
 
         val sendMessage =
             "TEI27U8XCM Confirmed. Ksh1,300.00 sent to daniel  musyoki +254113694587 on 18/5/25 at 11:45 AM. New M-PESA balance is Ksh595.61. Transaction cost, Ksh23.00.  Amount you can transact within the day is 498,300.00. Earn interest daily on Ziidi MMF,Dial *334#"
-        val groups = TransactionType.SEND_MONEY.getRegex().find(sendMessage)?.groupValues
-        val g = TransactionType.SEND_MONEY.getRegex().find(sendMessage)?.groups
+        val groups = TransactionType.SEND_MONEY.getRegex().find(message)?.groupValues
+        val g = TransactionType.SEND_MONEY.getRegex().find(message)?.groups
 
         println("groups detected : ${groups?.size}")
         groups?.forEachIndexed { index, value ->
@@ -47,6 +47,7 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect RECEIVE_MONEY transaction`() {
+
         val ncbaMessage =
             "Congratulations! TD66N8PLHM confirmed.You have received Ksh15,950.00 from LOOP B2C. on 6/4/25 at 2:35 PM.New M-PESA balance is Ksh16,785.29. Separate personal and business funds through Pochi la Biashara on *334#."
 
@@ -57,13 +58,16 @@ class TransactionTypeTests {
             "TD18YFQ9MW Confirmed.You have received Ksh60,800.00 from KCB 1 501901 on 1/4/25 at 3:52 PM New M-PESA balance is Ksh62,483.13.  Separate personal and business funds through Pochi la Biashara on *334#."
         val message =
             "TCG1XB2SQV Confirmed.You have received Ksh100.00 from WALTER  OUMA 0713497418 on 16/3/25 at 4:55 PM  New M-PESA balance is Ksh69.13. Dial *544*18# & Enjoy 18 min talktime,"
+        val ziidi =
+            "TEF7UJ6449 Confirmed.You have received Ksh500.00 from ZIIDI on 15/5/25 6:13 PM. New M-PESA balance is Ksh501.48. Separate personal and business funds through Pochi la Biashara on *334#."
 
         val receiveFromHustlerFund =
             "TE397TUC4H Confirmed. You have received Ksh3,000.00 from Hustler Fund on 03/05/2025 at 11:15 AM. New MPESA balance is Ksh6,597.06."
 
-        val result = transactionRepo.getTransactionType(receiveFromBridge)
+        val result = transactionRepo.getTransactionType(receiveFromHustlerFund)
         println("Transaction type: ${result.description}")
-        val groups = TransactionType.RECEIVE_MONEY.getRegex().find(receiveFromBridge)?.groupValues
+        val groups =
+            TransactionType.RECEIVE_MONEY.getRegex().find(receiveFromHustlerFund)?.groupValues
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
         }
@@ -72,6 +76,7 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect PAY_BILL transaction`() {
+
         val easyCoach =
             "TD943EF52A Confirmed. Ksh2,850.00 sent to EASY COACH RAILWAYS-NRB(HQ) 6 for account 816492 on 9/4/25 at 6:14 PM New M-PESA balance is Ksh4,445.13. Transaction cost, Ksh25.00.Amount you can transact within the day is 496,620.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
         val coop =
@@ -87,18 +92,11 @@ class TransactionTypeTests {
         val sendGlobal =
             "TDG1XU4T4L Confirmed. Ksh103.50 sent to M-PESA CARD for account GLOVO PRIME BARCELONA ES on 17/4/25 at 9:50 PM New M-PESA balance is Ksh156.22. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,256.50. Save frequent paybills for quick payment on M-PESA app "
 
-        val safaricomHome =
-            "TEA36HT7MR Confirmed. Ksh1,600.00 sent to SAFARICOMHOME for account 31080111 on 10/5/25 at 2:14 PM. New M-PESA balance is Ksh327.61. Transaction cost, Ksh0.00."
         val paybillTest =
             "TEI27X4WEC Confirmed. Ksh100.00 sent to CITAM KAREN for account OFFERING on 18/5/25 at 12:07 PM New M-PESA balance is Ksh495.61. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,200.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
-
-        val airtelMoney =
-            "SLB432RET4 confirmed. Ksh100.00 sent to AIRTEL MONEY for account 254735877882 on 11/12/24 at 3:02 PM New M-PESA balance is Ksh190.48. Transaction cost, Ksh0.00."
-
-        val airtelMoney2 =
-            "TEJ0DQ1F50 confirmed. Ksh10.00 sent to AIRTEL MONEY  for account 254752537834 on 19/5/25 at 5:15 PM New M-PESA balance is Ksh133.61. Transaction cost, Ksh0.00."
-        val result = transactionRepo.getTransactionType(airtelMoney2)
-        val groups = TransactionType.PAY_BILL.getRegex().find(airtelMoney2)?.groupValues
+        //  "TCB48EE7UG Confirmed. Ksh20.00 sent to Equity Paybill Account for account 927001 on 11/3/25 at 8:17 AM New M-PESA balance is Ksh342.05. Transaction cost, Ksh0.00.Amount you can transact within the day is 499,780.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
+        val result = transactionRepo.getTransactionType(sendGlobal)
+        val groups = TransactionType.PAY_BILL.getRegex().find(sendGlobal)?.groupValues
 
         groups?.forEachIndexed { index, value ->
             println("$index : $value")
@@ -238,6 +236,7 @@ class TransactionTypeTests {
         val message =
             "TDG7XS8OVD Confirmed. Ksh10.00 sent to RICHARD  MACHAGE on 16/4/25 at 9:53 AM. New business balance is Ksh13.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,220.00."
         val result = transactionRepo.getTransactionType(message)
+
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY_FROM_POCHI)
     }
@@ -261,6 +260,26 @@ class TransactionTypeTests {
         println("TransactionType : ${result.description}")
 
         assertTrue(result == TransactionType.FULIZA_PAY)
+    }
+
+    @Test
+    fun `should detect reversal DEBIT transaction`() {
+        val message =
+            "TE62NRQ0YC  confirmed. Reversal of transaction TE67NQP0JJ has been successfully reversed  on 6/5/25  at 6:19 PM and Ksh400.00 is debited from your M-PESA account. New M-PESA account balance is Ksh813.21."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("TransactionType : ${result.description}")
+        assertTrue(result == TransactionType.REVERSAL_DEBIT)
+    }
+
+    @Test
+    fun `should detect reversal CREDIT transaction`() {
+        val message =
+            "SJP5C9HAIJ confirmed. Reversal of transaction SJH5DP029L has been successfully reversed on 25/10/24 at 2:04 PM and Ksh1.00 is credited to your M-PESA account. New M-PESA account balance is Ksh1,778.12."
+
+        val result = transactionRepo.getTransactionType(message)
+        println("TransactionType : ${result.description}")
+        assertTrue(result == TransactionType.REVERSAL_CREDIT)
     }
 }
 

@@ -12,6 +12,9 @@ import com.transsion.financialassistant.data.repository.transaction.paybill.PayB
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
+import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepo
+import com.transsion.financialassistant.data.repository.transaction.reversal_debit.ReversalDebitRepo
+import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
@@ -35,7 +38,9 @@ class Repos @Inject constructor(
     val transactionRepo: TransactionRepo,
     val moveToPochiRepo: MoveToPochiRepo,
     val moveFromPochiRepo: MoveFromPochiRepo,
-    val sendFromPochiRepo: SendPochiRepo,
+    val sendFromPochiRepo: SendFromPochiRepo,
     val fulizaRepo: FulizaPayRepo,
-    val unknownRepo: UnknownRepo
+    val unknownRepo: UnknownRepo,
+    val reversalCreditRepo: ReversalCreditRepo,
+    val reversalDebitRepo: ReversalDebitRepo
 )

@@ -5,26 +5,7 @@ import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.models.TransactionType
 
 @DatabaseView(
-    value = """
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, NULL AS name FROM BundlesPurchaseEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,transactionCost, mpesaBalance,NULL AS name FROM BuyAirtimeEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, paidTo as name FROM BuyGoodsEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,paidToName as name FROM PayBillEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,sentToName as name FROM SendMoneyEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, sentToName as name FROM SendPochiEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,NULL as name FROM SendMshwariEntity
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, "OUT" AS transactionCategory, transactionCost, mpesaBalance, "MY POCHI" as name FROM MoveToPochiEntity 
-                UNION ALL
-                SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, 0.0 AS transactionCost, mpesaBalance,"Paid Fuliza" as name FROM FulizaPayEntity
-
-    """
+    value = "SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, NULL AS name FROM BundlesPurchaseEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory,transactionCost, mpesaBalance,NULL AS name FROM BuyAirtimeEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, paidTo as name FROM BuyGoodsEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,paidToName as name FROM PayBillEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,sentToName as name FROM SendMoneyEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost,mpesaBalance, sentToName as name FROM SendPochiEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, transactionCost, mpesaBalance,NULL as name FROM SendMshwariEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, 'OUT' AS transactionCategory, transactionCost, mpesaBalance, 'MY POCHI' as name FROM MoveToPochiEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, 0.0 AS transactionCost, mpesaBalance,'Paid Fuliza' as name FROM FulizaPayEntity UNION ALL SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, 0.0 AS transactionCost, mpesaBalance, 'Reversal' AS name  FROM ReversalDebitEntity"
 )
 data class UnifiedOutGoingTransaction(
     val transactionCode: String,

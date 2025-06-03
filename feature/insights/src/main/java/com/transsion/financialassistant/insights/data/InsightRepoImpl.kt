@@ -17,11 +17,14 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillD
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
+import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditDao
+import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
+import com.transsion.financialassistant.data.utils.formatAsCurrency
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.insights.domain.InsightsRepo
@@ -57,9 +60,11 @@ class InsightRepoImpl @Inject constructor(
     private val moveFromPochiDao: MoveFromPochiDao,
     private val sendFromPochiDao: SendPochiDao,
     private val businessDao: UnifiedTransactionsBusinessDao,
-    private val fulizaPayDao: FulizaPayDao
+    private val fulizaPayDao: FulizaPayDao,
+    private val reversalCreditDao: ReversalCreditDao,
+    private val reversalDebitDao: ReversalDebitDao,
 
-) : InsightsRepo {
+    ) : InsightsRepo {
 
     private val _categoryDistributionFlow =
         MutableStateFlow<List<CategoryDistribution>>(emptyList())
@@ -223,12 +228,43 @@ class InsightRepoImpl @Inject constructor(
     }
 
 
+    override fun getDataForTransactionCost(insightTimeline: InsightTimeline): Flow<List<TransactionUi>> =
+        flow {
+            val startDate = insightTimeline.getTimeline().startDate
+            val endDate = insightTimeline.getTimeline().endDate
+
+            val cacheKey = "data_for_transaction_cost$startDate$endDate"
+            val cachedData = AppCache.get<List<TransactionUi>>(cacheKey)
+
+            if (cachedData != null) {
+                emit(cachedData)
+            } else {
+                val data =
+                    personalDao.getAllMoneyOutTransactions(startDate = startDate, endDate = endDate)
+                        .map {
+                            TransactionUi(
+                                code = it.transactionCode,
+                                title = it.name ?: it.transactionCode,
+                                type = it.transactionType,
+                                inOrOut = it.transactionCategory,
+                                amount = it.transactionCost.toString().formatAsCurrency(),
+                                dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                            )
+                        }
+                AppCache.put(key = cacheKey, value = data)
+                emit(data)
+            }
+        }.catch {
+            emit(emptyList())
+        }
+
     override fun getDataForCategory(
-        startDate: String,
-        endDate: String,
+        insightTimeline: InsightTimeline,
         transactionType: TransactionType,
         transactionCategory: TransactionCategory
     ): Flow<List<TransactionUi>> = flow<List<TransactionUi>> {
+        val startDate = insightTimeline.getTimeline().startDate
+        val endDate = insightTimeline.getTimeline().endDate
         val cacheKey = "data_for_category$startDate$endDate${transactionType.description}"
 
         val cachedData = AppCache.get<List<TransactionUi>>(cacheKey)
@@ -241,6 +277,7 @@ class InsightRepoImpl @Inject constructor(
                     fulizaPayDao.getPayFulizaTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = "FULIZA",
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -254,6 +291,7 @@ class InsightRepoImpl @Inject constructor(
                     depositMoneyDao.getDepositMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.agentDepositedTo,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -270,6 +308,7 @@ class InsightRepoImpl @Inject constructor(
                     )
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.agent,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -283,6 +322,7 @@ class InsightRepoImpl @Inject constructor(
                     sendMoneyDao.getSendMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.sentToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -296,6 +336,7 @@ class InsightRepoImpl @Inject constructor(
                     receiveMoneyDao.getReceiveMoneyTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.receiveFromName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -309,6 +350,7 @@ class InsightRepoImpl @Inject constructor(
                     receivePochiDao.getReceivePochiTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.receiveFromName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -322,6 +364,7 @@ class InsightRepoImpl @Inject constructor(
                     sendPochiDao.getSendPochiTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.sentToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -335,6 +378,7 @@ class InsightRepoImpl @Inject constructor(
                     payBillDao.getPayBillTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = it.paidToName,
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -347,6 +391,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.BUY_GOODS -> {
                     buyGoodsDao.getBuyGoodsTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.paidTo,
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -363,6 +408,7 @@ class InsightRepoImpl @Inject constructor(
                         endDate = endDate
                     ).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "M-SHWARI",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -378,6 +424,7 @@ class InsightRepoImpl @Inject constructor(
                         endDate = endDate
                     ).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "M-SHWARI",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -390,6 +437,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.AIRTIME_PURCHASE -> {
                     buyAirtimeDao.getBuyAirtimeTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = "AIRTIME",
                             type = it.transactionType,
                             inOrOut = it.transactionCategory,
@@ -403,6 +451,7 @@ class InsightRepoImpl @Inject constructor(
                     bundlesPurchaseDao.getBundlesPurchaseTransactionsByDate(startDate, endDate)
                         .map {
                             TransactionUi(
+                                code = it.transactionCode,
                                 title = "DATA & BUNDLES",
                                 type = it.transactionType,
                                 inOrOut = it.transactionCategory,
@@ -419,6 +468,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.MOVE_TO_POCHI -> {
                     moveToPochiDao.getRecordsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = when (transactionCategory) {
                                 TransactionCategory.IN -> it.transactionType.description
                                 TransactionCategory.OUT -> "Transfer from MPESA" //FIXME take from string resource
@@ -434,6 +484,7 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.MOVE_FROM_POCHI -> {
                     moveFromPochiDao.getRecordsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = when (transactionCategory) {
                                 TransactionCategory.IN -> it.transactionType.description
                                 TransactionCategory.OUT -> "Transfer to MPESA"
@@ -449,7 +500,34 @@ class InsightRepoImpl @Inject constructor(
                 TransactionType.SEND_MONEY_FROM_POCHI -> {
                     sendFromPochiDao.getSendPochiTransactionsByDate(startDate, endDate).map {
                         TransactionUi(
+                            code = it.transactionCode,
                             title = it.sentToName,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
+
+                TransactionType.REVERSAL_DEBIT -> {
+                    reversalDebitDao.getReversalDebitTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            code = it.transactionCode,
+                            title = it.transactionCode,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
+
+                TransactionType.REVERSAL_CREDIT -> {
+                    reversalCreditDao.getReversalCreditTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            code = it.transactionCode,
+                            title = it.transactionCode,
                             type = it.transactionType,
                             inOrOut = transactionCategory,
                             amount = it.amount.toString(),
@@ -465,9 +543,39 @@ class InsightRepoImpl @Inject constructor(
         emit(emptyList())
     }
 
+
+    override fun getDataPointsForTransactionCost(insightTimeline: InsightTimeline): Flow<List<DataPoint>> =
+        flow {
+            val startDate = insightTimeline.getTimeline().startDate
+            val endDate = insightTimeline.getTimeline().endDate
+
+            val cacheKey = "data_points_for_transaction_cost$startDate$endDate"
+            val cachedData = AppCache.get<List<DataPoint>>(cacheKey)
+
+            if (cachedData != null) {
+                emit(cachedData)
+            } else {
+                val dataPoints = personalDao.getAllMoneyOutTransactions(startDate, endDate).map {
+                    when (insightTimeline) {
+                        InsightTimeline.TODAY -> DataPoint(
+                            x = it.time,
+                            y = it.transactionCost.toFloat()
+                        )
+
+                        else -> DataPoint(
+                            x = it.date,
+                            y = it.transactionCost.toFloat()
+                        )
+                    }
+                }
+
+                AppCache.put(key = cacheKey, value = dataPoints)
+                emit(dataPoints)
+            }
+        }.catch {
+            emit(emptyList())
+        }
     override fun getDataPointsForCategory(
-        /*startDate: String,
-        endDate: String,*/
         transactionType: TransactionType,
         insightTimeline: InsightTimeline
     ): Flow<List<DataPoint>> = flow {
@@ -763,6 +871,9 @@ class InsightRepoImpl @Inject constructor(
                         }
                     }
                 }
+
+                TransactionType.REVERSAL_DEBIT -> TODO()
+                TransactionType.REVERSAL_CREDIT -> TODO()
             }
 
             AppCache.put(key = cacheKey, value = dataPoints)
@@ -884,6 +995,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.UNKNOWN -> null
                                 TransactionType.MOVE_FROM_POCHI -> R.drawable.account
                                 TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
+                                TransactionType.REVERSAL_DEBIT -> R.drawable.account
+                                TransactionType.REVERSAL_CREDIT -> R.drawable.account
                             }
                         )
                     }
@@ -985,6 +1098,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.MOVE_FROM_POCHI -> R.drawable.account
                                 TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
                                 TransactionType.UNKNOWN -> null
+                                TransactionType.REVERSAL_DEBIT -> R.drawable.account
+                                TransactionType.REVERSAL_CREDIT -> R.drawable.account
                             }
                         )
                     }
