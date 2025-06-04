@@ -7,6 +7,9 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
 import java.time.LocalDate
 import javax.inject.Inject
@@ -76,11 +79,26 @@ class RecentTransactionRepoImpl @Inject constructor(
         }
     }
 
-    override fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double> {
-        return when (insightCategory) {
-            InsightCategory.PERSONAL -> dao.getMpesaBalance()
-            InsightCategory.BUSINESS -> businessDao.getBusinessBalance()
+    override fun getMpesaBalance(insightCategory: InsightCategory) = flow<Double> {
+        when (insightCategory) {
+            InsightCategory.PERSONAL -> {
+                emit(dao.getMpesaBalance().first())
+            }
+
+            InsightCategory.BUSINESS -> {
+                emit(getPochiBalance().first() + getTillBalance().first())
+            }
         }
+    }
+
+    override fun getPochiBalance(): Flow<Double> {
+        return businessDao.getBusinessBalance()
+    }
+
+    override fun getTillBalance(): Flow<Double> {
+
+        //FIXME change to retrieve till balance
+        return flowOf(0.0)//businessDao.getBusinessBalance()
     }
 
     override fun getNumOfAllTransactions(insightCategory: InsightCategory): Flow<Int> {
