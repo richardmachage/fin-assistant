@@ -21,4 +21,8 @@
     <string name="good_night">Good Night</string>
     <string name="no_data_available">No transactions available</string>
     <string name="all">All</string>
+    <string name="account_balances">Account Balances</string>
+    <string name="pochi_la_biashara">Pochi la Biashara</string>
+    <string name="till_number">Till Number</string>
+    <string name="business_balance">Business Balance</string>
 </resources>

@@ -16,4 +16,8 @@ interface RecentTransactionRepo {
     fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double>
 
     fun getNumOfAllTransactions(insightCategory: InsightCategory): Flow<Int>
+
+    fun getPochiBalance(): Flow<Double>
+
+    fun getTillBalance(): Flow<Double>
 }

@@ -54,10 +54,27 @@ class HomeViewModel @Inject constructor(
                 started = SharingStarted.Eagerly,
                 initialValue = 0
             )
+
     val mpesaBalance = state.map { it.insightCategory }
         .flatMapLatest {
+            //flowOf(90.0)
             recentTransactionsRepo.getMpesaBalance(it)
         }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = 0.0
+        )
+
+
+    val pochiBalance = recentTransactionsRepo.getPochiBalance()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = 0.0
+        )
+
+    val tillBalance = recentTransactionsRepo.getTillBalance()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
