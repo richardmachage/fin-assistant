@@ -109,7 +109,6 @@ fun AllTransactionsScreen(
                             .fillMaxWidth()
                     ) {
                         BigTittleText(text = stringResource(R.string.all_transactions))
-
                     }
                 },
 
