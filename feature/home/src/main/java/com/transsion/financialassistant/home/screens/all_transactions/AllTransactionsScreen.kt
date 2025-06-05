@@ -45,7 +45,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.wear.compose.material.Icon
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.getMessageForTransaction
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.toAppTime
@@ -60,7 +59,6 @@ import com.transsion.financialassistant.home.screens.components.InsightCateToggl
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -352,16 +350,16 @@ fun AllTransactionsScreen(
                             textAlign = TextAlign.Left
                         )
                         VerticalSpacer(10)
-                        if (transaction.transactionType == TransactionType.SEND_MONEY) {
-                            OutlineButtonFa(
-                                text = "Reverse Transaction",
-                                onClick = {
-                                    //TODO
-                                    Toast.makeText(context, "Coming soon...", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            )
-                        }
+                        /* if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                             OutlineButtonFa(
+                                 text = "Reverse Transaction",
+                                 onClick = {
+                                     //TODO
+                                     Toast.makeText(context, "Coming soon...", Toast.LENGTH_SHORT)
+                                         .show()
+                                 }
+                             )
+                         }*/
                     }
                 }
             }
