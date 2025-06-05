@@ -49,7 +49,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.data.models.InsightCategory
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.getMessageForTransaction
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.formatAsCurrency
@@ -65,7 +64,6 @@ import com.transsion.financialassistant.home.screens.components.TransactionUiLis
 import com.transsion.financialassistant.presentation.components.CategoryCard
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -378,7 +376,7 @@ fun HomeScreen(
                             textAlign = TextAlign.Left
                         )*/
                         VerticalSpacer(10)
-                        if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                        /*if (transaction.transactionType == TransactionType.SEND_MONEY) {
                             OutlineButtonFa(
                                 text = "Reverse Transaction",
                                 onClick = {
@@ -387,7 +385,7 @@ fun HomeScreen(
                                         .show()
                                 }
                             )
-                        }
+                        }*/
                     }
                 }
             }
