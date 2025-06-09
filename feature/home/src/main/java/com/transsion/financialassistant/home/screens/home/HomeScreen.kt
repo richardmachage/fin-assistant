@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -40,6 +43,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,6 +61,7 @@ import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.home.R
 import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.navigation.HomeRoutes
+import com.transsion.financialassistant.home.screens.components.BottomSheetFaMessage
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
@@ -64,7 +69,9 @@ import com.transsion.financialassistant.home.screens.components.TransactionUiLis
 import com.transsion.financialassistant.presentation.components.CategoryCard
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
+import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
+import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
@@ -96,6 +103,8 @@ fun HomeScreen(
     var selectedMessage by remember { mutableStateOf("") }
     var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
+    var showBottomSheet by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
@@ -329,8 +338,87 @@ fun HomeScreen(
             }
         }
 
-
         BottomSheetFa(
+            modifier = Modifier,
+            isSheetOpen = showMessageBottomSheet,
+            onDismiss = {
+                showMessageBottomSheet = false
+                selectedMessage = ""
+            }
+        ) {
+            if (selectedMessage.isNotBlank()) {
+                selectedTransaction?.let { transaction ->
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingLarge),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+
+                        ) {
+                            // Header Row - Transaction type
+                            /*Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                TitleText(
+                                    text = transaction.transactionType.description,
+                                    fontSize = 16.sp,
+                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+
+                            VerticalSpacer(20)*/
+
+                            TitleText(
+                                text = transaction.transactionType.description,
+                                fontSize = 16.sp,
+                            )
+                            VerticalSpacer(20)
+
+                            // Centered Amount
+                            BigTittleText(
+                                text = "KES ${transaction.amount}",
+                                modifier = Modifier.align(Alignment.CenterHorizontally),
+                            )
+
+                            VerticalSpacer(20)
+
+                            // Receiver Name
+                            transaction.name?.let { receiverName ->
+                                NormalText(
+                                    text = "To: $receiverName",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Medium,
+                                )
+                                VerticalSpacer(10)
+                            }
+
+                            // Message without M-PESA balance
+                            val sanitizedMessage = selectedMessage
+                                .replace(
+                                    Regex("M-Shwari balance is Ksh[\\d,.]+", RegexOption.IGNORE_CASE),
+                                    "M-Shwari balance is ********"
+                                )
+                                .replace(
+                                    Regex("(New )?M-PESA balance (is|:) Ksh[\\d,.]+", RegexOption.IGNORE_CASE),
+                                    "M-PESA balance: ********"
+                                )
+
+                            Text(
+                                text = sanitizedMessage,
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                                lineHeight = 18.sp,
+                                textAlign = TextAlign.Left
+                            )
+                        }
+                }
+            }
+        }
+
+
+        /*BottomSheetFa(
             modifier = Modifier,
             isSheetOpen = showMessageBottomSheet,
             onDismiss = {
@@ -371,12 +459,12 @@ fun HomeScreen(
                             lineHeight = 18.sp
                         )
                         //Message
-                        /*NormalText(
+                        *//*NormalText(
                             text = selectedMessage,
                             textAlign = TextAlign.Left
-                        )*/
+                        )*//*
                         VerticalSpacer(10)
-                        /*if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                        *//*if (transaction.transactionType == TransactionType.SEND_MONEY) {
                             OutlineButtonFa(
                                 text = "Reverse Transaction",
                                 onClick = {
@@ -385,11 +473,11 @@ fun HomeScreen(
                                         .show()
                                 }
                             )
-                        }*/
+                        }*//*
                     }
                 }
             }
-        }
+        }*/
 
         if (false) {
             HorizontalDivider()
