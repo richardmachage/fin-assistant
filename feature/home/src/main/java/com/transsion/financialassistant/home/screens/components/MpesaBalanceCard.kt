@@ -55,21 +55,13 @@ fun MpesaBalanceCard(
     ElevatedCard(
         modifier = modifier,//.height(215.dp),
         shape = RoundedCornerShape(10),
-        ) {
+    ) {
         VerticalSpacer(10)
 
-        val today = stringResource(R.string.today)
-        //date
-        /* NormalText(
-             modifier = Modifier.padding(start = paddingLarge),
-             text = "$today, ${getAmOrPm()}",
-             textColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-             fontSize = 11.sp
-         )
-         VerticalSpacer(20)*/
+        // val today = stringResource(R.string.today)
+
 
         //balance
-
         Column(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -82,15 +74,12 @@ fun MpesaBalanceCard(
 
                     )
 
-                /*  TitleText(
-                  text = stringResource(R.string.mpesa_balance),
-                  fontSize = 13.sp
-              )*/
+                InsightCategory.BUSINESS -> Text(
+                    text = stringResource(R.string.business_balance),
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
 
-                InsightCategory.BUSINESS -> TitleText(
-                    text = stringResource(R.string.pochi_balance),
-                    fontSize = 13.sp
-                )
+                    )
             }
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -117,35 +106,35 @@ fun MpesaBalanceCard(
                 }
             }
         }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(paddingMedium),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                //money In
-                InOutCardCategory(
-                    category = TransactionCategory.IN,
-                    amount = moneyIn,
-                    // transactions = transactionsIn
-                )
-                //divider
-                VerticalDivider(
-                    Modifier
-                        .height(50.dp)
-                        .align(Alignment.CenterVertically),
-                    thickness = 0.5.dp
-                )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingMedium),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //money In
+            InOutCardCategory(
+                category = TransactionCategory.IN,
+                amount = moneyIn,
+                // transactions = transactionsIn
+            )
+            //divider
+            VerticalDivider(
+                Modifier
+                    .height(50.dp)
+                    .align(Alignment.CenterVertically),
+                thickness = 0.5.dp
+            )
 
-                //money out
-                InOutCardCategory(
-                    category = TransactionCategory.OUT,
-                    amount = moneyOut,
-                    // transactions = transactionsOut
-                )
-            }
-            VerticalSpacer(10)
+            //money out
+            InOutCardCategory(
+                category = TransactionCategory.OUT,
+                amount = moneyOut,
+                // transactions = transactionsOut
+            )
+        }
+        VerticalSpacer(10)
 
     }
 }

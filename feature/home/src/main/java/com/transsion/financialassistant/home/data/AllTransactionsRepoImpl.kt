@@ -8,7 +8,8 @@ import com.transsion.financialassistant.data.cache.AppCache
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.data.room.db.FinancialAssistantDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
-import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionBusiness
+import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionsPersonalDao
 import com.transsion.financialassistant.data.utils.dbFormatter
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class AllTransactionsRepoImpl @Inject constructor(
     val dao: FinancialAssistantDao,
     private val unifiedTransactionsDao: UnifiedTransactionsPersonalDao,
-    private val receivePochiDao: ReceivePochiDao
+    private val receivePochiDao: ReceivePochiDao,
+    private val businessDao: UnifiedTransactionsBusinessDao
 ) : AllTransactionsRepo {
 
     private val TAG = "AllTransactionRepoImpl"
@@ -117,23 +119,69 @@ class AllTransactionsRepoImpl @Inject constructor(
             ),
             pagingSourceFactory = {
                 //byPeriodAndSource(filterState)
-                byPeriodAndSourceLogs(filterState)
+                byPeriodAndSourcePersonal(filterState)
             }
         ).flow
     }
 
-    override fun getAllBusinessTransactions(): Flow<PagingData<ReceivePochiEntity>> {
+    override fun getAllBusinessTransactions(filterState: FilterState): Flow<PagingData<UnifiedTransactionBusiness>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20
             ),
             pagingSourceFactory = {
-                receivePochiDao.getAllPaged()
+                //receivePochiDao.getAllPaged()
+                byPeriodAndSourceBusiness(filterState)
             }
         ).flow
     }
 
-    private fun byPeriodFilter(period: FilterPeriod?) = when (period) {
+
+    private fun byPeriodBusinessFilter(period: FilterPeriod?) = when (period) {
+        FilterPeriod.MOST_RECENT -> {
+            businessDao.getAllTransactions()
+        }
+
+        FilterPeriod.OLDEST_FIRST -> {
+            businessDao.getAllTransactionsReverse()
+        }
+
+        FilterPeriod.TODAY -> {
+            val today = LocalDate.now().format(dbFormatter)
+            businessDao.getAllTransactionsForDate(today, today)
+        }
+
+        FilterPeriod.YESTERDAY -> {
+            val yesterday =
+                LocalDate.now().minusDays(1).format(dbFormatter)
+            businessDao.getAllTransactionsForDate(yesterday, yesterday)
+        }
+
+        FilterPeriod.THIS_WEEK -> {
+            val (startWeek, endWeek) = LocalDate.now().getWeekRange(DayOfWeek.SUNDAY)
+            businessDao.getAllTransactionsForDate(startWeek, endWeek)
+        }
+
+        FilterPeriod.LAST_WEEK -> {
+            val (startWeek, endWeek) = LocalDate.now().getLastWeekRange(DayOfWeek.SUNDAY)
+            businessDao.getAllTransactionsForDate(startWeek, endWeek)
+        }
+
+        FilterPeriod.THIS_MONTH -> {
+            val (startMonth, endMonth) = LocalDate.now().getMonthRange()
+            businessDao.getAllTransactionsForDate(startMonth, endMonth)
+        }
+
+        FilterPeriod.LAST_MONTH -> {
+            val (startMonth, endMonth) = LocalDate.now().getLastMonthRange()
+            businessDao.getAllTransactionsForDate(startMonth, endMonth)
+        }
+
+        null -> businessDao.getAllTransactions()
+
+    }
+
+    private fun byPeriodPersonalFilter(period: FilterPeriod?) = when (period) {
         FilterPeriod.MOST_RECENT -> {
             unifiedTransactionsDao.getAllTransactions()
         }
@@ -179,13 +227,13 @@ class AllTransactionsRepoImpl @Inject constructor(
     }
 
 
-    private fun byPeriodAndSourceLogs(filterState: FilterState) = when (filterState.period) {
+    private fun byPeriodAndSourcePersonal(filterState: FilterState) = when (filterState.period) {
         FilterPeriod.MOST_RECENT -> {
             Log.d(TAG, "Fetching MOST_RECENT transactions with source: ${filterState.source}")
             when (filterState.source) {
                 TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsIn()
                 TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOut()
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -194,7 +242,7 @@ class AllTransactionsRepoImpl @Inject constructor(
             when (filterState.source) {
                 TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsInReverse()
                 TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOutReverse()
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -212,7 +260,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     today
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -233,7 +281,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     yesterday
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -254,7 +302,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     endWeek
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -275,7 +323,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     endWeek
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -296,7 +344,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     endMonth
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -317,7 +365,7 @@ class AllTransactionsRepoImpl @Inject constructor(
                     endMonth
                 )
 
-                null -> byPeriodFilter(filterState.period)
+                null -> byPeriodPersonalFilter(filterState.period)
             }
         }
 
@@ -326,7 +374,141 @@ class AllTransactionsRepoImpl @Inject constructor(
             when (filterState.source) {
                 TransactionCategory.IN -> unifiedTransactionsDao.getAllTransactionsIn()
                 TransactionCategory.OUT -> unifiedTransactionsDao.getAllTransactionsOut()
-                null -> byPeriodFilter(null)
+                null -> byPeriodPersonalFilter(null)
+            }
+        }
+    }
+
+    private fun byPeriodAndSourceBusiness(filterState: FilterState) = when (filterState.period) {
+        FilterPeriod.MOST_RECENT -> {
+            Log.d(TAG, "Fetching MOST_RECENT transactions with source: ${filterState.source}")
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsIn()
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOut()
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.OLDEST_FIRST -> {
+            Log.d(TAG, "Fetching OLDEST_FIRST transactions with source: ${filterState.source}")
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInReverse()
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutReverse()
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.TODAY -> {
+            val today = LocalDate.now().format(dbFormatter)
+            Log.d(TAG, "Fetching TODAY's transactions ($today) with source: ${filterState.source}")
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    today,
+                    today
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutForDate(
+                    today,
+                    today
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.YESTERDAY -> {
+            val yesterday = LocalDate.now().minusDays(1).format(dbFormatter)
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    yesterday,
+                    yesterday
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsForDate(
+                    yesterday,
+                    yesterday
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.THIS_WEEK -> {
+            val (startWeek, endWeek) = LocalDate.now().getWeekRange(DayOfWeek.SUNDAY)
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    startWeek,
+                    endWeek
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutForDate(
+                    startWeek,
+                    endWeek
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.LAST_WEEK -> {
+            val (startWeek, endWeek) = LocalDate.now().getLastWeekRange(DayOfWeek.SUNDAY)
+
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    startWeek,
+                    endWeek
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutForDate(
+                    startWeek,
+                    endWeek
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.THIS_MONTH -> {
+            val (startMonth, endMonth) = LocalDate.now().getMonthRange()
+
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    startMonth,
+                    endMonth
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutForDate(
+                    startMonth,
+                    endMonth
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        FilterPeriod.LAST_MONTH -> {
+            val (startMonth, endMonth) = LocalDate.now().getLastMonthRange()
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsInForDate(
+                    startMonth,
+                    endMonth
+                )
+
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOutForDate(
+                    startMonth,
+                    endMonth
+                )
+
+                null -> byPeriodBusinessFilter(filterState.period)
+            }
+        }
+
+        null -> {
+            Log.d(TAG, "Fetching ALL transactions with source: ${filterState.source}")
+            when (filterState.source) {
+                TransactionCategory.IN -> businessDao.getAllTransactionsIn()
+                TransactionCategory.OUT -> businessDao.getAllTransactionsOut()
+                null -> byPeriodBusinessFilter(null)
             }
         }
     }

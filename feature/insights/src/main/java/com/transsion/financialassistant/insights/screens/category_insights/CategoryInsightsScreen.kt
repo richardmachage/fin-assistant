@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.getMessageForTransaction
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
@@ -40,7 +39,6 @@ import com.transsion.financialassistant.insights.model.TransactionUi
 import com.transsion.financialassistant.insights.screens.components.Graph
 import com.transsion.financialassistant.insights.screens.components.TransactionUiListItem
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
@@ -179,16 +177,16 @@ fun CategoryInsightsScreen(
                             textAlign = TextAlign.Left
                         )*/
                         VerticalSpacer(10)
-                        if (transaction.type == TransactionType.SEND_MONEY) {
-                            OutlineButtonFa(
-                                text = "Reverse Transaction",
-                                onClick = {
-                                    //TODO
-                                    Toast.makeText(context, "Coming soon...", Toast.LENGTH_SHORT)
-                                        .show()
-                                }
-                            )
-                        }
+                        /* if (transaction.type == TransactionType.SEND_MONEY) {
+                             OutlineButtonFa(
+                                 text = "Reverse Transaction",
+                                 onClick = {
+                                     //TODO
+                                     Toast.makeText(context, "Coming soon...", Toast.LENGTH_SHORT)
+                                         .show()
+                                 }
+                             )
+                         }*/
                     }
                 }
             }

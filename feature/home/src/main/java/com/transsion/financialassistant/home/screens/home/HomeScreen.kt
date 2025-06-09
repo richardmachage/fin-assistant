@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.home.screens.home
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,11 +10,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -32,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -43,7 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.data.repository.getMessageForTransaction
 import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.formatAsCurrency
@@ -56,12 +61,13 @@ import com.transsion.financialassistant.home.screens.components.InsightCateToggl
 import com.transsion.financialassistant.home.screens.components.MpesaBalanceCard
 import com.transsion.financialassistant.home.screens.components.MyBudgetsCard
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
+import com.transsion.financialassistant.presentation.components.CategoryCard
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
-import com.transsion.financialassistant.presentation.components.buttons.OutlineButtonFa
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
@@ -82,12 +88,14 @@ fun HomeScreen(
     val recents by viewModel.recentTransactions.collectAsStateWithLifecycle(
         initialValue = emptyList()
     )
+
     val mpesaBalance by viewModel.mpesaBalance.collectAsState()
     val numOfAllTransactions by viewModel.numOfAllTransactions.collectAsState()
     val hideBalance = viewModel.hideBalance.collectAsState(false)
     var showMessageBottomSheet by remember { mutableStateOf(false) }
     var selectedMessage by remember { mutableStateOf("") }
     var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
+    val screenHeight = LocalConfiguration.current.screenHeightDp
 
     Scaffold(
         topBar = {
@@ -161,8 +169,8 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .padding(top = innerPadding.calculateTopPadding())
-                .padding(start = paddingMedium, end = paddingMedium),
-
+                .padding(start = paddingMedium, end = paddingMedium)
+                .verticalScroll(rememberScrollState()),
             ) {
 
             MpesaBalanceCard(
@@ -196,9 +204,65 @@ fun HomeScreen(
                 )
             }
 
-            VerticalSpacer(10)
-            HorizontalDivider()
 
+            if (state.insightCategory == InsightCategory.PERSONAL) {
+                VerticalSpacer(10)
+                HorizontalDivider()
+            }
+
+            //Account Balances
+            AnimatedVisibility(visible = state.insightCategory == InsightCategory.BUSINESS) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingSmall)
+                ) {
+                    // VerticalSpacer(10)
+
+                    TitleText(
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(paddingMedium),
+                        text = stringResource(R.string.account_balances),
+                        textAlign = TextAlign.Left
+                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(paddingSmall),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        //Pochi
+                        CategoryCard(
+                            modifier = Modifier.weight(1f),
+                            title = stringResource(R.string.pochi_la_biashara),
+                            amount = viewModel.pochiBalance.collectAsState().value.toString()
+                                .formatAsCurrency(),
+                            icon = com.transsion.financialassistant.presentation.R.drawable.coins_01,
+
+                            )
+
+                        HorizontalSpacer(10)
+
+                        //Till
+                        CategoryCard(
+                            modifier = Modifier.weight(1f),
+                            title = stringResource(R.string.till_number),
+                            amount = viewModel.tillBalance.collectAsState().value.toString()
+                                .formatAsCurrency(),
+                            icon = com.transsion.financialassistant.presentation.R.drawable.cash,
+
+                            )
+                    }
+
+                    VerticalSpacer(10)
+                    HorizontalDivider()
+
+                }
+
+
+            }
             //Recent Transactions
             Row(
                 modifier = Modifier
@@ -224,7 +288,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding()
-                ///.heightIn(max = (screenHeight / 4).dp),
+                    .heightIn(max = (screenHeight / 2).dp),
             ) {
                 items(recents.size) { it ->
                     val item = recents[it]
@@ -312,7 +376,7 @@ fun HomeScreen(
                             textAlign = TextAlign.Left
                         )*/
                         VerticalSpacer(10)
-                        if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                        /*if (transaction.transactionType == TransactionType.SEND_MONEY) {
                             OutlineButtonFa(
                                 text = "Reverse Transaction",
                                 onClick = {
@@ -321,7 +385,7 @@ fun HomeScreen(
                                         .show()
                                 }
                             )
-                        }
+                        }*/
                     }
                 }
             }

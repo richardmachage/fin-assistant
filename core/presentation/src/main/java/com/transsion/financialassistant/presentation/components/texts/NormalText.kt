@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
@@ -18,7 +19,8 @@ fun NormalText(
     lineHeight: TextUnit = 17.sp,
     textColor: Color = MaterialTheme.colorScheme.onBackground,
     textAlign: TextAlign = TextAlign.Center,
-    fontWeight: FontWeight = FontWeight(400)
+    fontWeight: FontWeight = FontWeight(400),
+    textOverflow: TextOverflow = TextOverflow.Clip
 ) {
     Text(
         modifier = modifier,
@@ -27,6 +29,7 @@ fun NormalText(
         fontWeight = fontWeight,
         fontSize = fontSize,
         lineHeight = lineHeight,
-        color = textColor
+        color = textColor,
+        overflow = textOverflow
     )
 }

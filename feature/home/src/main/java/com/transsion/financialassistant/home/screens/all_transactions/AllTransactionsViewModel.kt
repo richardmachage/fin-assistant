@@ -52,20 +52,22 @@ class AllTransactionsViewModel @Inject constructor(
             .flatMapLatest { (filters, insightCategory) ->
                 when (insightCategory) {
                     InsightCategory.PERSONAL -> allTransactionsRepo.getAllTransactions(filters)
-                    InsightCategory.BUSINESS -> allTransactionsRepo.getAllBusinessTransactions()
+                    InsightCategory.BUSINESS -> allTransactionsRepo.getAllBusinessTransactions(
+                        filters
+                    )
                         .map {
-                            it.map { re ->
+                            it.map { bussinessTransaction ->
                                 UnifiedTransactionPersonal(
-                                    transactionCode = re.transactionCode,
-                                    phone = re.phone,
-                                    amount = re.amount,
-                                    date = re.date,
-                                    time = re.time,
-                                    name = re.receiveFromName,
-                                    transactionCost = 0.0,
-                                    mpesaBalance = re.businessBalance,
-                                    transactionCategory = re.transactionCategory,
-                                    transactionType = re.transactionType
+                                    transactionCode = bussinessTransaction.transactionCode,
+                                    phone = bussinessTransaction.phone,
+                                    amount = bussinessTransaction.amount,
+                                    date = bussinessTransaction.date,
+                                    time = bussinessTransaction.time,
+                                    name = bussinessTransaction.name,
+                                    transactionCost = bussinessTransaction.transactionCost,
+                                    mpesaBalance = bussinessTransaction.mpesaBalance,
+                                    transactionCategory = bussinessTransaction.transactionCategory,
+                                    transactionType = bussinessTransaction.transactionType
                                 )
                             }
                         }
