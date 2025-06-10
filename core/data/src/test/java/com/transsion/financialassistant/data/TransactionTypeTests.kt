@@ -30,8 +30,8 @@ class TransactionTypeTests {
 
         val sendMessage =
             "TEI27U8XCM Confirmed. Ksh1,300.00 sent to daniel  musyoki +254113694587 on 18/5/25 at 11:45 AM. New M-PESA balance is Ksh595.61. Transaction cost, Ksh23.00.  Amount you can transact within the day is 498,300.00. Earn interest daily on Ziidi MMF,Dial *334#"
-        val groups = TransactionType.SEND_MONEY.getRegex().find(message)?.groupValues
-        val g = TransactionType.SEND_MONEY.getRegex().find(message)?.groups
+        val groups = TransactionType.SEND_MONEY.getRegex().find(sendToZiidi)?.groupValues
+        val g = TransactionType.SEND_MONEY.getRegex().find(sendToZiidi)?.groups
 
         println("groups detected : ${groups?.size}")
         groups?.forEachIndexed { index, value ->
@@ -40,7 +40,7 @@ class TransactionTypeTests {
         println("Transactioncode : ${g?.get("txnId1")?.value}")
         println("Transactioncode2 : ${g?.get("txnId2")?.value}")
 
-        val result = transactionRepo.getTransactionType(sendMessage)
+        val result = transactionRepo.getTransactionType(sendToZiidi)
         println("Transaction type: ${result.description}")
         assertTrue(result == TransactionType.SEND_MONEY)
     }
@@ -190,12 +190,12 @@ class TransactionTypeTests {
 
     @Test
     fun `should detect send pochi transaction`() {
-        val m =
-            "TEE5O55BWX Confirmed. Ksh200.00 sent to SBM Bank Kenya Limited for account 818283 on 14/5/25 at 11:39 AM New M-PESA balance is Ksh4,793.21. Transaction cost, Ksh5.00.Amount you can transact within the day is 499,590.00. Save frequent paybills for quick payment on M-PESA app https://bit.ly/mpesalnk"
 
+        val sendToZiidi =
+            "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
         val message =
             "TCH01GAG8Y Confirmed. Ksh10.00 sent to richard machage on 17/3/25 at 12:03 PM. New M-PESA balance is Ksh358.00. Transaction cost, Ksh0.00. Amount you can transact within the day is 499,990.00"
-        val result = transactionRepo.getTransactionType(m)
+        val result = transactionRepo.getTransactionType(sendToZiidi)
         println("Transaction type: ${result.description}")
 
         assertTrue(result == TransactionType.SEND_POCHI)
