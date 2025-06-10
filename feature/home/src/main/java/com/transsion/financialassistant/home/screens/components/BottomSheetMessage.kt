@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.home.screens.components
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,69 +38,78 @@ import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheetFaMessage(
     modifier: Modifier = Modifier,
+    showMessageBottomSheet: Boolean,
+    selectedMessage: String,
     transaction: UnifiedTransactionPersonal,
-    message: String,
     onDismiss: () -> Unit
 ) {
     BottomSheetFa(
         modifier = modifier,
-        isSheetOpen = true,
-        onDismiss = onDismiss
+        isSheetOpen = showMessageBottomSheet,
+        onDismiss = {
+            onDismiss()
+        }
     ) {
-        Column(
-            modifier = Modifier
-                .padding(horizontal = paddingLarge)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-        ) {
-            // Top Left: Transaction Type
-            BigTittleText(
-                text = transaction.transactionType.description,
-                modifier = Modifier.align(Alignment.Start)
-            )
+        if (selectedMessage.isNotBlank()) {
+            transaction.let { transaction ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingLarge),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
 
-            VerticalSpacer(12)
+                ) {
 
-            // Center: Amount
-            TitleText(
-                text = transaction.amount.toString(),
-                fontSize = 24.sp,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+                    TitleText(
+                        text = transaction.transactionType.description,
+                        fontSize = 16.sp,
+                    )
+                    VerticalSpacer(20)
 
-            VerticalSpacer(12)
+                    // Centered Amount
+                    BigTittleText(
+                        text = "KES ${transaction.amount}",
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                    )
 
-            // Receiver Name and Message
-            Text(
-                text = "To: ${transaction.name}",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
+                    VerticalSpacer(20)
 
-            VerticalSpacer(6)
-
-            Text(
-                text = message.replace(Regex("""(\b(?:balance|amount)\s*[:=]?\s*)(\d+[,.]?\d*)"""), "$1****"),
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-            )
-
-            VerticalSpacer(16)
-
-            if (transaction.transactionType == TransactionType.SEND_MONEY) {
-                OutlineButtonFa(
-                    text = "Reverse Transaction",
-                    onClick = {
-                       /* Toast.makeText(LocalContext.current, "Coming soon...", Toast.LENGTH_SHORT)
-                            .show()*/
+                    // Receiver Name
+                    transaction.name?.let { receiverName ->
+                        NormalText(
+                            text = "To: ${receiverName.uppercase(Locale.ROOT)}",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                        VerticalSpacer(10)
                     }
-                )
+
+                    // Message without M-PESA balance
+                    val sanitizedMessage = selectedMessage
+                        .replace(
+                            Regex("M-Shwari balance is Ksh[\\d,.]+", RegexOption.IGNORE_CASE),
+                            "M-Shwari balance is ********"
+                        )
+                        .replace(
+                            Regex("(New )?M-PESA balance (is|:) Ksh[\\d,.]+", RegexOption.IGNORE_CASE),
+                            "M-PESA balance: ********"
+                        )
+
+                    Text(
+                        text = selectedMessage,
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                        lineHeight = 18.sp,
+                        textAlign = TextAlign.Left
+                    )
+                }
             }
         }
     }
