@@ -293,7 +293,6 @@ fun HomeScreen(
                 items(recents.size) { it ->
                     val item = recents[it]
                     TransactionUiListItem(
-
                         transactionUi = TransactionUi(
                             title = item.name ?: item.transactionCode,
                             type = item.transactionType,
