@@ -5,16 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.data.models.MpesaMessage
 import com.transsion.financialassistant.data.models.TransactionType
+import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import com.transsion.financialassistant.data.repository.getMpesaMessagesByTransactionType
 import com.transsion.financialassistant.data.repository.pin.PinRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
+import com.transsion.financialassistant.settings.screens.settings.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +26,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val transactionRepo: TransactionRepo,
     private val onboardingRepo: OnboardingRepo,
-    private val pinRepo: PinRepo
+    private val pinRepo: PinRepo,
+    private val preferences: DatastorePreferences
 ) : ViewModel() {
 
     private var _state = MutableStateFlow(ScreenState())
@@ -69,6 +73,13 @@ class MainViewModel @Inject constructor(
 
         }
 
-
     }
+
+
+    val currentTheme = preferences.getValue(DatastorePreferences.THEME_KEY, ThemeMode.SYSTEM.name)
+        .stateIn(
+            scope = viewModelScope,
+            started = kotlinx.coroutines.flow.SharingStarted.WhileSubscribed(5000),
+            initialValue = ThemeMode.SYSTEM.name
+        )
 }
