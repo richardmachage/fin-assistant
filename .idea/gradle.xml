@@ -37,6 +37,7 @@
             <option value="$PROJECT_DIR$/feature/insights" />
             <option value="$PROJECT_DIR$/feature/onboarding" />
             <option value="$PROJECT_DIR$/feature/search" />
+            <option value="$PROJECT_DIR$/feature/settings" />
           </set>
         </option>
       </GradleProjectSettings>
