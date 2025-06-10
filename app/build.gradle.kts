@@ -12,6 +12,7 @@ dependencies {
     implementation(projects.feature.insights)
     implementation(projects.feature.home)
     implementation(projects.feature.feedback)
+    implementation(projects.feature.settings)
     //defaultImplementation(projects.core.presentation)
     implementation(projects.core.background)
 
