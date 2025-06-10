@@ -87,7 +87,8 @@ class RoomDbTests {
         sendMshwariRepo = SendMshwariRepoImpl(sendMshwariDao = db.sendMshwariDao())
         receiveMshwariRepo = ReceiveMshwariRepoImpl(receiveMshwariDao = db.receiveMshwariDao())
         bundlesPurchaseRepo = BundlesPurchaseRepoImpl(bundlesPurchaseDao = db.bundlesPurchaseDao())
-        sendPochiRepo = SendPochiRepoImpl(sendPochiDao = db.sendPochiDao())
+        sendPochiRepo =
+            SendPochiRepoImpl(sendPochiDao = db.sendPochiDao(), sendMoneyDao = db.sendMoneyDao())
         receivePochiRepo = ReceivePochiRepoImpl(receivePochiDao = db.receivePochiDao())
         depositRepo = DepositRepoImpl(depositMoneyDao = db.depositMoneyDao())
         moveToPochiRepo = MoveToPochiRepoImpl(moveToPochiDao = db.moveToPochiDao())

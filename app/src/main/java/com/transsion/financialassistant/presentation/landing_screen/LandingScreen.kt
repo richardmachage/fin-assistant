@@ -51,6 +51,8 @@ import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingMedium
+import com.transsion.financialassistant.settings.navigation.SettingRoutes
+import com.transsion.financialassistant.settings.screens.settings.SettingsScreen
 
 @Composable
 fun LandingScreen(
@@ -96,7 +98,12 @@ fun LandingScreen(
                                     icon = com.transsion.financialassistant.presentation.R.drawable.chartpieslice
                                 ),
 
+                                BottomBarItem(
+                                    route = SettingRoutes.Settings,
+                                    title = com.transsion.financialassistant.presentation.R.string.settings,
+                                    icon = com.transsion.financialassistant.presentation.R.drawable.system_update_01
                                 )
+                            )
                         )
                     }
                 ) { innerPadding ->
@@ -108,7 +115,7 @@ fun LandingScreen(
                     ) {
 
 
-                    composable<InsightsRoutes.Insights>(
+                        composable<InsightsRoutes.Insights>(
                         ) {
                             InsightsScreen(
                                 navController = mainNavController
@@ -124,6 +131,10 @@ fun LandingScreen(
                                     mainNavController.navigate(FeedbackRoutes.Feedback)
                                 }
                             )
+                        }
+
+                        composable<SettingRoutes.Settings> {
+                            SettingsScreen()
                         }
 
                     }
