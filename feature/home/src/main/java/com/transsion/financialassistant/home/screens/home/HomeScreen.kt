@@ -103,8 +103,6 @@ fun HomeScreen(
     var selectedMessage by remember { mutableStateOf("") }
     var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    var showBottomSheet by remember { mutableStateOf(false) }
-
 
     Scaffold(
         topBar = {
@@ -320,7 +318,6 @@ fun HomeScreen(
                                         selectedTransaction = item
                                         selectedMessage = message
                                         showMessageBottomSheet = true
-
                                     }
 
                                     onFailure { error ->
@@ -338,7 +335,23 @@ fun HomeScreen(
             }
         }
 
-        BottomSheetFa(
+        val transaction = selectedTransaction
+        if (showMessageBottomSheet && transaction != null && selectedMessage.isNotBlank()) {
+            BottomSheetFaMessage(
+                modifier = Modifier,
+                transaction = transaction,
+                showMessageBottomSheet = true,
+                selectedMessage = selectedMessage,
+                onDismiss = {
+                    showMessageBottomSheet = false
+                    selectedMessage = ""
+                    selectedTransaction = null
+                }
+            )
+        }
+
+
+        /*BottomSheetFa(
             modifier = Modifier,
             isSheetOpen = showMessageBottomSheet,
             onDismiss = {
@@ -357,7 +370,7 @@ fun HomeScreen(
 
                         ) {
                             // Header Row - Transaction type
-                            /*Row(
+                            *//*Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
@@ -368,7 +381,7 @@ fun HomeScreen(
                                 Spacer(modifier = Modifier.weight(1f))
                             }
 
-                            VerticalSpacer(20)*/
+                            VerticalSpacer(20)*//*
 
                             TitleText(
                                 text = transaction.transactionType.description,
@@ -415,7 +428,7 @@ fun HomeScreen(
                         }
                 }
             }
-        }
+        }*/
 
 
         /*BottomSheetFa(
