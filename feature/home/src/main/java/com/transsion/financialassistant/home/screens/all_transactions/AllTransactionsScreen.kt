@@ -54,6 +54,7 @@ import com.transsion.financialassistant.home.model.TransactionUi
 import com.transsion.financialassistant.home.screens.all_transactions.filter.FilterState
 import com.transsion.financialassistant.home.screens.all_transactions.filter.TransactionFilterDialog
 import com.transsion.financialassistant.home.screens.all_transactions.filter.isFilterEmpty
+import com.transsion.financialassistant.home.screens.components.BottomSheetFaMessage
 import com.transsion.financialassistant.home.screens.components.InOutCard
 import com.transsion.financialassistant.home.screens.components.InsightCateToggleSegmentedButton
 import com.transsion.financialassistant.home.screens.components.TransactionUiListItem
@@ -317,8 +318,22 @@ fun AllTransactionsScreen(
             }
         }
 
+        val transaction = selectedTransaction
+        if (showMessageBottomSheet && transaction != null && selectedMessage.isNotBlank()) {
+            BottomSheetFaMessage(
+                modifier = Modifier,
+                transaction = transaction,
+                showMessageBottomSheet = true,
+                selectedMessage = selectedMessage,
+                onDismiss = {
+                    showMessageBottomSheet = false
+                    selectedMessage = ""
+                    selectedTransaction = null
+                }
+            )
+        }
 
-        BottomSheetFa(
+       /* BottomSheetFa(
             isSheetOpen = showMessageBottomSheet,
             onDismiss = {
                 showMessageBottomSheet = false
@@ -349,7 +364,7 @@ fun AllTransactionsScreen(
                             textAlign = TextAlign.Left
                         )
                         VerticalSpacer(10)
-                        /* if (transaction.transactionType == TransactionType.SEND_MONEY) {
+                        *//* if (transaction.transactionType == TransactionType.SEND_MONEY) {
                              OutlineButtonFa(
                                  text = "Reverse Transaction",
                                  onClick = {
@@ -358,11 +373,11 @@ fun AllTransactionsScreen(
                                          .show()
                                  }
                              )
-                         }*/
+                         }*//*
                     }
                 }
             }
-        }
+        }*/
     }
 
 }
