@@ -12,6 +12,7 @@ import com.transsion.financialassistant.home.navigation.homeNavGraph
 import com.transsion.financialassistant.insights.navigation.insightsNavGraph
 import com.transsion.financialassistant.onboarding.navigation.onboardingNavGraph
 import com.transsion.financialassistant.presentation.landing_screen.LandingScreen
+import com.transsion.financialassistant.settings.navigation.settingsNavGraph
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -44,6 +45,8 @@ fun FinancialAssistantNavHost(
             }
         )
 
+        settingsNavGraph(navController = navController)
+
         feedbackNavGraph(
             navController = navController
         )
@@ -53,6 +56,7 @@ fun FinancialAssistantNavHost(
                 mainNavController = navController
             )
         }
+
 
     }
 
