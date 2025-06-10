@@ -53,7 +53,11 @@ fun TransactionUiListItem(
             TransactionCategory.IN -> "Transfer From MPESA"
             TransactionCategory.OUT -> "Transfer To POCHI"
         }
-    } else transactionUi.type.description
+    } else if (transactionUi.type == TransactionType.SEND_MONEY && transactionUi.title.lowercase() == "ziidi") {
+        "Sent to Ziidi"
+    } else {
+        transactionUi.type.description
+    }
 
     VerticalSpacer(5)
     Row(
