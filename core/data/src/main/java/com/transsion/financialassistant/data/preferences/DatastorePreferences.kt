@@ -21,6 +21,7 @@ class DatastorePreferences(private val context: Context) {
         val MPESA_NUMBER_KEY = stringPreferencesKey("mpesa_number_key")
         val LANGUAGE_KEY = stringPreferencesKey("language_key")
         val MESSAGE_PARSING_METRICS = stringPreferencesKey("message_parsing_metrics")
+        val THEME_KEY = stringPreferencesKey("theme_key")
 
     }
 

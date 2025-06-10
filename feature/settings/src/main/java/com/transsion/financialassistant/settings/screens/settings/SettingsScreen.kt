@@ -1,6 +1,7 @@
 package com.transsion.financialassistant.settings.screens.settings
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
@@ -23,25 +25,35 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
-import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
+import com.transsion.financialassistant.presentation.utils.paddingMediumSmall
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+//@Preview
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
+
+    val currentTheme by viewModel.getCurrentTheme().collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -61,18 +73,83 @@ fun SettingsScreen() {
 
             //Theme
             SettingGroup(
-                title = "Theme"
+                title = "Theme",
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-
-                        },
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(30))
+                            .clickable {
+                                if (currentTheme != ThemeMode.DARK.name) viewModel.setThemeMode(
+                                    ThemeMode.DARK
+                                )//currentTheme = ThemeMode.DARK
+                            }
+                            .border(
+                                width = 1.dp,
+                                color = if (currentTheme == ThemeMode.DARK.name) FAColors.green.copy(
+                                    alpha = 0.5f
+                                ) else Color.Transparent,
+                                shape = RoundedCornerShape(30)
+                            )
+                            .padding(paddingMediumSmall),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            tint = Color.Black,
+                            painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.basil_moon_solid),
+                            contentDescription = "mode"
+                        )
+                        HorizontalSpacer(10)
+                        Text("Dark")
+                    }
+
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(30))
+                            .clickable {
+                                if (currentTheme != ThemeMode.LIGHT.name) viewModel.setThemeMode(
+                                    ThemeMode.LIGHT
+                                )
+                            }
+                            .border(
+                                width = 1.dp,
+                                color = if (currentTheme == ThemeMode.LIGHT.name) FAColors.green.copy(
+                                    alpha = 0.5f
+                                ) else Color.Transparent,
+                                shape = RoundedCornerShape(30)
+                            )
+                            .padding(paddingMediumSmall),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            tint = FAColors.GrayBackground,
+                            painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.basil_moon_solid),
+                            contentDescription = "mode"
+                        )
+                        HorizontalSpacer(10)
+                        Text("Light")
+                    }
+                    Row(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(30))
+                            .clickable {
+                                if (currentTheme != ThemeMode.SYSTEM.name) viewModel.setThemeMode(
+                                    ThemeMode.SYSTEM
+                                )
+                            }
+                            .border(
+                                width = 1.dp,
+                                color = if (currentTheme == ThemeMode.SYSTEM.name) FAColors.green.copy(
+                                    alpha = 0.5f
+                                ) else Color.Transparent,
+                                shape = RoundedCornerShape(30)
+                            )
+                            .padding(paddingMediumSmall),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -81,16 +158,16 @@ fun SettingsScreen() {
                             contentDescription = "mode"
                         )
                         HorizontalSpacer(10)
-                        Text("Dark Mode")
+                        Text("System")
                     }
-                    Switch(
+                    /*Switch(
                         checked = false,
                         onCheckedChange = {},
                         colors = SwitchDefaults.colors().copy(
                             checkedThumbColor = Color.White,
                             checkedTrackColor = FAColors.green
                         )
-                    )
+                    )*/
                 }
             }
 
@@ -281,32 +358,30 @@ fun SettingGroup(
         }
     }
 ) {
-    FinancialAssistantTheme {
-        Column(
-            modifier = modifier
-                .padding(paddingLarge)
+    Column(
+        modifier = modifier
+            .padding(paddingLarge)
+            .fillMaxWidth()
+    ) {
+
+        TitleText(
+            text = title,
+        )
+        VerticalSpacer(10)
+
+        ElevatedCard(
+            modifier = Modifier
                 .fillMaxWidth()
+            //.padding(paddingMedium)
         ) {
-
-            TitleText(
-                text = title,
-            )
-            VerticalSpacer(10)
-
-            ElevatedCard(
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                //.padding(paddingMedium)
+                    .padding(paddingMediumLarge)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingMediumLarge)
-                ) {
-                    content()
-                }
-
+                content()
             }
+
         }
     }
 }
@@ -339,4 +414,11 @@ fun RowButton(
         HorizontalSpacer(10)
         Text(title)
     }
+}
+
+
+enum class ThemeMode {
+    DARK,
+    LIGHT,
+    SYSTEM
 }

@@ -37,7 +37,8 @@ dependencies {
     defaultImplementation(libs.androidx.work.ktx)
     defaultImplementation(libs.hilt.work)
     defaultImplementation(libs.androidx.appcompat)
-
+    //data store
+    implementation(libs.datastore.preferences)
     ksp(libs.hilt.ext.compiler)
     testDefaultImplementation(libs.work.testing)
     androidTestDefaultImplementation(libs.work.testing)
