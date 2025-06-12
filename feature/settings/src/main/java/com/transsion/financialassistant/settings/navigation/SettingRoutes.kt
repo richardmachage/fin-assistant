@@ -8,4 +8,7 @@ sealed interface SettingRoutes {
     @Serializable
     data object Settings : SettingRoutes
 
+    @Serializable
+    data object ChangePin : SettingRoutes
+
 }

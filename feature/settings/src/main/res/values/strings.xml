@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="change_pin">Change Pin</string>
+    <string name="new_pin">New PIN</string>
+    <string name="old_pin">Old PIN</string>
+    <string name="save">Save</string>
+</resources>
