@@ -7,7 +7,6 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.mapNotNull
@@ -82,11 +81,18 @@ class RecentTransactionRepoImpl @Inject constructor(
     override fun getMpesaBalance(insightCategory: InsightCategory) = flow<Double> {
         when (insightCategory) {
             InsightCategory.PERSONAL -> {
-                emit(dao.getMpesaBalance().first())
+                dao.getMpesaBalance().collect {
+                    emit(it)
+                }
+                //emit(dao.getMpesaBalance().first())
             }
 
             InsightCategory.BUSINESS -> {
-                emit(getPochiBalance().first() + getTillBalance().first())
+                getPochiBalance().collect { pochiBalance ->
+                    getTillBalance().collect {
+                        emit(pochiBalance + it)
+                    }
+                }
             }
         }
     }
