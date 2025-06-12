@@ -42,6 +42,7 @@ import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
+import com.transsion.financialassistant.settings.navigation.SettingRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview
@@ -79,107 +80,6 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
 
-
-            /*   //Theme
-               SettingGroup(
-                   title = "Theme",
-               ) {
-                   Row(
-                       modifier = Modifier
-                           .fillMaxWidth(),
-                       verticalAlignment = Alignment.CenterVertically,
-                       horizontalArrangement = Arrangement.SpaceBetween
-                   ) {
-                       Row(
-                           modifier = Modifier
-                               .clip(RoundedCornerShape(30))
-                               .clickable {
-                                   if (currentTheme != ThemeMode.DARK.name) viewModel.setThemeMode(
-                                       ThemeMode.DARK
-                                   )//currentTheme = ThemeMode.DARK
-                               }
-                               .border(
-                                   width = 1.dp,
-                                   color = if (currentTheme == ThemeMode.DARK.name) FAColors.green.copy(
-                                       alpha = 0.5f
-                                   ) else Color.Transparent,
-                                   shape = RoundedCornerShape(30)
-                               )
-                               .padding(paddingMediumSmall),
-                           verticalAlignment = Alignment.CenterVertically,
-                       ) {
-                           Icon(
-                               tint = Color.Black,
-                               painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.basil_moon_solid),
-                               contentDescription = "mode"
-                           )
-                           HorizontalSpacer(10)
-                           Text("Dark")
-                       }
-
-                       Row(
-                           modifier = Modifier
-                               .clip(RoundedCornerShape(30))
-                               .clickable {
-                                   if (currentTheme != ThemeMode.LIGHT.name) viewModel.setThemeMode(
-                                       ThemeMode.LIGHT
-                                   )
-                               }
-                               .border(
-                                   width = 1.dp,
-                                   color = if (currentTheme == ThemeMode.LIGHT.name) FAColors.green.copy(
-                                       alpha = 0.5f
-                                   ) else Color.Transparent,
-                                   shape = RoundedCornerShape(30)
-                               )
-                               .padding(paddingMediumSmall),
-                           verticalAlignment = Alignment.CenterVertically,
-                       ) {
-                           Icon(
-                               tint = FAColors.GrayBackground,
-                               painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.basil_moon_solid),
-                               contentDescription = "mode"
-                           )
-                           HorizontalSpacer(10)
-                           Text("Light")
-                       }
-                       Row(
-                           modifier = Modifier
-                               .clip(RoundedCornerShape(30))
-                               .clickable {
-                                   if (currentTheme != ThemeMode.SYSTEM.name) viewModel.setThemeMode(
-                                       ThemeMode.SYSTEM
-                                   )
-                               }
-                               .border(
-                                   width = 1.dp,
-                                   color = if (currentTheme == ThemeMode.SYSTEM.name) FAColors.green.copy(
-                                       alpha = 0.5f
-                                   ) else Color.Transparent,
-                                   shape = RoundedCornerShape(30)
-                               )
-                               .padding(paddingMediumSmall),
-                           verticalAlignment = Alignment.CenterVertically,
-                       ) {
-                           Icon(
-                               tint = FAColors.green,
-                               painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.basil_moon_solid),
-                               contentDescription = "mode"
-                           )
-                           HorizontalSpacer(10)
-                           Text("System")
-                       }
-                       *//*Switch(
-                        checked = false,
-                        onCheckedChange = {},
-                        colors = SwitchDefaults.colors().copy(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = FAColors.green
-                        )
-                    )*//*
-                }
-            }
-*/
             //Security
             SettingGroup(
                 title = "Security",
@@ -190,7 +90,7 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-
+                            navController.navigate(SettingRoutes.ChangePin)
                         }
                 ) {
                     Icon(
