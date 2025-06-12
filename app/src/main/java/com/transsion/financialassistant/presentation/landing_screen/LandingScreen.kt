@@ -51,8 +51,8 @@ import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingMedium
-import com.transsion.financialassistant.settings.navigation.SettingRoutes
-import com.transsion.financialassistant.settings.screens.settings.SettingsScreen
+import com.transsion.financialassistant.search.navigation.SearchRoutes
+import com.transsion.financialassistant.search.screens.search.SearchScreen
 
 @Composable
 fun LandingScreen(
@@ -99,9 +99,9 @@ fun LandingScreen(
                                 ),
 
                                 BottomBarItem(
-                                    route = SettingRoutes.Settings,
-                                    title = com.transsion.financialassistant.presentation.R.string.settings,
-                                    icon = com.transsion.financialassistant.presentation.R.drawable.system_update_01
+                                    route = SearchRoutes.Search,
+                                    title = com.transsion.financialassistant.presentation.R.string.search,
+                                    icon = com.transsion.financialassistant.presentation.R.drawable.search
                                 )
                             )
                         )
@@ -133,8 +133,8 @@ fun LandingScreen(
                             )
                         }
 
-                        composable<SettingRoutes.Settings> {
-                            SettingsScreen()
+                        composable<SearchRoutes.Search> {
+                            SearchScreen(navController = mainNavController)
                         }
 
                     }

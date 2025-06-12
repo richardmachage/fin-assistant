@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.transsion.financialassistant.home.screens.all_transactions.AllTransactionsScreen
 import com.transsion.financialassistant.home.screens.home.HomeScreen
-import com.transsion.financialassistant.search.navigation.searchNavGraph
+import com.transsion.financialassistant.settings.navigation.settingsNavGraph
 
 fun NavGraphBuilder.homeNavGraph(
     navController: NavController,
@@ -25,5 +25,6 @@ fun NavGraphBuilder.homeNavGraph(
         )
     }
 
-    searchNavGraph(navController = navController)
+    //searchNavGraph(navController = navController)
+    settingsNavGraph(navController = navController)
 }

@@ -2,9 +2,6 @@ package com.transsion.financialassistant.home.screens.home
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,12 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -64,15 +59,15 @@ import com.transsion.financialassistant.home.screens.components.TransactionUiLis
 import com.transsion.financialassistant.presentation.components.CategoryCard
 import com.transsion.financialassistant.presentation.components.bottom_sheets.BottomSheetFa
 import com.transsion.financialassistant.presentation.components.buttons.IconButtonFa
+import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.ClickableText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
-import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import com.transsion.financialassistant.search.navigation.SearchRoutes
+import com.transsion.financialassistant.settings.navigation.SettingRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,55 +96,47 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(paddingMedium),
-                navigationIcon = {
+                /* navigationIcon = {
 
-                    Box(
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(color = FAColors.greenOverlay)
-                            .border(
-                                width = 1.dp,
-                                color = FAColors.green,
-                                shape = CircleShape
-                            )
-                            .clickable {
-                                //TODO
-                            }
-                    ) {
-                        Icon(
-                            painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.start_avatar),
-                            contentDescription = null,
-                            tint = FAColors.green
-                        )
-                    }
-                },
+                     Box(
+                         modifier = Modifier
+                             .clip(CircleShape)
+                             .background(color = FAColors.greenOverlay)
+                             .border(
+                                 width = 1.dp,
+                                 color = FAColors.green,
+                                 shape = CircleShape
+                             )
+                             .clickable {
+                                 //TODO
+                             }
+                     ) {
+                         Icon(
+                             painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.start_avatar),
+                             contentDescription = null,
+                             tint = FAColors.green
+                         )
+                     }
+                 },*/
                 title = {
-                    TitleText(
-                        modifier = Modifier
-                            .padding(start = paddingSmall)
-                            .fillMaxWidth(),
-                        text = "Financial Assistant",//viewModel.getGreetingBasedOnTime(context),
-                        fontSize = 22.sp,
-                        textAlign = TextAlign.Center
-                        )
-
+                    BigTittleText(text = "Fin Assistant")
                 },
                 actions = {
                     //feedback
-                    IconButtonFa(
+                    /*IconButtonFa(
                         icon = painterResource(com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular),
                         //colors = colors(),
                         onClick = {
                             goToFeedBack()
                         }
-                    )
+                    )*/
 
                     //search
                     IconButtonFa(
-                        icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
+                        icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.system_update_01),
                         colors = colors(),
                         onClick = {
-                            navController.navigate(SearchRoutes.Search)
+                            navController.navigate(SettingRoutes.Settings)
                         }
                     )
                     
