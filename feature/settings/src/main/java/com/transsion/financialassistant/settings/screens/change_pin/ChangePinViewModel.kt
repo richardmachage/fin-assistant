@@ -2,8 +2,10 @@ package com.transsion.financialassistant.settings.screens.change_pin
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.transsion.financialassistant.data.preferences.SharedPreferences
+import com.transsion.financialassistant.data.repository.pin.PinRepo
+import com.transsion.financialassistant.data.repository.security.SecurityRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -11,21 +13,35 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChangePinViewModel @Inject constructor() : ViewModel() {
+class ChangePinViewModel @Inject constructor(
+    private val pinRepo: PinRepo,
+    private val securityRepo: SecurityRepo,
+    private val sharedPreferences: SharedPreferences
+) : ViewModel() {
 
     private var _state = MutableStateFlow(ChangePinScreenState())
     val state = _state.asStateFlow()
 
 
     fun onOldPinChange(pin: String) {
-        _state.update { it.copy(oldPin = pin) }
+        if (pin.length < 5) {
+            _state.update { it.copy(oldPin = pin) }
+        }
     }
 
     fun onNewPinChange(pin: String) {
-        _state.update { it.copy(newPin = pin) }
+        if (pin.length < 5) {
+            _state.update { it.copy(newPin = pin) }
+        }
     }
 
-    fun toggleLoading(isLoading: Boolean) {
+    fun onConfirmPinChange(pin: String) {
+        if (pin.length < 5) {
+            _state.update { it.copy(confirmPin = pin) }
+        }
+    }
+
+    private fun toggleLoading(isLoading: Boolean) {
         _state.update { it.copy(isLoading = isLoading) }
     }
 
@@ -37,16 +53,49 @@ class ChangePinViewModel @Inject constructor() : ViewModel() {
         _state.update { it.copy(toastMessage = null) }
     }
 
-    fun onSavePin(
-        onSuccess: () -> Unit
-    ) {
-        viewModelScope.launch {
-            //TODO: save pin
 
+    fun isPinSet(): Boolean = pinRepo.isPinSet()
+
+    fun onSavePin(onSuccess: () -> Unit) {
+        viewModelScope.launch {
             toggleLoading(true)
-            delay(2)
-            toggleLoading(false)
-            onSuccess()
+
+            val isVerified = try {
+                verifyPin(state.value.oldPin)
+            } catch (e: Exception) {
+                showToast("Invalid old PIN")
+                toggleLoading(false)
+                return@launch
+            }
+
+            if (!isVerified) {
+                showToast("Invalid old PIN")
+                toggleLoading(false)
+                return@launch
+            }
+
+            val pinSet = pinRepo.setPin(
+                state.value.newPin,
+                onSuccess = {
+                    toggleLoading(false)
+                    onSuccess()
+                },
+                onFailure = {
+                    toggleLoading(false)
+                    showToast("Failed to change PIN")
+                }
+            )
         }
     }
+
+    private fun verifyPin(pin: String): Boolean {
+        val correctPin = sharedPreferences.loadData(SharedPreferences.PIN_KEY)
+            ?: throw Exception("No PIN found")
+
+        val decryptedPin = securityRepo.decryptData(correctPin)
+        val hashedInput = securityRepo.doHash(pin)
+
+        return hashedInput.contentEquals(decryptedPin)
+    }
+
 }
