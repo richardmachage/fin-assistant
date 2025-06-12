@@ -33,6 +33,9 @@ class MainViewModel @Inject constructor(
     private var _messages = MutableStateFlow(emptyList<MpesaMessage>())
     val messages = _messages.asStateFlow()
 
+    private val _requireAuth = MutableStateFlow(false)
+    val requireAuth = _requireAuth.asStateFlow()
+
     fun getTheMessages(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { it.copy(isLoading = true) }
@@ -68,7 +71,17 @@ class MainViewModel @Inject constructor(
             return OnboardingRoutes.Welcome
 
         }
+    }
 
+    /**Check onResume*/
+    fun checkAuthOnResume(){
+        if (onboardingRepo.hasCompletedOnboarding() && pinRepo.isPinSet()) {
+            _requireAuth.value = true
+        }
+    }
 
+    /**Check if Authentication is Completed*/
+    fun authCompleted(){
+        _requireAuth.value = false
     }
 }
