@@ -96,42 +96,12 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 modifier = Modifier.padding(paddingMedium),
-                /* navigationIcon = {
-
-                     Box(
-                         modifier = Modifier
-                             .clip(CircleShape)
-                             .background(color = FAColors.greenOverlay)
-                             .border(
-                                 width = 1.dp,
-                                 color = FAColors.green,
-                                 shape = CircleShape
-                             )
-                             .clickable {
-                                 //TODO
-                             }
-                     ) {
-                         Icon(
-                             painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.start_avatar),
-                             contentDescription = null,
-                             tint = FAColors.green
-                         )
-                     }
-                 },*/
                 title = {
                     BigTittleText(text = "Fin Assistant")
                 },
                 actions = {
-                    //feedback
-                    /*IconButtonFa(
-                        icon = painterResource(com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular),
-                        //colors = colors(),
-                        onClick = {
-                            goToFeedBack()
-                        }
-                    )*/
 
-                    //search
+                    //Settings
                     IconButtonFa(
                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.system_update_01),
                         colors = colors(),
@@ -139,15 +109,6 @@ fun HomeScreen(
                             navController.navigate(SettingRoutes.Settings)
                         }
                     )
-                    
-                    //more
-                    /*IconButtonFa(
-                        icon = Icons.Default.MoreVert,
-                        colors = colors(),
-                        onClick = {
-                            //TODO
-                        }
-                    )*/
                 }
             )
         },

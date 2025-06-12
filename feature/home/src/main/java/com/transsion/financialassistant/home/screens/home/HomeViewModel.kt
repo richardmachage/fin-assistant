@@ -57,7 +57,6 @@ class HomeViewModel @Inject constructor(
 
     val mpesaBalance = state.map { it.insightCategory }
         .flatMapLatest {
-            //flowOf(90.0)
             recentTransactionsRepo.getMpesaBalance(it)
         }
         .stateIn(
