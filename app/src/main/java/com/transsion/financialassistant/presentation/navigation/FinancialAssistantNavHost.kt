@@ -7,12 +7,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
-import com.transsion.financialassistant.feedback.navigation.feedbackNavGraph
 import com.transsion.financialassistant.home.navigation.homeNavGraph
 import com.transsion.financialassistant.insights.navigation.insightsNavGraph
 import com.transsion.financialassistant.onboarding.navigation.onboardingNavGraph
 import com.transsion.financialassistant.presentation.landing_screen.LandingScreen
-import com.transsion.financialassistant.settings.navigation.settingsNavGraph
+import com.transsion.financialassistant.search.navigation.searchNavGraph
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
@@ -45,11 +44,13 @@ fun FinancialAssistantNavHost(
             }
         )
 
-        settingsNavGraph(navController = navController)
+        //settingsNavGraph(navController = navController)
 
-        feedbackNavGraph(
-            navController = navController
-        )
+        searchNavGraph(navController)
+
+        /* feedbackNavGraph(
+             navController = navController
+         )*/
 
         composable<FinancialAssistantRoutes.Landing> {
             LandingScreen(

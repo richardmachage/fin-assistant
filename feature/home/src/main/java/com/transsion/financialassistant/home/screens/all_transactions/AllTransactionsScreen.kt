@@ -68,7 +68,6 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
-import com.transsion.financialassistant.search.navigation.SearchRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,16 +111,16 @@ fun AllTransactionsScreen(
                     }
                 },
 
-                actions = {
-                    //search
-                    IconButtonFa(
-                        icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
-                        colors = colors(),
-                        onClick = {
-                            navController.navigate(SearchRoutes.Search)
-                        }
-                    )
-                }
+                /* actions = {
+                     //search
+                     IconButtonFa(
+                         icon = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.search),
+                         colors = colors(),
+                         onClick = {
+                             navController.navigate(SearchRoutes.Search)
+                         }
+                     )
+                 }*/
             )
         }
     ) { paddingValues ->

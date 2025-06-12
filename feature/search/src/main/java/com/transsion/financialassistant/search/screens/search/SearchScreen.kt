@@ -8,18 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,6 +35,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
+import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
@@ -51,7 +49,7 @@ import com.transsion.financialassistant.search.screens.components.ListItemUI
 import com.transsion.financialassistant.search.screens.components.RecentSearchUi
 import com.transsion.financialassistant.search.screens.components.TransactionUiListItem
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
@@ -64,7 +62,15 @@ fun SearchScreen(
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
     val recentSearches by viewModel.recentSearches.collectAsState(initial = emptyList())
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    BigTittleText(text = "Search")
+                }
+            )
+        }
+    ) { innerPadding ->
         val focusManager = LocalFocusManager.current
 
         Column(
@@ -85,35 +91,37 @@ fun SearchScreen(
 
             //Top containing search bar and back navigation icon
 
-            Row(
+            /*Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(paddingMedium),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            ) {*/
                 //back navigation
-                IconButton(
-                    onClick = {
-                        when (state.searchView) {
-                            SearchView.INITIAL -> navController.navigateUp()
-                            SearchView.ON_SEARCH -> {
-                                viewModel.saveRecent()
-                                viewModel.onQueryChanged("")
-                                viewModel.onSearchViewChanged(SearchView.INITIAL)
-                            }
+            /*IconButton(
+                onClick = {
+                    when (state.searchView) {
+                        SearchView.INITIAL -> navController.navigateUp()
+                        SearchView.ON_SEARCH -> {
+                            viewModel.saveRecent()
+                            viewModel.onQueryChanged("")
+                            viewModel.onSearchViewChanged(SearchView.INITIAL)
                         }
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "Back"
-                    )
                 }
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = "Back"
+                )
+            }*/
 
                 //search Bar
                 CustomSearchBar(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(paddingSmall),
                     query = state.searchQuery,
                     onQueryChanged = {
                         viewModel.onQueryChanged(it)
@@ -133,7 +141,7 @@ fun SearchScreen(
                         focusManager.clearFocus()
                     }
                 )
-            }
+            // }
 
             VerticalSpacer(5)
 

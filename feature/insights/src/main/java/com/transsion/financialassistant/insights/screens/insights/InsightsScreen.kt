@@ -20,11 +20,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,6 +68,7 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingSmall
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InsightsScreen(
     navController: NavController,
@@ -77,7 +80,18 @@ fun InsightsScreen(
     val screeHeight = LocalConfiguration.current.screenHeightDp
 
 
-    Scaffold { innerPadding ->
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
+                BigTittleText(
+                    modifier = Modifier
+                        //.align(Alignment.Start)
+                        .padding(paddingSmall),
+                    text = stringResource(R.string.insights)
+                )
+            })
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -90,13 +104,6 @@ fun InsightsScreen(
                 )
                 .verticalScroll(rememberScrollState())
         ) {
-            //tittle
-            BigTittleText(
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(paddingSmall),
-                text = stringResource(R.string.insights)
-            )
 
             //personal finances and timeline selection
             Row(

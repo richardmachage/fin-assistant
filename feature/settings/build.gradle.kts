@@ -12,6 +12,7 @@ dependencies {
     //implementation(projects.core.presentation)
     implementation(projects.core.data)
     implementation(projects.core.presentation)
+    implementation(projects.feature.feedback)
 
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.rules)

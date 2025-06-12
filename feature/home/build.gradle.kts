@@ -10,7 +10,7 @@ dependencies {
     //project dependencies
     implementation(projects.core.presentation)
     implementation(projects.core.data)
-    implementation(projects.feature.search)
+    implementation(projects.feature.settings)
 
 
     implementation(libs.androidx.compose.material)
