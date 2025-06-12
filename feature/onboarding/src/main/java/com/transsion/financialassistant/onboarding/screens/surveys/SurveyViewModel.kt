@@ -141,11 +141,8 @@ class SurveyViewModel @Inject constructor(
         }
     }
 
-
-
-
     // Move to the next question
-     fun loadNextQuestion(){
+    private fun loadNextQuestion(){
         _surveyState.value?.let { currentState ->
             val nextIndex = currentState.currentQuestionIndex + 1
 
@@ -157,6 +154,7 @@ class SurveyViewModel @Inject constructor(
                 _currentStep.value = nextIndex + 1 // Update progress
             } else {
                 _surveyState.value = currentState.copy(isSurveyComplete = true)
+                completeOnboarding()
             }
         }
     }
