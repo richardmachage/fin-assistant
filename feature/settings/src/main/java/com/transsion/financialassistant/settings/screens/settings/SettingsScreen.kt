@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -27,10 +29,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -42,6 +46,7 @@ import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.HorizontalSpacer
 import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
+import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
 import com.transsion.financialassistant.settings.navigation.SettingRoutes
 
@@ -89,17 +94,22 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(30))
                         .clickable {
                             navController.navigate(SettingRoutes.ChangePin)
                         }
                 ) {
                     Icon(
+                        modifier = Modifier.size(34.dp),
                         tint = FAColors.green,
                         painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.security_password),
                         contentDescription = "security password"
                     )
                     HorizontalSpacer(10)
-                    Text(if (isPinSet) "Change PIN" else "Set Pin")
+                    Text(
+                        modifier = Modifier.padding(top = paddingMedium, bottom = paddingMedium),
+                        text = if (isPinSet) "Change PIN" else "Set Pin"
+                    )
                 }
 
                 if (isPinSet) {
@@ -160,14 +170,17 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(30))
                         .clickable {
 
                         }
                 ) {
                     Row(
+
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
+                            modifier = Modifier.size(34.dp),
                             tint = FAColors.green,
                             imageVector = Icons.Outlined.Refresh,
                             contentDescription = "Refresh"
@@ -189,6 +202,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(30))
                         .clickable {
 
                         }
@@ -197,6 +211,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
+                            modifier = Modifier.size(34.dp),
                             tint = FAColors.green,
                             painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.sync),
                             contentDescription = "security password"
@@ -324,6 +339,7 @@ fun RowButton(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
+            .clip(RoundedCornerShape(30))
             .clickable(
                 enabled = clickEnabled,
                 onClick = onClick
@@ -332,6 +348,7 @@ fun RowButton(
 
     ) {
         Icon(
+            modifier = Modifier.size(34.dp),
             tint = FAColors.green,
             painter = painterResource(icon),
             contentDescription = title
