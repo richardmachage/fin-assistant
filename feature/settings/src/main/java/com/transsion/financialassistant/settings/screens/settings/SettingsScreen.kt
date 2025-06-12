@@ -24,6 +24,7 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,8 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
+import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
 import com.transsion.financialassistant.presentation.theme.FAColors
@@ -50,6 +53,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
+    val isPinSet by viewModel.isPinSet.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -95,20 +99,29 @@ fun SettingsScreen(
                         contentDescription = "security password"
                     )
                     HorizontalSpacer(10)
-                    Text(if (viewModel.isPinSet()) "Change PIN" else "Set Pin")
+                    Text(if (isPinSet) "Change PIN" else "Set Pin")
                 }
 
-                if (viewModel.isPinSet()) {
+                if (isPinSet) {
+                    //info Dialog
+                    ConfirmDialog(
+                        showDialog = viewModel.showDialog.value,
+                        title = "Disable auth",
+                        message = "By confirming, you will disable authentication and be required to Reset your PIN should you want to enable Authentication again",
+                        confirmButtonText = "Disable",
+                        onDismiss = { viewModel.showDialog.value = false },
+                        onConfirm = {
+                            viewModel.onDisableAuth()
+                            viewModel.showDialog.value = false
+                        }
+                    )
 
                     VerticalSpacer(15)
                     HorizontalDivider()
                     //VerticalSpacer(10)
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-
-                            },
+                            .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
@@ -121,11 +134,13 @@ fun SettingsScreen(
                                 contentDescription = "security passwword"
                             )
                             HorizontalSpacer(10)
-                            Text("Fingerprint Authentication")
+                            Text("Disable Authentication")
                         }
                         Switch(
                             checked = true,
-                            onCheckedChange = {},
+                            onCheckedChange = {
+                                viewModel.showDialog.value = true
+                            },
                             colors = SwitchDefaults.colors().copy(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = FAColors.green

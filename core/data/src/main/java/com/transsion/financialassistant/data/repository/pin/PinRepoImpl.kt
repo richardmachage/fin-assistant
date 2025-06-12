@@ -41,4 +41,8 @@ open class PinRepoImpl @Inject constructor(
         return sharedPreferences.loadData(SharedPreferences.PIN_KEY)?.isNotBlank() ?: false
     }
 
+    override fun deletePin() {
+        sharedPreferences.deleteData(SharedPreferences.PIN_KEY)
+    }
+
 }

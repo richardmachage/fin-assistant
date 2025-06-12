@@ -60,31 +60,48 @@ class ChangePinViewModel @Inject constructor(
         viewModelScope.launch {
             toggleLoading(true)
 
-            val isVerified = try {
-                verifyPin(state.value.oldPin)
-            } catch (e: Exception) {
-                showToast("Invalid old PIN")
-                toggleLoading(false)
-                return@launch
-            }
-
-            if (!isVerified) {
-                showToast("Invalid old PIN")
-                toggleLoading(false)
-                return@launch
-            }
-
-            val pinSet = pinRepo.setPin(
-                state.value.newPin,
-                onSuccess = {
+            if (isPinSet()) {
+                val isVerified = try {
+                    verifyPin(state.value.oldPin)
+                } catch (e: Exception) {
+                    showToast("Invalid old PIN")
                     toggleLoading(false)
-                    onSuccess()
-                },
-                onFailure = {
-                    toggleLoading(false)
-                    showToast("Failed to change PIN")
+                    return@launch
                 }
-            )
+
+                if (!isVerified) {
+                    showToast("Invalid old PIN")
+                    toggleLoading(false)
+                    return@launch
+                }
+
+                pinRepo.setPin(
+                    state.value.newPin,
+                    onSuccess = {
+                        toggleLoading(false)
+                        onNewPinChange("")
+                        onOldPinChange("")
+                        onSuccess()
+                    },
+                    onFailure = {
+                        toggleLoading(false)
+                        showToast("Failed to change PIN")
+                    }
+                )
+            } else {
+                //Pin is not set
+                pinRepo.setPin(
+                    state.value.newPin,
+                    onSuccess = {
+                        toggleLoading(false)
+                        onSuccess()
+                    },
+                    onFailure = {
+                        toggleLoading(false)
+                        showToast("Failed to change PIN")
+                    }
+                )
+            }
         }
     }
 
