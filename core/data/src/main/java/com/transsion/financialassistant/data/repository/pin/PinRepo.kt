@@ -10,4 +10,6 @@ interface PinRepo {
     )
 
     fun isPinSet(): Boolean
+
+    fun deletePin()
 }
