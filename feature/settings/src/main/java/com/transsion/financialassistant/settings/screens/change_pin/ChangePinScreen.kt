@@ -14,6 +14,9 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -32,6 +35,7 @@ import com.transsion.financialassistant.presentation.components.buttons.FilledBu
 import com.transsion.financialassistant.presentation.components.text_input_fields.PasswordTextFieldFa
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.NormalText
+import com.transsion.financialassistant.presentation.theme.FAColors
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
@@ -46,6 +50,7 @@ fun ChangePinScreen(
 
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val isPinSet = viewModel.isPinSet()
 
     LaunchedEffect(state.toastMessage) {
         state.toastMessage?.let {
@@ -58,7 +63,7 @@ fun ChangePinScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    BigTittleText(text = stringResource(R.string.change_pin))
+                    BigTittleText(text = stringResource(if (isPinSet) R.string.change_pin else R.string.set_pin))
                 },
                 navigationIcon = {
                     BackButton { navController.navigateUp() }
@@ -79,7 +84,8 @@ fun ChangePinScreen(
                     .align(Alignment.TopCenter)
                     .padding(top = paddingLarge),
                 painter = painterResource(id = com.transsion.financialassistant.presentation.R.drawable.reset_pin),
-                contentDescription = "reset pin"
+                contentDescription = "reset pin",
+                tint = FAColors.green
             )
 
 
@@ -90,29 +96,32 @@ fun ChangePinScreen(
                     .padding(paddingMedium)
                     .fillMaxWidth()
             ) {
-                //old pin
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingMediumLarge)
-                ) {
-                    NormalText(
-                        modifier = Modifier.padding(start = paddingMediumLarge),
-                        text = stringResource(R.string.old_pin)
-                    )
-                    PasswordTextFieldFa(
-                        value = state.oldPin,
-                        onValueChange = { viewModel.onOldPinChange(it) },
-                        placeholder = "",
+
+                if (isPinSet) {
+                    //old pin
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(paddingMediumLarge),
-                        visualTransformation = { text ->
-                            val transformedText = AnnotatedString(text.text.map { '*' }
-                                .joinToString(""))
-                            TransformedText(transformedText, OffsetMapping.Identity)
-                        }
-                    )
+                            .padding(paddingMediumLarge)
+                    ) {
+                        NormalText(
+                            modifier = Modifier.padding(start = paddingMediumLarge),
+                            text = stringResource(R.string.old_pin)
+                        )
+                        PasswordTextFieldFa(
+                            value = state.oldPin,
+                            onValueChange = { viewModel.onOldPinChange(it) },
+                            placeholder = "",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingMediumLarge),
+                            visualTransformation = { text ->
+                                val transformedText = AnnotatedString(text.text.map { '*' }
+                                    .joinToString(""))
+                                TransformedText(transformedText, OffsetMapping.Identity)
+                            }
+                        )
+                    }
                 }
 
                 //New Pin
@@ -141,11 +150,42 @@ fun ChangePinScreen(
                         )
                 }
 
-                //save Button
+                if (!isPinSet) {
+                    //Confirm new Pin
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(paddingMediumLarge)
+                    ) {
+                        var isError by remember { mutableStateOf(false) }
+                        NormalText(
+                            modifier = Modifier.padding(start = paddingMediumLarge),
+                            text = stringResource(R.string.confirm_pin)
+                        )
+                        PasswordTextFieldFa(
+                            value = state.confirmPin,
+                            onValueChange = {
+                                viewModel.onConfirmPinChange(it)
+                                isError = state.newPin.length > 3 && state.newPin != it
+                            },
+                            placeholder = "",
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(paddingMediumLarge),
+                            visualTransformation = { text ->
+                                val transformedText = AnnotatedString(text.text.map { '*' }
+                                    .joinToString(""))
+                                TransformedText(transformedText, OffsetMapping.Identity)
+                            },
+                            isShowError = isError
+                        )
+                    }
+                }
             }
 
+            //save Button
             FilledButtonFa(
-                enabled = state.oldPin.isNotBlank() && state.newPin.isNotBlank(),
+                enabled = if (isPinSet) state.oldPin.isNotBlank() && state.newPin.isNotBlank() else state.newPin.isNotBlank() && state.confirmPin.isNotBlank() && state.newPin == state.confirmPin,
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter)

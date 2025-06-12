@@ -24,8 +24,6 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -51,8 +49,6 @@ fun SettingsScreen(
     navController: NavController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
-
-    val currentTheme by viewModel.getCurrentTheme().collectAsState()
 
 
     Scaffold(
@@ -99,40 +95,43 @@ fun SettingsScreen(
                         contentDescription = "security password"
                     )
                     HorizontalSpacer(10)
-                    Text("Change PIN")
+                    Text(if (viewModel.isPinSet()) "Change PIN" else "Set Pin")
                 }
 
-                VerticalSpacer(15)
-                HorizontalDivider()
-                //VerticalSpacer(10)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
+                if (viewModel.isPinSet()) {
 
-                        },
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
+                    VerticalSpacer(15)
+                    HorizontalDivider()
+                    //VerticalSpacer(10)
                     Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+
+                            },
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            tint = FAColors.green,
-                            painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint),
-                            contentDescription = "security passwword"
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Icon(
+                                tint = FAColors.green,
+                                painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint),
+                                contentDescription = "security passwword"
+                            )
+                            HorizontalSpacer(10)
+                            Text("Fingerprint Authentication")
+                        }
+                        Switch(
+                            checked = true,
+                            onCheckedChange = {},
+                            colors = SwitchDefaults.colors().copy(
+                                checkedThumbColor = Color.White,
+                                checkedTrackColor = FAColors.green
+                            )
                         )
-                        HorizontalSpacer(10)
-                        Text("Fingerprint Authentication")
                     }
-                    Switch(
-                        checked = true,
-                        onCheckedChange = {},
-                        colors = SwitchDefaults.colors().copy(
-                            checkedThumbColor = Color.White,
-                            checkedTrackColor = FAColors.green
-                        )
-                    )
                 }
             }
 

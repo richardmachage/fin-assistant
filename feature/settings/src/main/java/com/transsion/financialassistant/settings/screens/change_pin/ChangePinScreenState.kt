@@ -4,5 +4,6 @@ data class ChangePinScreenState(
     val isLoading: Boolean = false,
     val oldPin: String = "",
     val newPin: String = "",
+    val confirmPin: String = "",
     val toastMessage: String? = null
 )
