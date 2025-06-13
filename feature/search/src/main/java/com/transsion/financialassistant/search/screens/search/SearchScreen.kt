@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -86,62 +89,35 @@ fun SearchScreen(
                 )
                 .padding(innerPadding)
                 .padding(start = paddingSmall, end = paddingSmall)
+                .verticalScroll(rememberScrollState())
 
         ) {
 
-            //Top containing search bar and back navigation icon
 
-            /*Row(
+            //search Bar
+            CustomSearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(paddingMedium),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {*/
-                //back navigation
-            /*IconButton(
-                onClick = {
-                    when (state.searchView) {
-                        SearchView.INITIAL -> navController.navigateUp()
-                        SearchView.ON_SEARCH -> {
-                            viewModel.saveRecent()
-                            viewModel.onQueryChanged("")
-                            viewModel.onSearchViewChanged(SearchView.INITIAL)
-                        }
+                    .padding(paddingSmall),
+                query = state.searchQuery,
+                onQueryChanged = {
+                    viewModel.onQueryChanged(it)
+                    if (it.isEmpty()) viewModel.onSearchViewChanged(SearchView.INITIAL)
+                    else viewModel.onSearchViewChanged(SearchView.ON_SEARCH)
+                },
+                onFocusChanged = {
+                    //focus used to control visibility of the recent searches
+                    showRecentSearches = it
+
+                    //when focus is lost, meaning the user is no longer searching
+                    if (!it) {
+                        viewModel.saveRecent()
                     }
+                },
+                clearFocus = {
+                    focusManager.clearFocus()
                 }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                    contentDescription = "Back"
-                )
-            }*/
-
-                //search Bar
-                CustomSearchBar(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(paddingSmall),
-                    query = state.searchQuery,
-                    onQueryChanged = {
-                        viewModel.onQueryChanged(it)
-                        if (it.isEmpty()) viewModel.onSearchViewChanged(SearchView.INITIAL)
-                        else viewModel.onSearchViewChanged(SearchView.ON_SEARCH)
-                    },
-                    onFocusChanged = {
-                        //focus used to control visibility of the recent searches
-                        showRecentSearches = it
-
-                        //when focus is lost, meaning the user is no longer searching
-                        if (!it) {
-                            viewModel.saveRecent()
-                        }
-                    },
-                    clearFocus = {
-                        focusManager.clearFocus()
-                    }
-                )
-            // }
+            )
 
             VerticalSpacer(5)
 
@@ -198,11 +174,12 @@ fun SearchScreen(
                             ) {
                                 //title
                                 TitleText(text = "Frequent Money Out")
-                                VerticalSpacer(10)
+                                VerticalSpacer(25)
                                 //list of senders
                                 FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalArrangement = Arrangement.spacedBy(25.dp)
                                 ) {
                                     state.frequentSenders.forEach { sender ->
                                         ListItemUI(
@@ -219,7 +196,7 @@ fun SearchScreen(
                                 }
                             }
 
-                            VerticalSpacer(20)
+                            VerticalSpacer(25)
 
                             //Frequent Recipients
                             Column(
@@ -229,11 +206,12 @@ fun SearchScreen(
                             ) {
                                 //title
                                 TitleText(text = "Frequent Money In")
-                                VerticalSpacer(10)
+                                VerticalSpacer(25)
                                 //list of recipients
                                 FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalArrangement = Arrangement.spacedBy(25.dp)
                                 ) {
                                     state.frequentRecipients.forEach { recipient ->
                                         ListItemUI(
@@ -246,7 +224,6 @@ fun SearchScreen(
                                             }
                                         )
                                     }
-
                                 }
                             }
                         }
