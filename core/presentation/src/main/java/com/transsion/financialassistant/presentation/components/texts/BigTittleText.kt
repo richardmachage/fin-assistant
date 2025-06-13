@@ -17,12 +17,14 @@ fun BigTittleText(
     modifier: Modifier = Modifier,
     textAlign: TextAlign = TextAlign.Center,
     text: String = "Begin your smartmoney journey",
-    textColor: Color = MaterialTheme.colorScheme.onBackground
+    textColor: Color = MaterialTheme.colorScheme.onBackground,
+    fontSize: TextUnit = 30.sp,
+    fontWeight: FontWeight = FontWeight(600)
 ) {
     Text(
         text = text,
-        fontWeight = FontWeight(600),
-        fontSize = 30.sp,
+        fontWeight = fontWeight,
+        fontSize = fontSize,
         lineHeight = 31.sp,
         textAlign = textAlign,
         color = textColor
