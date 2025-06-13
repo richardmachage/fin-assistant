@@ -32,7 +32,7 @@ include(":core:presentation")
 include(":core:background")
 include(":core:security")
 include(":feature:insights")
-include(":feature:insights")
+/*include(":feature:insights")*/
 include(":feature:home")
 include(":feature:feedback")
 include(":feature:admin")

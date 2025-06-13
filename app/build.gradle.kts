@@ -5,6 +5,8 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.androidx.work.testing)
+    implementation(libs.androidx.lifecycle.process)
     adminImplementation(libs.androidx.appcompat)
     adminImplementation(libs.androidx.work.runtime.ktx)
     adminImplementation(libs.hilt.work)
