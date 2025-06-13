@@ -20,6 +20,7 @@ object FAColors {
     val black = Color(0xFF000000)
     val GrayBackground = Color(0xFFECEEED)
     val greenOverlay = Color(0xFFE4ECE6)//green.copy(alpha = 0.3f)
+
     val faintText = Color(0xFF757575)
     val cardBackgroundDark = Color(0xFF1E1E1E)
     val cardBackgroundLight = Color(0xFFECEEED)

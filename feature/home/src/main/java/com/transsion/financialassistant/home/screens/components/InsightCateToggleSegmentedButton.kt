@@ -2,10 +2,12 @@ package com.transsion.financialassistant.home.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.transsion.financialassistant.data.models.InsightCategory
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
 @Composable
 fun InsightCateToggleSegmentedButton(
@@ -33,12 +36,14 @@ fun InsightCateToggleSegmentedButton(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(FAColors.greenOverlay)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh/*if(isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.greenOverlay*/)
     ) {
         options.forEach { option ->
             val isSelected = selectedOption == option
             val backgroundColor = if (isSelected) FAColors.green else Color.Transparent
-            val contentColor = if (isSelected) Color.White else Color.Black
+            val contentColor = if (isSelected) Color.White else {
+                if (isSystemInDarkTheme()) Color.White else Color.Black
+            }
 
             Box(
                 modifier = Modifier
@@ -65,10 +70,12 @@ fun InsightCateToggleSegmentedButton(
 fun SegmentendInOutButtonPrev() {
     //SegmentendInOutButton()
     var selectedOption by remember { mutableStateOf(InsightCategory.PERSONAL) }
-    InsightCateToggleSegmentedButton(
-        selectedOption = selectedOption,
-        onOptionSelected = {
-            selectedOption = it
-        }
-    )
+    FinancialAssistantTheme(darkTheme = true) {
+        InsightCateToggleSegmentedButton(
+            selectedOption = selectedOption,
+            onOptionSelected = {
+                selectedOption = it
+            }
+        )
+    }
 }

@@ -21,8 +21,6 @@ fun BottomSheetFa(
         ModalBottomSheet(
             onDismissRequest = { onDismiss() },
             sheetState = sheetState,
-            //containerColor = FAColors.GrayBackground.copy(alpha = 0.8f),
-            //contentColor = FAColors.black
         ) {
             content()
         }
