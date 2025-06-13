@@ -44,6 +44,8 @@ googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.4"
 workRuntimeKtx = "2.10.1"
 firebaseInstallations = "18.0.0"
+workTesting = "2.10.1"
+lifecycleProcess = "2.9.1"
 
 
 [libraries]
@@ -123,6 +125,8 @@ androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtim
 androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workRuntimeKtx" }
+androidx-work-testing = { group = "androidx.work", name = "work-testing", version.ref = "workTesting" }
+androidx-lifecycle-process = { group = "androidx.lifecycle", name = "lifecycle-process", version.ref = "lifecycleProcess" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
