@@ -97,6 +97,10 @@ class LandingViewModel @Inject constructor(
                             _workerState.value = "Completed successfully"
 
                             markMessagesRead {
+                                sharedPreferences.saveData(
+                                    key = SharedPreferences.LAST_SYNC_TIMESTAMP,
+                                    value = System.currentTimeMillis().toString()
+                                )
                                 onFinish("Success")
                             }
                         }
