@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.transsion.financialassistant.home.navigation.HomeRoutes
 import com.transsion.financialassistant.home.screens.home.HomeScreen
 import com.transsion.financialassistant.insights.navigation.InsightsRoutes
 import com.transsion.financialassistant.insights.screens.insights.InsightsScreen
+import com.transsion.financialassistant.presentation.components.LinearProgressBar
 import com.transsion.financialassistant.presentation.components.bottom_nav_bar.BottomBarItem
 import com.transsion.financialassistant.presentation.components.bottom_nav_bar.BottomNavBar
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
@@ -204,15 +204,7 @@ fun LandingScreen(
                                                 .fillMaxWidth()
                                                 .padding(paddingMedium),
                                         ) {
-                                            LinearProgressIndicator(
-                                                modifier = Modifier
-                                                    .padding(paddingMedium)
-                                                    .fillMaxWidth(),
-                                                progress = { progress },
-                                                color = FAColors.green,
-                                                trackColor = FAColors.lightGreen,
-                                                drawStopIndicator = {},
-                                            )
+                                            LinearProgressBar(progress = progress)
                                             NormalText(
                                                 fontWeight = FontWeight.Bold,
                                                 text = "${(progress * 100).toInt()}%",
