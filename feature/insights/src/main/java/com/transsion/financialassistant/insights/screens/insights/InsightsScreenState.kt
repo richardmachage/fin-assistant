@@ -11,6 +11,4 @@ data class InsightsScreenState(
     val insightCategory: InsightCategory = InsightCategory.PERSONAL,
     val insightTimeline: InsightTimeline = InsightTimeline.TODAY,
     val totalTransactionCost: String? = null,
-
-
-    )
+)
