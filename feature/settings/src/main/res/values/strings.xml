@@ -6,4 +6,6 @@
     <string name="save">Save</string>
     <string name="confirm_pin">Confirm PIN</string>
     <string name="set_pin">Set Pin</string>
+    <string name="refresh_transactions">Refresh Transactions</string>
+    <string name="sync_all_transactions">Sync all transactions</string>
 </resources>
