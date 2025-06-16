@@ -29,7 +29,7 @@ class InsertTransactionsWorker @AssistedInject constructor(
     @Assisted private val workerParams: WorkerParameters,
     private val repos: Repos,
     private val transactionRepo: TransactionRepo,
-    private val dataStore: DatastorePreferences
+    private val dataStore: DatastorePreferences,
 ) : CoroutineWorker(context, workerParams) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -74,11 +74,9 @@ class InsertTransactionsWorker @AssistedInject constructor(
                 val body = thisCursor.getString(bodyColumn)
                 val subscriptionId = thisCursor.getString(subscriptionIdColumn)
 
-
                 //branch here, only proceed for known types
                 when (val transactionType = transactionRepo.getTransactionType(body)) {
                     TransactionType.UNKNOWN -> {
-                        //TODO()
                         //check if it is an accepted unknown,
                         val isAcceptedUnknown = acceptedUnknownKeywords
                             .any { keyWord ->
@@ -103,10 +101,6 @@ class InsertTransactionsWorker @AssistedInject constructor(
                             val message = MpesaMessage(body = body, subscriptionId = subscriptionId)
                             try {
                                 saveAction(message)
-                                Log.d(
-                                    "InsertWorker",
-                                    "Saved processed message: ${message.body} subId: ${message.subscriptionId}"
-                                )
                             } catch (e: Exception) {
                                 Log.e("InsertWorker", "Error saving: ${e.message}")
                             }
