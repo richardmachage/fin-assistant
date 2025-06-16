@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface WithdrawMoneyDao {
 
     // Create
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(withdrawMoneyEntity: WithdrawMoneyEntity)
 
     //read

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MoveFromPochiDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(moveFromPochiEntity: MoveFromPochiEntity)
 
     @Query("SELECT * FROM MoveFromPochiEntity")

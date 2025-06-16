@@ -8,7 +8,7 @@ import androidx.room.Query
 
 @Dao
 interface UnknownEntityDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(unknownEntity: UnknownEntity)
 
     @Query("SELECT * FROM UnknownEntity")
