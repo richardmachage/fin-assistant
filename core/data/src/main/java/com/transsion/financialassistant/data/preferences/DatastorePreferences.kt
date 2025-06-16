@@ -68,8 +68,9 @@ class DatastorePreferences(private val context: Context) {
         saveValue(PreferencesKeys.PURPOSE, purpose)
     }
 
-    suspend fun savePersonalExpenses(expenses: String) {
-        saveValue(PreferencesKeys.PERSONAL_EXPENSES, expenses)
+    suspend fun savePersonalExpenses(expenses: List<String>) {
+        val serialized = expenses.joinToString(separator = ",")
+        saveValue(PreferencesKeys.PERSONAL_EXPENSES, serialized)
     }
 
     suspend fun saveBusinessDetails(type: String, expenses: String, paymentMethod: String) {
