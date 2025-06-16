@@ -6,13 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ReceiveMshwariDao {
     // create
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(receiveMshwari: ReceiveMshwariEntity)
 
     // update
