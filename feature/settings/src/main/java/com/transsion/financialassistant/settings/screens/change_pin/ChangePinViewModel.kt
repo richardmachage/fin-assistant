@@ -79,8 +79,7 @@ class ChangePinViewModel @Inject constructor(
                     state.value.newPin,
                     onSuccess = {
                         toggleLoading(false)
-                        onNewPinChange("")
-                        onOldPinChange("")
+                        clearFields()
                         onSuccess()
                     },
                     onFailure = {
@@ -94,6 +93,7 @@ class ChangePinViewModel @Inject constructor(
                     state.value.newPin,
                     onSuccess = {
                         toggleLoading(false)
+                        clearFields()
                         onSuccess()
                     },
                     onFailure = {
@@ -113,6 +113,12 @@ class ChangePinViewModel @Inject constructor(
         val hashedInput = securityRepo.doHash(pin)
 
         return hashedInput.contentEquals(decryptedPin)
+    }
+
+    private fun clearFields() {
+        onNewPinChange("")
+        onOldPinChange("")
+        onConfirmPinChange("")
     }
 
 }
