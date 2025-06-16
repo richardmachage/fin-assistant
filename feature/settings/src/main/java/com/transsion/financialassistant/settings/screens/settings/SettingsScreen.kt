@@ -100,7 +100,7 @@ fun SettingsScreen(
                         }
                 ) {
                     Icon(
-                        modifier = Modifier.size(34.dp),
+                        modifier = Modifier.size(26.dp),
                         tint = FAColors.green,
                         painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.security_password),
                         contentDescription = "security password"
@@ -139,6 +139,7 @@ fun SettingsScreen(
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Icon(
+                                modifier = Modifier.size(26.dp),
                                 tint = FAColors.green,
                                 painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.ic_outline_fingerprint),
                                 contentDescription = "security passwword"
@@ -180,7 +181,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            modifier = Modifier.size(34.dp),
+                            modifier = Modifier.size(26.dp),
                             tint = FAColors.green,
                             imageVector = Icons.Outlined.Refresh,
                             contentDescription = "Refresh"
@@ -211,7 +212,7 @@ fun SettingsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
-                            modifier = Modifier.size(34.dp),
+                            modifier = Modifier.size(23.dp),
                             tint = FAColors.green,
                             painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.sync),
                             contentDescription = "security password"
@@ -348,7 +349,7 @@ fun RowButton(
 
     ) {
         Icon(
-            modifier = Modifier.size(34.dp),
+            modifier = Modifier.size(26.dp),
             tint = FAColors.green,
             painter = painterResource(icon),
             contentDescription = title
