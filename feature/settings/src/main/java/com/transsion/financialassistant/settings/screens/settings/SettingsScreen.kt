@@ -1,6 +1,8 @@
 package com.transsion.financialassistant.settings.screens.settings
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -26,11 +27,17 @@ import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +46,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.transsion.financialassistant.feedback.navigation.FeedbackRoutes
+import com.transsion.financialassistant.presentation.components.LinearProgressBar
 import com.transsion.financialassistant.presentation.components.dialogs.ConfirmDialog
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.TitleText
@@ -48,6 +56,7 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
+import com.transsion.financialassistant.settings.R
 import com.transsion.financialassistant.settings.navigation.SettingRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,8 +66,15 @@ fun SettingsScreen(
     navController: NavController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val isPinSet by viewModel.isPinSet.collectAsStateWithLifecycle()
+
+
+    LaunchedEffect(Unit) {
+        viewModel.refreshIsPinSet()
+    }
 
     Scaffold(
         topBar = {
@@ -165,7 +181,12 @@ fun SettingsScreen(
             SettingGroup(
                 title = "App Data",
             ) {
-                //Sync Recent
+                VerticalSpacer(10)
+
+                var showRefreshDialog by remember { mutableStateOf(false) }
+                var showSyncAllDialog by remember { mutableStateOf(false) }
+
+                //Refresh Recent
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -173,11 +194,31 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(30))
                         .clickable {
-
+                            showRefreshDialog = true
                         }
                 ) {
-                    Row(
 
+                    // dialog
+                    ConfirmDialog(
+                        title = stringResource(R.string.refresh_transactions),
+                        showDialog = showRefreshDialog,
+                        message = "This will sync only the messages received since your previous sync",
+                        confirmButtonText = stringResource(com.transsion.financialassistant.presentation.R.string.okay),
+                        onDismiss = { showRefreshDialog = false },
+                        onConfirm = {
+                            //TODO perform sync
+                            showRefreshDialog = false
+                            viewModel.onRefreshTransactions(
+                                onComplete = {
+                                    Toast.makeText(context, "Refresh Complete", Toast.LENGTH_SHORT)
+                                        .show()
+
+                                }
+                            )
+                        },
+                    )
+
+                    Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
@@ -190,12 +231,16 @@ fun SettingsScreen(
                         Text("Refresh Transactions")
                     }
 
-                    IconButton(onClick = {
-                        //TODO show info dialog
-                    }) {
-                        Icon(imageVector = Icons.Outlined.Info, contentDescription = "info")
-                    }
                 }
+
+                //Refresh Progress
+                AnimatedVisibility(visible = state.showRefreshLoading) {
+                    LinearProgressBar(
+                        progress = viewModel.refreshProgress.collectAsState().value
+                    )
+                }
+
+                VerticalSpacer(20)
 
                 //Sync all
                 Row(
@@ -205,9 +250,29 @@ fun SettingsScreen(
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(30))
                         .clickable {
-
+                            showSyncAllDialog = true
                         }
                 ) {
+
+                    // dialog
+                    ConfirmDialog(
+                        title = stringResource(R.string.sync_all_transactions),
+                        showDialog = showSyncAllDialog,
+                        message = "This action will repeat the whole process of reading transactions from the MPESA messages.\nAre you sure you want to perform this long running process?",
+                        confirmButtonText = stringResource(com.transsion.financialassistant.presentation.R.string.okay),
+                        onDismiss = { showSyncAllDialog = false },
+                        onConfirm = {
+                            //TODO perform sync
+                            showSyncAllDialog = false
+                            viewModel.onSyncAllTransactions(
+                                onComplete = {
+                                    Toast.makeText(context, "Sync Complete", Toast.LENGTH_SHORT)
+                                        .show()
+                                }
+                            )
+                        },
+                    )
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -215,18 +280,25 @@ fun SettingsScreen(
                             modifier = Modifier.size(23.dp),
                             tint = FAColors.green,
                             painter = painterResource(com.transsion.financialassistant.presentation.R.drawable.sync),
-                            contentDescription = "security password"
+                            contentDescription = "sync all"
                         )
                         HorizontalSpacer(10)
                         Text("Sync All Transactions")
                     }
 
-                    IconButton(onClick = {
+                    /*IconButton(onClick = {
                         //TODO show info dialog
                     }) {
                         Icon(imageVector = Icons.Outlined.Info, contentDescription = "info")
-                    }
+                    }*/
                 }
+                //Sync All Progress
+                AnimatedVisibility(visible = state.showSyncAllLoading) {
+                    LinearProgressBar(
+                        progress = viewModel.syncAllProgress.collectAsState().value
+                    )
+                }
+                VerticalSpacer(10)
             }
 
             //Financial Assistant
