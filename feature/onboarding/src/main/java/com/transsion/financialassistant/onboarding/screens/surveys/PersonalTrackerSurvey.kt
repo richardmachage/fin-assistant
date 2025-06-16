@@ -158,6 +158,8 @@ fun PersonalTrackerSurvey(
                             //goToLanding()
                             goToLanding(OnboardingRoutes.PersonalTrackerSurvey)
 
+                            viewModel.updatePersonalExpenses(selectedItems) /*Save selected answers*/
+
                             viewModel.completeOnboarding()
                         },
                         enabled = if (selectedItems.isNotEmpty()) true else false,

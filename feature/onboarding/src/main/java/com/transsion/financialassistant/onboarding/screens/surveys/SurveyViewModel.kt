@@ -91,12 +91,12 @@ class SurveyViewModel @Inject constructor(
     }
 
     fun completeOnboarding(){
+        Log.d("SurveyViewModel", "Onboarding complete. Final answers: ${_surveyState.value?.answers}")
         viewModelScope.launch {
             val purpose = _state.value.purpose
+            Log.d("Onboarding", "Purpose from state: $purpose")
             onboardingSurveyRepo.savePurpose(purpose)
             Log.d("Onboarding", "Saving Purpose: $purpose")
-
-
             if(purpose == context.getString(R.string.personal_finance_needs)){
                 val personalExpenses = _state.value.personalExpenses
                 onboardingSurveyRepo.savePersonalExpenses(personalExpenses)
@@ -179,6 +179,9 @@ class SurveyViewModel @Inject constructor(
             val updatedAnswers = currentState.answers.toMutableMap()
             updatedAnswers[questionId] = answer
             _surveyState.value = currentState.copy(answers = updatedAnswers)
+
+            Log.d("SurveyViewModel", "Question $questionId answered with: $answer")
+            Log.d("SurveyViewModel", "Current answers map: $updatedAnswers")
         }
     }
 
@@ -205,6 +208,19 @@ class SurveyViewModel @Inject constructor(
             // Optionally reset the survey state
         }
     }
+
+    fun setPurpose(purpose: String) {
+        _state.value = _state.value.copy(purpose = purpose)
+    }
+
+    fun updatePurpose(purpose: String) {
+        _state.value = _state.value.copy(purpose = purpose)
+    }
+
+    fun updatePersonalExpenses(expenses: List<String>) {
+        _state.value = _state.value.copy(personalExpenses = expenses)
+    }
+
 
     fun setCompleteOnboarding() {
         onboardingRepo.setCompletedOnboarding()
