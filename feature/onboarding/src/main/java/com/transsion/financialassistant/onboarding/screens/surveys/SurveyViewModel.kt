@@ -11,7 +11,8 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.transsion.financialassistant.onboarding.R
-import com.transsion.financialassistant.onboarding.data.OnboardingRepositoryImpl
+import com.transsion.financialassistant.onboarding.data.OnboardingSurveyRepo
+import com.transsion.financialassistant.onboarding.data.OnboardingSurveyRepoImpl
 import com.transsion.financialassistant.onboarding.domain.OnboardingRepo
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.AnswerType
 import com.transsion.financialassistant.onboarding.screens.surveys.utils.OnboardingState
@@ -25,9 +26,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SurveyViewModel @Inject constructor(
-   @ApplicationContext private val context: Context,
-   private val repository: OnboardingRepositoryImpl,
-   private val onboardingRepo: OnboardingRepo
+    @ApplicationContext private val context: Context,
+    private val onboardingRepo: OnboardingRepo,
+    private val onboardingSurveyRepo: OnboardingSurveyRepo
 ) : ViewModel() {
     private val _surveyState = MutableLiveData(SurveyState())
     val surveyState: LiveData<SurveyState> = _surveyState
@@ -79,7 +80,7 @@ class SurveyViewModel @Inject constructor(
                 ))
     )
 
-    val onboardingCompleted: LiveData<Boolean> = repository.onboardingCompleted.asLiveData()
+    val onboardingCompleted: LiveData<Boolean> = onboardingSurveyRepo.onboardingCompleted.asLiveData()
 
     init {
         _surveyState.value = SurveyState(
@@ -92,25 +93,25 @@ class SurveyViewModel @Inject constructor(
     fun completeOnboarding(){
         viewModelScope.launch {
             val purpose = _state.value.purpose
-            repository.savePurpose(purpose)
+            onboardingSurveyRepo.savePurpose(purpose)
             Log.d("Onboarding", "Saving Purpose: $purpose")
 
 
             if(purpose == context.getString(R.string.personal_finance_needs)){
                 val personalExpenses = _state.value.personalExpenses
-                repository.savePersonalExpenses(personalExpenses)
+                onboardingSurveyRepo.savePersonalExpenses(personalExpenses)
                 Log.d("Onboarding", "Saving Personal Expenses: ${_state.value.personalExpenses}")
             } else {
                 val businessType = _state.value.businessType
                 val businessExpenses = _state.value.businessExpenses
                 val paymentMethod = _state.value.paymentMethod
-                repository.saveBusinessDetails(businessType, businessExpenses.toString(), paymentMethod)
+                onboardingSurveyRepo.saveBusinessDetails(businessType, businessExpenses.toString(), paymentMethod)
                 Log.d("Onboarding", "Saving Business Details - Type: $businessType, Expenses: $businessExpenses, Payment: $paymentMethod")
 
             }
 
             Log.d("Onboarding", "Setting Onboarding Completed to true")
-            repository.setOnboardingCompleted(true)
+            onboardingSurveyRepo.setOnboardingCompleted(true)
         }
     }
 
@@ -207,6 +208,14 @@ class SurveyViewModel @Inject constructor(
 
     fun setCompleteOnboarding() {
         onboardingRepo.setCompletedOnboarding()
+    }
+
+    fun setCompleteOnboardingSurvey(completed: Boolean) {
+        viewModelScope.launch {
+            if (completed) {
+                onboardingSurveyRepo.setOnboardingCompleted(true)
+            }
+        }
     }
 
     // calculate progress for the progress bar
