@@ -82,6 +82,8 @@ class MainViewModel @Inject constructor(
 
     /**Check if Authentication is Completed*/
     fun authCompleted(){
-        _requireAuth.value = false
+        if (onboardingRepo.hasCompletedOnboarding() && pinRepo.isPinSet()) {
+            _requireAuth.value = false
+        }
     }
 }
