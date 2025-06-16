@@ -7,7 +7,7 @@ import com.transsion.financialassistant.insights.model.InsightTimeline
 data class InsightsScreenState(
     val isLoading: Boolean = false,
     val toastMessage: String? = null,
-    val transactionCategory: TransactionCategory = TransactionCategory.IN,
+    val transactionCategory: TransactionCategory = TransactionCategory.OUT,
     val insightCategory: InsightCategory = InsightCategory.PERSONAL,
     val insightTimeline: InsightTimeline = InsightTimeline.TODAY,
     val totalTransactionCost: String? = null,

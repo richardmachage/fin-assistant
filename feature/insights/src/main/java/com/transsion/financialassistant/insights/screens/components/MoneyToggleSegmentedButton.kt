@@ -2,10 +2,12 @@ package com.transsion.financialassistant.insights.screens.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.transsion.financialassistant.data.models.TransactionCategory
 import com.transsion.financialassistant.presentation.components.texts.NormalText
 import com.transsion.financialassistant.presentation.theme.FAColors
+import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 
 @Composable
 fun MoneyToggle(
@@ -32,12 +35,14 @@ fun MoneyToggle(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(FAColors.greenOverlay)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
     ) {
         options.forEach { option ->
             val isSelected = selectedOption == option
             val backgroundColor = if (isSelected) FAColors.green else Color.Transparent
-            val contentColor = if (isSelected) Color.White else Color.Black
+            val contentColor = if (isSelected) Color.White else {
+                if (isSystemInDarkTheme()) Color.White else Color.Black
+            }
 
             Box(
                 modifier = Modifier
@@ -64,10 +69,13 @@ fun MoneyToggle(
 fun SegementendInOutButtonPrev() {
     //SegmentendInOutButton()
     var selectedOption by remember { mutableStateOf(TransactionCategory.IN) }
-    MoneyToggle(
-        selectedOption = selectedOption,
-        onOptionSelected = {
-            selectedOption = it
-        }
-    )
+
+    FinancialAssistantTheme(darkTheme = true) {
+        MoneyToggle(
+            selectedOption = selectedOption,
+            onOptionSelected = {
+                selectedOption = it
+            }
+        )
+    }
 }

@@ -36,7 +36,7 @@ fun InsightCateToggleSegmentedButton(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(50))
-            .background(MaterialTheme.colorScheme.surfaceContainerHigh/*if(isSystemInDarkTheme()) FAColors.cardBackgroundDark else FAColors.greenOverlay*/)
+            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
     ) {
         options.forEach { option ->
             val isSelected = selectedOption == option
