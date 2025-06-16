@@ -4,9 +4,9 @@ import com.transsion.financialassistant.data.preferences.DatastorePreferences
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class OnboardingRepositoryImpl @Inject constructor(
+class OnboardingSurveyRepoImpl @Inject constructor(
     private val datastorePreferences: DatastorePreferences
-) : OnboardingRepository {
+) : OnboardingSurveyRepo {
 
     override val onboardingCompleted: Flow<Boolean> = datastorePreferences.getOnboardingCompleted(false)
 
