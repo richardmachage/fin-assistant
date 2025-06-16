@@ -7,7 +7,7 @@ interface OnboardingSurveyRepo {
 
     suspend fun savePurpose(purpose: String)
 
-    suspend fun savePersonalExpenses(expenses: String)
+    suspend fun savePersonalExpenses(expenses: List<String>)
 
     suspend fun saveBusinessDetails(type: String, expenses: String, paymentMethod: String)
 

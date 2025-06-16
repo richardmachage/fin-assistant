@@ -14,7 +14,7 @@ class OnboardingSurveyRepoImpl @Inject constructor(
         datastorePreferences.savePurpose(purpose)
     }
 
-    override suspend fun savePersonalExpenses(expenses: String) {
+    override suspend fun savePersonalExpenses(expenses: List<String>) {
         datastorePreferences.savePersonalExpenses(expenses)
     }
 
