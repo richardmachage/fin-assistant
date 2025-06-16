@@ -43,7 +43,7 @@ fun BottomSheetFaMessage(
     ) {
 
         if (selectedMessage.isNotBlank()) {
-            var hideBalance by remember { mutableStateOf(false) }
+            var hideBalance by remember { mutableStateOf(true) }
 
             transaction.let { transaction ->
                 Column(
