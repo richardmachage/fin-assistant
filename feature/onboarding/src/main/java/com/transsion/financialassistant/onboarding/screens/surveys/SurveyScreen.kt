@@ -160,21 +160,37 @@ fun SurveyScreen(
                         text = stringResource(R.string.next_btn),
                         onClick = {
                             when (selectedOption) {
-                                stringOptions[0] -> navController.navigate(
-                                    OnboardingRoutes.PersonalTrackerSurvey
-                                ) { popUpTo(OnboardingRoutes.SurveyScreen) { inclusive = true } }
+                                stringOptions[0] -> {
+                                    viewModel.setPurpose(stringOptions[0])
+                                    navController.navigate(
+                                        OnboardingRoutes.PersonalTrackerSurvey
+                                    ) {
+                                        popUpTo(OnboardingRoutes.SurveyScreen) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                                stringOptions[1] -> {
+                                    viewModel.setPurpose(stringOptions[1])
+                                    navController.navigate(
+                                        OnboardingRoutes.SurveyBusinessScreens
+                                    ) {
+                                        popUpTo(OnboardingRoutes.SurveyScreen) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
 
-                                stringOptions[1] -> navController.navigate(
-                                    OnboardingRoutes.SurveyBusinessScreens
-                                ) { popUpTo(OnboardingRoutes.SurveyScreen) { inclusive = true } }
-
-                                stringOptions[2] -> navController.navigate(
-                                    OnboardingRoutes.SurveyBusinessScreens
-                                ) { popUpTo(OnboardingRoutes.SurveyScreen) { inclusive = true } }
+                                stringOptions[2] -> {
+                                    viewModel.setPurpose(stringOptions[2])
+                                    navController.navigate(
+                                        OnboardingRoutes.SurveyBusinessScreens
+                                    ) { popUpTo(OnboardingRoutes.SurveyScreen) { inclusive = true } }
+                                }
                             }
 
+                            viewModel.updatePurpose(selectedOption)
                             viewModel.setCompleteOnboarding()
-
                             viewModel.setCompleteOnboardingSurvey(completed = true)
                         },
 
