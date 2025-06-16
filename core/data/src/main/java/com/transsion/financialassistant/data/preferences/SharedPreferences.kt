@@ -7,7 +7,7 @@ import androidx.core.content.edit
 
 @SuppressLint("ApplySharedPref")
 class SharedPreferences(
-    private val context: Context
+    context: Context
 ) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences(PREFERENCES_FILE_KEY, Context.MODE_PRIVATE)
@@ -20,6 +20,7 @@ class SharedPreferences(
         const val SALT_KEY = "pin_salt"
         const val HAS_COMPLETED_PIN_SETUP = "has_completed_pin_setup"
         const val IS_MESSAGES_READ = "is_messages_read"
+        const val LAST_SYNC_TIMESTAMP = "last_sync_timestamp"
 
     }
 
