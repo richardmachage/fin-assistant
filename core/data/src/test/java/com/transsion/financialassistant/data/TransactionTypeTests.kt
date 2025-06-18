@@ -284,25 +284,10 @@ class TransactionTypeTests {
 }
 
 
+val receiveTill =
+    "TES4LLOXD6 Confirmed on 9/6/25 at 18:49 Ksh 90.00 received from 254723767736 WANUME. Account balance is Ksh 4,650.89 Transaction cost, Ksh 1.00"
+
+val sendFromTill =
+    "TES9IENCF7 Confirmed. Ksh140.00 transferred to CLEANSHELF SUPERMARKET - NGONG 28/5/25 at 10:41 AM. Merchant Account Balanceis Ksh2,534.38."
 val sendToZiidi =
     "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
-val fulizaCut =
-    "SKT7KAQMRH Confirmed. Ksh 241.19 from your M-PESA has been used to fully pay your outstanding Fuliza M-PESA. Available Fuliza M-PESA limit is Ksh 700.00. M-PESA balance is Ksh558.81."
-val fulizaAmount =
-    "SKT9JYXWRJ Confirmed. Fuliza M-PESA amount is Ksh 238.80. Interest charged Ksh 2.39. Total Fuliza M-PESA outstanding amount is Ksh 241.19 due on 29/12/24. To check daily charges, Dial *234*0#OK Select Query Charges"
-val reversal =
-    "SJP5C9HAIJ confirmed. Reversal of transaction SJH5DP029L has been successfully reversed  on 25/10/24  at 2:04 PM and Ksh1.00 is credited to your M-PESA account. New M-PESA account balance is Ksh1,778.12."
-val dataBundlesEmptyAccoountNumer =
-    "SGK99ETMW3 Confirmed. Ksh100.00 sent to SAFARICOM DATA BUNDLES for account on 20/7/24 at 11:04 AM. New M-PESA balance is Ksh1,407.98."
-
-val sendTohustlerFund =
-    "TE337PZFVF Confirmed. You have sent Ksh3,013.88 to Hustler Fund on 03/05/2025  at 10:50 AM. New MPESA balance is Ksh4,066.78."
-
-val receiveFromHustlerFund =
-    "TE397TUC4H Confirmed. You have received Ksh3,000.00 from Hustler Fund on 03/05/2025 at 11:15 AM. New MPESA balance is Ksh6,597.06."
-
-val sendBridge =
-    "TE357Q76ZT Confirmed. You have sent Ksh3,019.72 to BRIDGE on 03/05/2025  at 10:51 AM. New MPESA balance is Ksh1,047.06."
-
-val receiveFromBridge =
-    "TE377TLKL9 Confirmed. You have received Ksh3,000.00 from BRIDGE on 03/05/2025 at 11:13 AM. New MPESA balance is Ksh3,747.06."
