@@ -31,7 +31,9 @@ interface SendTillDao {
         endDate: String
     ): List<SendTillEntity>
 
+
     @Query(
+
         """
             SELECT COUNT(transactionCode) FROM SendTillEntity
         """
