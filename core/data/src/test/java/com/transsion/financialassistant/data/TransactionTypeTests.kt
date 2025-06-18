@@ -289,5 +289,7 @@ val receiveTill =
 
 val sendFromTill =
     "TES9IENCF7 Confirmed. Ksh140.00 transferred to CLEANSHELF SUPERMARKET - NGONG 28/5/25 at 10:41 AM. Merchant Account Balanceis Ksh2,534.38."
+
+
 val sendToZiidi =
     "SLV9I5W4EV Confirmed. Ksh2,000.00 sent to ZIIDI on 31/12/24 at 6:34 PM New M-PESA balance is Ksh2,349.89. Transaction cost, Ksh0.00.Amount you can transact within the day is 498,000.00. Pay your water/KPLC bill conveniently using M-PESA APP or use Paybill option on Lipa Na M-PESA."
