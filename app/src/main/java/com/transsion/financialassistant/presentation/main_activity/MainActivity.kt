@@ -4,11 +4,9 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,7 +17,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantNavHost
-import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,26 +38,30 @@ class MainActivity : AppCompatActivity() {
              * */
             DisposableEffect(Unit) {
                 val observer = object : DefaultLifecycleObserver {
-                    override fun onStart(owner: LifecycleOwner) {
-                        viewmodel.checkAuthOnResume()
+
+
+                    override fun onResume(owner: LifecycleOwner) {
+                        super.onResume(owner)
+                        if (viewmodel.isPinSet()) {
+                            //TODO show LogIn screen
+                            financialAssistantController.navigate(OnboardingRoutes.Login) {
+                                popUpTo(OnboardingRoutes.Login) {
+                                    inclusive = true
+                                }
+                            }
+                        }
                     }
                 }
+
                 ProcessLifecycleOwner.get().lifecycle.addObserver(observer)
+
+                //Dispose
                 onDispose {
                     ProcessLifecycleOwner.get().lifecycle.removeObserver(observer)
                 }
             }
 
-            LaunchedEffect (requireAuth){
-                if (requireAuth){
-                    financialAssistantController.navigate(OnboardingRoutes.Login){
-                        popUpTo(FinancialAssistantRoutes.Landing){
-                            inclusive = true
-                        }
-                    }
-                    viewmodel.authCompleted()
-                }
-            }
+
             FinancialAssistantTheme {
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
