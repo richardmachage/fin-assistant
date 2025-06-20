@@ -7,9 +7,11 @@ import com.transsion.financialassistant.data.models.TransactionType
 
 @DatabaseView(
     value = """
-        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName , "0.0" as transactionCost FROM ReceivePochiEntity
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName , 0.0 as transactionCost FROM ReceivePochiEntity
         UNION ALL
         SELECT transactionCode, phone, amount, date,time, transactionType, "IN" as transactionCategory, businessBalance, "MY MPESA" as receiveFromName, transactionCost FROM MoveToPochiEntity
+        UNION ALL 
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName, transactionCost from ReceiveTillEntity
     """
 )
 data class UnifiedIncomingTransactionsBusiness(

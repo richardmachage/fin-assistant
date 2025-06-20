@@ -9,6 +9,8 @@ import com.transsion.financialassistant.data.models.TransactionType
         SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName , transactionCost FROM SendFromPochiEntity
         UNION ALL
         SELECT transactionCode, phone, amount, date,time,transactionType, businessBalance, 'OUT' as transactionCategory,'MY MPESA' as sentToName, transactionCost FROM MoveFromPochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date, time, transactionType, businessBalance, transactionCategory, sentToName, 0.0 as transactionCost  from SendTillEntity
     """
 )
 data class UnifiedOutGoingTransactionsBusiness(
