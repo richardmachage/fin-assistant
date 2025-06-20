@@ -1,6 +1,6 @@
 package com.transsion.financialassistant.onboarding.screens.surveys.utils
 
-data class SurveyQuestion(
+/*data class SurveyQuestion(
     val id: Int,
     val questionText: String,
     val questionDescription: String? = null,
@@ -13,6 +13,6 @@ enum class AnswerType {
     MULTI_CHOICE,
     MULTI_CHOICE_PAY,
     TEXT_INPUT,
-}
+}*/
 
 
