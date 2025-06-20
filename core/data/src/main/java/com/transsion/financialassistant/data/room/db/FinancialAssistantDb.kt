@@ -26,6 +26,8 @@ import com.transsion.financialassistant.data.room.entities.receive_mshwari.Recei
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.receive_till.ReceiveTillDao
+import com.transsion.financialassistant.data.room.entities.receive_till.ReceiveTillEntity
 import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditDao
 import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
 import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
@@ -42,12 +44,16 @@ import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshw
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.send_till.SendTillDao
+import com.transsion.financialassistant.data.room.entities.send_till.SendTillEntity
 import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntity
 import com.transsion.financialassistant.data.room.entities.unknown.UnknownEntityDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import com.transsion.financialassistant.data.room.views.business.UnifiedIncomingTransactionsBusiness
 import com.transsion.financialassistant.data.room.views.business.UnifiedOutGoingTransactionsBusiness
+import com.transsion.financialassistant.data.room.views.business.UnifiedPochiTransactions
+import com.transsion.financialassistant.data.room.views.business.UnifiedTillTransactions
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionBusiness
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
 import com.transsion.financialassistant.data.room.views.personal.UnifiedIncomingTransaction
@@ -77,7 +83,9 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnknownEntity::class,
         ReversalDebitEntity::class,
         ReversalCreditEntity::class,
-        SearchHistoryEntity::class
+        SearchHistoryEntity::class,
+        ReceiveTillEntity::class,
+        SendTillEntity::class
     ],
     views = [
         UnifiedIncomingTransaction::class,
@@ -86,9 +94,11 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
         UnifiedTransactionBusiness::class,
         UnifiedIncomingTransactionsBusiness::class,
         UnifiedOutGoingTransactionsBusiness::class,
+        UnifiedPochiTransactions::class,
+        UnifiedTillTransactions::class
     ],
 
-    version = 5,
+    version = 7,
     exportSchema = true
 
 )
@@ -118,6 +128,8 @@ abstract class FinancialAssistantDb : RoomDatabase() {
     abstract fun reversalDebitDao(): ReversalDebitDao
     abstract fun reversalCreditDao(): ReversalCreditDao
     abstract fun searchHistoryDao(): SearchHistoryDao
+    abstract fun receiveTillDao(): ReceiveTillDao
+    abstract fun sendTillDao(): SendTillDao
 
     companion object {
         private var INSTANCE: FinancialAssistantDb? = null
@@ -131,7 +143,12 @@ abstract class FinancialAssistantDb : RoomDatabase() {
                         FinancialAssistantDb::class.java,
                         "financial_assistant_db"
                     )
-                        .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                        .addMigrations(
+                            MIGRATION_3_4,
+                            MIGRATION_4_5,
+                            MIGRATION_5_6,
+                            MIGRATION_6_7
+                        )
                         .build()
                     INSTANCE = instance
                 }
