@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,7 +44,6 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.components.buttons.FilledButtonFa
@@ -64,7 +61,8 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 @Composable
 fun CreatePinScreen(
     navController: NavController,
-    viewModel: CreatePinScreenViewModel = hiltViewModel()
+    viewModel: CreatePinScreenViewModel = hiltViewModel(),
+    goToLanding: (route: Any) -> Unit
 ) {
     val showPrompt by viewModel.showPrompt.collectAsState()
     val pinState by viewModel.pinState.collectAsState()
@@ -98,13 +96,15 @@ fun CreatePinScreen(
         true -> SetPasswordPromptScreen(
             onSkip = {
                 viewModel.skipPinSetup()
-                navController.navigate(OnboardingRoutes.SurveyScreen) {
+                goToLanding(OnboardingRoutes.CreatePin)
+                /*navController.navigate(OnboardingRoutes.SurveyScreen) {
                     popUpTo<OnboardingRoutes.CreatePin> {
                         inclusive = true
                     }
                     launchSingleTop = true
-                }
-            }, onContinue = {
+                }*/
+            },
+            onContinue = {
                 viewModel.setShowPrompt(false)
             }
         )
@@ -169,7 +169,7 @@ fun CreatePinScreen(
                             pinError = pin.length < 4 //  Show error if PIN is less than 4 digits
                         },
                         modifier = Modifier
-                           // .align(Alignment.Start)
+                            // .align(Alignment.Start)
                             .padding(start = 40.dp),
                         placeholder = stringResource(R.string.pin),
                         isShowError = pinError,
@@ -221,50 +221,61 @@ fun CreatePinScreen(
 
                 }
 
-            FilledButtonFa(
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-                    .padding(paddingValues)
-                    .imePadding()
-                    .align(Alignment.BottomCenter),
-                text = stringResource(R.string.create),
-                onClick = {
-                    if (isValidLength && isMatching) {
-                        viewModel.setUserPin(pin)
-                        navController.navigate(OnboardingRoutes.Login){
-                            popUpTo<OnboardingRoutes.CreatePin> {
-                                inclusive = true
-                            }
+                FilledButtonFa(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(paddingValues)
+                        .imePadding()
+                        .align(Alignment.BottomCenter),
+                    text = stringResource(R.string.create),
+                    onClick = {
+                        if (isValidLength && isMatching) {
+                            viewModel.setUserPin(
+                                pin = pin,
+                                onSuccess = {
+                                    navController.navigate(OnboardingRoutes.Login) {
+                                        popUpTo<OnboardingRoutes.CreatePin> {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onFailure = {
+                                    //TODO
+                                }
+                            )
+
+                        } else {
+                            showError = true
                         }
-                    } else {
-                        showError = true
-                    }
-                },
-                enabled = isMatching,
-            )
-
-            if (showError) {
-                Text(
-                    text = stringResource(R.string.show_error),
-                    color = Color.Red,
-                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    },
+                    enabled = isMatching,
                 )
-            }
 
-            when {
-                //is PinState.Loading -> CircularLoading()
+                if (showError) {
+                    Text(
+                        text = stringResource(R.string.show_error),
+                        color = Color.Red,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                }
 
-                pinState.isLoading -> {
-                    Toast.makeText(context, "Pin Created Successfully!", Toast.LENGTH_SHORT).show()
+                when {
+                    //is PinState.Loading -> CircularLoading()
+
+                    pinState.isLoading -> {
+                        Toast.makeText(context, "Pin Created Successfully!", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+
+                    pinState.error != null -> {
+                        Text(text = pinState.error!!, color = Color.Red)
+                    }
+
+                    else -> {}
                 }
-               pinState.error != null -> {
-                    Text(text = pinState.error!!, color = Color.Red)
-                }
-                else -> {}
             }
         }
     }
-}
 
 }
 
@@ -273,6 +284,6 @@ fun CreatePinScreen(
 @Composable
 fun CreatePinScreenPreview() {
     FinancialAssistantTheme {
-        CreatePinScreen(navController = rememberNavController())
+        // CreatePinScreen(navController = rememberNavController())
     }
 }
