@@ -358,6 +358,25 @@ fun saveStrategies(
         )
     },
 
+    TransactionType.RECEIVE_TILL to { message ->
+        repos.receiveTillRepo.receiveTillTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {}
+        )
+    },
+
+    TransactionType.SEND_FROM_TILL to { message ->
+        repos.sendTillRepo.insertSendTillTransaction(
+            message = message.body,
+            context = context,
+            subId = message.subscriptionId.toIntOrNull() ?: 0,
+            onSuccess = {},
+            onFailure = {}
+        )
+    },
 
     TransactionType.UNKNOWN to { _: MpesaMessage ->
         // No-op or maybe log it
