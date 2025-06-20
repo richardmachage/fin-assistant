@@ -26,7 +26,7 @@ interface SendTillDao {
     suspend fun getAllReceiveTill(): List<SendTillEntity>
 
     @Query("SELECT * FROM SendTillEntity WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
-    suspend fun getReceiveTillTransactionsByDate(
+    suspend fun getSendFromTillTransactionsByDate(
         startDate: String,
         endDate: String
     ): List<SendTillEntity>
