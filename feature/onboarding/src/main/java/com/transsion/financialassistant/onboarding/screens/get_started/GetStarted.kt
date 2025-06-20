@@ -171,17 +171,12 @@ fun GetStarted(
                     width = LocalConfiguration.current.screenWidthDp.dp,
                     onSwipeComplete = {
                         if (isGranted) {
-                            /* navController.navigate(OnboardingRoutes.ConfirmNumberDual)
-                             {
-                                 popUpTo(OnboardingRoutes.Welcome) { inclusive = true }
-                             }*/
 
                             navController.navigate(OnboardingRoutes.CreatePin) {
                                 popUpTo<OnboardingRoutes.Welcome> {
                                     inclusive = true
                                 }
                             }
-
 
                         } else {
                             scope.launch { swipeableState.snapTo(0) }
