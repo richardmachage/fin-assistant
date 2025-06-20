@@ -78,15 +78,24 @@ interface UnifiedTransactionsBusinessDao {
     )
     fun getNumOfAllTransactions(): Flow<Int>
 
-    /**Get Business balance*/
+    //get pochi balance
     @Query(
         """
-        SELECT mpesaBalance FROM UnifiedTransactionBusiness 
+        SELECT businessBalance FROM UnifiedPochiTransactions 
         ORDER BY date DESC, time DESC  
         LIMIT 1
             """
     )
-    fun getBusinessBalance(): Flow<Double>
+    fun getPochiBalance(): Flow<Double?>
+
+    @Query(
+        """
+        SELECT businessBalance FROM UnifiedTillTransactions 
+        ORDER BY date DESC, time DESC  
+        LIMIT 1
+            """
+    )
+    fun getTillBalance(): Flow<Double?>
 
 
     @Query(
