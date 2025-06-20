@@ -19,6 +19,8 @@ enum class TransactionType(val description: String) {
     FULIZA_PAY("Paid Fuliza"),
     REVERSAL_DEBIT("Reversal debited"),
     REVERSAL_CREDIT("Reversal credited"),
+    RECEIVE_TILL("Received in Till"),
+    SEND_FROM_TILL("Send from Till"),
     UNKNOWN("Unknown"),
     ;
 
@@ -55,7 +57,7 @@ enum class TransactionType(val description: String) {
                 RegexOption.IGNORE_CASE
             )*/
 
-            PAY_BILL ->"(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) for account ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(?:\\.Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2}))?(.*)?"
+            PAY_BILL -> "(\\b[A-Z0-9]+\\b) Confirmed\\. Ksh([\\d,]+\\.?\\d{0,2}) sent to ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) for account ([A-Za-z0-9\\s\\p{P}\\p{S}_]+) on (\\d{1,2}/\\d{1,2}/\\d{2}) at (\\d{1,2}:\\d{2} [APM]{2})\\.? New M-PESA balance is Ksh([\\d,]+\\.?\\d{0,2})\\. Transaction cost, Ksh([\\d,]+\\.?\\d{0,2})(?:\\.Amount you can transact within the day is ([\\d,]+\\.?\\d{0,2}))?(.*)?"
                 .toRegex(RegexOption.IGNORE_CASE)
 
 
@@ -99,6 +101,8 @@ enum class TransactionType(val description: String) {
                 RegexOption.IGNORE_CASE
             )
 
+            RECEIVE_TILL -> RECEIVE_TILL_REGEX
+            SEND_FROM_TILL -> SEND_FROM_TILL_REGEX
 
             UNKNOWN -> "".toRegex()
 
@@ -113,4 +117,11 @@ val FULIZA_CUT_REGEX = (
         ).toRegex(RegexOption.IGNORE_CASE)
 
 
-
+val RECEIVE_TILL_REGEX =
+    "^(\\w+)\\s+Confirmed\\s+on\\s+(\\d{1,2}/\\d{1,2}/\\d{2})\\s+at\\s+(\\d{1,2}:\\d{2})\\s+Ksh\\s+([\\d,]+\\.\\d{2})\\s+received\\s+from\\s+(\\d+)\\s+([^.]+?)\\.\\s+Account\\s+balance\\s+is\\s+Ksh\\s+([\\d,]+\\.\\d{2})\\s+Transaction\\s+cost,\\s+Ksh\\s+([\\d,]+\\.\\d{2})".toRegex(
+        RegexOption.IGNORE_CASE
+    )
+val SEND_FROM_TILL_REGEX =
+    "(\\b[A-Z0-9]+\\b)\\s+Confirmed\\.\\s*Ksh\\s*([\\d,]+\\.\\d{2})\\s+transferred\\s+to\\s+(.+?)\\s+(\\d{1,2}/\\d{1,2}/\\d{2})\\s+at\\s+(\\d{1,2}:\\d{2}\\s+[AP]M)\\.\\s+Merchant\\s+Account\\s+Balanceis\\s+Ksh\\s*([\\d,]+\\.\\d{2})\\.".toRegex(
+        RegexOption.IGNORE_CASE
+    )

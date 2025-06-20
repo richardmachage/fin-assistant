@@ -1,9 +1,12 @@
 package com.transsion.financialassistant.data
 
+import com.transsion.financialassistant.data.models.RECEIVE_TILL_REGEX
+import com.transsion.financialassistant.data.models.SEND_FROM_TILL_REGEX
 import com.transsion.financialassistant.data.models.TransactionType
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepo
 import com.transsion.financialassistant.data.repository.transaction.TransactionRepoImpl
 import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 
@@ -242,7 +245,6 @@ class TransactionTypeTests {
     }
 
 
-
     @Test
     fun `should handle null input safely`() {
         val message: String? = null
@@ -281,8 +283,27 @@ class TransactionTypeTests {
         println("TransactionType : ${result.description}")
         assertTrue(result == TransactionType.REVERSAL_CREDIT)
     }
-}
 
+    @Test
+    fun `should detect send money from till`() {
+        val match = SEND_FROM_TILL_REGEX.find(sendFromTill)
+        match?.let {
+            it.groupValues.forEachIndexed { index, value ->
+                println("$index : $value")
+            }
+        } ?: fail("No Match")
+    }
+
+    @Test
+    fun `should detect receive money in till`() {
+        val match = RECEIVE_TILL_REGEX.find(receiveTill)
+        match?.let {
+            it.groupValues.forEachIndexed { index, value ->
+                println("$index : $value")
+            }
+        }
+    }
+}
 
 val receiveTill =
     "TES4LLOXD6 Confirmed on 9/6/25 at 18:49 Ksh 90.00 received from 254723767736 WANUME. Account balance is Ksh 4,650.89 Transaction cost, Ksh 1.00"
