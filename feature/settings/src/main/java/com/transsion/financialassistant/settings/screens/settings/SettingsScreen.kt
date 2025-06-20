@@ -292,6 +292,7 @@ fun SettingsScreen(
                         Icon(imageVector = Icons.Outlined.Info, contentDescription = "info")
                     }*/
                 }
+
                 //Sync All Progress
                 AnimatedVisibility(visible = state.showSyncAllLoading) {
                     LinearProgressBar(
