@@ -14,12 +14,14 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillE
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyEntity
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariEntity
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiEntity
+import com.transsion.financialassistant.data.room.entities.receive_till.ReceiveTillEntity
 import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditEntity
 import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitEntity
 import com.transsion.financialassistant.data.room.entities.send_from_pochi.SendFromPochiEntity
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyEntity
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariEntity
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiEntity
+import com.transsion.financialassistant.data.room.entities.send_till.SendTillEntity
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyEntity
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toDbDate
@@ -375,11 +377,6 @@ open class TransactionRepoImpl @Inject constructor(
         val match = TransactionType.REVERSAL_DEBIT.getRegex().find(message) ?: return null
         val groups = match.groupValues
 
-        //FIXME should be removed in production
-        groups.forEachIndexed { index, it ->
-            println("${index}, $it")
-        }
-
         return ReversalDebitEntity(
             transactionCode = groups[1],
             transactionReversedCode = groups[2],
@@ -388,6 +385,38 @@ open class TransactionRepoImpl @Inject constructor(
             amount = groups[5].replace(",", "").toDouble(),
             mpesaBalance = groups[6].replace(",", "").toDouble(),
             phone = phone,
+        )
+    }
+
+    override fun parseReceiveTillMessage(message: String, phone: String): ReceiveTillEntity? {
+        val match = TransactionType.RECEIVE_TILL.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        return ReceiveTillEntity(
+            transactionCode = groups[1],
+            phone = phone,
+            amount = groups[4].replace(",", "").toDouble(),
+            receiveFromName = groups[6],
+            receiveFromNumber = groups[5],
+            date = groups[2].toDbDate(),
+            time = groups[3].toDbTime(),
+            businessBalance = groups[7].replace(",", "").toDouble(),
+            transactionCost = groups[8].replace(",", "").toDouble()
+        )
+    }
+
+    override fun parseSendTillMessage(message: String, phone: String): SendTillEntity? {
+        val match = TransactionType.SEND_FROM_TILL.getRegex().find(message) ?: return null
+        val groups = match.groupValues
+
+        return SendTillEntity(
+            transactionCode = groups[1],
+            amount = groups[2].replace(",", "").toDouble(),
+            sentToName = groups[3],
+            date = groups[4].toDbDate(),
+            time = groups[5].toDbTime(),
+            businessBalance = groups[6].replace(",", "").toDouble(),
+            phone = phone
         )
     }
 
