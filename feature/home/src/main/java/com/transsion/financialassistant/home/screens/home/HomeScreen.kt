@@ -114,7 +114,7 @@ fun HomeScreen(
                 .padding(top = innerPadding.calculateTopPadding())
                 .padding(start = paddingMedium, end = paddingMedium)
                 .verticalScroll(rememberScrollState()),
-            ) {
+        ) {
 
             MpesaBalanceCard(
                 balance = mpesaBalance.toString().formatAsCurrency(),
@@ -191,7 +191,7 @@ fun HomeScreen(
                         //Till
                         CategoryCard(
                             modifier = Modifier.weight(1f),
-                            title = stringResource(R.string.till_number),
+                            title = stringResource(R.string.buy_goods_till),
                             amount = viewModel.tillBalance.collectAsState().value.toString()
                                 .formatAsCurrency(),
                             icon = com.transsion.financialassistant.presentation.R.drawable.cash,
