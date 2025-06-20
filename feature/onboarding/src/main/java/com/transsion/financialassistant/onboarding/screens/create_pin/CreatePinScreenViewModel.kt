@@ -16,7 +16,7 @@ import javax.inject.Inject
 class CreatePinScreenViewModel @Inject constructor(
     private val repository: OnboardingRepo,
     private val sharedPreferences: SharedPreferences
-): ViewModel() {
+) : ViewModel() {
 
     //private val _pinState = MutableStateFlow<PinState>(PinState.Idle)
     private val _pinState = MutableStateFlow(CreatePinScreenState()) // Default state
@@ -39,11 +39,13 @@ class CreatePinScreenViewModel @Inject constructor(
     }
 
 
-    fun setUserPin(pin: String) {
+    fun setUserPin(
+        pin: String,
+        onSuccess: () -> Unit,
+        onFailure: (message: String) -> Unit
+    ) {
         viewModelScope.launch {
 
-            // ---- Loading state ------
-            //_pinState.value = PinState.Loading
             _pinState.update {
                 it.copy(isLoading = true, isIdle = false, error = null, toastMessage = null)
             }
@@ -51,8 +53,10 @@ class CreatePinScreenViewModel @Inject constructor(
             repository.setPin(
                 pin = pin,
                 onSuccess = {
-                    // ----Success state ------
-                    //_pinState.value = PinState.Success
+                    _pinState.update { it.copy(toastMessage = "Pin Created successfully") }
+                    repository.setCompletedOnboarding()
+                    onSuccess()
+
                     // check if pin meets requirements
                     if (pin.length >= 4) {
                         _pinState.update {
@@ -69,23 +73,25 @@ class CreatePinScreenViewModel @Inject constructor(
                                 success = false,
                                 isLoading = false,
                                 error = "Pin must be at least 4 digits",
-                                //toastMessage = "Pin must be at least 4 digits"
                             )
                         }
                     }
                 },
                 onFailure = {
+                    _pinState.update { state -> state.copy(toastMessage = it) }
+
+                    onFailure(it)
                     // ----Error state ------
-                    //_pinState.value = PinState.Error(message = it)
                     _pinState.value = CreatePinScreenState(error = it)
                 }
             )
         }
     }
 
-    fun skipPinSetup(){
+    fun skipPinSetup() {
         viewModelScope.launch {
             repository.setPinSetupCompleted(false) // Save status as false
+            repository.setCompletedOnboarding()
             _pinState.update {
                 it.copy(
                     success = true,
