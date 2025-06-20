@@ -12,9 +12,7 @@ import com.transsion.financialassistant.onboarding.screens.create_pin.SetPasswor
 import com.transsion.financialassistant.onboarding.screens.get_started.GetStarted
 import com.transsion.financialassistant.onboarding.screens.login.LoginScreen
 import com.transsion.financialassistant.onboarding.screens.promt_screens.enable_notifications.EnableNotificationScreen
-import com.transsion.financialassistant.onboarding.screens.surveys.PersonalTrackerSurvey
-import com.transsion.financialassistant.onboarding.screens.surveys.SurveyBusinessScreens
-import com.transsion.financialassistant.onboarding.screens.surveys.SurveyScreen
+
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -30,7 +28,9 @@ fun NavGraphBuilder.onboardingNavGraph(
 
 
     composable<OnboardingRoutes.CreatePin> {
-        CreatePinScreen(navController = navController)
+        CreatePinScreen(
+            navController = navController, goToLanding = goToLanding
+        )
     }
 
     composable<OnboardingRoutes.Login> {
@@ -56,7 +56,7 @@ fun NavGraphBuilder.onboardingNavGraph(
         EnableNotificationScreen(navController = navController)
     }
 
-    composable<OnboardingRoutes.SurveyScreen> {
+    /*composable<OnboardingRoutes.SurveyScreen> {
         SurveyScreen(navController = navController)
     }
 
@@ -72,7 +72,7 @@ fun NavGraphBuilder.onboardingNavGraph(
             navController = navController,
             goToLanding = goToLanding
         )
-    }
+    }*/
 
 
 }
