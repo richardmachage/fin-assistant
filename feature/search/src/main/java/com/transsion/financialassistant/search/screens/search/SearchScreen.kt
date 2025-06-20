@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -178,7 +177,7 @@ fun SearchScreen(
                                     .padding(paddingMedium),
                             ) {
                                 //title
-                                TitleText(text = "Frequent Money Out")
+                                if (state.frequentSenders.isNotEmpty()) TitleText(text = "Frequent Money Out")
                                 VerticalSpacer(25)
                                 //list of senders
                                 FlowRow(
@@ -197,8 +196,8 @@ fun SearchScreen(
                                             }
                                         )
                                     }
-
                                 }
+
                             }
 
                             VerticalSpacer(25)
@@ -210,8 +209,11 @@ fun SearchScreen(
                                     .padding(paddingMedium),
                             ) {
                                 //title
-                                TitleText(text = "Frequent Money In")
+                                if (state.frequentRecipients.isNotEmpty()) {
+                                    TitleText(text = "Frequent Money In")
+                                }
                                 VerticalSpacer(25)
+                                if (state.frequentRecipients.isNotEmpty())
                                 //list of recipients
                                 FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
