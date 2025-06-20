@@ -139,3 +139,119 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
         )
     }
 }
+
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            """
+                CREATE TABLE IF NOT EXISTS ReceiveTillEntity(
+                    transactionCode TEXT NOT NULL PRIMARY KEY,
+                    phone TEXT NOT NULL,
+                    receiveFromName TEXT NOT NULL,
+                    receiveFromNumber TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    businessBalance REAL NOT NULL,
+                    date TEXT NOT NULL,
+                    time TEXT NOT NULL,
+                    transactionCost REAL NOT NULL,
+                    transactionType TEXT NOT NULL,
+                    transactionCategory TEXT NOT NULL              
+                )
+            """/*.trimIndent()*/
+        )
+
+        db.execSQL(
+            """
+                CREATE TABLE IF NOT EXISTS SendTillEntity(
+                    transactionCode TEXT NOT NULL PRIMARY KEY,
+                    phone TEXT NOT NULL,
+                    sentToName TEXT NOT NULL,
+                    amount REAL NOT NULL,
+                    businessBalance REAL NOT NULL,
+                    date TEXT NOT NULL,
+                    time TEXT NOT NULL,
+                    transactionType TEXT NOT NULL,
+                    transactionCategory TEXT NOT NULL                      
+                )
+            """/*.trimIndent()*/
+        )
+
+        //views
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedOutGoingTransactionsBusiness`")
+
+        db.execSQL(
+            """
+        CREATE VIEW `UnifiedOutGoingTransactionsBusiness` AS SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName , transactionCost FROM SendFromPochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date,time,transactionType, businessBalance, 'OUT' as transactionCategory,'MY MPESA' as sentToName, transactionCost FROM MoveFromPochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date, time, transactionType, businessBalance, transactionCategory, sentToName, 0.0 as transactionCost  from SendTillEntity
+    """/*.trimIndent()*/
+        )
+
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedIncomingTransactionsBusiness`")
+        db.execSQL(
+            """
+        CREATE VIEW `UnifiedIncomingTransactionsBusiness` AS SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName , 0.0 as transactionCost FROM ReceivePochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date,time, transactionType, "IN" as transactionCategory, businessBalance, "MY MPESA" as receiveFromName, transactionCost FROM MoveToPochiEntity
+        UNION ALL 
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName, transactionCost from ReceiveTillEntity
+    """/*.trimIndent()*/
+        )
+
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedPochiTransactions`")
+        db.execSQL(
+            """
+            CREATE VIEW `UnifiedPochiTransactions` AS SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName , transactionCost FROM SendFromPochiEntity
+            UNION ALL
+            SELECT transactionCode, phone, amount, date,time,transactionType, businessBalance, 'OUT' as transactionCategory,'MY MPESA' as sentToName, transactionCost FROM MoveFromPochiEntity
+            UNION ALL
+            SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName , 0.0 as transactionCost FROM ReceivePochiEntity
+            UNION ALL
+            SELECT transactionCode, phone, amount, date,time, transactionType, 'IN' as transactionCategory, businessBalance, 'MY MPESA' as receiveFromName, transactionCost FROM MoveToPochiEntity
+    """
+        )
+
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedTillTransactions`")
+        db.execSQL(
+            """
+        CREATE VIEW `UnifiedTillTransactions` AS SELECT transactionCode, phone, amount, date, time, transactionType, businessBalance, transactionCategory, sentToName, 0.0 as transactionCost  from SendTillEntity
+        UNION ALL 
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName, transactionCost from ReceiveTillEntity
+    """
+        )
+
+    }
+
+}
+
+
+val MIGRATION_6_7 = object : Migration(6, 7) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedPochiTransactions`")
+        db.execSQL(
+            """
+        CREATE VIEW `UnifiedPochiTransactions` AS SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, sentToName , transactionCost FROM SendFromPochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date,time,transactionType, businessBalance, 'OUT' as transactionCategory,'MY MPESA' as sentToName, transactionCost FROM MoveFromPochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date, time, transactionType, transactionCategory, businessBalance, receiveFromName , 0.0 as transactionCost FROM ReceivePochiEntity
+        UNION ALL
+        SELECT transactionCode, phone, amount, date,time, transactionType, 'IN' as transactionCategory, businessBalance, 'MY MPESA' as receiveFromName, transactionCost FROM MoveToPochiEntity
+    """
+        )
+
+        db.execSQL("DROP VIEW IF EXISTS `UnifiedTillTransactions`")
+
+        db.execSQL(
+            sql = """
+        CREATE VIEW `UnifiedTillTransactions` AS SELECT transactionCode, phone, amount, date, time, transactionType, businessBalance, transactionCategory, sentToName as name, 0.0 as transactionCost  from SendTillEntity
+        UNION ALL 
+        SELECT transactionCode, phone, amount, date, time, transactionType,  businessBalance,transactionCategory, receiveFromName as name, transactionCost from ReceiveTillEntity
+    """
+        )
+    }
+
+}
