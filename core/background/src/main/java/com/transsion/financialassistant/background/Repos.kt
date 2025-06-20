@@ -12,12 +12,14 @@ import com.transsion.financialassistant.data.repository.transaction.paybill.PayB
 import com.transsion.financialassistant.data.repository.transaction.receive_money.ReceiveMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_till.ReceiveTillRepo
 import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepo
 import com.transsion.financialassistant.data.repository.transaction.reversal_debit.ReversalDebitRepo
 import com.transsion.financialassistant.data.repository.transaction.send_from_pochi.SendFromPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_money.SendMoneyRepo
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepo
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
+import com.transsion.financialassistant.data.repository.transaction.send_till.SendTillRepo
 import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepo
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
 import javax.inject.Inject
@@ -42,5 +44,7 @@ class Repos @Inject constructor(
     val fulizaRepo: FulizaPayRepo,
     val unknownRepo: UnknownRepo,
     val reversalCreditRepo: ReversalCreditRepo,
-    val reversalDebitRepo: ReversalDebitRepo
+    val reversalDebitRepo: ReversalDebitRepo,
+    val receiveTillRepo: ReceiveTillRepo,
+    val sendTillRepo: SendTillRepo
 )
