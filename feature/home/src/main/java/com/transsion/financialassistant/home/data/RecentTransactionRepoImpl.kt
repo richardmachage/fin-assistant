@@ -7,8 +7,8 @@ import com.transsion.financialassistant.data.room.views.personal.UnifiedTransact
 import com.transsion.financialassistant.data.utils.dbFormatter
 import com.transsion.financialassistant.home.domain.RecentTransactionRepo
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import java.time.LocalDate
 import javax.inject.Inject
@@ -74,37 +74,25 @@ class RecentTransactionRepoImpl @Inject constructor(
                         }
                     }
             }
-
         }
     }
 
-    override fun getMpesaBalance(insightCategory: InsightCategory) = flow<Double> {
-        when (insightCategory) {
-            InsightCategory.PERSONAL -> {
-                dao.getMpesaBalance().collect {
-                    emit(it)
-                }
-                //emit(dao.getMpesaBalance().first())
-            }
+    override fun getMpesaBalance(insightCategory: InsightCategory): Flow<Double> {
+        return when (insightCategory) {
+            InsightCategory.PERSONAL -> dao.getMpesaBalance()
 
             InsightCategory.BUSINESS -> {
-                getPochiBalance().collect { pochiBalance ->
-                    getTillBalance().collect {
-                        emit(pochiBalance + it)
-                    }
-                }
+                combine(getPochiBalance(), getTillBalance()) { pochi, till -> pochi + till }
             }
         }
     }
 
     override fun getPochiBalance(): Flow<Double> {
-        return businessDao.getBusinessBalance()
+        return businessDao.getPochiBalance().map { it ?: 0.0 }
     }
 
     override fun getTillBalance(): Flow<Double> {
-
-        //FIXME change to retrieve till balance
-        return flowOf(0.0)//businessDao.getBusinessBalance()
+        return businessDao.getTillBalance().map { it ?: 0.0 }
     }
 
     override fun getNumOfAllTransactions(insightCategory: InsightCategory): Flow<Int> {
