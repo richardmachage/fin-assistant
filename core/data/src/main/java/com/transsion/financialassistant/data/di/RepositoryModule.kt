@@ -28,6 +28,8 @@ import com.transsion.financialassistant.data.repository.transaction.receive_mshw
 import com.transsion.financialassistant.data.repository.transaction.receive_mshwari.ReceiveMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepo
 import com.transsion.financialassistant.data.repository.transaction.receive_pochi.ReceivePochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.receive_till.ReceiveTillRepo
+import com.transsion.financialassistant.data.repository.transaction.receive_till.ReceiveTillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepo
 import com.transsion.financialassistant.data.repository.transaction.reversal_credit.ReversalCreditRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.reversal_debit.ReversalDebitRepo
@@ -40,6 +42,8 @@ import com.transsion.financialassistant.data.repository.transaction.send_mshwari
 import com.transsion.financialassistant.data.repository.transaction.send_mshwari.SendMshwariRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepo
 import com.transsion.financialassistant.data.repository.transaction.send_pochi.SendPochiRepoImpl
+import com.transsion.financialassistant.data.repository.transaction.send_till.SendTillRepo
+import com.transsion.financialassistant.data.repository.transaction.send_till.SendTillRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepo
 import com.transsion.financialassistant.data.repository.transaction.unknown.UnknownRepoImpl
 import com.transsion.financialassistant.data.repository.transaction.withdraw_money.WithdrawMoneyRepo
@@ -52,6 +56,7 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
 
     @Binds
     internal abstract fun bindTransactionRepo(
@@ -162,5 +167,15 @@ abstract class RepositoryModule {
     internal abstract fun bindsReversalCreditRepo(
         reversalCreditRepo: ReversalCreditRepoImpl
     ): ReversalCreditRepo
+
+    @Binds
+    internal abstract fun bindsReceiveTillRepo(
+        receiveTillRepo: ReceiveTillRepoImpl
+    ): ReceiveTillRepo
+
+    @Binds
+    internal abstract fun bindsSendTillRepo(
+        sendTillRepo: SendTillRepoImpl
+    ): SendTillRepo
 
 }
