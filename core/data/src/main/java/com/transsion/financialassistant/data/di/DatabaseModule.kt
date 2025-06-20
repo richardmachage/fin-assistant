@@ -157,4 +157,15 @@ object DatabaseModule {
     fun providesSearchHistoryDao(financialAssistantDb: FinancialAssistantDb) =
         financialAssistantDb.searchHistoryDao()
 
+    @Provides
+    @Singleton
+    fun providesReceiveTillDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.receiveTillDao()
+
+    @Provides
+    @Singleton
+    fun providesSendTillDao(financialAssistantDb: FinancialAssistantDb) =
+        financialAssistantDb.sendTillDao()
+
+
 }
