@@ -197,8 +197,7 @@ fun ChangePinScreen(
                     viewModel.onSavePin(onSuccess = {
                         viewModel.viewModelScope.launch {
                             viewModel.showToast(message = "Pin Changed Successfully")
-                            //delay(1000)
-                            //navController.navigateUp()
+                            navController.navigateUp()
                         }
                     }
                     )
