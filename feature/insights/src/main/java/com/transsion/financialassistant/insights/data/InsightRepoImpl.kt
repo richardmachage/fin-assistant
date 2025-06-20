@@ -17,11 +17,13 @@ import com.transsion.financialassistant.data.room.entities.paybill_till.PayBillD
 import com.transsion.financialassistant.data.room.entities.receive_money.ReceiveMoneyDao
 import com.transsion.financialassistant.data.room.entities.receive_mshwari.ReceiveMshwariDao
 import com.transsion.financialassistant.data.room.entities.receive_pochi.ReceivePochiDao
+import com.transsion.financialassistant.data.room.entities.receive_till.ReceiveTillDao
 import com.transsion.financialassistant.data.room.entities.reversal_credit.ReversalCreditDao
 import com.transsion.financialassistant.data.room.entities.reversal_debit.ReversalDebitDao
 import com.transsion.financialassistant.data.room.entities.send_money.SendMoneyDao
 import com.transsion.financialassistant.data.room.entities.send_mshwari.SendMshwariDao
 import com.transsion.financialassistant.data.room.entities.send_pochi.SendPochiDao
+import com.transsion.financialassistant.data.room.entities.send_till.SendTillDao
 import com.transsion.financialassistant.data.room.entities.withdraw.WithdrawMoneyDao
 import com.transsion.financialassistant.data.room.views.business.UnifiedTransactionsBusinessDao
 import com.transsion.financialassistant.data.utils.formatAsCurrency
@@ -63,6 +65,8 @@ class InsightRepoImpl @Inject constructor(
     private val fulizaPayDao: FulizaPayDao,
     private val reversalCreditDao: ReversalCreditDao,
     private val reversalDebitDao: ReversalDebitDao,
+    private val receiveTillDao: ReceiveTillDao,
+    private val sendTillDao: SendTillDao,
 
     ) : InsightsRepo {
 
@@ -535,6 +539,32 @@ class InsightRepoImpl @Inject constructor(
                         )
                     }
                 }
+
+                TransactionType.RECEIVE_TILL -> {
+                    receiveTillDao.getReceiveTillTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            code = it.transactionCode,
+                            title = it.receiveFromName,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
+
+                TransactionType.SEND_FROM_TILL -> {
+                    sendTillDao.getSendFromTillTransactionsByDate(startDate, endDate).map {
+                        TransactionUi(
+                            code = it.transactionCode,
+                            title = it.sentToName,
+                            type = it.transactionType,
+                            inOrOut = transactionCategory,
+                            amount = it.amount.toString(),
+                            dateAndTime = "${it.date.toMonthDayDate()}, ${it.time.toAppTime()}"
+                        )
+                    }
+                }
             }
             AppCache.put(key = cacheKey, value = data)
             emit(data)
@@ -575,6 +605,7 @@ class InsightRepoImpl @Inject constructor(
         }.catch {
             emit(emptyList())
         }
+
     override fun getDataPointsForCategory(
         transactionType: TransactionType,
         insightTimeline: InsightTimeline
@@ -872,8 +903,69 @@ class InsightRepoImpl @Inject constructor(
                     }
                 }
 
-                TransactionType.REVERSAL_DEBIT -> TODO()
-                TransactionType.REVERSAL_CREDIT -> TODO()
+                TransactionType.REVERSAL_DEBIT -> {
+                    reversalDebitDao.getReversalDebitTransactionsByDate(startDate, endDate).map {
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                    }
+                }
+
+                TransactionType.REVERSAL_CREDIT -> {
+                    reversalCreditDao.getReversalCreditTransactionsByDate(startDate, endDate).map {
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                    }
+                }
+
+                TransactionType.RECEIVE_TILL -> {
+                    receiveTillDao.getReceiveTillTransactionsByDate(startDate, endDate).map {
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                    }
+                }
+
+                TransactionType.SEND_FROM_TILL -> {
+                    sendTillDao.getSendFromTillTransactionsByDate(startDate, endDate).map {
+                        when (insightTimeline) {
+                            InsightTimeline.TODAY -> DataPoint(
+                                x = it.time,
+                                y = it.amount.toFloat()
+                            )
+
+                            else -> DataPoint(
+                                x = it.date,
+                                y = it.amount.toFloat()
+                            )
+                        }
+                    }
+                }
             }
 
             AppCache.put(key = cacheKey, value = dataPoints)
@@ -997,6 +1089,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.SEND_MONEY_FROM_POCHI -> R.drawable.iconamoon_cheque_light
                                 TransactionType.REVERSAL_DEBIT -> R.drawable.account
                                 TransactionType.REVERSAL_CREDIT -> R.drawable.account
+                                TransactionType.RECEIVE_TILL -> R.drawable.account
+                                TransactionType.SEND_FROM_TILL -> R.drawable.account
                             }
                         )
                     }
@@ -1100,6 +1194,8 @@ class InsightRepoImpl @Inject constructor(
                                 TransactionType.UNKNOWN -> null
                                 TransactionType.REVERSAL_DEBIT -> R.drawable.account
                                 TransactionType.REVERSAL_CREDIT -> R.drawable.account
+                                TransactionType.RECEIVE_TILL -> R.drawable.account
+                                TransactionType.SEND_FROM_TILL -> R.drawable.account
                             }
                         )
                     }
