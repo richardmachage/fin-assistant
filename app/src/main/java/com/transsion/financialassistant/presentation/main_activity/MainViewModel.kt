@@ -26,6 +26,7 @@ class MainViewModel @Inject constructor(
     private val pinRepo: PinRepo,
 ) : ViewModel() {
 
+
     private var _state = MutableStateFlow(ScreenState())
     val state = _state.asStateFlow()
 
@@ -58,12 +59,12 @@ class MainViewModel @Inject constructor(
         if (onboardingRepo.hasCompletedOnboarding()) {
             //onboarding has completed, check if pin is set
 
-            if (pinRepo.isPinSet()) {
+            return if (pinRepo.isPinSet()) {
                 //pin is set, go to login
-                return OnboardingRoutes.Login
+                OnboardingRoutes.Login
             } else {
                 //pin not set, go to home
-                return FinancialAssistantRoutes.Landing
+                FinancialAssistantRoutes.Landing
             }
         } else {
             //Onboarding has not completed
@@ -79,6 +80,8 @@ class MainViewModel @Inject constructor(
             _requireAuth.value = true
         }
     }
+
+    fun isPinSet() = onboardingRepo.hasCompletedOnboarding() && pinRepo.isPinSet()
 
     /**Check if Authentication is Completed*/
     fun authCompleted(){
