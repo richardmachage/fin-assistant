@@ -30,10 +30,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,8 +55,6 @@ import com.transsion.financialassistant.onboarding.R
 import com.transsion.financialassistant.onboarding.biometric.BiometricPromptManager
 import com.transsion.financialassistant.onboarding.biometric.BiometricResult
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
-import com.transsion.financialassistant.onboarding.screens.surveys.SurveyViewModel
-import com.transsion.financialassistant.presentation.components.CircularLoading
 import com.transsion.financialassistant.presentation.components.ThreeDotsLoader
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
 import com.transsion.financialassistant.presentation.components.texts.FaintText
@@ -71,10 +67,11 @@ import com.transsion.financialassistant.presentation.utils.VerticalSpacer
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel(),
-    surveyViewModel: SurveyViewModel = hiltViewModel(),
+//    surveyViewModel: SurveyViewModel = hiltViewModel(),
     navController: NavController,
     goToLanding: (route: Any) -> Unit
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val state by viewModel.state.collectAsStateWithLifecycle()
     val errorMessage by viewModel.errorMessage.collectAsState()
@@ -83,27 +80,17 @@ fun LoginScreen(
     val promptManager by remember { mutableStateOf(BiometricPromptManager(context)) }
     val biometricResult by promptManager.promptResult.collectAsState(initial = null)
 
-    // if onboarding is completed, navigate to home screen
-    val isOnboardingCompleted by surveyViewModel.onboardingCompleted.observeAsState(initial = false)
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-
-
-    LaunchedEffect(viewModel.shouldTriggerBiometric.value) {
-        if (viewModel.shouldTriggerBiometric.value){
-            promptManager.showBiometricPrompt(
-                title = context.getString(R.string.biometric_authentication),
-                description = context.getString(R.string.please_authenticate_to_continue)
-            )
-            viewModel.resetBiometricTrigger()
-        }
-    }
-
-    /**Allow Biometric Trigger again - on Resume*/
+    //Set automatic Biometric Trigger even  on Resume
     DisposableEffect(Unit) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                viewModel.allowBiometricTrigger()
+                // viewModel.allowBiometricTrigger()
+                promptManager.showBiometricPrompt(
+                    title = context.getString(R.string.biometric_authentication),
+                    description = context.getString(R.string.please_authenticate_to_continue)
+                )
+                viewModel.resetBiometricTrigger()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -127,14 +114,16 @@ fun LoginScreen(
         }
     }
 
-    LaunchedEffect(state.isValidationSuccess, isOnboardingCompleted) {
+    LaunchedEffect(state.isValidationSuccess) {
         if (state.isValidationSuccess) {
             viewModel.clearPin()
-            if (isOnboardingCompleted) {
-                goToLanding(OnboardingRoutes.Login)
-               // viewModel.resetValidationSuccess()
+            goToLanding(OnboardingRoutes.Login)
 
-            } else {
+            //if (isOnboardingCompleted) {
+            // viewModel.resetValidationSuccess()
+
+            /*}
+            else {
                 //goToLanding(goToLanding)
                 navController.navigate(OnboardingRoutes.SurveyScreen) {
                     popUpTo(OnboardingRoutes.Login) {
@@ -143,16 +132,13 @@ fun LoginScreen(
                 }
                 //viewModel.resetValidationSuccess()
                 }
-            }
+            }*/
         }
+    }
 
     Surface {
         val paddingValues = WindowInsets.statusBars.asPaddingValues()
 
-        /*when (state.isValidationSuccess) {
-            //is PinState.Loading -> CircularLoading()
-            true -> CircularLoading(true)*/
-        // else -> {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -309,16 +295,15 @@ fun LoginScreen(
                         // Display biometric authentication result
                         biometricResult?.let { result ->
                             if (result is BiometricResult.AuthenticationSuccess) {
-                                if (isOnboardingCompleted) {
+                                //  if (isOnboardingCompleted) {
                                     goToLanding(OnboardingRoutes.Login)
                                     /*navController.navigate(*//*OnboardingRoutes.HomeScreen*//*) {
                                                 // popUpTo(OnboardingRoutes.Login) { inclusive = true }
                                             }*/
-                                } else {
+                                /*} else {
                                     navController.navigate(OnboardingRoutes.SurveyScreen) {
                                         popUpTo(OnboardingRoutes.Login) { inclusive = true }
-                                    }
-                                }
+                                    }*/
                             }
                         }
                     }
