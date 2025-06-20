@@ -28,7 +28,6 @@ import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.transsion.financialassistant.presentation.components.buttons.BackButton
@@ -41,7 +40,6 @@ import com.transsion.financialassistant.presentation.utils.paddingLarge
 import com.transsion.financialassistant.presentation.utils.paddingMedium
 import com.transsion.financialassistant.presentation.utils.paddingMediumLarge
 import com.transsion.financialassistant.settings.R
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -195,10 +193,8 @@ fun ChangePinScreen(
                 text = stringResource(R.string.save),
                 onClick = {
                     viewModel.onSavePin(onSuccess = {
-                        viewModel.viewModelScope.launch {
-                            viewModel.showToast(message = "Pin Changed Successfully")
-                            navController.navigateUp()
-                        }
+                        viewModel.showToast(message = "Pin Changed Successfully")
+                        navController.navigateUp()
                     }
                     )
                 }
