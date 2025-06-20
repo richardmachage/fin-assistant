@@ -302,11 +302,22 @@ fun SettingsScreen(
                 VerticalSpacer(10)
             }
 
-            //Financial Assistant
 
+            //Financial Assistant
             SettingGroup(
                 title = "Financial Assistant"
             ) {
+                //Feedback
+                RowButton(
+                    title = "Send Feedback",
+                    onClick = {
+                        navController.navigate(FeedbackRoutes.Feedback)
+                    },
+                    icon = com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular
+                )
+
+                VerticalSpacer(20)
+
                 //About
                 RowButton(
                     title = "About",
@@ -320,17 +331,8 @@ fun SettingsScreen(
                     onClick = {},
                     icon = com.transsion.financialassistant.presentation.R.drawable.legal_document_01
                 )
-                //Terms of service
 
-                VerticalSpacer(20)
-                //Feedback
-                RowButton(
-                    title = "Send Feedback",
-                    onClick = {
-                        navController.navigate(FeedbackRoutes.Feedback)
-                    },
-                    icon = com.transsion.financialassistant.presentation.R.drawable.fluent_person_feedback_24_regular
-                )
+                //Terms of service
 
                 VerticalSpacer(20)
 
