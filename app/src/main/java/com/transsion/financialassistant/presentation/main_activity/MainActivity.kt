@@ -35,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         installSplashScreen()
         enableEdgeToEdge()
 
-        /**Prevent the app from taking screenshot and blur content while app is in background*/
+        /**Flag to prevent app from capturing screenshots and blur the app content while in background*/
         this.window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE
+            WindowManager.LayoutParams.FLAG_SECURE,
         )
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
