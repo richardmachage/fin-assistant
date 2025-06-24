@@ -2,6 +2,8 @@ package com.transsion.financialassistant.presentation.main_activity
 
 import android.os.Build
 import android.os.Bundle
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -32,6 +34,12 @@ class MainActivity : AppCompatActivity() {
 
         installSplashScreen()
         enableEdgeToEdge()
+
+        /**Prevent the app from taking screenshot and blur content while app is in background*/
+        this.window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
             val financialAssistantController = rememberNavController()
