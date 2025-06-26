@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
+import com.transsion.financialassistant.observer.AppLifecycleObserver
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantNavHost
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
@@ -37,6 +38,11 @@ class MainActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE,
         )
+
+        /**Register Lifecycle Event*/
+        val lifecycleObserver = AppLifecycleObserver(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleObserver)
+
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
             val financialAssistantController = rememberNavController()
