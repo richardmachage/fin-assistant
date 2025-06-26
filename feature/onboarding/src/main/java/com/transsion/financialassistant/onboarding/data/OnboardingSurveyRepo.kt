@@ -2,14 +2,14 @@ package com.transsion.financialassistant.onboarding.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface OnboardingRepository {
+interface OnboardingSurveyRepo {
     val onboardingCompleted: Flow<Boolean>
 
     suspend fun savePurpose(purpose: String)
 
-    suspend fun savePersonalExpenses(expenses: String)
+    suspend fun savePersonalExpenses(expenses: List<String>)
 
     suspend fun saveBusinessDetails(type: String, expenses: String, paymentMethod: String)
 
-    suspend fun setOnboardingCompleted(completed: Boolean)
+     suspend fun setOnboardingCompleted(completed: Boolean)
 }
