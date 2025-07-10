@@ -117,6 +117,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.IN,
                 amount = moneyIn,
+                modifier = if (hide) Modifier.blur(10.dp) else Modifier,
                 // transactions = transactionsIn
             )
             //divider
@@ -131,6 +132,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.OUT,
                 amount = moneyOut,
+                modifier = if (hide) Modifier.blur(10.dp) else Modifier,
                 // transactions = transactionsOut
             )
         }
