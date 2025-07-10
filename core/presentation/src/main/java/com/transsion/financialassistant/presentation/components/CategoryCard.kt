@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -44,6 +45,7 @@ fun CategoryCard(
     amount: String = "6,900.90",
     @DrawableRes icon: Int = com.transsion.financialassistant.presentation.R.drawable.weui_arrow_outlined,
     onClick: () -> Unit = {},
+    hide: Boolean = false,
     showTopIcon: Boolean = false
 ) {
     ElevatedCard(
@@ -104,11 +106,13 @@ fun CategoryCard(
                     Text(
                         text = stringResource(com.transsion.financialassistant.presentation.R.string.kes),
                         style = MaterialTheme.typography.labelSmall,
+                       // modifier = if (hide) Modifier.blur(10.dp) else Modifier,
                         color = Color.Gray
                     )
 
                     TitleText(
                         text = " $amount",
+                        modifier = if (hide) Modifier.blur(10.dp) else Modifier
                     )
                 }
 
