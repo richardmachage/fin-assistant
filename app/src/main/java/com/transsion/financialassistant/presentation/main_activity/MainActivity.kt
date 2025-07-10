@@ -2,13 +2,13 @@ package com.transsion.financialassistant.presentation.main_activity
 
 import android.os.Build
 import android.os.Bundle
-import android.view.Window
 import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,9 +17,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
-import com.transsion.financialassistant.observer.AppLifecycleObserver
 import com.transsion.financialassistant.onboarding.navigation.OnboardingRoutes
 import com.transsion.financialassistant.presentation.navigation.FinancialAssistantNavHost
+import com.transsion.financialassistant.presentation.navigation.FinancialAssistantRoutes
 import com.transsion.financialassistant.presentation.theme.FinancialAssistantTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,19 +30,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        installSplashScreen()
-        enableEdgeToEdge()
-
-        /**Flag to prevent app from capturing screenshots and blur the app content while in background*/
         this.window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
-            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
         )
-
-        /**Register Lifecycle Event*/
-        val lifecycleObserver = AppLifecycleObserver(this)
-        ProcessLifecycleOwner.get().lifecycle.addObserver(lifecycleObserver)
-
+        installSplashScreen()
+        enableEdgeToEdge()
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
             val financialAssistantController = rememberNavController()
@@ -52,30 +45,26 @@ class MainActivity : AppCompatActivity() {
              * */
             DisposableEffect(Unit) {
                 val observer = object : DefaultLifecycleObserver {
-
-
-                    override fun onResume(owner: LifecycleOwner) {
-                        super.onResume(owner)
-                        if (viewmodel.isPinSet()) {
-                            //TODO show LogIn screen
-                            financialAssistantController.navigate(OnboardingRoutes.Login) {
-                                popUpTo(OnboardingRoutes.Login) {
-                                    inclusive = true
-                                }
-                            }
-                        }
+                    override fun onStart(owner: LifecycleOwner) {
+                        viewmodel.checkAuthOnResume()
                     }
                 }
-
                 ProcessLifecycleOwner.get().lifecycle.addObserver(observer)
-
-                //Dispose
                 onDispose {
                     ProcessLifecycleOwner.get().lifecycle.removeObserver(observer)
                 }
             }
 
-
+            LaunchedEffect (requireAuth){
+                if (requireAuth){
+                    financialAssistantController.navigate(OnboardingRoutes.Login){
+                        popUpTo(FinancialAssistantRoutes.Landing){
+                            inclusive = true
+                        }
+                    }
+                    viewmodel.authCompleted()
+                }
+            }
             FinancialAssistantTheme {
                 FinancialAssistantNavHost(
                     navController = financialAssistantController,
