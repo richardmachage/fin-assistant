@@ -1,5 +1,6 @@
 package com.transsion.financialassistant.search.screens.search
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,6 +39,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.transsion.financialassistant.data.repository.getMessageForTransaction
+import com.transsion.financialassistant.data.room.views.personal.UnifiedTransactionPersonal
 import com.transsion.financialassistant.data.utils.toAppTime
 import com.transsion.financialassistant.data.utils.toMonthDayDate
 import com.transsion.financialassistant.presentation.components.texts.BigTittleText
@@ -49,6 +52,7 @@ import com.transsion.financialassistant.presentation.utils.paddingSmall
 import com.transsion.financialassistant.search.R
 import com.transsion.financialassistant.search.model.SearchView
 import com.transsion.financialassistant.search.model.TransactionUi
+import com.transsion.financialassistant.search.screens.components.BottomSheetFaMessage
 import com.transsion.financialassistant.search.screens.components.CustomSearchBar
 import com.transsion.financialassistant.search.screens.components.ListItemUI
 import com.transsion.financialassistant.search.screens.components.RecentSearchUi
@@ -67,6 +71,25 @@ fun SearchScreen(
     val searchResults = viewModel.searchResults.collectAsLazyPagingItems()
     val recentSearches by viewModel.recentSearches.collectAsState(initial = emptyList())
     val screenHeight = LocalConfiguration.current.screenHeightDp
+    var showMessageBottomSheet by remember { mutableStateOf(false) }
+    var selectedMessage by remember { mutableStateOf("") }
+    var selectedTransaction by remember { mutableStateOf<UnifiedTransactionPersonal?>(null) }
+
+
+    val transaction = selectedTransaction
+    if (showMessageBottomSheet && transaction != null && selectedMessage.isNotBlank()) {
+        BottomSheetFaMessage(
+            modifier = Modifier,
+            transaction = transaction,
+            showMessageBottomSheet = true,
+            selectedMessage = selectedMessage,
+            onDismiss = {
+                showMessageBottomSheet = false
+                selectedMessage = ""
+                selectedTransaction = null
+            }
+        )
+    }
 
     Scaffold(
         topBar = {
@@ -264,6 +287,25 @@ fun SearchScreen(
                                             onClick = {
                                                 focusManager.clearFocus()
                                                 //showRecentSearches = false
+                                                getMessageForTransaction(
+                                                    context = context,
+                                                    transactionCode = item.transactionCode
+                                                )
+                                                    .apply {
+                                                        onSuccess { message ->
+                                                            selectedTransaction = item
+                                                            selectedMessage = message
+                                                            showMessageBottomSheet = true
+                                                        }
+
+                                                        onFailure { error ->
+                                                            Toast.makeText(
+                                                                context,
+                                                                error.message,
+                                                                Toast.LENGTH_SHORT
+                                                            ).show()
+                                                        }
+                                                    }
                                             }
                                         )
                                     }
