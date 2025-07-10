@@ -170,7 +170,6 @@ fun InOutCardCategoryCard(
                 stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
             NormalText(
                 text = "$transactions $transaction",
-                modifier = if (hide) Modifier.blur(10.dp) else Modifier
             )
         }
     }

@@ -117,7 +117,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.IN,
                 amount = moneyIn,
-                modifier = if (hide) Modifier.blur(10.dp) else Modifier,
+                hide = hide
                 // transactions = transactionsIn
             )
             //divider
@@ -132,7 +132,7 @@ fun MpesaBalanceCard(
             InOutCardCategory(
                 category = TransactionCategory.OUT,
                 amount = moneyOut,
-                modifier = if (hide) Modifier.blur(10.dp) else Modifier,
+                hide = hide
                 // transactions = transactionsOut
             )
         }
@@ -146,7 +146,8 @@ fun InOutCardCategory(
     modifier: Modifier = Modifier,
     category: TransactionCategory = TransactionCategory.IN,
     amount: String = "236,900.60",
-    transactions: String? = null
+    transactions: String? = null,
+    hide: Boolean = false
 ) {
     Column(modifier = modifier) {
         Row(
@@ -161,7 +162,9 @@ fun InOutCardCategory(
                         tint = FAColors.green
                     )
                     // HorizontalSpacer(5)
-                    FaintText(text = stringResource(com.transsion.financialassistant.presentation.R.string.money_in))
+                    FaintText(
+                        text = stringResource(com.transsion.financialassistant.presentation.R.string.money_in)
+                    )
                 }
 
                 TransactionCategory.OUT -> {
@@ -172,7 +175,6 @@ fun InOutCardCategory(
                     )
                     // HorizontalSpacer(5)
                     FaintText(text = stringResource(com.transsion.financialassistant.presentation.R.string.money_out))
-
                 }
             }
         }
@@ -187,7 +189,10 @@ fun InOutCardCategory(
             )
             HorizontalSpacer(3)
             //Amount
-            TitleText(text = amount)
+            TitleText(
+                text = amount,
+                modifier = if (hide) Modifier.blur(10.dp) else Modifier
+            )
 
         }
         VerticalSpacer(5)
