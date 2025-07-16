@@ -60,6 +60,7 @@ fun MoreDetailsScreen(
             viewModel.resetToast()
         }
     }
+
     Scaffold(
         topBar = {
             TopAppBar(
