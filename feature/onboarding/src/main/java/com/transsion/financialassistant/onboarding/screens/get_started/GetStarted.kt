@@ -66,10 +66,12 @@ fun GetStarted(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    var isGranted = remember {
-        context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) && context.isPermissionGranted(
-            Manifest.permission.READ_PHONE_NUMBERS
+    var isGranted by remember {
+        mutableStateOf(
+            context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) &&
+                    context.isPermissionGranted(Manifest.permission.READ_PHONE_NUMBERS)
         )
+
     }
     var showPermissionDialog by remember { mutableStateOf(false) }
     var showPermissionRationaleDialog by remember { mutableStateOf(false) }
@@ -84,6 +86,13 @@ fun GetStarted(
             isGranted = true
             showPermissionDialog = false
             showPermissionRationaleDialog = false
+
+            /**Navigate Directly*/
+            navController.navigate(OnboardingRoutes.CreatePin){
+                popUpTo(OnboardingRoutes.Welcome){
+                    inclusive = true
+                }
+            }
         },
         onPermissionDenied = {
             showPermissionRationaleDialog = true
