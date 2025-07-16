@@ -84,6 +84,12 @@ fun GetStarted(
             isGranted = true
             showPermissionDialog = false
             showPermissionRationaleDialog = false
+
+            navController.navigate(OnboardingRoutes.CreatePin) {
+                popUpTo<OnboardingRoutes.Welcome> {
+                    inclusive = true
+                }
+            }
         },
         onPermissionDenied = {
             showPermissionRationaleDialog = true
