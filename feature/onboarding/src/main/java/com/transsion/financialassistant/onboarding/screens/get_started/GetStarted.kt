@@ -66,6 +66,7 @@ fun GetStarted(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
+
     var isGranted = remember {
         context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) && context.isPermissionGranted(
             Manifest.permission.READ_PHONE_NUMBERS
