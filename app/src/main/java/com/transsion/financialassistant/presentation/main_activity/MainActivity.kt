@@ -39,7 +39,10 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
             val financialAssistantController = rememberNavController()
-
+            val requireAuth by viewmodel.requireAuth.collectAsStateWithLifecycle()
+            /**Detect when app returns to foreground
+             * Trigger auth when app resumes
+             * */
             DisposableEffect(Unit) {
                 val observer = object : DefaultLifecycleObserver {
 
