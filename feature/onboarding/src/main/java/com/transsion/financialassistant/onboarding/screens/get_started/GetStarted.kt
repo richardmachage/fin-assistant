@@ -71,6 +71,7 @@ fun GetStarted(
         context.isPermissionGranted(Manifest.permission.READ_PHONE_STATE) && context.isPermissionGranted(
             Manifest.permission.READ_PHONE_NUMBERS
         )
+
     }
     var showPermissionDialog by remember { mutableStateOf(false) }
     var showPermissionRationaleDialog by remember { mutableStateOf(false) }

@@ -168,7 +168,9 @@ fun InOutCardCategoryCard(
         Row(verticalAlignment = Alignment.CenterVertically) {
             val transaction =
                 stringResource(com.transsion.financialassistant.presentation.R.string.transactions)
-            NormalText(text = "$transactions $transaction")
+            NormalText(
+                text = "$transactions $transaction",
+            )
         }
     }
 
