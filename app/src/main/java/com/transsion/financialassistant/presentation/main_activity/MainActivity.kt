@@ -2,7 +2,6 @@ package com.transsion.financialassistant.presentation.main_activity
 
 import android.os.Build
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -32,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         /**Flag to prevent app from capturing screenshots and blur the app content while in background*/
         //FIXME -> Make this logic optional, user can allow or disallow
-        this.window.setFlags(
+        /*this.window.setFlags(
             WindowManager.LayoutParams.FLAG_SECURE,
             WindowManager.LayoutParams.FLAG_SECURE,
-        )
+        )*/
 
         setContent {
             val viewmodel = hiltViewModel<MainViewModel>()
