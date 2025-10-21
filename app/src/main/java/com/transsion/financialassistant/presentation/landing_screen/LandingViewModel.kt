@@ -33,6 +33,7 @@ class LandingViewModel @Inject constructor(
     private val unknownRepo: UnknownRepo
 ) : ViewModel() {
 
+    private var i = ""
     private var workerId: UUID? = null
     private var workManager: WorkManager? = null
     private var workInfo: StateFlow<WorkInfo?>? = null

@@ -178,7 +178,9 @@ fun HomeScreen(
                     ) {
                         //Pochi
                         CategoryCard(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f),
+                            hide = hideBalance.value,
                             title = stringResource(R.string.pochi_la_biashara),
                             amount = viewModel.pochiBalance.collectAsState().value.toString()
                                 .formatAsCurrency(),
@@ -192,6 +194,7 @@ fun HomeScreen(
                         CategoryCard(
                             modifier = Modifier.weight(1f),
                             title = stringResource(R.string.buy_goods_till),
+                            hide = hideBalance.value,
                             amount = viewModel.tillBalance.collectAsState().value.toString()
                                 .formatAsCurrency(),
                             icon = com.transsion.financialassistant.presentation.R.drawable.cash,
