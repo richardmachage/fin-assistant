@@ -4,7 +4,6 @@
 ![Android](https://img.shields.io/badge/Android-Modern-%233DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-UI-%234285F4?style=for-the-badge&logo=android&logoColor=white)
 ![Gradle](https://img.shields.io/badge/Gradle-Convention%20Plugins-%2302303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)
 
 **An automated, privacy-first financial tracker built for the Kenyan ecosystem.**
 
